@@ -131,3 +131,12 @@ https://github.com/hscgavin/autopep8-on-pycharm
 Al posto di output filter voi andrete su advanced options.
 
 Per poi runnare autopep8 dovrete per il momento fare tasto destro nel file-> external tools-> autopep8
+
+## Flake8
+
+```
+pip install flake8
+```
+
+seguire questa guida per impostare mettendo come working directory una cartella con il main (quindi es venv->ciao->main.py)
+https://gist.github.com/tossmilestone/23139d870841a3d5cba2aea28da1a895
