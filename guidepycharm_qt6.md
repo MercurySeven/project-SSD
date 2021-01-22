@@ -97,7 +97,7 @@ per fixare (da terminale esterno a pycharm)
 sudo apt install libopengl0
 ```
 
-#Installazione Plugin 
+# Installazione Plugin 
 
 Tramite il marketplace di pycharm installate pylint.
 Riavviate l'ide dopo aver installato e dovrebbe comparire a sinistra del terminale ( che è in basso a sinistra)
