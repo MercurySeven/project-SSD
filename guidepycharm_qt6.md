@@ -113,3 +113,21 @@ Riavviate l'ide e andate su File->Settings->Other Settings->Save Actions
 Attivate la prima spunta ("Activate save actions on save") oppure la spunta del salvataggio con shortcut, a vostro piacimento
 Attivate Optimize imports
 Poi attivate reformat only changed code
+
+
+## Autopep8
+
+Per installare autopep8 andate nel terminale ed eseguite 
+
+```
+pip install autopep8
+
+```
+
+Dopo seguite questa guida dal punto 1.
+
+https://github.com/hscgavin/autopep8-on-pycharm
+
+Al posto di output filter voi andrete su advanced options.
+
+Per poi runnare autopep8 dovrete per il momento fare tasto destro nel file-> external tools-> autopep8
