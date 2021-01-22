@@ -96,3 +96,15 @@ per fixare (da terminale esterno a pycharm)
 ```
 sudo apt install libopengl0
 ```
+
+#Installazione Plugin 
+
+Tramite il marketplace di pycharm installate pylint.
+Riavviate l'ide dopo aver installato e dovrebbe comparire a sinistra del terminale ( che è in basso a sinistra)
+il pulsante "Plyint", cliccatelo. Ora per testare che tutto funzioni nella finestra clickate il pulsante verde "check current file". 
+Dovrebbe darvi diversi problemi con qt, per risolverli create un file ".pylintrc" nella main directory del progetto e copiate ed incollate questo al suo interno
+```
+extension-pkg-whitelist=PySide6
+```
+
+Runnate nuovamente il check current file e dovrebbe darvi 0 problemi!
