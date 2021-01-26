@@ -1,10 +1,10 @@
 import unittest
-from src.hello import helloWorld
+import src.main as main
 
 
 class TestHelloWorld(unittest.TestCase):
     def test_helloWorld(self) -> None:
-        self.assertEqual(helloWorld(), "Hello World!")
+        self.assertEqual(main.helloWorld(), "Hello World!")
 
 
 if __name__ == "__main__":
