@@ -1,16 +1,5 @@
 Settings = {
-    'LOCAL' : "LOCAL/",
+    'LOCAL': "LOCAL/",
     'REMOTE': "REMOTE/",
-    'TICK'  : 8
+    'TICK': 8
 }
-
-
-
-
-
-
-
-
-
-
-

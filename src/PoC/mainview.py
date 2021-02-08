@@ -1,8 +1,8 @@
-from PySide6.QtWidgets import (QApplication, QLabel, QPushButton,
-                               QVBoxLayout, QWidget)
-from PySide6.QtCore import QObject, Signal, Slot, Qt
+from PySide6.QtWidgets import (QLabel, QVBoxLayout, QWidget)
+from PySide6.QtCore import Qt
 
-from syncwidget import *
+from syncwidget import SyncWidget
+
 
 class MainView(QWidget):
     """This is the main view class"""
@@ -10,7 +10,7 @@ class MainView(QWidget):
     def __init__(self, parent=None):
         super(MainView, self).__init__(parent)
 
-        self.label = QLabel( "MainView" )
+        self.label = QLabel("MainView")
         self.label.setAlignment(Qt.AlignCenter)
 
         self.syncWidget = SyncWidget(self)

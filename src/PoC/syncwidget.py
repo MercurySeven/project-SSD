@@ -1,11 +1,13 @@
-from PySide6.QtWidgets import (QApplication, QLabel, QPushButton,
+from PySide6.QtWidgets import (QLabel, QPushButton,
                                QVBoxLayout, QWidget)
-from PySide6.QtCore import QObject, Signal, Slot, Qt
+from PySide6.QtCore import Signal, Slot, Qt
+
 
 class SyncWidget(QWidget):
-    """the SyncWidget class allows to activate or deactivate and see the synchronization status
-    through the emission of the 'sync' signal
-    
+    """the SyncWidget class allows to activate or deactivate
+    and see the synchronization status through the emission
+    of the 'sync' signal
+
     Signals
     -------
     sync: bool
@@ -17,14 +19,15 @@ class SyncWidget(QWidget):
     __run()
         private slot
         when run button is clicked emit sync(True)
-    
+
     __stop()
         private slot
         when stop button is clicked emit sync(False)
 
     Sl_status(stat: bool)
         public slot
-        receive a 'status' signal and change label to show the synchronization status
+        receive a 'status' signal and change label to show
+        the synchronization status
 
     """
 
@@ -35,12 +38,13 @@ class SyncWidget(QWidget):
         super(SyncWidget, self).__init__(parent)
 
         # TODO: implement better style management
-        self.setStyleSheet("background-color: rgb(96,96,96); margin:5px; border:1px solid black; color: white;")
+        self.setStyleSheet(
+            "background-color: rgb(96,96,96); margin:5px; border:1px solid black; color: white;")
 
         # provvisoria
         self.text = lambda x: "Synchronization is running" if x else "Synchronization is stopped"
 
-        self.label = QLabel( self.text(False) )
+        self.label = QLabel(self.text(False))
         self.label.setAlignment(Qt.AlignCenter)
 
         self.runButton = QPushButton("Run")
@@ -59,16 +63,15 @@ class SyncWidget(QWidget):
 
     @Slot()
     def __run(self):
-        print("called SyncWidget.__run -> emit sync(True)") # debug
+        print("called SyncWidget.__run -> emit sync(True)")  # debug
         self.Sg_sync.emit(True)
-    
+
     @Slot()
     def __stop(self):
-        print("called SyncWidget.__stop -> emit sync(False)") # debug
+        print("called SyncWidget.__stop -> emit sync(False)")  # debug
         self.Sg_sync.emit(False)
-    
-    
+
     @Slot(bool)
     def Sl_status(self, stat: bool):
         print("called SyncWidget.Sl_status -> change label")
-        self.label.setText( self.text(stat) )
+        self.label.setText(self.text(stat))
