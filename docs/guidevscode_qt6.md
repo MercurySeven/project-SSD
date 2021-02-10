@@ -27,6 +27,9 @@ Passi da seguire:
     ],
     "python.testing.pytestEnabled": false,
     "python.testing.nosetestsEnabled": false,
-    "python.testing.unittestEnabled": true
+    "python.testing.unittestEnabled": true,
+    "files.exclude": {
+        "**/__pycache__": true
+    }
 }
 ```

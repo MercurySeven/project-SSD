@@ -5,19 +5,21 @@ from distutils.dir_util import copy_tree
 import threading
 import time
 from settings import Settings
-from mainview import MainView
-from model import Model
+from view.mainview import MainView
+from model.model import Model
 
 
 class Controller(QObject):
 
     Sg_status = Signal(bool)
 
-    def __init__(self, model: Model, view: MainView, parent=None):
+    def __init__(self, parent=None):
         super(Controller, self).__init__(parent)
 
-        self.model = model
-        self.view = view
+        self.model = Model(Settings['REMOTE'], Settings['LOCAL'])
+        self.view = MainView()
+        self.view.resize(800, 600)
+        self.view.show()
 
         # connetto
         self.view.syncWidget.Sg_sync.connect(self.__sync_daemon)

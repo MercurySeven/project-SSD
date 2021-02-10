@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import (QLabel, QVBoxLayout, QWidget)
 from PySide6.QtCore import Qt
 
-from syncwidget import SyncWidget
+from view.widget.syncwidget import SyncWidget
 
 
 class MainView(QWidget):
@@ -9,7 +9,7 @@ class MainView(QWidget):
 
     def __init__(self, parent=None):
         super(MainView, self).__init__(parent)
-
+        self.setWindowTitle("SSD: Zextras Drive Desktop")
         self.label = QLabel("MainView")
         self.label.setAlignment(Qt.AlignCenter)
 
