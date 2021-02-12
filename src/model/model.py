@@ -1,29 +1,37 @@
-import os
-import glob
 from distutils.dir_util import remove_tree
+from model.client import API_Client
+from settings import Settings
 from typing import Generator
+import glob
+import os
+
 
 # TODO: provvisoria
-
-
 class Model:
     def __init__(self, remote: str, local: str):
 
         # set remote and local path
-        self.remote = remote
-        self.local = local
+        self.remote = os.path.join(Settings['REAL_PATH'], remote)
+        self.local = os.path.join(Settings['REAL_PATH'], local)
+
+        self.api = API_Client(Settings['HOST'], Settings['PORT'])
 
         # returns time of the last change in the folder
         self.last_change = lambda path: os.path.getmtime(path)
 
-    def remote_content(self) -> Generator[str, None, None]:
+    def remote_content(self) -> list:
         """fake remote call
         return the contents of the remote directory"""
-        return self.content(self.remote)
 
-    def local_content(self) -> Generator[str, None, None]:
+        query = '{content(path: "REMOTE/")}'
+
+        # fak api call
+        response = self.api.get_content(query)
+        return response['content']
+
+    def local_content(self) -> list:
         """return the contents of the local directory"""
-        return self.content(self.local)
+        return list(self.content(self.local))
 
     def remote_last_change(self) -> float:
         """fake remote call

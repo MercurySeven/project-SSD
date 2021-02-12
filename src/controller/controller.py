@@ -29,8 +29,7 @@ class Controller(QObject):
         self.sync_job = None
 
         # return True if dirs content are not equal
-        self.is_diff = lambda generator1, generator2: list(
-            generator1) != list(generator2)
+        self.is_diff = lambda l1, l2: l1 != l2
 
     @Slot(bool)
     def __sync_daemon(self, sync):

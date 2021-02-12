@@ -141,5 +141,3 @@ cython_debug/
 .DS_Store
 .idea
 .vscode
-LOCAL/
-REMOTE/
