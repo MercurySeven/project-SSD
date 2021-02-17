@@ -36,6 +36,7 @@ class Controller(QObject):
         if sync:
             self.sync_job = threading.Thread(
                 target=self.sync, args=(Settings['TICK'],))
+            self.sync_job.setDaemon(True)
             self.sync_job.do_run = True
             self.sync_job.start()
             print("attiva thread di sincronizzazione")  # debug

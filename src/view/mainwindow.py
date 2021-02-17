@@ -11,7 +11,7 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
 
         self.setWindowTitle("SSD: Zextras Drive Desktop")
-        self.label = QLabel("MainWindow")
+        self.label = QLabel("MainWindow", self)
         self.label.setAlignment(Qt.AlignCenter)
 
         # widgets
