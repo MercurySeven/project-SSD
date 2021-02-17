@@ -5,7 +5,7 @@ from distutils.dir_util import copy_tree
 import threading
 import time
 from settings import Settings
-from view.mainview import MainView
+from view.mainwindow import MainWindow
 from model.model import Model
 
 
@@ -17,14 +17,13 @@ class Controller(QObject):
         super(Controller, self).__init__(parent)
 
         self.model = Model(Settings['REMOTE'], Settings['LOCAL'])
-        self.view = MainView()
-        self.view.resize(800, 600)
+        self.view = MainWindow()
         self.view.show()
 
         # connetto
-        self.view.syncWidget.Sg_sync.connect(self.__sync_daemon)
+        self.view.mainWidget.syncWidget.Sg_sync.connect(self.__sync_daemon)
 
-        self.Sg_status.connect(self.view.syncWidget.Sl_status)
+        self.Sg_status.connect(self.view.mainWidget.syncWidget.Sl_status)
 
         self.sync_job = None
 

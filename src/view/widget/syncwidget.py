@@ -1,6 +1,6 @@
+from PySide6.QtCore import Signal, Slot, Qt
 from PySide6.QtWidgets import (QLabel, QPushButton,
                                QVBoxLayout, QWidget)
-from PySide6.QtCore import Signal, Slot, Qt
 
 
 class SyncWidget(QWidget):
@@ -31,7 +31,7 @@ class SyncWidget(QWidget):
 
     """
 
-    # creating the signal
+    # creating Signals
     Sg_sync = Signal(bool)
 
     def __init__(self, parent=None):
@@ -44,11 +44,11 @@ class SyncWidget(QWidget):
         # provvisoria
         self.text = lambda x: "Synchronization is running" if x else "Synchronization is stopped"
 
-        self.label = QLabel(self.text(False))
+        self.label = QLabel(self.text(False), self)
         self.label.setAlignment(Qt.AlignCenter)
 
-        self.runButton = QPushButton("Run")
-        self.stopButton = QPushButton("Stop")
+        self.runButton = QPushButton("Run", self)
+        self.stopButton = QPushButton("Stop", self)
 
         # create layout
         self.layout = QVBoxLayout()
