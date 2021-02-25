@@ -17,7 +17,7 @@ class SettingsWidget(QWidget):
         self.title.setAlignment(Qt.AlignCenter)
 
         self.path_label = QLabel("Path")
-        self.path_edit = QLineEdit(self.settings.value("sync/path"), self)
+        self.path_edit = QLineEdit(self.settings.value("sync_path")[0], self)
 
         # connect
         self.path_edit.textChanged.connect(self.setPath)
@@ -32,6 +32,6 @@ class SettingsWidget(QWidget):
     @Slot()
     def setPath(self):
         new_path = self.path_edit.text()
-        self.settings.setValue("sync/path", new_path)
+        self.settings.setValue("sync_path", new_path)
         self.settings.sync()
         print(f"new sync path {new_path}")  # debug

@@ -18,9 +18,9 @@ class MainWindow(QMainWindow):
         # initialize settings
         self.settings = QSettings(self)
 
-        # settings.setValue("sync/path", None)  # debug
+        # settings.setValue("sync_path", None)  # debug
 
-        if not self.settings.value("sync/path"):
+        if not self.settings.value("sync_path"):
             dialog = QFileDialog(self)
             dialog.setFileMode(QFileDialog.Directory)
             dialog.setViewMode(QFileDialog.Detail)  # provare anche .List
@@ -29,10 +29,10 @@ class MainWindow(QMainWindow):
 
             if dialog.exec_():
                 sync_path = dialog.selectedFiles()
-                self.settings.setValue("sync/path", sync_path)
+                self.settings.setValue("sync_path", sync_path)
                 # self.settings.sync() # save
-        
-        print(self.settings.value("sync/path"))  # debug
+
+        print(self.settings.value("sync_path"))  # debug
 
         # widgets
         self.mainWidget = MainWidget(self)
