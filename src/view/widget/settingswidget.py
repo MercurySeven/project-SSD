@@ -1,5 +1,5 @@
-from PySide6.QtCore import (Signal, Slot, Qt, QSettings)
-from PySide6.QtWidgets import (QLabel, QVBoxLayout, QWidget, QLineEdit)
+from PySide6.QtCore import Slot, Qt, QSettings
+from PySide6.QtWidgets import QLabel, QVBoxLayout, QWidget, QLineEdit
 
 
 class SettingsWidget(QWidget):
@@ -17,7 +17,7 @@ class SettingsWidget(QWidget):
         self.title.setAlignment(Qt.AlignCenter)
 
         self.path_label = QLabel("Path")
-        self.path_edit = QLineEdit(self.settings.value("sync_path")[0], self)
+        self.path_edit = QLineEdit(self.settings.value("sync_path"), self)
 
         # connect
         self.path_edit.textChanged.connect(self.setPath)

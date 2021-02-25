@@ -1,5 +1,4 @@
-from PySide6.QtWidgets import (QLabel, QVBoxLayout, QWidget, QStackedWidget)
-from PySide6.QtCore import Signal, Slot, Qt
+from PySide6.QtWidgets import (QVBoxLayout, QWidget, QStackedWidget)
 
 from view.widget.syncwidget import SyncWidget
 from view.widget.menuwidget import MenuWidget
@@ -9,9 +8,9 @@ from view.widget.settingswidget import SettingsWidget
 
 
 class MainWidget(QWidget):
-    
+
     def __init__(self, parent=None):
-        
+
         super(MainWidget, self).__init__(parent)
 
         # widgets
