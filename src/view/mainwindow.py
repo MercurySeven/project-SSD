@@ -1,5 +1,5 @@
-from PySide6.QtCore import Qt, QSettings
-from PySide6.QtWidgets import QLabel, QVBoxLayout, QMainWindow, QFileDialog
+from PySide6.QtCore import (Qt, QSettings)
+from PySide6.QtWidgets import (QLabel, QVBoxLayout, QMainWindow, QFileDialog)
 
 from view.widget.mainwidget import MainWidget
 

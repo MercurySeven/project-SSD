@@ -1,4 +1,4 @@
-from PySide6.QtCore import Signal, Slot, Qt
+from PySide6.QtCore import (Signal, Slot, Qt)
 from PySide6.QtWidgets import (QLabel, QPushButton,
                                QVBoxLayout, QWidget)
 

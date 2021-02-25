@@ -1,4 +1,4 @@
-from PySide6.QtCore import QObject, Signal, Slot, QCoreApplication
+from PySide6.QtCore import (QObject, Signal, Slot)
 
 from distutils.dir_util import copy_tree
 
@@ -15,10 +15,6 @@ class Controller(QObject):
 
     def __init__(self, parent=None):
         super(Controller, self).__init__(parent)
-
-        # setup QSettings for multiple instances
-        QCoreApplication.setOrganizationName("MercurySeven")
-        QCoreApplication.setApplicationName("SSD")
 
         self.model = Model(Settings['REMOTE'], Settings['LOCAL'])
         self.view = MainWindow()

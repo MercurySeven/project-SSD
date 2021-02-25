@@ -1,5 +1,6 @@
-from PySide6.QtCore import Slot, Qt, QSettings
-from PySide6.QtWidgets import QLabel, QVBoxLayout, QWidget, QLineEdit
+from PySide6.QtCore import (Slot, Qt, QSettings)
+from PySide6.QtWidgets import (
+    QLabel, QVBoxLayout, QWidget, QPushButton, QFileDialog)
 
 
 class SettingsWidget(QWidget):
@@ -16,22 +17,37 @@ class SettingsWidget(QWidget):
         self.title = QLabel("SETTINGS", self)
         self.title.setAlignment(Qt.AlignCenter)
 
-        self.path_label = QLabel("Path")
-        self.path_edit = QLineEdit(self.settings.value("sync_path"), self)
+        self.path_label = QLabel(self)
+        self.updatePathText(self.settings.value("sync_path"))
+        self.changePathButton = QPushButton('Cambia PATH', self)
 
         # connect
-        self.path_edit.textChanged.connect(self.setPath)
+        self.changePathButton.clicked.connect(self.setPath)
 
         # create layout
         layout = QVBoxLayout()
         layout.addWidget(self.title)
         layout.addWidget(self.path_label)
-        layout.addWidget(self.path_edit)
+        layout.addWidget(self.changePathButton)
         self.setLayout(layout)
+
+    def updatePathText(self, new_path: str) -> None:
+        self.path_label.setText(new_path)
 
     @Slot()
     def setPath(self):
-        new_path = self.path_edit.text()
-        self.settings.setValue("sync_path", new_path)
-        self.settings.sync()
-        print(f"new sync path {new_path}")  # debug
+        dialog = QFileDialog(self)
+        dialog.setFileMode(QFileDialog.Directory)
+        dialog.setViewMode(QFileDialog.Detail)  # provare anche .List
+        dialog.setOption(QFileDialog.ShowDirsOnly)
+        dialog.setOption(QFileDialog.DontResolveSymlinks)
+
+        # L'utente non ha selezionato la cartella
+        if dialog.exec_():
+            sync_path = dialog.selectedFiles()
+            if (len(sync_path) == 1):
+                self.settings.setValue("sync_path", sync_path[0])
+                self.updatePathText(self.settings.value("sync_path"))
+                print("Nuova directory impostata: " +
+                      self.settings.value("sync_path"))
+                self.settings.sync()  # save
