@@ -20,7 +20,6 @@ class Watcher(QObject):
         # connect
         self.observer = Observer()
         self.path = path
-        self.sync_job = None
 
     def run(self, watch):
         print("called watchdog")
@@ -28,8 +27,6 @@ class Watcher(QObject):
             if not self.is_running:
                 print("Watchdog già disattivato")
             else:
-                self.sync_job.do_run = False
-                self.sync_job.join()
                 self.observer.unschedule_all()
                 self.observer.stop()
                 print("disattiva watchdog thread")  # debug
@@ -40,12 +37,8 @@ class Watcher(QObject):
             else:
                 print("attiva thread watchdog")  # debug
                 print("Controllo cartella: " + self.path)
-                self.sync_job = threading.Thread(
-                    target=self.background(), args=(Settings['TICK'],))
-                self.sync_job.setDaemon(True)
-                self.sync_job.do_run = True
-                self.sync_job.start()
                 self.is_running = True
+                self.background()
 
     def background(self):
         event_handler = Handler()
