@@ -18,10 +18,11 @@ class MenuWidget(QWidget):
 
         # layout
         vbox = QVBoxLayout()
-        vbox.addStretch(1)
+        vbox.addStretch()
         vbox.addWidget(syncronizedButton)
         vbox.addWidget(diskQuotaButton)
         vbox.addWidget(settingsButton)
+        vbox.addStretch()
         self.setLayout(vbox)
 
     def showSyncronized(self):

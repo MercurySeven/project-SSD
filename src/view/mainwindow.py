@@ -53,4 +53,4 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.mainWidget)
 
         # style
-        self.resize(800, 600)
+        self.resize(1200, 800)
