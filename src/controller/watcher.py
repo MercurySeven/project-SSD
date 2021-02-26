@@ -4,6 +4,8 @@ from PySide6.QtCore import QObject, Signal
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
+import src.model.ssd_settings as ssd_settings
+
 
 class Watcher(QObject):
     Sg_status = Signal(bool)
@@ -38,6 +40,8 @@ class Watcher(QObject):
 
     def background(self):
         event_handler = Handler()
+        # Lo richiamo ogni volta perchè non posso far ripartire lo stesso
+        # thread
         self.observer = Observer()
         self.observer.schedule(event_handler, self.path, recursive=True)
         self.observer.start()
@@ -48,8 +52,22 @@ class Handler(FileSystemEventHandler):
     def on_any_event(event):
         # if event.is_directory:
         #     return None
+
         print(
             "[{}] noticed: [{}] on: [{}] ".format(
                 time.asctime(), event.event_type, event.src_path
             )
         )
+        if event.event_type == "modified" or "created" or "deleted":
+            print("Logging")
+            # first i check if getpath returns a valid pathing
+            path = ssd_settings.getpath()
+            path_is_ok = ssd_settings.validate_path(path, "log.txt")
+            if path_is_ok:
+                path = ssd_settings.setup_path(path + "log.txt")
+                with open(path, "w") as file:
+                    file.write("True")
+                    print("file modified with true")
+                    print(path)
+            else:
+                print("Path not ok")

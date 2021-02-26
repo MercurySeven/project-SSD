@@ -1,7 +1,9 @@
 import sys
-from PySide6.QtWidgets import (QApplication, QFileDialog)
-from PySide6.QtCore import (QCoreApplication, QSettings)
 
+from PySide6.QtCore import (QCoreApplication, QSettings)
+from PySide6.QtWidgets import (QApplication, QFileDialog)
+
+import model.ssd_settings as ssd_settings
 from controller.controller import Controller
 
 if __name__ == "__main__":
@@ -36,7 +38,9 @@ if __name__ == "__main__":
             settings.setValue("sync_path", sync_path[0])
             print("Nuova directory: " + settings.value("sync_path"))
             # settings.sync() # save
-
+    # impostazione della variabile setting, sarebbe da fare ad ogni modifica
+    # del path
+    ssd_settings.setpath(settings.value("sync_path"))
     controller = Controller()
 
     sys.exit(app.exec_())
