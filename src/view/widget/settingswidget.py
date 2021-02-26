@@ -1,6 +1,6 @@
 from PySide6.QtCore import (Slot, Qt, QSettings)
 from PySide6.QtWidgets import (
-    QLabel, QVBoxLayout, QWidget, QPushButton, QFileDialog)
+    QLabel, QVBoxLayout, QWidget, QPushButton, QFileDialog, QRadioButton)
 
 
 class SettingsWidget(QWidget):
@@ -21,14 +21,32 @@ class SettingsWidget(QWidget):
         self.updatePathText(self.settings.value("sync_path"))
         self.changePathButton = QPushButton('Cambia PATH', self)
 
+        self.priorityLabel = QLabel(self)
+        self.priorityLabel.setText(
+            "Seleziona a quale archivio dare la priorità")
+
+        self.radioLocal = QRadioButton("Locale")
+        self.radioLocal.setChecked(True)
+        self.radioLocal.clicked.connect(lambda: self.setPriority(
+            self.radioLocal))
+
+        self.radioRemote = QRadioButton("Remoto")
+        self.radioRemote.clicked.connect(lambda: self.setPriority(
+            self.radioRemote))
+
         # connect
         self.changePathButton.clicked.connect(self.setPath)
 
         # create layout
         layout = QVBoxLayout()
+        layout.addStretch()
         layout.addWidget(self.title)
         layout.addWidget(self.path_label)
         layout.addWidget(self.changePathButton)
+        layout.addWidget(self.priorityLabel)
+        layout.addWidget(self.radioLocal)
+        layout.addWidget(self.radioRemote)
+        layout.addStretch()
         self.setLayout(layout)
 
     def updatePathText(self, new_path: str) -> None:
@@ -51,3 +69,9 @@ class SettingsWidget(QWidget):
                 print("Nuova directory impostata: " +
                       self.settings.value("sync_path"))
                 self.settings.sync()  # save
+
+    def setPriority(self, b):
+        if(b.text() == 'Locale'):
+            print("locale")
+        else:
+            print("remoto")
