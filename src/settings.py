@@ -1,5 +1,5 @@
 Settings = {
     "TICK": 8,
-    "HOST": "localhost",
-    "PORT": 42069
+    "HOST": "20.56.176.12",
+    "PORT": 80
 }
