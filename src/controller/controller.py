@@ -7,6 +7,7 @@ import time
 from settings import Settings
 from view.mainwindow import MainWindow
 from model.model import Model
+from src.controller.watcher import Watcher
 
 
 class Controller(QObject):
@@ -29,6 +30,12 @@ class Controller(QObject):
 
         # return True if dirs content are not equal
         self.is_diff = lambda l1, l2: l1 != l2
+
+        # Attivo il watchdog
+        self.watcher = Watcher(".")
+
+        self.view.mainWidget.watchWidget.Sg_watch.connect(
+            self.watcher.run)
 
     @Slot(bool)
     def __sync_daemon(self, sync):
@@ -58,7 +65,9 @@ class Controller(QObject):
             # debug
             print(f"remote content {list(self.model.remote_content())}")
 
-            if self.is_diff(self.model.local_content(), self.model.remote_content()):
+            if self.is_diff(
+                    self.model.local_content(),
+                    self.model.remote_content()):
 
                 if self.model.local_last_change() > self.model.remote_last_change():
 
