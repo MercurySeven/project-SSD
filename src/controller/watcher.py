@@ -39,6 +39,7 @@ class Watcher(QObject):
                 print("Watchdog già attivato")
             else:
                 print("attiva thread watchdog")  # debug
+                print("Controllo cartella: " + self.path)
                 self.sync_job = threading.Thread(
                     target=self.background(), args=(Settings['TICK'],))
                 self.sync_job.setDaemon(True)

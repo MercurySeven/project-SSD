@@ -1,6 +1,6 @@
 import sys
-from PySide6.QtWidgets import QApplication
-from PySide6.QtCore import QCoreApplication
+from PySide6.QtWidgets import (QApplication, QFileDialog)
+from PySide6.QtCore import (QCoreApplication, QSettings)
 
 from controller.controller import Controller
 
@@ -12,6 +12,30 @@ if __name__ == "__main__":
 
     # start main application
     app = QApplication(sys.argv)
+
+    # initialize settings
+    settings = QSettings()
+
+    # settings.setValue("sync_path", None)  # debug
+
+    # Controlliamo se l'utente ha già settato il PATH della cartella
+    if not settings.value("sync_path"):
+        dialog = QFileDialog()
+        dialog.setFileMode(QFileDialog.Directory)
+        dialog.setViewMode(QFileDialog.Detail)  # provare anche .List
+        dialog.setOption(QFileDialog.ShowDirsOnly)
+        dialog.setOption(QFileDialog.DontResolveSymlinks)
+
+        # L'utente non ha selezionato la cartella
+        if not dialog.exec_():
+            settings.setValue("sync_path", None)
+            sys.exit()
+
+        sync_path = dialog.selectedFiles()
+        if (len(sync_path) == 1):
+            settings.setValue("sync_path", sync_path[0])
+            print("Nuova directory: " + settings.value("sync_path"))
+            # settings.sync() # save
 
     controller = Controller()
 

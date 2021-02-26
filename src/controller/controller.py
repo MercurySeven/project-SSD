@@ -15,7 +15,6 @@ class Controller(QObject):
 
         # Attivo il watchdog nella root definita dall'utente
         self.settings = QSettings(self)
-        # self.watcher = Watcher(self.settings.value("sync_path"))
-        self.watcher = Watcher(".")
+        self.watcher = Watcher(self.settings.value("sync_path"))
 
         self.view.mainWidget.watchWidget.Sg_watch.connect(self.watcher.run)
