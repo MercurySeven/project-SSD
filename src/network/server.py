@@ -9,7 +9,7 @@ class Server:
         self.url: str = Settings["HOST"]
         self.port: int = Settings["PORT"]
 
-        transport = AIOHTTPTransport(url=f"{self.url}/{self.port}/")
+        transport = AIOHTTPTransport(url=f"{self.url}:{self.port}/")
         self.client: Client = Client(transport=transport)
 
     def sendToServer(self, filePath: str, lastUpdate: str) -> None:
@@ -52,3 +52,22 @@ class Server:
             result[items["Nome"]] = items["DataUltimaModifica"]
 
         return result
+
+    def removeFileByName(self, fileName: str) -> None:
+        """Rimuove il file dal cloud"""
+        query = gql('''
+                mutation RemoveFile($fileName: String!) {
+                    removeFile(fileName: $fileName) {
+                        Nome
+                        DataUltimaModifica
+                    }
+                }
+                ''')
+
+        params = {
+            "fileName": fileName
+        }
+
+        result = self.client.execute(query, variable_values=params)
+
+        print(result)
