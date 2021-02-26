@@ -5,7 +5,7 @@ from PySide6.QtCore import Slot, QObject, Signal
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
-from src.settings import Settings
+from settings import Settings
 
 
 class Watcher(QObject):

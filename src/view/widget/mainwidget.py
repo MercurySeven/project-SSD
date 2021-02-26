@@ -1,11 +1,11 @@
 from PySide6.QtWidgets import (QVBoxLayout, QWidget, QStackedWidget)
-from src.view.widget.diskquotawidget import DiskQuotaWidget
-from src.view.widget.syncwidget import SyncWidget
-from src.view.widget.menuwidget import MenuWidget
-from src.view.widget.syncronizedwidget import SyncronizedWidget
-from src.view.widget.settingswidget import SettingsWidget
+from view.widget.diskquotawidget import DiskQuotaWidget
+from view.widget.syncwidget import SyncWidget
+from view.widget.menuwidget import MenuWidget
+from view.widget.syncronizedwidget import SyncronizedWidget
+from view.widget.settingswidget import SettingsWidget
 
-from src.view.widget.watchwidget import WatchWidget
+from view.widget.watchwidget import WatchWidget
 
 
 class MainWidget(QWidget):

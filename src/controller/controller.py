@@ -7,7 +7,7 @@ import time
 from settings import Settings
 from view.mainwindow import MainWindow
 from model.model import Model
-from src.controller.watcher import Watcher
+from controller.watcher import Watcher
 
 
 class Controller(QObject):
