@@ -1,6 +1,5 @@
 from PySide6.QtWidgets import (QVBoxLayout, QWidget, QStackedWidget)
 from view.widget.diskquotawidget import DiskQuotaWidget
-from view.widget.syncwidget import SyncWidget
 from view.widget.menuwidget import MenuWidget
 from view.widget.syncronizedwidget import SyncronizedWidget
 from view.widget.settingswidget import SettingsWidget
@@ -13,10 +12,8 @@ class MainWidget(QWidget):
     def __init__(self, parent=None):
 
         super(MainWidget, self).__init__(parent)
-        # widgets
-        self.syncWidget = SyncWidget(self)
-        self.syncWidget.Sl_status(False)  # set initial status
 
+        # widgets
         self.watchWidget = WatchWidget(self)
 
         self.menuWidget = MenuWidget(self)
@@ -27,14 +24,13 @@ class MainWidget(QWidget):
 
         # stacked
         self.swidget = QStackedWidget()
-        self.swidget.addWidget(self.watchWidget)
         self.swidget.addWidget(self.syncronizedWidget)
         self.swidget.addWidget(self.diskquotaWidget)
         self.swidget.addWidget(self.settingsWidget)
 
         # create layout
         layout = QVBoxLayout()
-        layout.addWidget(self.syncWidget)
+        layout.addWidget(self.watchWidget)
         layout.addWidget(self.menuWidget)
         layout.addWidget(self.swidget)
         self.setLayout(layout)
