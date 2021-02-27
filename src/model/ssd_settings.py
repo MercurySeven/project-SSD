@@ -23,7 +23,7 @@ def getquota():
         full_path = setup_path(path) + file_name
         if validate_path(full_path):
             with open(full_path, "r") as file:
-                if len(file.readlines()) > nSettings:
+                if len(file.readlines()) >= nSettings:
                     # makes pointer look at the beginning of file, readlines
                     # make pointer look at the eof
                     file.seek(0)
@@ -45,7 +45,7 @@ def setquota(quota):
         full_path = setup_path(path) + file_name
         if validate_path(full_path):
             with open(full_path, "r") as file:
-                if len(file.readlines) > nSettings:
+                if len(file.readlines) >= nSettings:
                     file.seek(0)
                     data = file.readLines()
                     file.close()
@@ -72,7 +72,7 @@ def setpath(new_path):
         new_full_path = setup_path(new_path) + file_name
         if old_path is None:
             print(
-                "Il path precedente non è ancora stato impostato, probabilmente prima avvio dell'app")
+                "Il path precedente non è ancora stato impostato, app appena avviata")
             raise FileNotFoundError
         old_full_path = setup_path(old_path) + file_name
         with open(old_full_path, "r") as file:
@@ -80,7 +80,7 @@ def setpath(new_path):
             file.seek(0)
             os.remove(old_full_path)
             with open(new_full_path, "w") as f:
-                if len(file.readlines()) > nSettings:
+                if len(file.readlines()) >= nSettings:
                     file.seek(0)  # pointer look at beginning of file
                     data[0] = new_path
                     f.writelines(data)
@@ -92,19 +92,30 @@ def setpath(new_path):
     except FileNotFoundError:
         # this means that there is no old settings file
         print(" Sono nell'eccezione ")
-        with open(new_full_path, "w") as f:
-            print(new_full_path)
-            print("Ho aperto il nuovo file e ci scrivo dentro")
-            f.write(new_path + "\n")
-            f.write("None \n")  # new lines for other settings
-            f.write("None \n")
-            path = new_path
+        if not validate_path(new_full_path):
+            write_new_settings_file()
+        else:
+            with open(new_full_path, "r") as f:
+                if len(f.readlines()) >= nSettings:
+                    print("file is up to date")
+                else:
+                    write_new_settings_file(new_path)
+        path = new_path
+
     finally:
         print("----------")
         print(path)
         print("----------")
 
-# TODO refresh method done better
+# maybe to a vector of strings to write
+
+
+def write_new_settings_file(new_path, quota="None"):
+    with open(new_path, "w") as f:
+        print(new_path)
+        print("Ho aperto il nuovo file e ci scrivo dentro")
+        f.write(new_path + "\n")
+        f.write(quota + "\n")
 
 
 def validate_path(path_to_validate, extra_to_attach=""):
