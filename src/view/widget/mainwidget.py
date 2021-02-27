@@ -7,7 +7,7 @@ from view.widget.settingswidget import SettingsWidget
 
 from view.widget.watchwidget import WatchWidget
 
-from view.widget.stylesheets.qssManager import setQss
+import re
 
 
 class MainWidget(QWidget):
@@ -46,7 +46,6 @@ class MainWidget(QWidget):
         self.setLayout(self.mainGrid)
 
         # stylesheet
-        setQss("main.qss", self)
-
         for i in self.findChildren(QWidget, ):
-            setQss("menu.qss", i)
+            if(re.findall("view.widget", str(i))):
+                i.setAttribute(QtCore.Qt.WA_StyledBackground, True)

@@ -14,6 +14,8 @@ class SettingsWidget(QWidget):
         # environment variables
         self.settings = QSettings(self)
 
+        self.setObjectName('Settings')
+
         self.title = QLabel("SETTINGS", self)
         self.title.setAlignment(Qt.AlignCenter)
 

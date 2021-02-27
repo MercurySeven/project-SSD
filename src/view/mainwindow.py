@@ -2,6 +2,8 @@ from PySide6.QtWidgets import (QVBoxLayout, QMainWindow)
 
 from view.widget.mainwidget import MainWidget
 
+from view.widget.stylesheets.qssManager import setQss
+
 
 class MainWindow(QMainWindow):
     """This is the main view class"""
@@ -24,3 +26,5 @@ class MainWindow(QMainWindow):
 
         # style
         self.resize(1200, 800)
+
+        setQss("style.qss", self)
