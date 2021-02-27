@@ -23,8 +23,11 @@ def getquota():
         full_path = setup_path(path) + file_name
         if validate_path(full_path):
             with open(full_path, "r") as file:
-                if len(file > nSettings):
-                    data = file.readLines()
+                if len(file.readlines()) > nSettings:
+                    # makes pointer look at the beginning of file, readlines
+                    # make pointer look at the eof
+                    file.seek(0)
+                    data = file.readlines()
                     if data[1] == "None":
                         return False
                     else:
@@ -42,7 +45,8 @@ def setquota(quota):
         full_path = setup_path(path) + file_name
         if validate_path(full_path):
             with open(full_path, "r") as file:
-                if len(file) > nSettings:
+                if len(file.readlines) > nSettings:
+                    file.seek(0)
                     data = file.readLines()
                     file.close()
                     with open(full_path, "w") as f:
@@ -73,9 +77,11 @@ def setpath(new_path):
         old_full_path = setup_path(old_path) + file_name
         with open(old_full_path, "r") as file:
             data = file.readlines()
+            file.seek(0)
             os.remove(old_full_path)
             with open(new_full_path, "w") as f:
-                if len(file) > nSettings:
+                if len(file.readlines()) > nSettings:
+                    file.seek(0)  # pointer look at beginning of file
                     data[0] = new_path
                     f.writelines(data)
                     path = new_path
@@ -99,13 +105,6 @@ def setpath(new_path):
         print("----------")
 
 # TODO refresh method done better
-
-
-def refresh_path(self):
-    file = open(self.path + "/" "settings.mer", "r")
-    data = file.readlines()
-    self.path = data[0]
-    file.close()
 
 
 def validate_path(path_to_validate, extra_to_attach=""):
