@@ -31,11 +31,13 @@ class WatchWidget(QWidget):
 
         self.watch_label = QLabel(self)
         self.watch_label.setAlignment(Qt.AlignCenter)
-        self.watch_label.setText("STATO SYNC")
+        self.watch_label.setText("SYNC")
+        self.watch_label.setAccessibleName('Title')
 
         self.running_label = QLabel(self)
         self.running_label.setAlignment(Qt.AlignCenter)
         self.running_label.setText("disattivata")
+        self.running_label.setAccessibleName('Subtitle')
 
         self.runButton = QPushButton("Run", self)
         self.stopButton = QPushButton("Stop", self)

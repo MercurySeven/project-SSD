@@ -19,12 +19,23 @@ QWidget[accessibleName='Stacked'] >  QWidget > QPushButton{
 QWidget[accessibleName='Stacked'] >  QWidget > QPushButton:hover{
     background-color: #404040;
 }
+/* 
+Stile Label
+*/
+QLabel[accessibleName='Title']{
+    font-size: 30px;
+    margin-bottom: 0px;
+    font-weight: bold;
 
+}
+QLabel[accessibleName='Subtitle']{
+    font-weight: bold;
+}
 
 QWidget > QPushButton{
     background-color: #4B4B4B;
     margin:5px;
-    border:0px solid black;
+    border:0px;
     border-radius: 6px;
     color: rgb(190, 190, 190);
     padding: 5px;

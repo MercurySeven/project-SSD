@@ -1,6 +1,6 @@
 from PySide6.QtCore import (Slot, Qt, QSettings)
 from PySide6.QtWidgets import (
-    QLabel, QVBoxLayout, QWidget, QPushButton, QFileDialog, QRadioButton)
+    QLabel, QVBoxLayout, QHBoxLayout, QWidget, QPushButton, QFileDialog, QRadioButton)
 
 
 class SettingsWidget(QWidget):
@@ -16,16 +16,27 @@ class SettingsWidget(QWidget):
 
         self.setObjectName('Settings')
 
+        # Titolo
         self.title = QLabel("SETTINGS", self)
-        self.title.setAlignment(Qt.AlignCenter)
+        self.title.setAlignment(Qt.AlignLeft)
+        self.title.setAccessibleName('Title')
+
+        # Impostazioni path
+        self.titoloPath = QLabel(self)
+        self.titoloPath.setText("Cartella da sincronizzare")
+        self.titoloPath.setAccessibleName('Subtitle')
 
         self.path_label = QLabel(self)
         self.updatePathText(self.settings.value("sync_path"))
-        self.changePathButton = QPushButton('Cambia PATH', self)
 
+        self.changePathButton = QPushButton('Cambia PATH', self)
+        self.changePathButton.setMaximumWidth(150)
+
+        # Impostazioni Priorità
         self.priorityLabel = QLabel(self)
         self.priorityLabel.setText(
             "Seleziona a quale archivio dare la priorità")
+        self.priorityLabel.setAccessibleName('Subtitle')
 
         self.radioLocal = QRadioButton("Locale")
         self.radioLocal.setChecked(True)
@@ -40,14 +51,22 @@ class SettingsWidget(QWidget):
         self.changePathButton.clicked.connect(self.setPath)
 
         # create layout
+        pathLayout = QHBoxLayout()
+        pathLayout.setAlignment(Qt.AlignLeft)
+        pathLayout.addWidget(self.path_label)
+        pathLayout.addWidget(self.changePathButton)
+
+        radioLayout = QHBoxLayout()
+        radioLayout.setAlignment(Qt.AlignLeft)
+        radioLayout.addWidget(self.radioLocal)
+        radioLayout.addWidget(self.radioRemote)
+
         layout = QVBoxLayout()
-        layout.addStretch()
         layout.addWidget(self.title)
-        layout.addWidget(self.path_label)
-        layout.addWidget(self.changePathButton)
+        layout.addWidget(self.titoloPath)
+        layout.addLayout(pathLayout)
         layout.addWidget(self.priorityLabel)
-        layout.addWidget(self.radioLocal)
-        layout.addWidget(self.radioRemote)
+        layout.addLayout(radioLayout)
         layout.addStretch()
         self.setLayout(layout)
 
