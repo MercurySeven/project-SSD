@@ -91,15 +91,22 @@ def setpath(new_path):
                         f.write("None \n")  # new lines for other settings
     except FileNotFoundError:
         # this means that there is no old settings file
-        print(" Sono nell'eccezione ")
+        print(" Sono al primo avvio dall'accensione dell'app ")
         if not validate_path(new_full_path):
-            write_new_settings_file()
+            # Non esiste nemmeno un file nel nuovo path indicato quindi devo crearne uno nuovo
+            # Questo dovrebbe capitare solo al primo avvio o quando uno
+            # cancella le impostazioni
+            write_new_settings_file([new_full_path, new_path, "None"])
         else:
             with open(new_full_path, "r") as f:
                 if len(f.readlines()) >= nSettings:
+                    # Il nuovo path ha il file up to date, non ha bisogno di
+                    # essere sistemato
                     print("file is up to date")
                 else:
-                    write_new_settings_file(new_path)
+                    # Il nuovo path ha il file con alcuni elementi mancanti,
+                    # strano, file corrotto?
+                    write_new_settings_file([new_full_path, new_path, "None"])
         path = new_path
 
     finally:
@@ -110,12 +117,22 @@ def setpath(new_path):
 # maybe to a vector of strings to write
 
 
-def write_new_settings_file(new_path, quota="None"):
-    with open(new_path, "w") as f:
-        print(new_path)
-        print("Ho aperto il nuovo file e ci scrivo dentro")
-        f.write(new_path + "\n")
-        f.write(quota + "\n")
+def write_new_settings_file(data):
+    # data in 1 = path, 2 = quota etc
+    # data in 0 is the full path for the setting file
+    try:
+        iter(data)
+        if isinstance(data, str):
+            raise ValueError
+    except TypeError:
+        return ValueError
+    else:
+        with open(data[0], "w") as f:
+            data.pop(0)  # rimuovo il path al file, non mi serve più
+            print("Ho aperto il nuovo file e ci scrivo dentro")
+            for setting in data:
+                print(setting)
+                f.write(setting + "\n")
 
 
 def validate_path(path_to_validate, extra_to_attach=""):
