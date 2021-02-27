@@ -1,5 +1,4 @@
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import (QLabel, QVBoxLayout, QMainWindow)
+from PySide6.QtWidgets import (QVBoxLayout, QMainWindow)
 
 from view.widget.mainwidget import MainWidget
 
@@ -11,15 +10,12 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
 
         self.setWindowTitle("SSD: Zextras Drive Desktop")
-        self.label = QLabel("MainWindow", self)
-        self.label.setAlignment(Qt.AlignCenter)
 
         # widgets
         self.mainWidget = MainWidget(self)
 
         # create layout
         layout = QVBoxLayout()
-        layout.addWidget(self.label)
         layout.addWidget(self.mainWidget)
         self.setLayout(layout)
 

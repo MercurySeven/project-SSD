@@ -41,6 +41,7 @@ class WatchWidget(QWidget):
 
         # create layout
         self.layout = QVBoxLayout()
+        self.layout.addWidget(self.running_label)
         self.layout.addWidget(self.runButton)
         self.layout.addWidget(self.stopButton)
         self.setLayout(self.layout)
@@ -52,9 +53,11 @@ class WatchWidget(QWidget):
     @Slot()
     def __run_watch(self):
         print("called SyncWidget.__run -> emit watch(True)")  # debug
+        self.running_label.setText("Sync attivata")
         self.Sg_watch.emit(True)
 
     @Slot()
     def __stop_watch(self):
         print("called watchWidget.__stop -> emit watch(False)")  # debug
+        self.running_label.setText("Sync disattivata")
         self.Sg_watch.emit(False)
