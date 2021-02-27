@@ -7,17 +7,22 @@ from view.widget.settingswidget import SettingsWidget
 
 from view.widget.watchwidget import WatchWidget
 
+from view.widget.stylesheets.qssManager import setQss
+
 
 class MainWidget(QWidget):
 
     def __init__(self, parent=None):
 
         super(MainWidget, self).__init__(parent)
-        #layouts
+        # layouts
         # Grid di struttura dell'applicazione
         self.mainGrid = QGridLayout(self)
         # finestra centrale in cui compariranno le opzioni selezionate
         self.centerWindow = QVBoxLayout(self)
+        # stylesheet
+        setQss("main.qss", self)
+
         # widgets
         self.watchWidget = WatchWidget(self)
 

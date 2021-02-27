@@ -4,7 +4,7 @@ from PySide6.QtCore import QObject, Signal
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
-import src.model.ssd_settings as ssd_settings
+import model.ssd_settings as ssd_settings
 
 
 class Watcher(QObject):

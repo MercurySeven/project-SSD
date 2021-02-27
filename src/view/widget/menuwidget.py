@@ -1,4 +1,5 @@
 from PySide6.QtWidgets import (QPushButton, QVBoxLayout, QWidget)
+from view.widget.stylesheets.qssManager import setQss
 
 
 class MenuWidget(QWidget):
@@ -18,12 +19,14 @@ class MenuWidget(QWidget):
 
         # layout
         vbox = QVBoxLayout()
-        vbox.addStretch()
         vbox.addWidget(syncronizedButton)
         vbox.addWidget(diskQuotaButton)
         vbox.addWidget(settingsButton)
         vbox.addStretch()
         self.setLayout(vbox)
+
+        # stylesheet
+        setQss('menu.qss', self)
 
     def showSyncronized(self):
         self.parent().swidget.setCurrentWidget(self.parent().syncronizedWidget)

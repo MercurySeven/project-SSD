@@ -2,6 +2,8 @@ from PySide6.QtCore import (Slot, Qt, QSettings)
 from PySide6.QtWidgets import (
     QLabel, QVBoxLayout, QWidget, QPushButton, QFileDialog, QRadioButton)
 
+from view.widget.stylesheets.qssManager import setQss
+
 
 class SettingsWidget(QWidget):
 
@@ -10,6 +12,9 @@ class SettingsWidget(QWidget):
 
     def __init__(self, parent=None):
         super(SettingsWidget, self).__init__(parent)
+
+        # stylesheet
+        setQss("menu.qss", self)
 
         # environment variables
         self.settings = QSettings(self)
