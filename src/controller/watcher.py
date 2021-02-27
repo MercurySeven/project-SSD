@@ -12,11 +12,14 @@ class Watcher:
     def __init__(self, path):
 
         # connect
+        # could be deleted, for now it's just to avoid Exceptions when turning
+        # off
         self.observer = Observer()
         self.path = path
 
     def run(self, watch):
         print("called watchdog")
+        self.path = ssd_settings.getpath()
         if not watch:
             if not self.is_running:
                 print("Watchdog già disattivato")
@@ -42,6 +45,10 @@ class Watcher:
         self.observer = Observer()
         self.observer.schedule(event_handler, self.path, recursive=True)
         self.observer.start()
+
+    def reboot(self):
+        self.run(self, False)
+        self.run(self, True)
 
 
 class MyHandler(PatternMatchingEventHandler):
