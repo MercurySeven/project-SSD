@@ -2,7 +2,7 @@ from PySide6.QtWidgets import (QVBoxLayout, QMainWindow)
 
 from view.widget.mainwidget import MainWidget
 
-from view.widget.stylesheets.qssManager import setQss
+from view.stylesheets.qssManager import setQss
 
 
 class MainWindow(QMainWindow):
