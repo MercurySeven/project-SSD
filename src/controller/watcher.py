@@ -1,19 +1,18 @@
 import time
 
-from PySide6.QtCore import QObject, Signal
+from PySide6.QtCore import Signal
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 import model.ssd_settings as ssd_settings
 
 
-class Watcher(QObject):
+class Watcher:
     Sg_status = Signal(bool)
     is_running = False
 
-    def __init__(self, path, parent=None):
+    def __init__(self, path):
 
-        super(Watcher, self).__init__(parent)
         # connect
         self.observer = Observer()
         self.path = path
