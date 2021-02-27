@@ -42,7 +42,7 @@ def setquota(quota):
         full_path = setup_path(path) + file_name
         if validate_path(full_path):
             with open(full_path, "r") as file:
-                if len(file > nSettings):
+                if len(file) > nSettings:
                     data = file.readLines()
                     file.close()
                     with open(full_path, "w") as f:
