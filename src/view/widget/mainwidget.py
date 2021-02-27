@@ -18,8 +18,10 @@ class MainWidget(QWidget):
         # layouts
         # Grid di struttura dell'applicazione
         self.mainGrid = QGridLayout(self)
+        self.mainGrid.setContentsMargins(0, 0, 0, 0)
         # finestra centrale in cui compariranno le opzioni selezionate
         self.centerWindow = QVBoxLayout(self)
+        self.centerWindow.setSpacing(0)
 
         # widgets
         self.watchWidget = WatchWidget(self)
@@ -32,6 +34,7 @@ class MainWidget(QWidget):
 
         # stacked
         self.swidget = QStackedWidget()
+        self.swidget.setAccessibleName("Stacked")
         self.swidget.addWidget(self.syncronizedWidget)
         self.swidget.addWidget(self.diskquotaWidget)
         self.swidget.addWidget(self.settingsWidget)
@@ -40,6 +43,7 @@ class MainWidget(QWidget):
         layout = QVBoxLayout(self)
         layout.addWidget(self.watchWidget)
         layout.addWidget(self.menuWidget)
+        layout.setSpacing(0)
         self.centerWindow.addWidget(self.swidget)
         self.mainGrid.addLayout(layout, 0, 0, 1, 2)
         self.mainGrid.addLayout(self.centerWindow, 0, 2, 0, 4)
