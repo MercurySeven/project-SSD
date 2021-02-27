@@ -8,7 +8,6 @@ file_name = "settings.mer"
 
 
 def getpath():
-    global path
     return path
 
 
@@ -49,6 +48,11 @@ def setpath(new_path):
             f.write(new_path + "\n")
             f.write("None \n")  # new lines for other settings
             f.write("None \n")
+            path = new_path
+    finally:
+        print("----------")
+        print(path)
+        print("----------")
 
 # TODO refresh method done better
 
