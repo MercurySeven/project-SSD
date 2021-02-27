@@ -5,10 +5,54 @@ import os
 
 path = None
 file_name = "settings.mer"
+nSettings = 2
 
 
 def getpath():
     return path
+
+# returns false if quota is not set, otherwise raise FileNotFoundError if
+# it cannot find the settings.mer and if all goes well it returns the
+# quota
+
+
+def getquota():
+    if path is None:
+        raise FileNotFoundError
+    else:
+        full_path = setup_path(path) + file_name
+        if validate_path(full_path):
+            with open(full_path, "r") as file:
+                if len(file > nSettings):
+                    data = file.readLines()
+                    if data[1] == "None":
+                        return False
+                    else:
+                        return data[1]
+                else:
+                    return False
+        else:
+            raise FileNotFoundError
+
+
+def setquota(quota):
+    if path is None:
+        raise FileNotFoundError
+    else:
+        full_path = setup_path(path) + file_name
+        if validate_path(full_path):
+            with open(full_path, "r") as file:
+                if len(file > nSettings):
+                    data = file.readLines()
+                    file.close()
+                    with open(full_path, "w") as f:
+                        data[1] = quota
+                        f.writelines(data)
+                else:
+                    return False
+
+        else:
+            raise FileNotFoundError
 
 
 def setpath(new_path):
@@ -31,14 +75,14 @@ def setpath(new_path):
             data = file.readlines()
             os.remove(old_full_path)
             with open(new_full_path, "w") as f:
-                if len(file) > 3:
+                if len(file) > nSettings:
                     data[0] = new_path
                     f.writelines(data)
                     path = new_path
                 else:
                     f.write(new_path + "\n")
-                    f.write("None \n")  # new lines for other settings
-                    f.write("None \n")
+                    for i in range(nSettings):
+                        f.write("None \n")  # new lines for other settings
     except FileNotFoundError:
         # this means that there is no old settings file
         print(" Sono nell'eccezione ")
@@ -69,10 +113,12 @@ def validate_path(path_to_validate, extra_to_attach=""):
     # None raises an exception, now i can firstly check if path is None and
     # then add them
     if path_to_validate is not None:
-        with open(path_to_validate + extra_to_attach, "r"):
-            return True
-        return False
-
+        try:
+            with open(path_to_validate + extra_to_attach, "r"):
+                return True
+        except OSError:
+            print("Errore lettura file")
+            return False
     else:
         print("Path = none")
         return False
