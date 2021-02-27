@@ -20,8 +20,6 @@ class MainWidget(QWidget):
         self.mainGrid = QGridLayout(self)
         # finestra centrale in cui compariranno le opzioni selezionate
         self.centerWindow = QVBoxLayout(self)
-        # stylesheet
-        setQss("main.qss", self)
 
         # widgets
         self.watchWidget = WatchWidget(self)
@@ -46,3 +44,9 @@ class MainWidget(QWidget):
         self.mainGrid.addLayout(layout, 0, 0, 1, 2)
         self.mainGrid.addLayout(self.centerWindow, 0, 2, 0, 4)
         self.setLayout(self.mainGrid)
+
+        # stylesheet
+        setQss("main.qss", self)
+
+        for i in self.findChildren(QWidget, ):
+            setQss("menu.qss", i)

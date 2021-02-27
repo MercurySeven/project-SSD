@@ -1,7 +1,6 @@
 from PySide6.QtCore import Signal, Slot
 from PySide6.QtWidgets import (QPushButton, QLabel,
                                QVBoxLayout, QWidget)
-from view.widget.stylesheets.qssManager import setQss
 
 
 class WatchWidget(QWidget):
@@ -29,9 +28,6 @@ class WatchWidget(QWidget):
 
     def __init__(self, parent=None):
         super(WatchWidget, self).__init__(parent)
-
-        # stylesheet
-        setQss("watch.qss", self)
 
         self.running_label = QLabel(self)
         self.running_label.setText("Sync disattivata")
