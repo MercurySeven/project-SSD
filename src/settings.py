@@ -72,7 +72,7 @@ class Settings:
 
         return address + ":" + port + "/"
 
-    def get_quota_disco(self, default_value=True):
+    def get_quota_disco(self, default_value=True) -> str:
         """Restituisce la quota disco"""
         try:
             value = self.get_config("General", "quota")
@@ -84,7 +84,7 @@ class Settings:
         except ValueError:
             print("Il valore di quota disco non è int")
             self.update_config("General", "quota", "1000")
-            return 1000
+            return "1000"
 
     def update_config(self, section: str, config: str, value: str) -> None:
         """Aggiunge o aggiorna una config"""
