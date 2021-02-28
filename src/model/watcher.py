@@ -64,6 +64,7 @@ class MyHandler(PatternMatchingEventHandler):
                 "*/settings.mer"])
 
     def log_event(self):
+        ssd_settings.setquota(100)
         event = self.currentEvent
         print("Logging")
         # first i check if getpath returns a valid pathing

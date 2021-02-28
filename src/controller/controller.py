@@ -2,7 +2,7 @@ from PySide6.QtCore import (QObject, QSettings)
 
 
 from view.mainwindow import MainWindow
-from controller.watcher import Watcher
+from model.watcher import Watcher
 
 
 class Controller(QObject):
