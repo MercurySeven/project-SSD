@@ -1,6 +1,7 @@
 from PySide6.QtCore import (Slot, Qt, QSettings)
 from PySide6.QtWidgets import (
-    QLabel, QVBoxLayout, QHBoxLayout, QWidget, QPushButton, QFileDialog, QRadioButton)
+    QLabel, QVBoxLayout, QHBoxLayout, QWidget, QPushButton,
+    QFileDialog, QRadioButton)
 import model.ssd_settings as ssd_settings
 
 

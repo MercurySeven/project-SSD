@@ -1,6 +1,5 @@
 from PySide6.QtWidgets import (QVBoxLayout, QMainWindow)
 from PySide6.QtGui import (QIcon)
-from PySide6.QtCore import QSize
 
 from view.widget.mainwidget import MainWidget
 
