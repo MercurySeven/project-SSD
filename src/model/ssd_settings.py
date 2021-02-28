@@ -1,11 +1,13 @@
 import os
-
-# class SsdSettings:
-# my module
+import json
 
 path = None
-file_name = "settings.mer"
-nSettings = 2
+config_path = os.path.dirname(os.path.realpath(__file__)) + "/settings.mer"
+
+settings_list = ['path', 'quota']
+n_settings = len(settings_list)
+
+# TODO: check if json is in fact a json
 
 
 def getpath():
@@ -18,14 +20,12 @@ def getpath():
 
 def getquota() -> int:
     if path is None:
-        raise FileNotFoundError("path is set to None, cannot search for settings file")
+        raise FileNotFoundError(
+            "path is set to None, cannot search for settings file")
     else:
-        full_path = setup_path(path) + file_name
-        if is_path_valid(full_path):
-            with open(full_path, "r") as file:
-                if len(file.readlines()) >= nSettings:
-                    # makes pointer look at the beginning of file, readlines
-                    # make pointer look at the eof
+        if is_path_valid(config_path):
+            with open(config_path, "r") as file:
+                if len(file.readlines()) >= n_settings:
                     file.seek(0)
                     data = file.readlines()
                     if data[1] == "None":
@@ -35,116 +35,65 @@ def getquota() -> int:
                 else:
                     return False
         else:
-            raise FileNotFoundError("Cannot find files in the following path" + full_path)
+            raise FileNotFoundError(
+                "Cannot find files in the following path" + config_path)
 
 
 def setquota(quota: int) -> bool:
     int(quota)  # può lanciare ValueError
-    if path is None:
+    if config_path is None:
         raise FileNotFoundError(
-            "Root path is not set, cannot search for setting file")
+            "config path is not set, cannot search for setting file")
     else:
-        full_path = setup_path(path) + file_name
-        if is_path_valid(full_path):
-            with open(full_path, "r") as file:
-                if len(file.readlines()) >= nSettings:
-                    file.seek(0)
-                    data = file.readlines()
-                    file.close()
-                    with open(full_path, "w") as f:
-                        data[1] = quota
-                        for obj in data:
-                            f.write(str(obj))
+        print()
+        if is_path_valid(config_path):
+            with open(config_path, "r") as file:
+                data = json.load(file)
+                if len(data['settings'][0]) >= n_settings:
+                    with open(config_path, "w") as output:
+                        for obj in data['settings']:
+                            obj['quota'] = quota
+                        json.dump(data, output)
                         return True
                 else:
                     raise EOFError(
-                        "File is not in the correct format, it does "
-                        "not contain at least" + nSettings + "lines")
+                        "File is corrupted, it does "
+                        "not contain at least" + n_settings + "lines")
 
         else:
             raise FileNotFoundError(
-                "Root path is set but setting file cannot be found or opened")
+                "config path is set but setting file cannot be found or opened")
 
     return False
 
 
 def setpath(new_path: str):
-    global path  # God help me, used for the scope, long comment incoming to explain
-    # in python module variable are global and can be read from wherever inside the module
-    # but cannot be modified, doing global path and then assign
-    # is a way to do it, even if risky
-    old_path = path
-    # with is used to properly close file at the end of code block even in
-    # case of exceptions
-    try:
-        # preparo la stringa per il pathing nuovo e vecchio
-        new_full_path = setup_path(new_path) + file_name
-        if old_path is None:
-            raise FileNotFoundError("Previous path not set, app just started")
-        old_full_path = setup_path(old_path) + file_name
-        with open(old_full_path, "r") as file:
-            data = file.readlines()
-            file.seek(0)
-            os.remove(old_full_path)
-            with open(new_full_path, "w") as f:
-                if len(file.readlines()) >= nSettings:
-                    file.seek(0)  # pointer look at beginning of file
-                    data[0] = new_path
-                    f.writelines(data)
-                    path = new_path
-                else:
-                    f.write(new_path + "\n")
-                    for i in range(nSettings):
-                        f.write("None \n")  # new lines for other settings
-    except FileNotFoundError as x:
-        # this means that there is no old settings file
-        print(x.strerror)
-        if not is_path_valid(new_full_path):
-            # Non esiste nemmeno un file nel nuovo path indicato quindi devo crearne uno nuovo
-            # Questo dovrebbe capitare solo al primo avvio o quando uno
-            # cancella le impostazioni
-            write_new_settings_file([new_full_path, new_path, "None"])
-        else:
-            with open(new_full_path, "r") as f:
-                if len(f.readlines()) >= nSettings:
-                    # Il nuovo path ha il file up to date, non ha bisogno di
-                    # essere sistemato
-                    print("file is up to date")
-                else:
-                    # Il nuovo path ha il file con alcuni elementi mancanti,
-                    # strano, file corrotto?
-                    write_new_settings_file([new_full_path, new_path, "None"])
-        path = new_path
-
-    finally:
-        print("----------")
-        print(path)
-        print("----------")
-
-# maybe to a vector of strings to write
+    global path
+    path = new_path
 
 
 def write_new_settings_file(data: iter):
-    # data in 1 = path, 2 = quota etc
+    # data in 1 = x, 2 = y etc
     # data in 0 is the full path for the setting file
     try:
         iter(data)
         if isinstance(data, str):
             raise ValueError(
                 "Wrong argument, passed a string when needed a list/vector of data")
-        elif len(data < nSettings):
+        elif len(data < n_settings):
             raise ValueError(
-                "Passed a vector with less than " + nSettings + "values")
+                "Passed a vector with less than " + n_settings + "values")
     except TypeError:
         return ValueError(
             "Wrong argument, passed" + type(data) + "when needed a list/vector of data")
     else:
-        with open(data[0], "w") as f:
-            data.pop(0)  # rimuovo il path al file, non mi serve più
+        with open(data[0], "w") as outfile:
             print("Ho aperto il nuovo file e ci scrivo dentro")
-            for setting in data:
-                print(setting)
-                f.write(setting + "\n")
+            data.pop(0)  # rimuovo il path al file, non mi serve più
+            jsonfile = {'settings': []}
+            diz = create_settings_dict()
+            jsonfile['settings'].append(diz)
+            json.dump(jsonfile, outfile)
 
 
 def is_path_valid(path_to_validate: str, extra_to_attach: str = "") -> bool:
@@ -166,7 +115,6 @@ def is_path_valid(path_to_validate: str, extra_to_attach: str = "") -> bool:
 
 
 def setup_path(path_to_fix: str) -> str:
-
     if not isinstance(path_to_fix, str):
         raise TypeError(
             "Passato un oggetto che non è una stringa come path")
@@ -175,3 +123,25 @@ def setup_path(path_to_fix: str) -> str:
             return path_to_fix + "/"
         else:
             return path_to_fix
+
+
+def get_all_settings_values():
+    settings_value = []
+    with open(path, "r") as json_file:
+        data = json.load(json_file)
+
+        # prende gli elementi innestati dentro a settings
+        for obj in data['settings']:
+            settings_value.append(obj)
+        # while diff length between two vector add "None" to get vector
+        while len(settings_value) < len(settings_list):
+            settings_value.append("None")
+        return settings_value
+
+
+def create_settings_dict():
+    try:
+        settings_value = get_all_settings_values()
+    except IOError:
+        settings_value = ['None'] * n_settings
+    return dict(zip(settings_list, zip(settings_value)))
