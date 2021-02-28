@@ -19,7 +19,7 @@ def getpath():
 # quota
 
 
-def getquota(byte_result: True):
+def getquota(byte_result= True):
     if path is None:
         raise FileNotFoundError(
             "path is set to None, cannot search for settings file")
@@ -160,3 +160,7 @@ def convert_size(size_bytes):
     p = math.pow(1024, i)
     s = round(size_bytes / p, 2)
     return "%s %s" % (s, size_name[i])
+
+
+def getsettingspath():
+    return os.path.dirname(os.path.realpath(__file__))
