@@ -16,12 +16,12 @@ def getpath():
 # quota
 
 
-def getquota():
+def getquota() -> int:
     if path is None:
-        raise FileNotFoundError
+        raise FileNotFoundError("path is set to None, cannot search for settings file")
     else:
         full_path = setup_path(path) + file_name
-        if validate_path(full_path):
+        if is_path_valid(full_path):
             with open(full_path, "r") as file:
                 if len(file.readlines()) >= nSettings:
                     # makes pointer look at the beginning of file, readlines
@@ -31,21 +31,21 @@ def getquota():
                     if data[1] == "None":
                         return False
                     else:
-                        return data[1]
+                        return int(data[1])
                 else:
                     return False
         else:
-            raise FileNotFoundError
+            raise FileNotFoundError("Cannot find files in the following path" + full_path)
 
 
-def setquota(quota):
-    if quota:
-        print("ciao")
+def setquota(quota: int) -> bool:
+    int(quota)  # può lanciare ValueError
     if path is None:
-        raise FileNotFoundError
+        raise FileNotFoundError(
+            "Root path is not set, cannot search for setting file")
     else:
         full_path = setup_path(path) + file_name
-        if validate_path(full_path):
+        if is_path_valid(full_path):
             with open(full_path, "r") as file:
                 if len(file.readlines()) >= nSettings:
                     file.seek(0)
@@ -55,14 +55,20 @@ def setquota(quota):
                         data[1] = quota
                         for obj in data:
                             f.write(str(obj))
+                        return True
                 else:
-                    return False
+                    raise EOFError(
+                        "File is not in the correct format, it does "
+                        "not contain at least" + nSettings + "lines")
 
         else:
-            raise FileNotFoundError
+            raise FileNotFoundError(
+                "Root path is set but setting file cannot be found or opened")
+
+    return False
 
 
-def setpath(new_path):
+def setpath(new_path: str):
     global path  # God help me, used for the scope, long comment incoming to explain
     # in python module variable are global and can be read from wherever inside the module
     # but cannot be modified, doing global path and then assign
@@ -74,9 +80,7 @@ def setpath(new_path):
         # preparo la stringa per il pathing nuovo e vecchio
         new_full_path = setup_path(new_path) + file_name
         if old_path is None:
-            print(
-                "Il path precedente non è ancora stato impostato, app appena avviata")
-            raise FileNotFoundError
+            raise FileNotFoundError("Previous path not set, app just started")
         old_full_path = setup_path(old_path) + file_name
         with open(old_full_path, "r") as file:
             data = file.readlines()
@@ -92,10 +96,10 @@ def setpath(new_path):
                     f.write(new_path + "\n")
                     for i in range(nSettings):
                         f.write("None \n")  # new lines for other settings
-    except FileNotFoundError:
+    except FileNotFoundError as x:
         # this means that there is no old settings file
-        print(" Sono al primo avvio dall'accensione dell'app ")
-        if not validate_path(new_full_path):
+        print(x.strerror)
+        if not is_path_valid(new_full_path):
             # Non esiste nemmeno un file nel nuovo path indicato quindi devo crearne uno nuovo
             # Questo dovrebbe capitare solo al primo avvio o quando uno
             # cancella le impostazioni
@@ -120,15 +124,20 @@ def setpath(new_path):
 # maybe to a vector of strings to write
 
 
-def write_new_settings_file(data):
+def write_new_settings_file(data: iter):
     # data in 1 = path, 2 = quota etc
     # data in 0 is the full path for the setting file
     try:
         iter(data)
         if isinstance(data, str):
-            raise ValueError
+            raise ValueError(
+                "Wrong argument, passed a string when needed a list/vector of data")
+        elif len(data < nSettings):
+            raise ValueError(
+                "Passed a vector with less than " + nSettings + "values")
     except TypeError:
-        return ValueError
+        return ValueError(
+            "Wrong argument, passed" + type(data) + "when needed a list/vector of data")
     else:
         with open(data[0], "w") as f:
             data.pop(0)  # rimuovo il path al file, non mi serve più
@@ -138,7 +147,7 @@ def write_new_settings_file(data):
                 f.write(setting + "\n")
 
 
-def validate_path(path_to_validate, extra_to_attach=""):
+def is_path_valid(path_to_validate: str, extra_to_attach: str = "") -> bool:
     # i use two arguments because if i have to do path + filename and path is
     # None raises an exception, now i can firstly check if path is None and
     # then add them
@@ -156,11 +165,11 @@ def validate_path(path_to_validate, extra_to_attach=""):
 # controlla se termina con "/" altrimenti lo aggiunge
 
 
-def setup_path(path_to_fix):
+def setup_path(path_to_fix: str) -> str:
 
     if not isinstance(path_to_fix, str):
         raise TypeError(
-            "Passato un oggetto che non è una stringa come path al metodo setup_path")
+            "Passato un oggetto che non è una stringa come path")
     else:
         if not path_to_fix.endswith("/"):
             return path_to_fix + "/"
