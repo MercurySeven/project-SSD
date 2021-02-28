@@ -6,7 +6,6 @@ import model.ssd_settings as ssd_settings
 
 
 class Watcher:
-    Sg_status = Signal(bool)
     is_running = False
 
     def __init__(self, path):
@@ -47,8 +46,8 @@ class Watcher:
         self.observer.start()
 
     def reboot(self):
-        self.run(self, False)
-        self.run(self, True)
+        self.run(False)
+        self.run(True)
 
 
 class MyHandler(PatternMatchingEventHandler):
@@ -64,7 +63,6 @@ class MyHandler(PatternMatchingEventHandler):
                 "*/settings.mer"])
 
     def log_event(self):
-        ssd_settings.setquota(100)
         event = self.currentEvent
         print("Logging")
         # first i check if getpath returns a valid pathing
