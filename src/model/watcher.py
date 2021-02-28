@@ -1,6 +1,6 @@
-from PySide6.QtCore import Signal
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
+import datetime
 
 import model.ssd_settings as ssd_settings
 
@@ -78,29 +78,32 @@ class MyHandler(PatternMatchingEventHandler):
         super(MyHandler, self).on_modified(event)
         if not event.is_directory:
             what = 'Directory' if event.is_directory else 'File'  # for future use
-            self.currentEvent = what + ", modified, " + event.src_path
+            self.currentEvent = what + ", modified, " + \
+                event.src_path + ", time, " + str(datetime.datetime.now())
             self.log_event()
 
     def on_created(self, event):
         super(MyHandler, self).on_created(event)
         if not event.is_directory:
-            what = 'Directory' if event.is_directory else 'File'
-            self.currentEvent = what + ", created, " + event.src_path
+            what = 'Directory' if event.is_directory else 'File'  # for future use
+            self.currentEvent = what + ", modified, " + \
+                event.src_path + ", time, " + str(datetime.datetime.now())
             self.log_event()
 
     def on_deleted(self, event):
         super(MyHandler, self).on_deleted(event)
         if not event.is_directory:
-            what = 'Directory' if event.is_directory else 'File'
-            self.currentEvent = what + ", deleted, " + event.src_path
+            what = 'Directory' if event.is_directory else 'File'  # for future use
+            self.currentEvent = what + ", modified, " + \
+                event.src_path + ", time, " + str(datetime.datetime.now())
             self.log_event()
 
     def on_moved(self, event):
         super(MyHandler, self).on_moved(event)
         if not event.is_directory:
             what = 'Directory' if event.is_directory else 'File'
-            self.currentEvent = what + ", moved, from: " + \
-                event.src_path + ", to: " + event.dest_path
+            self.currentEvent = what + ", moved, from: " + event.src_path + \
+                ", to: " + event.dest_path + ", time, " + str(datetime.datetime.now())
             self.log_event()
 
     def get_boolean(self, bool):
