@@ -1,5 +1,6 @@
 import os
 import json
+import math
 
 path = None
 config_path = os.path.dirname(os.path.realpath(__file__)) + "/settings.mer"
@@ -18,7 +19,7 @@ def getpath():
 # quota
 
 
-def getquota() -> int:
+def getquota(byte_result: True):
     if path is None:
         raise FileNotFoundError(
             "path is set to None, cannot search for settings file")
@@ -32,7 +33,10 @@ def getquota() -> int:
                     if quota == "None":
                         return False
                     else:
-                        return int(quota)
+                        if byte_result:
+                            return int(quota)
+                        else:
+                            return convert_size(quota)
                 else:
                     return False
         else:
@@ -146,3 +150,13 @@ def create_settings_dict():
     except IOError:
         settings_value = ['None'] * n_settings
     return dict(zip(settings_list, zip(settings_value)))
+
+
+def convert_size(size_bytes):
+    if size_bytes == 0:
+        return "0B"
+    size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
+    i = int(math.floor(math.log(size_bytes, 1024)))
+    p = math.pow(1024, i)
+    s = round(size_bytes / p, 2)
+    return "%s %s" % (s, size_name[i])
