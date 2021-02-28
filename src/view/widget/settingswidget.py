@@ -3,6 +3,7 @@ from PySide6.QtWidgets import (
     QLabel, QVBoxLayout, QHBoxLayout, QWidget, QPushButton, QFileDialog, QRadioButton)
 import model.ssd_settings as ssd_settings
 
+
 class SettingsWidget(QWidget):
 
     # creating Signals
@@ -17,7 +18,7 @@ class SettingsWidget(QWidget):
         self.setObjectName('Settings')
 
         # Titolo
-        self.title = QLabel("SETTINGS", self)
+        self.title = QLabel("Impostazioni", self)
         self.title.setAlignment(Qt.AlignLeft)
         self.title.setAccessibleName('Title')
 

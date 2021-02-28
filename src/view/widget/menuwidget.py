@@ -7,9 +7,9 @@ class MenuWidget(QWidget):
 
         super(MenuWidget, self).__init__(parent)
 
-        syncronizedButton = QPushButton('SINCRONIZZATI', self)
-        diskQuotaButton = QPushButton('QUOTA DISCO', self)
-        settingsButton = QPushButton('SETTINGS', self)
+        syncronizedButton = QPushButton("Sincronizzati", self)
+        diskQuotaButton = QPushButton("Quota disco", self)
+        settingsButton = QPushButton("Impostazioni", self)
 
         # connect to actions
         syncronizedButton.clicked.connect(self.showSyncronized)

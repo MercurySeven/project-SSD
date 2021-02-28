@@ -5,6 +5,7 @@ from PySide6.QtWidgets import (QApplication, QFileDialog)
 
 import model.ssd_settings as ssd_settings
 from controller.controller import Controller
+from view.system_tray_icon import SystemTrayIcon
 
 if __name__ == "__main__":
 
@@ -14,6 +15,8 @@ if __name__ == "__main__":
 
     # start main application
     app = QApplication(sys.argv)
+
+    app.setQuitOnLastWindowClosed(False)
 
     # initialize settings
     settings = QSettings()
@@ -42,5 +45,10 @@ if __name__ == "__main__":
     # del path
     ssd_settings.setpath(settings.value("sync_path"))
     controller = Controller()
+
+    system_tray = SystemTrayIcon("logo.png", app)
+    system_tray.exit_option.triggered.connect(app.quit)
+    system_tray.show_option.triggered.connect(controller.show_app)
+    system_tray.show()
 
     sys.exit(app.exec_())

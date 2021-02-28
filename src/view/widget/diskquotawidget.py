@@ -1,10 +1,12 @@
 from PySide6.QtCore import (Signal, Slot, Qt)
-from PySide6.QtWidgets import (QLabel, QVBoxLayout, QWidget, QProgressBar, QLineEdit)
+from PySide6.QtWidgets import (
+    QLabel, QVBoxLayout, QWidget, QProgressBar, QLineEdit)
 from PySide6.QtGui import QIntValidator
 import model.ssd_settings as ssd_settings
 import os
 
-def get_size(start_path = '.'):
+
+def get_size(start_path: str = '.') -> int:
     total_size = 0
     for dirpath, dirnames, filenames in os.walk(start_path):
         for f in filenames:
@@ -25,7 +27,7 @@ class DiskQuotaWidget(QWidget):
         super(DiskQuotaWidget, self).__init__(parent)
 
         # Titolo pagina
-        self.title = QLabel("QUOTA DISCO", self)
+        self.title = QLabel("Quota disco", self)
         self.title.setAlignment(Qt.AlignLeft)
         self.title.setAccessibleName('Title')
 
@@ -48,7 +50,8 @@ class DiskQuotaWidget(QWidget):
         self.diskView.diskProgress.setValue(folderSize)
 
         self.diskView.diskQuota = QLabel()
-        self.diskView.diskQuota.setText(str(folderSize) + ' su ' + str(maxSize))
+        self.diskView.diskQuota.setText(
+            str(folderSize) + ' su ' + str(maxSize))
 
         diskLayout = QVBoxLayout()
         diskLayout.addWidget(self.diskView.diskProgress)
@@ -76,11 +79,8 @@ class DiskQuotaWidget(QWidget):
 
         spaceLayout = QVBoxLayout()
         spaceLayout.addWidget(self.spaceView.dedicatedSpace)
-        
+
         self.spaceView.setLayout(spaceLayout)
-        
-
-
 
         # create layout
         layout = QVBoxLayout()
@@ -91,10 +91,8 @@ class DiskQuotaWidget(QWidget):
         layout.addWidget(self.spaceView)
         layout.addStretch()
         self.setLayout(layout)
-    
+
     def updateSpace(self):
-
-
         folderSize = get_size(ssd_settings.getpath())
         ssd_settings.setquota(self.spaceView.dedicatedSpace.text())
         maxSize = int(ssd_settings.getquota())
@@ -102,5 +100,5 @@ class DiskQuotaWidget(QWidget):
 
         self.diskView.diskProgress.setRange(0, maxSize)
         self.diskView.diskProgress.setValue(folderSize)
-        self.diskView.diskQuota.setText(str(folderSize) + ' su ' + str(maxSize))
-
+        self.diskView.diskQuota.setText(
+            str(folderSize) + ' su ' + str(maxSize))

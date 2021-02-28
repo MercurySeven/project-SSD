@@ -1,4 +1,4 @@
-from PySide6.QtCore import (QObject, QSettings)
+from PySide6.QtCore import (QObject, QSettings, Slot)
 
 
 from view.mainwindow import MainWindow
@@ -18,3 +18,7 @@ class Controller(QObject):
         self.watcher = Watcher(self.settings.value("sync_path"))
 
         self.view.mainWidget.watchWidget.Sg_watch.connect(self.watcher.run)
+
+    @Slot()
+    def show_app(self):
+        self.view.show()

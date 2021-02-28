@@ -1,4 +1,6 @@
 from PySide6.QtWidgets import (QVBoxLayout, QMainWindow)
+from PySide6.QtGui import (QIcon)
+from PySide6.QtCore import QSize
 
 from view.widget.mainwidget import MainWidget
 
@@ -12,6 +14,7 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
 
         self.setWindowTitle("SSD: Zextras Drive Desktop")
+        self.setWindowIcon(QIcon("logo.png"))
 
         # widgets
         self.mainWidget = MainWidget(self)
