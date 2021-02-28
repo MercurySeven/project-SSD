@@ -1,7 +1,7 @@
 from PySide6.QtCore import (Slot, Qt, QSettings)
 from PySide6.QtWidgets import (
     QLabel, QVBoxLayout, QHBoxLayout, QWidget, QPushButton, QFileDialog, QRadioButton)
-
+import model.ssd_settings as ssd_settings
 
 class SettingsWidget(QWidget):
 
@@ -86,6 +86,7 @@ class SettingsWidget(QWidget):
             sync_path = dialog.selectedFiles()
             if (len(sync_path) == 1):
                 self.settings.setValue("sync_path", sync_path[0])
+                ssd_settings.setpath(sync_path[0])
                 self.updatePathText(self.settings.value("sync_path"))
                 print("Nuova directory impostata: " +
                       self.settings.value("sync_path"))
