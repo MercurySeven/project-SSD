@@ -2,6 +2,8 @@ import configparser
 import os.path
 import math
 
+from PySide6.QtCore import QSettings
+
 
 class Settings:
 
@@ -9,6 +11,7 @@ class Settings:
         self.filename = "config.ini"
         self.config = configparser.ConfigParser()
         self.__check_file()
+        self.settings = QSettings()
 
     def __check_file(self):
         if os.path.isfile(self.filename):
@@ -110,3 +113,9 @@ class Settings:
         p = math.pow(1024, i)
         s = round(size_bytes / p, 2)
         return "%s %s" % (s, size_name[i])
+
+    def get_path(self):
+        return self.settings.value("sync_path")
+
+    def update_path(self, new_path: str):
+        self.settings.setValue("sync_path", new_path)
