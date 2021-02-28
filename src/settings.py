@@ -1,5 +1,6 @@
 import configparser
 import os.path
+import math
 
 
 class Settings:
@@ -71,11 +72,11 @@ class Settings:
 
         return address + ":" + port + "/"
 
-    def get_quota_disco(self, default_value=True) :
+    def get_quota_disco(self, default_value=True):
         """Restituisce la quota disco"""
         try:
             value = self.get_config("General", "quota")
-            int(value) # test per controllare se è int
+            int(value)  # test per controllare se è int
             if default_value:
                 return value
             else:
