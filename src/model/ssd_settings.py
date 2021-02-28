@@ -39,19 +39,22 @@ def getquota():
 
 
 def setquota(quota):
+    if quota:
+        print("ciao")
     if path is None:
         raise FileNotFoundError
     else:
         full_path = setup_path(path) + file_name
         if validate_path(full_path):
             with open(full_path, "r") as file:
-                if len(file.readlines) >= nSettings:
+                if len(file.readlines()) >= nSettings:
                     file.seek(0)
-                    data = file.readLines()
+                    data = file.readlines()
                     file.close()
                     with open(full_path, "w") as f:
                         data[1] = quota
-                        f.writelines(data)
+                        for obj in data:
+                            f.write(str(obj))
                 else:
                     return False
 
