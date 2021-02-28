@@ -89,8 +89,7 @@ class SettingsWidget(QWidget):
             if (len(sync_path) == 1):
                 self.settings.update_path(sync_path[0])
                 self.updatePathText()
-                print("Nuova directory impostata: " +
-                      self.settings.get_path())
+                print("Nuova directory impostata: " + self.settings.get_path())
 
     def setPriority(self, b):
         if(b.text() == 'Locale'):
