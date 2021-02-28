@@ -7,6 +7,9 @@ QWidget > QWidget {
     background-color: #404040;
 }
 
+/* 
+Stile Schermata Dx
+*/
 QWidget[accessibleName='Stacked'] > QWidget {
     background-color: #2A2A2A;
 }
@@ -19,8 +22,40 @@ QWidget[accessibleName='Stacked'] >  QWidget > QPushButton{
 QWidget[accessibleName='Stacked'] >  QWidget > QPushButton:hover{
     background-color: #404040;
 }
+
 /* 
-Stile Label
+Stile Infobox in schermata a Dx
+*/
+
+QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] {
+    background-color: #353535;
+    border-radius: 6px;
+    max-width: 500;
+}
+
+QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] > QWidget {
+    background-color: #353535;
+}
+
+QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] > QProgressBar {
+    background-color: #404040;
+    border-radius: 6px;
+}
+
+QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] > QProgressBar:chunk {
+    background-color: #4B4B4B;
+    border-radius: 6px;
+}
+
+QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] > QLineEdit {
+    background-color: #404040;
+    border-radius: 6px;
+    border: 0px;
+    padding: 5px;
+}
+
+/* 
+Stile Label default
 */
 QLabel[accessibleName='Title']{
     font-size: 30px;
@@ -32,6 +67,9 @@ QLabel[accessibleName='Subtitle']{
     font-weight: bold;
 }
 
+/* 
+Stile Pulsanti default
+*/
 QWidget > QPushButton{
     background-color: #4B4B4B;
     margin:5px;
