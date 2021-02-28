@@ -4,7 +4,7 @@ from PySide6.QtWidgets import (QPushButton, QLabel,
 
 
 class WatchWidget(QWidget):
-    """the WatchWidget class allows to activate or deactivate the watchdog
+    """the WatchWidget class allows the GUI to activate or deactivate the watchdog
 
     Signals
     -------
