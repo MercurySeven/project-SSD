@@ -24,7 +24,7 @@ class Settings:
     def create_standard_settings(self) -> None:
         """Genera il file di impostazioni standard"""
         self.config["General"] = {
-            "Quota": "1000"
+            "Quota": "1024"
         }
 
         self.config["Connection"] = {
@@ -99,13 +99,15 @@ class Settings:
         """Aggiorna la quota disco"""
         self.update_config("General", "quota", value)
 
-    def convert_size(self, size_bytes: str) -> str:
+    @staticmethod
+    def convert_size(size_bytes: str) -> str:
         """
         Method used to convert from byte to the biggest representation
 
         :param size_bytes:
         :return: a string with the number and the new numeric base
         """
+        # TODO: Forse è da spostare, dato che non c'entra molto con settings
         if size_bytes == 0:
             return "0B"
         size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
@@ -114,8 +116,9 @@ class Settings:
         s = round(size_bytes / p, 2)
         return "%s %s" % (s, size_name[i])
 
-    def get_path(self):
+    def get_path(self) -> str:
         return self.settings.value("sync_path")
 
-    def update_path(self, new_path: str):
+    def update_path(self, new_path: str) -> None:
         self.settings.setValue("sync_path", new_path)
+        self.settings.sync()  # Aggisce come da cache e forza l'aggioramento

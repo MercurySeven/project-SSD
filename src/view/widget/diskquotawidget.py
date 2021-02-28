@@ -1,4 +1,4 @@
-from PySide6.QtCore import (Signal, Slot, Qt, QSettings)
+from PySide6.QtCore import (Signal, Slot, Qt)
 from PySide6.QtWidgets import (
     QLabel, QVBoxLayout, QWidget, QProgressBar, QLineEdit)
 from PySide6.QtGui import QIntValidator
@@ -41,9 +41,8 @@ class DiskQuotaWidget(QWidget):
         self.diskView.setAccessibleName('InfoBox')
 
         self.settings = Settings()
-        self.env_settings = QSettings()
 
-        folderSize = get_size(self.env_settings.value("sync_path"))
+        folderSize = get_size(self.settings.get_path())
         maxSize = int(self.settings.get_quota_disco())
 
         self.diskView.diskProgress = QProgressBar()
@@ -95,7 +94,7 @@ class DiskQuotaWidget(QWidget):
         self.setLayout(layout)
 
     def updateSpace(self):
-        folderSize = get_size(self.env_settings.value("sync_path"))
+        folderSize = get_size(self.settings.get_path())
         self.settings.update_quota_disco(self.spaceView.dedicatedSpace.text())
         maxSize = self.settings.get_quota_disco()
         print(maxSize)

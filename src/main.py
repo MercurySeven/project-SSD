@@ -1,11 +1,11 @@
 import sys
 
-from PySide6.QtCore import (QCoreApplication, QSettings)
+from PySide6.QtCore import (QCoreApplication)
 from PySide6.QtWidgets import (QApplication, QFileDialog)
 
-import model.ssd_settings as ssd_settings
 from controller.controller import Controller
 from view.system_tray_icon import SystemTrayIcon
+from settings import Settings
 
 if __name__ == "__main__":
 
@@ -19,12 +19,12 @@ if __name__ == "__main__":
     app.setQuitOnLastWindowClosed(False)
 
     # initialize settings
-    settings = QSettings()
+    settings = Settings()
 
     # settings.setValue("sync_path", None)  # debug
 
     # Controlliamo se l'utente ha già settato il PATH della cartella
-    if not settings.value("sync_path"):
+    if not settings.get_path():
         dialog = QFileDialog()
         dialog.setFileMode(QFileDialog.Directory)
         dialog.setViewMode(QFileDialog.Detail)  # provare anche .List
@@ -33,17 +33,16 @@ if __name__ == "__main__":
 
         # L'utente non ha selezionato la cartella
         if not dialog.exec_():
-            settings.setValue("sync_path", None)
+            settings.update_path(None)
             sys.exit()
 
         sync_path = dialog.selectedFiles()
         if (len(sync_path) == 1):
-            settings.setValue("sync_path", sync_path[0])
-            print("Nuova directory: " + settings.value("sync_path"))
-            # settings.sync() # save
+            settings.update_path(sync_path[0])
+            print("Nuova directory: " + settings.get_path())
+
     # impostazione della variabile setting, sarebbe da fare ad ogni modifica
     # del path
-    ssd_settings.setpath(settings.value("sync_path"))
     controller = Controller()
 
     system_tray = SystemTrayIcon("logo.png", app)

@@ -12,7 +12,7 @@ class Watcher:
 
     is_running = False
 
-    def __init__(self, path):
+    def __init__(self):
         """
         Constructor for Watcher class, used to setup some public variables(path) and hidden
         :param path: the path that the watchdog will observe
@@ -23,7 +23,7 @@ class Watcher:
         # off
         self.settings = Settings()
         self.observer = Observer()
-        self.path = path
+        self.path = self.settings.get_path()
 
     def run(self, watch):
         """
@@ -149,7 +149,8 @@ class MyHandler(PatternMatchingEventHandler):
         super(MyHandler, self).on_moved(event)
         what = 'Directory' if event.is_directory else 'File'
         self.currentEvent = what + ", moved, from: " + event.src_path + \
-            ", to: " + event.dest_path + ", time, " + str(datetime.datetime.now())
+            ", to: " + event.dest_path + ", time, " + \
+            str(datetime.datetime.now())
         self.log_event()
 
     def get_boolean(self, bool):

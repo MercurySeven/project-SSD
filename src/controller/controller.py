@@ -1,4 +1,4 @@
-from PySide6.QtCore import (QObject, QSettings, Slot)
+from PySide6.QtCore import (QObject, Slot)
 
 
 from view.mainwindow import MainWindow
@@ -14,8 +14,7 @@ class Controller(QObject):
         self.view.show()
 
         # Attivo il watchdog nella root definita dall'utente
-        self.settings = QSettings(self)
-        self.watcher = Watcher(self.settings.value("sync_path"))
+        self.watcher = Watcher()
 
         self.view.mainWidget.watchWidget.Sg_watch.connect(self.watcher.run)
 
