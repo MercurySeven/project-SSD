@@ -95,7 +95,7 @@ class MyHandler(PatternMatchingEventHandler):
             self).__init__(
             ignore_patterns=[
                 "*/log.mer",
-                "*/settings.mer"])
+                "*/config.ini"])
 
         self.settings = Settings()
 
@@ -107,10 +107,9 @@ class MyHandler(PatternMatchingEventHandler):
         """
         event = self.currentEvent
         print("Logging")
-        print(self.settings.getquota())
-        path = None
+        print(self.settings.get_quota_disco())
+        path = "log.mer"
         if path is not None:
-            path = self.setup_path(path) + "log.mer"
             # if this check returns false then there is no log file
             if self.is_path_valid(path):
                 # open file with append
@@ -155,7 +154,10 @@ class MyHandler(PatternMatchingEventHandler):
     def get_boolean(self, bool):
         self.update = bool
 
-    def is_path_valid(path_to_validate: str, extra_to_attach: str = "") -> bool:
+    def is_path_valid(
+            self,
+            path_to_validate: str,
+            extra_to_attach: str = "") -> bool:
         """
         Method used to check if the path is valid (I.E the path is a valid string and the file pointing at that
         path can be read

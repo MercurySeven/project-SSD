@@ -2,7 +2,8 @@ from PySide6.QtCore import (Slot, Qt, QSettings)
 from PySide6.QtWidgets import (
     QLabel, QVBoxLayout, QHBoxLayout, QWidget, QPushButton,
     QFileDialog, QRadioButton)
-import model.ssd_settings as ssd_settings
+
+from src.settings import Settings
 
 
 class SettingsWidget(QWidget):
@@ -15,6 +16,7 @@ class SettingsWidget(QWidget):
 
         # environment variables
         self.settings = QSettings(self)
+        self.mysettings = Settings()
 
         self.setObjectName('Settings')
 
@@ -87,12 +89,9 @@ class SettingsWidget(QWidget):
         if dialog.exec_():
             sync_path = dialog.selectedFiles()
             if (len(sync_path) == 1):
-                self.settings.setValue("sync_path", sync_path[0])
-                ssd_settings.setpath(sync_path[0])
-                self.updatePathText(self.settings.value("sync_path"))
-                print("Nuova directory impostata: " +
-                      self.settings.value("sync_path"))
-                self.settings.sync()  # save
+                self.settings.update_path(sync_path[0])
+                self.updatePathText(self.settings.get_path())
+                print("Nuova directory impostata: " + self.settings.get_path())
 
     def setPriority(self, b):
         if(b.text() == 'Locale'):

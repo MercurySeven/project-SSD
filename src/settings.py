@@ -119,3 +119,4 @@ class Settings:
 
     def update_path(self, new_path: str):
         self.settings.setValue("sync_path", new_path)
+        self.settings.sync()

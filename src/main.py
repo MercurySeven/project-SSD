@@ -3,7 +3,6 @@ import sys
 from PySide6.QtCore import (QCoreApplication, QSettings)
 from PySide6.QtWidgets import (QApplication, QFileDialog)
 
-import model.ssd_settings as ssd_settings
 from controller.controller import Controller
 from view.system_tray_icon import SystemTrayIcon
 
@@ -43,7 +42,6 @@ if __name__ == "__main__":
             # settings.sync() # save
     # impostazione della variabile setting, sarebbe da fare ad ogni modifica
     # del path
-    ssd_settings.setpath(settings.value("sync_path"))
     controller = Controller()
 
     system_tray = SystemTrayIcon("logo.png", app)
