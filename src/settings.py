@@ -58,8 +58,8 @@ class Settings():
             return None
         if config not in self.config[section]:
             return None
-        else:
-            return self.config[section][config]
+
+        return self.config[section][config]
 
     def get_server_url(self) -> str:
         """Resituisce l'indirizzo del server"""
