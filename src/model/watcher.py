@@ -2,7 +2,7 @@ from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
 import datetime
 
-import model.ssd_settings as ssd_settings
+from settings import Settings
 
 
 class Watcher:
@@ -21,6 +21,7 @@ class Watcher:
         # connect
         # could be deleted, for now it's just to avoid Exceptions when turning
         # off
+        self.settings = Settings()
         self.observer = Observer()
         self.path = path
 
@@ -32,7 +33,6 @@ class Watcher:
         :return: True if the requested action was done and False if ignored (ex turning off when already off)
         """
         print("called watchdog")
-        self.path = ssd_settings.getpath()
         if not watch:
             if not self.is_running:
                 print("Watchdog già disattivato")
@@ -97,6 +97,8 @@ class MyHandler(PatternMatchingEventHandler):
                 "*/log.mer",
                 "*/settings.mer"])
 
+        self.settings = Settings()
+
     def log_event(self):
         """
         Method that logs every event caught in a txt file, if the log file does not exists it creates one
@@ -105,12 +107,12 @@ class MyHandler(PatternMatchingEventHandler):
         """
         event = self.currentEvent
         print("Logging")
-        print(ssd_settings.getquota())
-        path: str = ssd_settings.getsettingspath()
+        print(self.settings.getquota())
+        path = None
         if path is not None:
-            path = ssd_settings.setup_path(path) + "log.mer"
+            path = self.setup_path(path) + "log.mer"
             # if this check returns false then there is no log file
-            if ssd_settings.is_path_valid(path):
+            if self.is_path_valid(path):
                 # open file with append
                 with open(path, "a+") as file:
                     file.write(event + '\n')
@@ -152,3 +154,44 @@ class MyHandler(PatternMatchingEventHandler):
 
     def get_boolean(self, bool):
         self.update = bool
+
+    def is_path_valid(path_to_validate: str, extra_to_attach: str = "") -> bool:
+        """
+        Method used to check if the path is valid (I.E the path is a valid string and the file pointing at that
+        path can be read
+
+        :param path_to_validate: str with the path
+        :param extra_to_attach: str to attach at the path, this is used to avoid doing None + Any as adding None to something will throw an exception
+        :return: False if the path is not valid (None) or cannot be read
+        """
+        if path_to_validate is not None:
+            try:
+                with open(path_to_validate + extra_to_attach, "r"):
+                    return True
+            except OSError:
+                print("Errore lettura file")
+                return False
+        else:
+            print("Path = none")
+            return False
+
+    # controlla se termina con "/" altrimenti lo aggiunge
+
+    def setup_path(path_to_fix: str) -> str:
+        """
+        Method used to setup a correct directory pathing I.E adding / at the end of the path if it's missing.
+        It can raise an exception if the param is not a string
+
+        :param path_to_fix: str with path to check if it needs to be fixed
+        :return: str with fixed path
+        """
+        if not isinstance(path_to_fix, str):
+            raise TypeError(
+                "Argument path_to_fix is not a string")
+        else:
+            # se non termina con "/" lo aggiungo
+            if not path_to_fix.endswith("/"):
+                return path_to_fix + "/"
+            else:
+                # altrimenti lascialo così
+                return path_to_fix

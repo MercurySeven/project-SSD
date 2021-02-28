@@ -44,7 +44,7 @@ class DiskQuotaWidget(QWidget):
         self.env_settings = QSettings()
 
         folderSize = get_size(self.env_settings.value("sync_path"))
-        maxSize = self.settings.get_quota_disco()
+        maxSize = int(self.settings.get_quota_disco())
 
         self.diskView.diskProgress = QProgressBar()
         self.diskView.diskProgress.setFormat('')

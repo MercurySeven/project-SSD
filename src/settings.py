@@ -2,7 +2,7 @@ import configparser
 import os.path
 
 
-class Settings():
+class Settings:
 
     def __init__(self):
         self.filename = "config.ini"
@@ -58,7 +58,6 @@ class Settings():
             return None
         if config not in self.config[section]:
             return None
-
         return self.config[section][config]
 
     def get_server_url(self) -> str:
@@ -72,11 +71,15 @@ class Settings():
 
         return address + ":" + port + "/"
 
-    def get_quota_disco(self) -> int:
+    def get_quota_disco(self, default_value=True) :
         """Restituisce la quota disco"""
         try:
-            value = int(self.get_config("General", "quota"))
-            return value
+            value = self.get_config("General", "quota")
+            int(value) # test per controllare se è int
+            if default_value:
+                return value
+            else:
+                return self.convert_size(value)
         except ValueError:
             print("Il valore di quota disco non è int")
             self.update_config("General", "quota", "1000")
@@ -86,8 +89,23 @@ class Settings():
         """Aggiunge o aggiorna una config"""
         self.config[section][config] = value
         self.__write_on_file()
-        print("New save: " + section + "/" + config + " with value: " + value)
+        print("New save: " + section + "/" + config + "with value: " + value)
 
     def update_quota_disco(self, value: str) -> None:
         """Aggiorna la quota disco"""
         self.update_config("General", "quota", value)
+
+    def convert_size(self, size_bytes: str) -> str:
+        """
+        Method used to convert from byte to the biggest representation
+
+        :param size_bytes:
+        :return: a string with the number and the new numeric base
+        """
+        if size_bytes == 0:
+            return "0B"
+        size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
+        i = int(math.floor(math.log(size_bytes, 1024)))
+        p = math.pow(1024, i)
+        s = round(size_bytes / p, 2)
+        return "%s %s" % (s, size_name[i])
