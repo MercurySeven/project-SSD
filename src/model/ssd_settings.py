@@ -25,13 +25,14 @@ def getquota() -> int:
     else:
         if is_path_valid(config_path):
             with open(config_path, "r") as file:
-                if len(file.readlines()) >= n_settings:
-                    file.seek(0)
-                    data = file.readlines()
-                    if data[1] == "None":
+                data = json.load(file)
+                if len(data['settings'][0]) >= n_settings:
+                    for obj in data['settings']:
+                        quota = obj['quota']
+                    if quota == "None":
                         return False
                     else:
-                        return int(data[1])
+                        return int(quota)
                 else:
                     return False
         else:
