@@ -145,3 +145,4 @@ cython_debug/
 .vscode
 .envFile
 *.mer
+config.ini

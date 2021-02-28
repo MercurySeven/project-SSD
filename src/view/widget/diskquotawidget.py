@@ -1,8 +1,8 @@
-from PySide6.QtCore import (Signal, Slot, Qt)
+from PySide6.QtCore import (Signal, Slot, Qt, QSettings)
 from PySide6.QtWidgets import (
     QLabel, QVBoxLayout, QWidget, QProgressBar, QLineEdit)
 from PySide6.QtGui import QIntValidator
-import model.ssd_settings as ssd_settings
+from settings import Settings
 import os
 
 
@@ -40,9 +40,11 @@ class DiskQuotaWidget(QWidget):
         self.diskView = QWidget()
         self.diskView.setAccessibleName('InfoBox')
 
-        folderSize = get_size(ssd_settings.getpath())
-        ssd_settings.setquota(1000)
-        maxSize = int(ssd_settings.getquota())
+        self.settings = Settings()
+        self.env_settings = QSettings()
+
+        folderSize = get_size(self.env_settings.value("sync_path"))
+        maxSize = self.settings.get_quota_disco()
 
         self.diskView.diskProgress = QProgressBar()
         self.diskView.diskProgress.setFormat('')
@@ -93,9 +95,9 @@ class DiskQuotaWidget(QWidget):
         self.setLayout(layout)
 
     def updateSpace(self):
-        folderSize = get_size(ssd_settings.getpath())
-        ssd_settings.setquota(self.spaceView.dedicatedSpace.text())
-        maxSize = int(ssd_settings.getquota())
+        folderSize = get_size(self.env_settings.value("sync_path"))
+        self.settings.update_quota_disco(self.spaceView.dedicatedSpace.text())
+        maxSize = self.settings.get_quota_disco()
         print(maxSize)
 
         self.diskView.diskProgress.setRange(0, maxSize)

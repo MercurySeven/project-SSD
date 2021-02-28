@@ -6,10 +6,10 @@ from settings import Settings
 class Server:
 
     def __init__(self):
-        self.url: str = Settings["HOST"]
-        self.port: int = Settings["PORT"]
+        self.settings = Settings()
+        self.url: str = self.settings.get_server_url()
 
-        transport = AIOHTTPTransport(url=f"{self.url}:{self.port}/")
+        transport = AIOHTTPTransport(url=self.url)
         self.client: Client = Client(transport=transport)
 
     def sendToServer(self, filePath: str, lastUpdate: str) -> None:
