@@ -1,7 +1,6 @@
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
-import datetime
-
+import logging
 from settings import Settings
 
 
@@ -82,7 +81,6 @@ class MyHandler(PatternMatchingEventHandler):
     """
     Class used to handle all the events caught by the observer
     """
-
     currentEvent = ""
     update = False
 
@@ -98,65 +96,54 @@ class MyHandler(PatternMatchingEventHandler):
                 "*/config.ini"])
 
         self.settings = Settings()
+        # Debug < Info < Warning < Error so setting debug will get everything
+        # I need to create a new logger cuz davide's logger is root log
+        self.logger = logging.getLogger("watchdog")
 
-    def log_event(self):
-        """
-        Method that logs every event caught in a txt file, if the log file does not exists it creates one
+        self.logger.setLevel(logging.INFO)
 
-        :return: Nothing
-        """
-        event = self.currentEvent
-        print("Logging")
-        print(self.settings.get_quota_disco())
-        path = "log.mer"
-        if path is not None:
-            # if this check returns false then there is no log file
-            if self.is_path_valid(path):
-                # open file with append
-                with open(path, "a+") as file:
-                    file.write(event + '\n')
-            else:
-                # open file to override
-                with open(path, "w+") as file:
-                    file.write(event + '\n')
-        else:
-            # path is None, cannot do anything
-            print("Path not ok")
+        formatter = logging.Formatter(
+            '%(asctime)s:%(levelname)s:%(pathname)s:%(funcName)s:%(process)d:%(thread)d:%(message)s')
+
+        file_handler = logging.FileHandler('log.mer')
+
+        file_handler.setFormatter(formatter)
+
+        self.logger.addHandler(file_handler)
 
     def on_modified(self, event):
         super(MyHandler, self).on_modified(event)
         what = 'Directory' if event.is_directory else 'File'  # for future use
-        self.currentEvent = what + ", modified, " + \
-            event.src_path + ", time, " + str(datetime.datetime.now())
-        self.log_event()
+        current_event = what + ", modified, " + \
+            event.src_path
+        self.logger.info(current_event)
 
     def on_created(self, event):
         super(MyHandler, self).on_created(event)
         what = 'Directory' if event.is_directory else 'File'  # for future use
-        self.currentEvent = what + ", created, " + \
-            event.src_path + ", time, " + str(datetime.datetime.now())
-        self.log_event()
+        current_event = what + ", created, " + \
+            event.src_path
+        self.logger.info(current_event)
 
     def on_deleted(self, event):
         super(MyHandler, self).on_deleted(event)
         what = 'Directory' if event.is_directory else 'File'  # for future use
-        self.currentEvent = what + ", deleted, " + \
-            event.src_path + ", time, " + str(datetime.datetime.now())
-        self.log_event()
+        current_event = what + ", deleted, " + \
+            event.src_path
+        self.logger.info(current_event)
 
     def on_moved(self, event):
         super(MyHandler, self).on_moved(event)
         what = 'Directory' if event.is_directory else 'File'
-        self.currentEvent = what + ", moved, from: " + event.src_path + \
-            ", to: " + event.dest_path + ", time, " + \
-            str(datetime.datetime.now())
-        self.log_event()
+        current_event = what + ", moved, from: " + event.src_path + \
+            ", to: " + event.dest_path
+        self.logger.info(current_event)
 
-    def get_boolean(self, bool):
-        self.update = bool
+    def get_boolean(self, boolean):
+        self.update = boolean
 
+    @staticmethod
     def is_path_valid(
-            self,
             path_to_validate: str,
             extra_to_attach: str = "") -> bool:
         """
@@ -179,7 +166,7 @@ class MyHandler(PatternMatchingEventHandler):
             return False
 
     # controlla se termina con "/" altrimenti lo aggiunge
-
+    @staticmethod
     def setup_path(path_to_fix: str) -> str:
         """
         Method used to setup a correct directory pathing I.E adding / at the end of the path if it's missing.
