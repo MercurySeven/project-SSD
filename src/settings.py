@@ -1,6 +1,7 @@
 import configparser
 import os.path
 import logging
+from typing import Optional
 
 from PySide6.QtCore import QSettings
 
@@ -47,11 +48,7 @@ class Settings:
             self.config.write(configfile)
         self.last_update = os.path.getmtime(self.filename)
 
-    def get_sections(self) -> list:
-        """Restituisce le sezioni del file"""
-        return self.config.sections()
-
-    def get_config(self, section: str, config: str) -> str:
+    def get_config(self, section: str, config: str) -> Optional[str]:
         """Ritorna il valore della config desiderata, None se inesistente"""
         new_time = os.path.getmtime(self.filename)
 
@@ -60,7 +57,7 @@ class Settings:
             self.__read_from_file()
             self.logger.debug("Impostazioni cambiate, file ricaricato")
 
-        if section not in self.get_sections():
+        if section not in self.config.sections():
             return None
         if config not in self.config[section]:
             return None
