@@ -3,6 +3,7 @@ import os
 from datetime import datetime
 from network.server import Server
 from settings import Settings
+from typing import Dict
 
 
 class Policy(Enum):
@@ -32,7 +33,7 @@ class metaData:
         # """metadata dei file nel server"""
         # self.metaServer = self.getDataServer()
 
-    def getDataServer(self) -> dict[str, str]:
+    def getDataServer(self) -> Dict[str, str]:
         return self.server.getAllFiles()
 
     def updateDiff(self):
@@ -105,7 +106,7 @@ class metaData:
             print(f"aggiunto metadati al server del file {i[0]}")
             """aggiungo file"""
             # TODO
-        for i in self.newFilesServer:
+        for i in self.newFilesServer:F
             """download dei file non presenti nel client"""
             # TODO
         for i in self.updateFilesClient:

@@ -3,6 +3,7 @@ import os
 from gql import gql, Client
 from gql.transport.aiohttp import AIOHTTPTransport
 from settings import Settings
+from typing import Dict
 
 
 class Server:
@@ -66,7 +67,7 @@ class Server:
             with open(path, "wb") as fh:
                 fh.write(base64.decodebytes(base64_bytes))
 
-    def getAllFiles(self) -> dict[str, str]:
+    def getAllFiles(self) -> Dict[str, str]:
         """Restituisce il nome dei file con l'ultima modifica"""
         query = gql('''
                 query {
