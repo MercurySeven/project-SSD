@@ -1,6 +1,6 @@
 
 import os
-from src.model.file import File
+from model.file import File
 
 
 class Directory:
@@ -17,6 +17,7 @@ class Directory:
         with os.scandir(self.path) as dir_entries:
             os.chdir(self.path)
             for entry in dir_entries:
-                file = File(entry.name, os.stat(entry.name).st_ctime, os.stat(entry.name).st_mtime_ns, " ", os.stat(entry.name).st_size, " ")
+                file = File(entry.name, os.stat(entry.name).st_ctime, os.stat(
+                    entry.name).st_mtime_ns, " ", os.stat(entry.name).st_size, " ")
                 self.files.append(file)
                 print(file.getName())

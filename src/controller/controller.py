@@ -20,9 +20,6 @@ class Controller(QObject):
 
         self.view.mainWidget.watchWidget.Sg_watch.connect(self.watcher.run)
 
-    def showFiles(self):
-        dir = Directory()
-
     @Slot()
     def show_app(self):
         self.view.show()

@@ -9,7 +9,7 @@ class SystemTrayIcon(QSystemTrayIcon):
         QSystemTrayIcon.__init__(self, QIcon(icon_path), parent)
         self.setVisible(True)
         self.setToolTip("Zextras Drive Desktop")
-        # self.showMessage("Mercury Seven", "Sembra che funzioni", msecs=5000)
+        self.showMessage("Mercury Seven", "Sembra che funzioni", msecs=5000)
 
         menu = QMenu()
         self.show_option = QAction("Mostra")

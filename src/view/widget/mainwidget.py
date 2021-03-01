@@ -1,14 +1,14 @@
 from PySide6 import QtCore
 from PySide6.QtWidgets import (
-    QGridLayout, QLabel, QLayout, QVBoxLayout, QHBoxLayout, QWidget, QStackedWidget)
+    QVBoxLayout, QHBoxLayout, QWidget, QStackedWidget)
 from view.widget.diskquotawidget import DiskQuotaWidget
 from view.widget.menuwidget import MenuWidget
 from view.widget.syncronizedwidget import SyncronizedWidget
 from view.widget.settingswidget import SettingsWidget
 
 from view.widget.watchwidget import WatchWidget
-
 from model.directory import Directory
+import re
 
 
 class MainWidget(QWidget):
@@ -33,7 +33,8 @@ class MainWidget(QWidget):
         self.diskquotaWidget = DiskQuotaWidget(self)
         self.settingsWidget = SettingsWidget(self)
 
-        self.listOfFiles = Directory('', self.settingsWidget.settings.get_path())
+        # self.listOfFiles = Directory(
+        #     '', self.settingsWidget.settings.get_path())
 
         # stacked
         self.swidget = QStackedWidget()
@@ -41,6 +42,7 @@ class MainWidget(QWidget):
         self.swidget.addWidget(self.syncronizedWidget)
         self.swidget.addWidget(self.diskquotaWidget)
         self.swidget.addWidget(self.settingsWidget)
+
         # create layout
         self.menu_laterale = QVBoxLayout()
         self.menu_laterale.addWidget(self.watchWidget)
@@ -54,5 +56,5 @@ class MainWidget(QWidget):
 
         # stylesheet
         for i in self.findChildren(QWidget, ):
-           # if(re.findall("view.widget", str(i))):
+            if re.findall("view.widget", str(i)):
                 i.setAttribute(QtCore.Qt.WA_StyledBackground, True)
