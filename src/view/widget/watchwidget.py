@@ -39,8 +39,11 @@ class WatchWidget(QWidget):
         self.running_label.setText("disattivata")
         self.running_label.setAccessibleName('Subtitle')
 
-        self.runButton = QPushButton("Run", self)
-        self.stopButton = QPushButton("Stop", self)
+        self.syncButton = QPushButton("↻", self)
+        self.syncButton.setCheckable(True)
+        self.syncButton.setChecked(False)
+        self.syncButton.setAccessibleName('HighlightButton')
+        # self.syncButton.setCheckable(True)
 
         self.menu_label = QLabel(self)
         self.menu_label.setAlignment(Qt.AlignCenter)
@@ -50,14 +53,12 @@ class WatchWidget(QWidget):
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.watch_label)
         self.layout.addWidget(self.running_label)
-        self.layout.addWidget(self.runButton)
-        self.layout.addWidget(self.stopButton)
+        self.layout.addWidget(self.syncButton)
         self.layout.addWidget(self.menu_label)
         self.setLayout(self.layout)
 
         # Connecting button the signal
-        self.runButton.clicked.connect(self.__run_watch)
-        self.stopButton.clicked.connect(self.__stop_watch)
+        self.syncButton.clicked.connect(self.startStop)
 
     @Slot()
     def __run_watch(self):
@@ -70,3 +71,10 @@ class WatchWidget(QWidget):
         print("called watchWidget.__stop -> emit watch(False)")  # debug
         self.running_label.setText("disattivata")
         self.Sg_watch.emit(False)
+
+    def startStop(self):
+        print(self.syncButton.isChecked())
+        if(self.syncButton.isChecked()):
+            self.__run_watch()
+        else:
+            self.__stop_watch()

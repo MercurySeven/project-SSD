@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import (QPushButton, QVBoxLayout, QWidget)
-
+from PySide6.QtCore import (Qt)
 
 class MenuWidget(QWidget):
 
@@ -7,9 +7,11 @@ class MenuWidget(QWidget):
 
         super(MenuWidget, self).__init__(parent)
 
-        syncronizedButton = QPushButton("Sincronizzati", self)
-        diskQuotaButton = QPushButton("Quota disco", self)
-        settingsButton = QPushButton("Impostazioni", self)
+        self.setAccessibleName('MenuNav')
+
+        syncronizedButton = QPushButton("🗐", self)
+        diskQuotaButton = QPushButton("🖴", self)
+        settingsButton = QPushButton("⚙", self)
 
         # connect to actions
         syncronizedButton.clicked.connect(self.showSyncronized)
@@ -18,6 +20,7 @@ class MenuWidget(QWidget):
 
         # layout
         vbox = QVBoxLayout()
+        vbox.setAlignment(Qt.AlignCenter)
         vbox.addWidget(syncronizedButton)
         vbox.addWidget(diskQuotaButton)
         vbox.addStretch()

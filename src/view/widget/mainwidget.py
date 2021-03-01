@@ -5,6 +5,7 @@ from view.widget.diskquotawidget import DiskQuotaWidget
 from view.widget.menuwidget import MenuWidget
 from view.widget.syncronizedwidget import SyncronizedWidget
 from view.widget.settingswidget import SettingsWidget
+from PySide6.QtCore import Qt
 
 from view.widget.watchwidget import WatchWidget
 from model.directory import Directory
