@@ -21,7 +21,7 @@ if __name__ == "__main__":
     # initialize settings
     settings = Settings()
 
-    # settings.setValue("sync_path", None)  # debug
+    # settings.update_path(None) # debug
 
     # Controlliamo se l'utente ha già settato il PATH della cartella
     if not settings.get_path():
@@ -41,8 +41,6 @@ if __name__ == "__main__":
             settings.update_path(sync_path[0])
             print("Nuova directory: " + settings.get_path())
 
-    # impostazione della variabile setting, sarebbe da fare ad ogni modifica
-    # del path
     controller = Controller()
 
     system_tray = SystemTrayIcon("logo.png", app)

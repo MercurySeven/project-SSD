@@ -1,6 +1,7 @@
 import configparser
 import os.path
 import math
+import logging
 
 from PySide6.QtCore import QSettings
 
@@ -10,15 +11,17 @@ class Settings:
     def __init__(self):
         self.filename = "config.ini"
         self.config = configparser.ConfigParser()
+        logging.basicConfig(level=logging.DEBUG,
+                            format="%(levelname)s:%(filename)s:%(asctime)s:%(message)s")
         self.__check_file()
         self.settings = QSettings()
 
     def __check_file(self):
         if os.path.isfile(self.filename):
-            print("Carico impostazioni dal file")
+            logging.info("Carico impostazioni da file: " + self.filename)
             self.__read_from_file()
         else:
-            print("File di impostazioni non esistente, verrà creato")
+            logging.info("File di impostazioni non esistente, verrà creato")
             self.create_standard_settings()
 
     def create_standard_settings(self) -> None:
@@ -56,7 +59,7 @@ class Settings:
         # Il file è stato modificato lo ricarico
         if new_time > self.last_update:
             self.__read_from_file()
-            print("Impostazioni cambiate, file ricaricato")
+            logging.debug("Impostazioni cambiate, file ricaricato")
 
         if section not in self.get_sections():
             return None
@@ -85,15 +88,16 @@ class Settings:
             else:
                 return self.convert_size(value)
         except ValueError:
-            print("Il valore di quota disco non è int")
-            self.update_config("General", "quota", "1000")
-            return "1000"
+            logging.warning("Il valore di quota disco non è int")
+            self.update_config("General", "quota", "1024")
+            return "1024"
 
     def update_config(self, section: str, config: str, value: str) -> None:
         """Aggiunge o aggiorna una config"""
         self.config[section][config] = value
         self.__write_on_file()
-        print("New save: " + section + "/" + config + "with value: " + value)
+        logging.info("New save: " + section + "/" +
+                     config + " with value: " + value)
 
     def update_quota_disco(self, value: str) -> None:
         """Aggiorna la quota disco"""
