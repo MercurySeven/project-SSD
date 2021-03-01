@@ -24,31 +24,34 @@ class metaData:
         """percorso cartella locale"""
         settings = Settings()
         self.directory = settings.get_path()
-        # self.directory = "C:\\Users\Poppi\Desktop\LOCAL"
-        # metadata dei file nel client
-        self.metaClient = self.getDataClient()
-        """metadata dei file nel server"""
-        self.metaServer = self.getDataServer()
 
-    def getDataServer(self):
-        server = Server()
-        return server.getAllFiles()
+        self.server = Server()
+
+        # metadata dei file nel client
+        # self.metaClient = self.getDataClient()
+        # """metadata dei file nel server"""
+        # self.metaServer = self.getDataServer()
+
+    def getDataServer(self) -> dict[str, str]:
+        return self.server.getAllFiles()
 
     def updateDiff(self):
         # controllo che tutti i file del server siano uguali a quelli del client e la data di ultima modifica
-        for i in self.getDataServer():
-            nome = i["Nome"]
-            ultimaModifica = i["DataUltimaModifica"]
+        for server_file in self.getDataServer():
+            nome = server_file["Nome"]
+            ultimaModifica = server_file["DataUltimaModifica"]
             trovato = False
-            for y in self.getDataClient():
-                if i["Nome"] == y["Nome"]:
-                    if i["DataUltimaModifica"] != y["DataUltimaModifica"]:
-                        if i["DataUltimaModifica"] > y["DataUltimaModifica"]:
+            for client_file in self.getDataClient():
+                if nome == client_file["Nome"]:
+                    if ultimaModifica != client_file["DataUltimaModifica"]:
+                        if ultimaModifica > client_file["DataUltimaModifica"]:
                             print(f"{nome} è stato modificato nel server")
-                            self.updateFileServer.append([nome, ultimaModifica])
+                            self.updateFileServer.append(
+                                [nome, ultimaModifica])
                         else:
                             print(f"{nome} è stato modificato nel client")
-                            self.updateFilesClient.append([nome, y['DataUltimaModifica']])
+                            self.updateFilesClient.append(
+                                [nome, client_file['DataUltimaModifica']])
                     trovato = True
                     break
             if not trovato:
@@ -56,12 +59,12 @@ class metaData:
                 self.newFilesServer.append([nome, ultimaModifica])
 
         # controllo che tutti i file nel client sono uguali al quelli nel server
-        for i in self.getDataClient():
-            nome = i["Nome"]
-            ultimaModifica = i["DataUltimaModifica"]
+        for client_file in self.getDataClient():
+            nome = client_file["Nome"]
+            ultimaModifica = client_file["DataUltimaModifica"]
             trovato = False
             for y in self.getDataServer():
-                if i["Nome"] == y["Nome"]:
+                if nome == y["Nome"]:
                     trovato = True
                     break
             if not trovato:
@@ -73,7 +76,6 @@ class metaData:
              -aggiungo i nuovi file presenti nel server
              -elimino i file che non son presenti nel server
              -aggiorno nel client tutti i file che hanno DataUltimaModifica differente dal server (anche se hanno una data di ultima modifica maggiore vince il server)"""
-        server = Server()
         for i in self.newFilesServer:
             """aggiungo nel client i nuovi file presenti nel server"""
             # TODO
@@ -96,28 +98,31 @@ class metaData:
             -aggiungo i nuovi file presenti nel client
             -elimino i file che non son presenti nel nel Client
             -aggiorno nel server tutti i file che hanno DataUltimaModifica differente dal client (anche se hanno una data di ultima modifica maggiore vince il client)"""
-        server = Server()
         for i in self.newFilesClient:
             """aggiorno nel server i meta dei nuovi file"""
-            server.sendToServer(f"{self.directory}\\{i[0]}", i[1])
+            file_path = os.path.join(self.directory, i[0])
+            self.server.sendToServer(file_path, i[1])
             print(f"aggiunto metadati al server del file {i[0]}")
             """aggiungo file"""
             # TODO
         for i in self.newFilesServer:
             """elimino i metadati dei nuovi file nel server"""
-            server.removeFileByName(i[0])
+            self.server.removeFileByName(i[0])
             """elimino i file dal server """
             # TODO
         for i in self.updateFilesClient:
             """aggiorno i metadata dei file aggiornati nel client al server"""
-            server.sendToServer(f"{self.directory}\\{i[0]}", i[1])
+            file_path = os.path.join(self.directory, i[0])
+            self.server.sendToServer(file_path, i[1])
             """invio il file aggiornato al server"""
             # TODO
         for y in self.updateFileServer:
             """ripristino i metadati alla versione che è presente nel client"""
             for i in self.getDataClient():
                 if i["Nome"] == y[0]:
-                    server.sendToServer(f"{self.directory}\\{i['Nome']}", i["DataUltimaModifica"])
+                    file_path = os.path.join(self.directory, i['Nome'])
+                    self.server.sendToServer(
+                        file_path, i["DataUltimaModifica"])
                     """ invio il file i["nome"] al server"""
                     # TODO
                     break
@@ -126,9 +131,9 @@ class metaData:
         """sincronizzo i nuovi file (problema sul controllo dei nomi)
            aggiungo nel server solo i file che nel client hanno l ultima modifica maggiore
            aggiorno nel client i file che nel server hanno ultima modifica superiore"""
-        server: Server = Server()
         for i in self.newFilesClient:
-            server.sendToServer(f"{self.directory}\\{i[0]}", i[1])
+            file_path = os.path.join(self.directory, i[0])
+            self.server.sendToServer(file_path, i[1])
             """inserisco il nuovo file nel server"""
             # TODO
         for i in self.newFilesServer:
@@ -138,7 +143,8 @@ class metaData:
             """aggiorno il file nel server"""
             # TODO
             """aggiorno i metadati nel server"""
-            server.sendToServer(f"{self.directory}\\{i[0]}", i[1])
+            file_path = os.path.join(self.directory, i[0])
+            self.server.sendToServer(file_path, i[1])
         for i in self.updateFileServer:
             """aggiorno i file nel client"""
             # TODO
@@ -154,10 +160,11 @@ class metaData:
         else:
             print("Invalid policy")
 
-    def metadata(self, file: str):
+    def metadata(self, file: str) -> dict:
         name = os.path.basename(file)
         size = os.path.getsize(file)
-        ultima_modifica = datetime.fromtimestamp(os.stat(file).st_mtime).strftime("%Y-%m-%d %I:%M:%S")
+        ultima_modifica = datetime.fromtimestamp(
+            os.stat(file).st_mtime).strftime("%Y-%m-%d %I:%M:%S")
         data = {
             'Nome': name,
             'Dimensione': size,
