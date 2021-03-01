@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import (QVBoxLayout, QMainWindow)
+from PySide6.QtWidgets import (QMainWindow)
 from PySide6.QtGui import (QIcon)
 
 from view.widget.mainwidget import MainWidget
@@ -18,10 +18,11 @@ class MainWindow(QMainWindow):
         # widgets
         self.mainWidget = MainWidget(self)
 
+        # Non più necessario ma da controllare
         # create layout
-        layout = QVBoxLayout()
-        layout.addWidget(self.mainWidget)
-        self.setLayout(layout)
+        # layout = QVBoxLayout()
+        # layout.addWidget(self.mainWidget)
+        # self.setLayout(layout)
 
         # !! MainWindow must have a central widget !!
         self.setCentralWidget(self.mainWidget)
