@@ -1,3 +1,5 @@
+import base64
+import os
 from gql import gql, Client
 from gql.transport.aiohttp import AIOHTTPTransport
 from settings import Settings
@@ -36,6 +38,34 @@ class Server:
 
             print(result)
 
+    def downloadFromServer(self, fileName: str) -> None:
+        """
+            Scarica il file dal server e lo salva nel path, filename deve
+            comprendere anche l'estensione
+        """
+        print(fileName)
+        query = gql('''
+                query DownloadFile($fileName: String!) {
+                    DownloadFile(fileName: $fileName) {
+                        Nome
+                        Base64
+                    }
+                }
+                ''')
+        params = {
+            "fileName": fileName
+        }
+        response = self.client.execute(query, variable_values=params)
+        base64_string = response["DownloadFile"]["Base64"]
+
+        if response != "0":
+            base64_bytes = base64_string.encode('ascii')
+
+            path = os.path.join(self.settings.get_path(), fileName)
+
+            with open(path, "wb") as fh:
+                fh.write(base64.decodebytes(base64_bytes))
+
     def getAllFiles(self) -> dict[str, str]:
         """Restituisce il nome dei file con l'ultima modifica"""
         query = gql('''
@@ -47,11 +77,11 @@ class Server:
                 }
                 ''')
         response = self.client.execute(query)["GetAllFiles"]
-        result: dict[str, str] = {}
-        for items in response:
-            result[items["Nome"]] = items["DataUltimaModifica"]
+        # result: dict[str, str] = {}
+        # for items in response:
+        #    result[items["Nome"]] = items["DataUltimaModifica"]
 
-        return result
+        return response
 
     def removeFileByName(self, fileName: str) -> None:
         """Rimuove il file dal cloud"""
