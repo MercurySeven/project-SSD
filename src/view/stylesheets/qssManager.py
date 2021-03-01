@@ -1,6 +1,6 @@
 import os
 from PySide6 import QtCore
-
+from PySide6 import QtGui
 '''
 Da usare per settare le stylesheet dei widget
 importare con
@@ -10,6 +10,7 @@ importare con
 
 def setQss(path, self):
     self.setAttribute(QtCore.Qt.WA_StyledBackground, True)
+    self.setAttribute(QtGui.Qt.WA_StyledBackground, True)
     THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
     my_file = os.path.join(THIS_FOLDER, path)
     with open(my_file, "r") as fh:

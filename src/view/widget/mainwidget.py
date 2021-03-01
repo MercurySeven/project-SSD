@@ -38,7 +38,6 @@ class MainWidget(QWidget):
         self.swidget.addWidget(self.syncronizedWidget)
         self.swidget.addWidget(self.diskquotaWidget)
         self.swidget.addWidget(self.settingsWidget)
-
         # create layout
         layout = QVBoxLayout(self)
         layout.addWidget(self.watchWidget)
