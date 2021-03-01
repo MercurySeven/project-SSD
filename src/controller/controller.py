@@ -3,8 +3,11 @@ from PySide6.QtCore import (QObject, Slot)
 
 from view.mainwindow import MainWindow
 from model.watcher import Watcher
-from model.file import File
-from model.directory import Directory
+
+from time import sleep
+from threading import Thread
+
+from network.metaData import metaData
 
 
 class Controller(QObject):
@@ -20,7 +23,13 @@ class Controller(QObject):
 
         self.view.mainWidget.watchWidget.Sg_watch.connect(self.watcher.run)
 
-        self.view.mainWidget.settingsWidget.Sg_path_changed.connect(self.reboot)
+        self.view.mainWidget.settingsWidget.Sg_path_changed.connect(
+            self.reboot)
+
+        self.algorithm = metaData()
+
+        sync = Thread(target=self.background, daemon=True)
+        sync.start()
 
     @Slot()
     def show_app(self):
@@ -29,3 +38,10 @@ class Controller(QObject):
     @Slot()
     def reboot(self):
         self.watcher.reboot()
+
+    def background(self):
+        while True:
+            # sync do_stuff()
+            sleep(20)
+            self.algorithm.updateDiff()
+            self.algorithm.applyChanges(3)  # policy last update
