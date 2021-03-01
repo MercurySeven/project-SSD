@@ -4,6 +4,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtGui import QIntValidator
 from settings import Settings
 import os
+import math
 
 
 def get_size(start_path: str = '.') -> int:
@@ -43,7 +44,7 @@ class DiskQuotaWidget(QWidget):
         self.settings = Settings()
 
         folderSize = get_size(self.settings.get_path())
-        maxSize = int(self.settings.get_quota_disco())
+        maxSize = self.settings.get_quota_disco()
 
         self.diskView.diskProgress = QProgressBar()
         self.diskView.diskProgress.setFormat('')
@@ -52,7 +53,7 @@ class DiskQuotaWidget(QWidget):
 
         self.diskView.diskQuota = QLabel()
         self.diskView.diskQuota.setText(
-            str(folderSize) + ' su ' + str(maxSize))
+            f"{folderSize} su {self.convert_size(maxSize)}")
 
         diskLayout = QVBoxLayout()
         diskLayout.addWidget(self.diskView.diskProgress)
@@ -97,9 +98,25 @@ class DiskQuotaWidget(QWidget):
         folderSize = get_size(self.settings.get_path())
         self.settings.update_quota_disco(self.spaceView.dedicatedSpace.text())
         maxSize = self.settings.get_quota_disco()
-        print(maxSize)
 
         self.diskView.diskProgress.setRange(0, maxSize)
         self.diskView.diskProgress.setValue(folderSize)
         self.diskView.diskQuota.setText(
-            str(folderSize) + ' su ' + str(maxSize))
+            f"{folderSize} su {self.convert_size(maxSize)}")
+
+    @staticmethod
+    def convert_size(size_bytes: int) -> str:
+        """
+        Method used to convert from byte to the biggest representation
+
+        :param size_bytes:
+        :return: a string with the number and the new numeric base
+        """
+        # TODO: Forse è da spostare
+        if size_bytes == 0:
+            return "0B"
+        size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
+        i = int(math.floor(math.log(size_bytes, 1024)))
+        p = math.pow(1024, i)
+        s = round(size_bytes / p, 2)
+        return "%s %s" % (s, size_name[i])
