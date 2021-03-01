@@ -47,11 +47,11 @@ class Server:
                 }
                 ''')
         response = self.client.execute(query)["GetAllFiles"]
-        result: dict[str, str] = {}
-        for items in response:
-            result[items["Nome"]] = items["DataUltimaModifica"]
+        # result: dict[str, str] = {}
+        # for items in response:
+        #    result[items["Nome"]] = items["DataUltimaModifica"]
 
-        return result
+        return response
 
     def removeFileByName(self, fileName: str) -> None:
         """Rimuove il file dal cloud"""
