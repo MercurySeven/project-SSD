@@ -1,6 +1,7 @@
-from PySide6.QtCore import Signal, Slot, Qt
+from PySide6.QtCore import Signal, Slot, Qt, QSize
 from PySide6.QtWidgets import (QPushButton, QLabel,
                                QVBoxLayout, QWidget)
+from PySide6.QtGui import QPixmap, QIcon
 
 
 class WatchWidget(QWidget):
@@ -39,7 +40,10 @@ class WatchWidget(QWidget):
         self.running_label.setText("disattivata")
         self.running_label.setAccessibleName('Subtitle')
 
-        self.syncButton = QPushButton("↻", self)
+        self.syncButton = QPushButton(self)
+        syncIcon = QIcon(QPixmap('icons/reload.png'))
+        self.syncButton.setIcon(syncIcon)
+        self.syncButton.setIconSize(QSize(50,50))
         self.syncButton.setCheckable(True)
         self.syncButton.setChecked(False)
         self.syncButton.setAccessibleName('HighlightButton')
@@ -51,6 +55,7 @@ class WatchWidget(QWidget):
 
         # create layout
         self.layout = QVBoxLayout()
+        self.layout.setAlignment(Qt.AlignCenter)
         self.layout.addWidget(self.watch_label)
         self.layout.addWidget(self.running_label)
         self.layout.addWidget(self.syncButton)
