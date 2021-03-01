@@ -81,7 +81,6 @@ class MyHandler(PatternMatchingEventHandler):
     """
     Class used to handle all the events caught by the observer
     """
-    currentEvent = ""
     update = False
 
     def __init__(self):
@@ -114,30 +113,23 @@ class MyHandler(PatternMatchingEventHandler):
     def on_modified(self, event):
         super(MyHandler, self).on_modified(event)
         what = 'Directory' if event.is_directory else 'File'  # for future use
-        current_event = what + ", modified, " + \
-            event.src_path
-        self.logger.info(current_event)
+        self.logger.info(f"{what}, modified, {event.src_path}")
 
     def on_created(self, event):
         super(MyHandler, self).on_created(event)
         what = 'Directory' if event.is_directory else 'File'  # for future use
-        current_event = what + ", created, " + \
-            event.src_path
-        self.logger.info(current_event)
+        self.logger.info(f"{what}, created, {event.src_path}")
 
     def on_deleted(self, event):
         super(MyHandler, self).on_deleted(event)
         what = 'Directory' if event.is_directory else 'File'  # for future use
-        current_event = what + ", deleted, " + \
-            event.src_path
-        self.logger.info(current_event)
+        self.logger.info(f"{what}, deleted, {event.src_path}")
 
     def on_moved(self, event):
         super(MyHandler, self).on_moved(event)
         what = 'Directory' if event.is_directory else 'File'
-        current_event = what + ", moved, from: " + event.src_path + \
-            ", to: " + event.dest_path
-        self.logger.info(current_event)
+        self.logger.info(
+            f"{what}, moved, from: {event.src_path}, to: {event.dest_path}")
 
     def get_boolean(self, boolean):
         self.update = boolean
