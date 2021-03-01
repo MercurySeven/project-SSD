@@ -1,7 +1,7 @@
 from enum import Enum
 import os
 from datetime import datetime
-from server import Server
+from network.server import Server
 from settings import Settings
 
 
@@ -77,12 +77,12 @@ class metaData:
              -elimino i file che non son presenti nel server
              -aggiorno nel client tutti i file che hanno DataUltimaModifica differente dal server (anche se hanno una data di ultima modifica maggiore vince il server)"""
         for i in self.newFilesServer:
-            """aggiungo nel client i nuovi file presenti nel server"""
+            """download dei file non presenti nel client"""
             # TODO
         for i in self.newFilesClient:
-            """rimuovo i nuovi file del client"""
-            print(f"rimosso il file {self.directory}\\{i[0]}")
-            # os.remove(f"{self.directory}\\{i[0]}")
+            """upload dei file non presenti nel server"""
+            file_path = os.path.join(self.directory, i[0])
+            self.server.sendToServer(file_path, i[1])
             # TODO
         for y in self.updateFileServer:
             # devo cancellare i file nel client con nome y["nome"] e esportare dal server il file y["nome"] e caricarlo nel client
@@ -106,9 +106,7 @@ class metaData:
             """aggiungo file"""
             # TODO
         for i in self.newFilesServer:
-            """elimino i metadati dei nuovi file nel server"""
-            self.server.removeFileByName(i[0])
-            """elimino i file dal server """
+            """download dei file non presenti nel client"""
             # TODO
         for i in self.updateFilesClient:
             """aggiorno i metadata dei file aggiornati nel client al server"""
@@ -132,12 +130,14 @@ class metaData:
            aggiungo nel server solo i file che nel client hanno l ultima modifica maggiore
            aggiorno nel client i file che nel server hanno ultima modifica superiore"""
         for i in self.newFilesClient:
+            """upload i file client che non sono presenti nel server"""
             file_path = os.path.join(self.directory, i[0])
             self.server.sendToServer(file_path, i[1])
-            """inserisco il nuovo file nel server"""
+
             # TODO
         for i in self.newFilesServer:
-            """inserisco il nuovo file y[0] nel client"""
+            """scarico i file che non sono presenti nel client"""
+            self.server.downloadFromServer(i[0])
             # TODO
         for i in self.updateFilesClient:
             """aggiorno il file nel server"""
@@ -172,7 +172,7 @@ class metaData:
         }
         return data
 
-    def getDataClient(self):
+    def getDataClient(self) -> list:
         p = []
         for root, dirs, files in os.walk(self.directory):
             for name in files:
@@ -188,7 +188,6 @@ class metaData:
         return data
 
 
-metadata = metaData()
 """
 print(f"file presenti nel client {metadata.getDataClient()}")
 print(f"file presenti nel server {metadata.getDataServer()}")
