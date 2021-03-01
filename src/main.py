@@ -1,4 +1,5 @@
 import sys
+import logging
 
 from PySide6.QtCore import (QCoreApplication)
 from PySide6.QtWidgets import (QApplication, QFileDialog)
@@ -20,6 +21,10 @@ if __name__ == "__main__":
 
     # initialize settings
     settings = Settings()
+
+    # initialize logging format
+    logging.basicConfig(level=logging.INFO,
+                        format="%(levelname)s:%(filename)s:%(asctime)s:%(message)s")
 
     # settings.update_path(None) # debug
 

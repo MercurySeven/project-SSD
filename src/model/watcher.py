@@ -81,7 +81,6 @@ class MyHandler(PatternMatchingEventHandler):
     """
     Class used to handle all the events caught by the observer
     """
-    update = False
 
     def __init__(self):
         """
@@ -130,50 +129,3 @@ class MyHandler(PatternMatchingEventHandler):
         what = 'Directory' if event.is_directory else 'File'
         self.logger.info(
             f"{what}, moved, from: {event.src_path}, to: {event.dest_path}")
-
-    def get_boolean(self, boolean):
-        self.update = boolean
-
-    @staticmethod
-    def is_path_valid(
-            path_to_validate: str,
-            extra_to_attach: str = "") -> bool:
-        """
-        Method used to check if the path is valid (I.E the path is a valid string and the file pointing at that
-        path can be read
-
-        :param path_to_validate: str with the path
-        :param extra_to_attach: str to attach at the path, this is used to avoid doing None + Any as adding None to something will throw an exception
-        :return: False if the path is not valid (None) or cannot be read
-        """
-        if path_to_validate is not None:
-            try:
-                with open(path_to_validate + extra_to_attach, "r"):
-                    return True
-            except OSError:
-                print("Errore lettura file")
-                return False
-        else:
-            print("Path = none")
-            return False
-
-    # controlla se termina con "/" altrimenti lo aggiunge
-    @staticmethod
-    def setup_path(path_to_fix: str) -> str:
-        """
-        Method used to setup a correct directory pathing I.E adding / at the end of the path if it's missing.
-        It can raise an exception if the param is not a string
-
-        :param path_to_fix: str with path to check if it needs to be fixed
-        :return: str with fixed path
-        """
-        if not isinstance(path_to_fix, str):
-            raise TypeError(
-                "Argument path_to_fix is not a string")
-        else:
-            # se non termina con "/" lo aggiungo
-            if not path_to_fix.endswith("/"):
-                return path_to_fix + "/"
-            else:
-                # altrimenti lascialo così
-                return path_to_fix
