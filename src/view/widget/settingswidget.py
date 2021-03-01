@@ -1,4 +1,4 @@
-from PySide6.QtCore import (Slot, Qt)
+from PySide6.QtCore import (Signal, Slot, Qt)
 from PySide6.QtWidgets import (
     QLabel, QVBoxLayout, QHBoxLayout, QWidget, QPushButton,
     QFileDialog, QRadioButton)
@@ -8,7 +8,7 @@ from settings import Settings
 class SettingsWidget(QWidget):
 
     # creating Signals
-    # TODO
+    Sg_path_changed = Signal()
 
     def __init__(self, parent=None):
         super(SettingsWidget, self).__init__(parent)
@@ -90,6 +90,8 @@ class SettingsWidget(QWidget):
                 self.settings.update_path(sync_path[0])
                 self.updatePathText()
                 print("Nuova directory impostata: " + self.settings.get_path())
+
+                self.Sg_path_changed.emit()
 
     def setPriority(self, b):
         if(b.text() == 'Locale'):

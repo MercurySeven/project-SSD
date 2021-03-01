@@ -20,6 +20,12 @@ class Controller(QObject):
 
         self.view.mainWidget.watchWidget.Sg_watch.connect(self.watcher.run)
 
+        self.view.mainWidget.settingsWidget.Sg_path_changed.connect(self.reboot)
+
     @Slot()
     def show_app(self):
         self.view.show()
+
+    @Slot()
+    def reboot(self):
+        self.watcher.reboot()

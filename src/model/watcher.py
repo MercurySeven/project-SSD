@@ -22,7 +22,7 @@ class Watcher:
         # off
         self.settings = Settings()
         self.observer = Observer()
-        self.path = self.settings.get_path()
+        self.path = lambda: self.settings.get_path()
 
     def run(self, watch):
         """
@@ -49,7 +49,7 @@ class Watcher:
                 return False
             else:
                 print("attiva thread watchdog")  # debug
-                print("Controllo cartella: " + self.path)
+                print("Controllo cartella: " + self.path())
                 self.is_running = True
                 self.background()
                 return True
@@ -64,7 +64,7 @@ class Watcher:
         # Lo richiamo ogni volta perchè non posso far ripartire lo stesso
         # thread
         self.observer = Observer()
-        self.observer.schedule(event_handler, self.path, recursive=True)
+        self.observer.schedule(event_handler, self.path(), recursive=True)
         self.observer.start()
 
     def reboot(self):
