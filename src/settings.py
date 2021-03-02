@@ -8,7 +8,8 @@ config = configparser.ConfigParser()
 logger = logging.getLogger("settings")
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 print(os.path.abspath(file_name))
-last_update = os.path.getmtime(file_name)
+if os.path.exists(file_name):
+    last_update = os.path.getmtime(file_name)
 
 
 def __read_from_file() -> None:
@@ -18,17 +19,12 @@ def __read_from_file() -> None:
     last_update = os.path.getmtime(file_name)
 
 
-def check_file() -> None:
-    print(os.path.abspath(file_name))
-    if os.path.isfile(file_name):
-        logger.info("Carico impostazioni da file: " + file_name)
-        __read_from_file()
-    else:
-        logger.info(
-            "File di impostazioni non esistente, verrà creato")
-        create_standard_settings()
-
-check_file()
+def __write_on_file() -> None:
+    """Salva le impostazioni su file"""
+    with open(file_name, 'w') as configfile:
+        config.write(configfile)
+    global last_update
+    last_update = os.path.getmtime(file_name)
 
 
 def create_standard_settings() -> None:
@@ -45,12 +41,18 @@ def create_standard_settings() -> None:
     __write_on_file()
 
 
-def __write_on_file() -> None:
-    """Salva le impostazioni su file"""
-    with open(file_name, 'w') as configfile:
-        config.write(configfile)
-    global last_update
-    last_update = os.path.getmtime(file_name)
+def check_file() -> None:
+    print(os.path.abspath(file_name))
+    if os.path.isfile(file_name):
+        logger.info("Carico impostazioni da file: " + file_name)
+        __read_from_file()
+    else:
+        logger.info(
+            "File di impostazioni non esistente, verrà creato")
+        create_standard_settings()
+
+
+check_file()
 
 
 def get_config(section: str, passed_config: str) -> Optional[str]:
