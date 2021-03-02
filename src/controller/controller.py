@@ -42,6 +42,6 @@ class Controller(QObject):
     def background(self):
         while True:
             # sync do_stuff()
-            sleep(20)
             self.algorithm.updateDiff()
             self.algorithm.applyChanges(3)  # policy last update
+            sleep(20)

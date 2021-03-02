@@ -1,5 +1,7 @@
 import base64
 import os
+import time
+import datetime
 from gql import gql, Client
 from gql.transport.aiohttp import AIOHTTPTransport
 from settings import Settings
@@ -50,6 +52,7 @@ class Server:
                     DownloadFile(fileName: $fileName) {
                         Nome
                         Base64
+                        DataUltimaModifica
                     }
                 }
                 ''')
@@ -58,6 +61,7 @@ class Server:
         }
         response = self.client.execute(query, variable_values=params)
         base64_string = response["DownloadFile"]["Base64"]
+        data_ultima_modifica = response["DownloadFile"]["DataUltimaModifica"]
 
         if response != "0":
             base64_bytes = base64_string.encode('ascii')
@@ -66,6 +70,11 @@ class Server:
 
             with open(path, "wb") as fh:
                 fh.write(base64.decodebytes(base64_bytes))
+
+            last_update = time.mktime(datetime.datetime.strptime(
+                data_ultima_modifica, "%Y-%m-%d %H:%M:%S").timetuple())
+
+            os.utime(path, (last_update, last_update))
 
     def getAllFiles(self) -> Dict[str, str]:
         """Restituisce il nome dei file con l'ultima modifica"""

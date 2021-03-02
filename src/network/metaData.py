@@ -51,10 +51,12 @@ class metaData:
                     if ultimaModifica != client_file["DataUltimaModifica"]:
                         if ultimaModifica > client_file["DataUltimaModifica"]:
                             print(f"{nome} è stato modificato nel server")
-                            self.updateFileServer.append([nome, ultimaModifica])
+                            self.updateFileServer.append(
+                                [nome, ultimaModifica])
                         else:
                             print(f"{nome} è stato modificato nel client")
-                            self.updateFilesClient.append([nome, client_file['DataUltimaModifica']])
+                            self.updateFilesClient.append(
+                                [nome, client_file['DataUltimaModifica']])
                     trovato = True
                     break
             if not trovato:
@@ -117,7 +119,8 @@ class metaData:
             for i in self.getDataClient():
                 if i["Nome"] == y[0]:
                     file_path = os.path.join(self.directory, i['Nome'])
-                    self.server.sendToServer(file_path, i["DataUltimaModifica"])
+                    self.server.sendToServer(
+                        file_path, i["DataUltimaModifica"])
                     break
 
     def applyChangeLastUpdate(self) -> None:
@@ -155,12 +158,13 @@ class metaData:
         name = os.path.basename(file)
         size = os.path.getsize(file)
         ultima_modifica = datetime.fromtimestamp(
-            os.stat(file).st_mtime).strftime("%Y-%m-%d %I:%M:%S")
+            os.stat(file).st_mtime).strftime("%Y-%m-%d %H:%M:%S")
         data = {
             'Nome': name,
             'Dimensione': size,
             'DataUltimaModifica': ultima_modifica
         }
+        print("->>>>>>>>>>>>>>>>>>>>Data ultima modifica: " + ultima_modifica)
         return data
 
     def getDataClient(self) -> list:

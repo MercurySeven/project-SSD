@@ -26,7 +26,8 @@ if __name__ == "__main__":
     # initialize logging format
     logging.basicConfig(level=logging.INFO,
                         format="%(levelname)s:%(filename)s:%(asctime)s:%(message)s")
-
+    # Remove asyncio debug and info messages, but leave warnings.
+    logging.getLogger('asyncio').setLevel(logging.WARNING)
     # settings.update_path(None) # debug
 
     # Controlliamo se l'utente ha già settato il PATH della cartella
