@@ -106,7 +106,7 @@ class metaData:
             print(f"aggiunto metadati al server del file {i[0]}")
             """aggiungo file"""
             # TODO
-        for i in self.newFilesServer:F
+        for i in self.newFilesServer:
             """download dei file non presenti nel client"""
             # TODO
         for i in self.updateFilesClient:
