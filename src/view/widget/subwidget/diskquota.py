@@ -5,7 +5,7 @@ from PySide6.QtGui import QIntValidator
 import os
 import math
 
-from settings import Settings
+import settings
 
 from PySide6.QtCore import Qt
 
@@ -27,12 +27,11 @@ class diskQuota(QWidget):
     def __init__(self, parent=None):
         super(diskQuota, self).__init__(parent)
 
-        self.settings = Settings()
 
         self.setAccessibleName('InfoBox')
 
-        folderSize = get_size(self.settings.get_path())
-        maxSize = self.settings.get_quota_disco()
+        folderSize = get_size(settings.get_path())
+        maxSize = settings.get_quota_disco()
 
         # Barra riempimento disco
 
@@ -72,9 +71,9 @@ class diskQuota(QWidget):
 
     def updateSpace(self):
 
-        folderSize = get_size(self.settings.get_path())
-        self.settings.update_quota_disco(self.dedicatedSpace.text())
-        maxSize = self.settings.get_quota_disco()
+        folderSize = get_size(settings.get_path())
+        settings.update_quota_disco(self.dedicatedSpace.text())
+        maxSize = settings.get_quota_disco()
 
         self.diskProgress.setRange(0, maxSize)
         self.diskProgress.setValue(folderSize)

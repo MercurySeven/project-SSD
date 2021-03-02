@@ -4,15 +4,14 @@ import time
 import datetime
 from gql import gql, Client
 from gql.transport.aiohttp import AIOHTTPTransport
-from settings import Settings
+import settings
 from typing import Dict
 
 
 class Server:
 
     def __init__(self):
-        self.settings = Settings()
-        self.url: str = self.settings.get_server_url()
+        self.url: str = settings.get_server_url()
 
         transport = AIOHTTPTransport(url=self.url)
         self.client: Client = Client(transport=transport)
@@ -66,7 +65,7 @@ class Server:
         if response != "0":
             base64_bytes = base64_string.encode('ascii')
 
-            path = os.path.join(self.settings.get_path(), fileName)
+            path = os.path.join(settings.get_path(), fileName)
 
             with open(path, "wb") as fh:
                 fh.write(base64.decodebytes(base64_bytes))

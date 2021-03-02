@@ -1,7 +1,7 @@
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
 import logging
-from settings import Settings
+import settings
 
 
 class Watcher:
@@ -20,9 +20,8 @@ class Watcher:
         # connect
         # could be deleted, for now it's just to avoid Exceptions when turning
         # off
-        self.settings = Settings()
         self.observer = Observer()
-        self.path = lambda: self.settings.get_path()
+        self.path = lambda: settings.get_path()
 
     def run(self, watch):
         """
@@ -93,7 +92,6 @@ class MyHandler(PatternMatchingEventHandler):
                 "*/log.mer",
                 "*/config.ini"])
 
-        self.settings = Settings()
         # Debug < Info < Warning < Error so setting debug will get everything
         # I need to create a new logger cuz davide's logger is root log
         self.logger = logging.getLogger("watchdog")

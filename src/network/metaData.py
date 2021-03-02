@@ -2,7 +2,7 @@ from enum import Enum
 import os
 from datetime import datetime
 from network.server import Server
-from settings import Settings
+import settings
 from typing import Dict
 
 
@@ -23,7 +23,6 @@ class metaData:
         # file nel server che sono più aggiornati rispetto a quelli nel client
         self.updateFileServer: list[list[str, str]] = []
         """percorso cartella locale"""
-        settings = Settings()
         self.directory: str = settings.get_path()
 
         self.server: Server = Server()

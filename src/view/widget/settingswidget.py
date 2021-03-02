@@ -2,9 +2,9 @@ from PySide6.QtCore import (Signal, Slot, Qt)
 from PySide6.QtWidgets import (
     QLabel, QVBoxLayout, QHBoxLayout, QWidget, QPushButton,
     QFileDialog, QRadioButton)
-from settings import Settings
 
 from view.widget.subwidget.diskquota import diskQuota
+import settings
 
 
 class SettingsWidget(QWidget):
@@ -16,7 +16,6 @@ class SettingsWidget(QWidget):
         super(SettingsWidget, self).__init__(parent)
 
         # environment variables
-        self.settings = Settings()
 
         self.setObjectName('Settings')
 
@@ -57,7 +56,7 @@ class SettingsWidget(QWidget):
         self.diskLabel.setText(
             "Quota disco")
         self.diskLabel.setAccessibleName('Subtitle')
-
+        settings.check_file()
         self.diskQuota = diskQuota(self)
         # connect
         self.changePathButton.clicked.connect(self.setPath)
@@ -85,7 +84,7 @@ class SettingsWidget(QWidget):
         self.setLayout(layout)
 
     def updatePathText(self) -> None:
-        self.path_label.setText(self.settings.get_path())
+        self.path_label.setText(settings.get_path())
 
     @Slot()
     def setPath(self):
@@ -99,9 +98,9 @@ class SettingsWidget(QWidget):
         if dialog.exec_():
             sync_path = dialog.selectedFiles()
             if (len(sync_path) == 1):
-                self.settings.update_path(sync_path[0])
+                settings.update_path(sync_path[0])
                 self.updatePathText()
-                print("Nuova directory impostata: " + self.settings.get_path())
+                print("Nuova directory impostata: " + settings.get_path())
 
                 self.Sg_path_changed.emit()
 

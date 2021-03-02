@@ -7,7 +7,7 @@ from PySide6.QtWidgets import (QApplication, QFileDialog)
 
 from controller.controller import Controller
 from view.system_tray_icon import SystemTrayIcon
-from settings import Settings
+import settings
 
 if __name__ == "__main__":
 
@@ -21,7 +21,7 @@ if __name__ == "__main__":
     app.setQuitOnLastWindowClosed(False)
 
     # initialize settings
-    settings = Settings()
+    settings.check_file()
 
     # initialize logging format
     logging.basicConfig(level=logging.INFO,

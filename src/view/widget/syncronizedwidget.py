@@ -3,7 +3,7 @@ from PySide6.QtWidgets import (QLabel, QVBoxLayout, QHBoxLayout, QWidget, QScrol
 from model.directory import Directory
 
 from view.widget.subwidget.filewidget import FileWidget
-from settings import Settings
+import settings
 
 
 class SyncronizedWidget(QWidget):
@@ -14,9 +14,8 @@ class SyncronizedWidget(QWidget):
     def __init__(self, parent=None):
         super(SyncronizedWidget, self).__init__(parent)
 
-        self.settings = Settings()
         layout = QVBoxLayout()
-        self.current_dir = Directory('', self.settings.get_path())
+        self.current_dir = Directory('', settings.get_path())
         self.listOfFileWidget = []
         for file in self.current_dir.files:
             self.listOfFileWidget.append(FileWidget(file.getName(), file.getCreationDate(), file.getLastModifiedDate(), file.getType(), file.getSize(), file.getStatus()))
