@@ -36,6 +36,10 @@ class diskQuota(QWidget):
 
         # Barra riempimento disco
 
+        self.progressLabel = QLabel(self)
+        self.progressLabel.setText('Spazio occupato')
+        self.progressLabel.setAccessibleName('Subtitle')
+
         self.diskProgress = QProgressBar()
         self.diskProgress.setFormat('')
         self.diskProgress.setRange(0, maxSize)
@@ -58,6 +62,7 @@ class diskQuota(QWidget):
 
         diskLayout = QVBoxLayout()
         diskLayout.setAlignment(Qt.AlignLeft)
+        diskLayout.addWidget(self.progressLabel)
         diskLayout.addWidget(self.diskProgress)
         diskLayout.addWidget(self.diskQuota)
         diskLayout.addWidget(self.spaceLabel)
