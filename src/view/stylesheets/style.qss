@@ -134,3 +134,43 @@ QWidget[accessibleName='MenuNav'] > QPushButton:hover {
 QWidget[accessibleName='MenuNav'] > QPushButton:checked {
     background-color: #565656;
 }
+
+/* 
+Stile File
+*/
+
+QWidget[accessibleName='Stacked'] QWidget[accessibleName='FileHeader'] {
+    background-color: #353535;
+    border-radius: 6px;
+}
+
+QWidget[accessibleName='Stacked'] QWidget[accessibleName='FileHeader'] > QLabel {
+    background-color: #404040;
+    border: 0px;
+    border-radius: 6px;
+    padding: 5px;
+    min-width: 50px;
+}
+
+QWidget[accessibleName='Stacked'] QWidget[accessibleName='File'] {
+    background-color: #353535;
+    border-radius: 6px;
+    margin: 0;
+}
+
+QWidget[accessibleName='Stacked'] QWidget[accessibleName='File'] > QLabel {
+    border: 0px;
+    border-radius: 6px;
+    padding: 5px;
+}
+
+QWidget[accessibleName='FileScroll'] QScrollBar {
+    width: 0px;
+}
+QWidget[accessibleName='FileScroll'] {
+    padding: 0;
+    margin: 0;
+    background-color: #353535
+}
+
+
