@@ -153,24 +153,40 @@ QWidget[accessibleName='Stacked'] QWidget[accessibleName='FileHeader'] > QLabel 
 }
 
 QWidget[accessibleName='Stacked'] QWidget[accessibleName='File'] {
-    background-color: #353535;
+    background-color: #404040;
     border-radius: 6px;
-    margin: 0;
+    border:0px;
+    margin: 0px;
+    padding: 0px;
 }
 
 QWidget[accessibleName='Stacked'] QWidget[accessibleName='File'] > QLabel {
-    border: 0px;
+    border-right: 0px;
+    margin-right: 0px;
     border-radius: 6px;
     padding: 5px;
+    background-color: #404040;
+
 }
 
 QWidget[accessibleName='FileScroll'] QScrollBar {
     width: 0px;
 }
-QWidget[accessibleName='FileScroll'] {
+
+QWidget[accessibleName='FileScroll'] > QWidget > QWidget{
     padding: 0;
     margin: 0;
-    background-color: #353535
+    border: 0px;
+    border-radius: 6px;
+    background-color: #353535;
+}
+
+QWidget[accessibleName='FileScroll']{
+    padding: 0;
+    margin: 0;
+    border: 0px;
+    border-radius: 6px;
+    background-color: #353535;
 }
 
 
