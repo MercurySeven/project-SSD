@@ -38,7 +38,7 @@ class Test(unittest.TestCase):
 
     def test_updateFile(self):
         """controllo l'aggiornamento di un file nel client (politica Client)"""
-        metadata = metaData()
+        metadata = MetaData()
         # server = Server()
         file_path = os.path.join(metadata.directory, "file_uno.txt")
         file_uno = open(file_path, "w")
@@ -82,7 +82,7 @@ class Test(unittest.TestCase):
 
     def test_due(self):
         """controllo last Update"""
-        metadata = metaData()
+        metadata = MetaData()
         # server = Server()
         file_path1 = os.path.join(metadata.directory, "file_uno.txt")
         file_uno = open(file_path1, "w")
