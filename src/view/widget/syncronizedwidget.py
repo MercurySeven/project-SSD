@@ -14,6 +14,7 @@ class SyncronizedWidget(QWidget):
         self.label.setAlignment(Qt.AlignCenter)
 
         # create layout
-        layout = QVBoxLayout()
-        layout.addWidget(self.label)
-        self.setLayout(layout)
+        # layout = QVBoxLayout()
+        # layout.addWidget(self.label)
+        # self.setLayout(layout)
+

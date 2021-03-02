@@ -1,6 +1,7 @@
 
 import os
-from model.file import File
+import magic
+from src.model.file import File
 
 
 class Directory:
@@ -17,7 +18,8 @@ class Directory:
         with os.scandir(self.path) as dir_entries:
             os.chdir(self.path)
             for entry in dir_entries:
-                file = File(entry.name, os.stat(entry.name).st_ctime, os.stat(
-                    entry.name).st_mtime_ns, " ", os.stat(entry.name).st_size, " ")
+                dir = str(self.path) + '/' + entry.name
+                content_type = magic.from_file( dir, mime=True)
+                file = File(entry.name, os.stat(entry.name).st_ctime, os.stat(entry.name).st_mtime_ns, content_type, os.stat(entry.name).st_size, " ")
                 self.files.append(file)
-                print(file.getName())
+                print(file.getName() + file.getType())
