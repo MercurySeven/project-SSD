@@ -15,28 +15,32 @@ class Policy(Enum):
 class metaData:
     def __init__(self):
         # file che son nel client e non sono nel server
-        self.newFilesClient = []
+        self.newFilesClient: list[list[str, str]] = []
         # file che son nel server e non sono nel client
-        self.newFilesServer = []
+        self.newFilesServer: list[list[str, str]] = []
         # file nel client che sono più aggiornati rispetto a quelli nel server
-        self.updateFilesClient = []
+        self.updateFilesClient: list[list[str, str]] = []
         # file nel server che sono più aggiornati rispetto a quelli nel client
-        self.updateFileServer = []
+        self.updateFileServer: list[list[str, str]] = []
         """percorso cartella locale"""
         settings = Settings()
-        self.directory = settings.get_path()
+        self.directory: str = settings.get_path()
 
-        self.server = Server()
+        self.server: Server = Server()
 
         # metadata dei file nel client
-        # self.metaClient = self.getDataClient()
+        #  self.getDataClient()
         # """metadata dei file nel server"""
-        # self.metaServer = self.getDataServer()
+        # self.getDataServer()
 
     def getDataServer(self) -> Dict[str, str]:
         return self.server.getAllFiles()
 
     def updateDiff(self):
+        self.newFilesClient = []
+        self.newFilesClient = []
+        self.updateFilesClient = []
+        self.updateFileServer = []
         # controllo che tutti i file del server siano uguali a quelli del client e la data di ultima modifica
         for server_file in self.getDataServer():
             nome = server_file["Nome"]
@@ -47,12 +51,10 @@ class metaData:
                     if ultimaModifica != client_file["DataUltimaModifica"]:
                         if ultimaModifica > client_file["DataUltimaModifica"]:
                             print(f"{nome} è stato modificato nel server")
-                            self.updateFileServer.append(
-                                [nome, ultimaModifica])
+                            self.updateFileServer.append([nome, ultimaModifica])
                         else:
                             print(f"{nome} è stato modificato nel client")
-                            self.updateFilesClient.append(
-                                [nome, client_file['DataUltimaModifica']])
+                            self.updateFilesClient.append([nome, client_file['DataUltimaModifica']])
                     trovato = True
                     break
             if not trovato:
@@ -81,18 +83,17 @@ class metaData:
             """download dei file non presenti nel client"""
             # TODO
         for i in self.newFilesClient:
-            """upload dei file non presenti nel server"""
+            """rimuovo i file non presenti nel server"""
             file_path = os.path.join(self.directory, i[0])
-            self.server.sendToServer(file_path, i[1])
-            # TODO
+            os.remove(file_path, i[1])
         for y in self.updateFileServer:
             # devo cancellare i file nel client con nome y["nome"] e esportare dal server il file y["nome"] e caricarlo nel client
-            # TODO
-            ''
+            file_path = os.path.join(self.directory, i[0])
+            self.server.downloadFromServer(file_path, i[1])
         for y in self.updateFilesClient:
             # stessa cosa di sopra
-            # TODO
-            ''
+            file_path = os.path.join(self.directory, i[0])
+            self.server.downloadFromServer(file_path, i[1])
 
     def applyChangeClient(self):
         """aggiorno il server:
@@ -100,57 +101,46 @@ class metaData:
             -elimino i file che non son presenti nel nel Client
             -aggiorno nel server tutti i file che hanno DataUltimaModifica differente dal client (anche se hanno una data di ultima modifica maggiore vince il client)"""
         for i in self.newFilesClient:
-            """aggiorno nel server i meta dei nuovi file"""
+            """aggiorno nel server i nuovi file presenti nel Client"""
             file_path = os.path.join(self.directory, i[0])
             self.server.sendToServer(file_path, i[1])
-            print(f"aggiunto metadati al server del file {i[0]}")
-            """aggiungo file"""
-            # TODO
+            print(f"aggiunto al server il file {i[0]}")
         for i in self.newFilesServer:
-            """download dei file non presenti nel client"""
-            # TODO
+            """elimino i nuovi file nel server"""
+            self.server.removeFileByName(i[0])
         for i in self.updateFilesClient:
-            """aggiorno i metadata dei file aggiornati nel client al server"""
+            """invio i file aggiornati nel client al server"""
             file_path = os.path.join(self.directory, i[0])
             self.server.sendToServer(file_path, i[1])
-            """invio il file aggiornato al server"""
-            # TODO
         for y in self.updateFileServer:
-            """ripristino i metadati alla versione che è presente nel client"""
+            """ripristino i file nel server alla versione che è presente nel client"""
             for i in self.getDataClient():
                 if i["Nome"] == y[0]:
                     file_path = os.path.join(self.directory, i['Nome'])
-                    self.server.sendToServer(
-                        file_path, i["DataUltimaModifica"])
-                    """ invio il file i["nome"] al server"""
-                    # TODO
+                    self.server.sendToServer(file_path, i["DataUltimaModifica"])
                     break
 
-    def applyChangeLastUpdate(self):
-        """sincronizzo i nuovi file (problema sul controllo dei nomi)
+    def applyChangeLastUpdate(self) -> None:
+        """sincronizzo i nuovi file
            aggiungo nel server solo i file che nel client hanno l ultima modifica maggiore
-           aggiorno nel client i file che nel server hanno ultima modifica superiore"""
+           aggiorno nel client i file che nel server hanno ultima modifica maggiore"""
         for i in self.newFilesClient:
             """upload i file client che non sono presenti nel server"""
             file_path = os.path.join(self.directory, i[0])
             self.server.sendToServer(file_path, i[1])
 
-            # TODO
         for i in self.newFilesServer:
             """scarico i file che non sono presenti nel client"""
             self.server.downloadFromServer(i[0])
-            # TODO
         for i in self.updateFilesClient:
             """aggiorno il file nel server"""
-            # TODO
-            """aggiorno i metadati nel server"""
             file_path = os.path.join(self.directory, i[0])
             self.server.sendToServer(file_path, i[1])
         for i in self.updateFileServer:
             """aggiorno i file nel client"""
-            # TODO
+            self.server.downloadFromServer(i[0])
 
-    def applyChanges(self, policy: Policy):
+    def applyChanges(self, policy: Policy) -> None:
         self.updateDiff()
         if policy == Policy.Client:
             self.applyChangeClient()
