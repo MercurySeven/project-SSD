@@ -7,7 +7,13 @@ file_name = "config.ini"
 config = configparser.ConfigParser()
 logger = logging.getLogger("settings")
 last_update = os.path.getmtime(file_name)
-# check_file()
+
+
+def __read_from_file() -> None:
+    """Legge le impostazioni dal file"""
+    config.read(file_name)
+    global last_update
+    last_update = os.path.getmtime(file_name)
 
 
 def check_file() -> None:
@@ -19,6 +25,8 @@ def check_file() -> None:
         logger.info(
             "File di impostazioni non esistente, verrà creato")
         create_standard_settings()
+
+check_file()
 
 
 def create_standard_settings() -> None:
@@ -35,13 +43,6 @@ def create_standard_settings() -> None:
     __write_on_file()
 
 
-def __read_from_file() -> None:
-    """Legge le impostazioni dal file"""
-    config.read(file_name)
-    global last_update
-    last_update = os.path.getmtime(file_name)
-
-
 def __write_on_file() -> None:
     """Salva le impostazioni su file"""
     with open(file_name, 'w') as configfile:
@@ -53,15 +54,19 @@ def __write_on_file() -> None:
 def get_config(section: str, passed_config: str) -> Optional[str]:
     """Ritorna il valore della config desiderata, None se inesistente"""
     new_time = os.path.getmtime(file_name)
+    print(os.path.abspath(file_name))
 
     # Il file è stato modificato lo ricarico
     if new_time > last_update:
         __read_from_file()
         logger.debug("Impostazioni cambiate, file ricaricato")
 
+    print(config.sections())
     if section not in config.sections():
+        print("primo if fallito")
         return None
     if passed_config not in config[section]:
+        print("Secondo if fallito")
         return None
     return config[section][passed_config]
 
