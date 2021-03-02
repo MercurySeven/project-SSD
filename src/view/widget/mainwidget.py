@@ -9,6 +9,7 @@ from PySide6.QtCore import Qt
 from view.widget.watchwidget import WatchWidget
 from model.directory import Directory
 import re
+from src.view.widget.subwidget.filewidget import FileWidget
 
 
 class MainWidget(QWidget):
@@ -32,9 +33,13 @@ class MainWidget(QWidget):
 
         self.settingsWidget = SettingsWidget(self)
 
-        # self.listOfFiles = Directory(
-        #     '', self.settingsWidget.settings.get_path())
+        self.current_dir = Directory('', self.settingsWidget.settings.get_path())
+        self.listOfFileWidget = []
+        for file in self.current_dir.files:
+            self.listOfFileWidget.append(FileWidget(file.getName(), file.getCreationDate(), file.getLastModifiedDate(), file.getType(), file.getSize(), file.getStatus()))
 
+        for file in self.listOfFileWidget:
+            self.central_view.addLayout(file)
         # stacked
         self.swidget = QStackedWidget()
         self.swidget.setAccessibleName("Stacked")

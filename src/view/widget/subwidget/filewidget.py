@@ -1,5 +1,6 @@
-from PySide6.QtWidgets import (QPushButton, QHBoxLayout, QWidget, QLabel)
+from PySide6.QtWidgets import (QPushButton, QHBoxLayout, QWidget)
 
+from PySide.QtGui import (QLabel)
 class FileWidget(QWidget):
     def __init__(self, name, creation_date, last_modified_date, type, size, status):
         super(FileWidget, self).__init__()
