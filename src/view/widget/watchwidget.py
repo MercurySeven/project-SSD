@@ -67,13 +67,13 @@ class WatchWidget(QWidget):
 
     @Slot()
     def __run_watch(self):
-        print("called SyncWidget.__run -> emit watch(True)")  # debug
+        print("called WatchWidget.__run -> emit watch(True)")  # debug
         self.running_label.setText("attivata")
         self.Sg_watch.emit(True)
 
     @Slot()
     def __stop_watch(self):
-        print("called watchWidget.__stop -> emit watch(False)")  # debug
+        print("called WatchWidget.__stop -> emit watch(False)")  # debug
         self.running_label.setText("disattivata")
         self.Sg_watch.emit(False)
 
