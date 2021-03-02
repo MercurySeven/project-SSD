@@ -140,12 +140,12 @@ Stile File
 */
 
 QWidget[accessibleName='Stacked'] QWidget[accessibleName='FileHeader'] {
-    background-color: #353535;
+    background-color: #404040;
     border-radius: 6px;
 }
 
 QWidget[accessibleName='Stacked'] QWidget[accessibleName='FileHeader'] > QLabel {
-    background-color: #353535;
+    background-color: #404040;
     border: 0px;
     border-radius: 6px;
     padding: 5px;
@@ -155,7 +155,7 @@ QWidget[accessibleName='Stacked'] QWidget[accessibleName='FileHeader'] > QLabel 
 }
 
 QWidget[accessibleName='Stacked'] QWidget[accessibleName='File'] {
-    background-color: #404040;
+    background-color: #353535;
     border-radius: 6px;
     border:0px;
     margin: 0px;
@@ -165,7 +165,7 @@ QWidget[accessibleName='Stacked'] QWidget[accessibleName='File'] {
 QWidget[accessibleName='Stacked'] QWidget[accessibleName='File'] > QLabel {
     border-radius: 6px;
     padding: 5px;
-    background-color: #404040;
+    background-color: #353535;
     min-width: 150px;
     max-width: 150px;
 
@@ -178,6 +178,12 @@ QWidget[accessibleName='FileScroll'] QScrollBar {
 QWidget[accessibleName='FileScroll'] > QWidget > QWidget{
     padding: 0;
     margin: 0;
+    border: 0px;
+    border-radius: 6px;
+    background-color: #2A2A2A;
+}
+
+QWidget[accessibleName='FileScroll'] {
     border: 0px;
     border-radius: 6px;
     background-color: #353535;
