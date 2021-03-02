@@ -13,28 +13,37 @@ class MenuWidget(QWidget):
         fileIcon = QIcon(QPixmap(':/icons/copy.png'))
         settingsIcon = QIcon(QPixmap(':/icons/settings.png'))
 
-        syncronizedButton = QPushButton(self)
-        syncronizedButton.setIcon(fileIcon)
-        syncronizedButton.setIconSize(QSize(30, 30))
+        self.syncronizedButton = QPushButton(self)
+        self.syncronizedButton.setIcon(fileIcon)
+        self.syncronizedButton.setIconSize(QSize(30, 30))
+        self.syncronizedButton.setCheckable(True)
 
-        settingsButton = QPushButton(self)
-        settingsButton.setIcon(settingsIcon)
-        settingsButton.setIconSize(QSize(30, 30))
+        self.settingsButton = QPushButton(self)
+        self.settingsButton.setIcon(settingsIcon)
+        self.settingsButton.setIconSize(QSize(30, 30))
+        self.settingsButton.setCheckable(True)
+        self.syncronizedButton.setChecked(False)
 
         # connect to actions
-        syncronizedButton.clicked.connect(self.showSyncronized)
-        settingsButton.clicked.connect(self.showSettings)
+        self.syncronizedButton.clicked.connect(self.showSyncronized)
+        self.settingsButton.clicked.connect(self.showSettings)
 
         # layout
         vbox = QVBoxLayout()
         vbox.setAlignment(Qt.AlignCenter)
-        vbox.addWidget(syncronizedButton)
+        vbox.addWidget(self.syncronizedButton)
         vbox.addStretch()
-        vbox.addWidget(settingsButton)
+        vbox.addWidget(self.settingsButton)
         self.setLayout(vbox)
+
+        self.syncronizedButton.setChecked(True)
 
     def showSyncronized(self):
         self.parent().swidget.setCurrentWidget(self.parent().syncronizedWidget)
+        self.settingsButton.setChecked(False)
+        self.syncronizedButton.setChecked(True)
 
     def showSettings(self):
         self.parent().swidget.setCurrentWidget(self.parent().settingsWidget)
+        self.syncronizedButton.setChecked(False)
+        self.settingsButton.setChecked(True)

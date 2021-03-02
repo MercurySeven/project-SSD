@@ -94,6 +94,11 @@ QPushButton[accessibleName='HighlightButton'] {
     min-height:100px;
     padding: 0px;
     margin: 0px;
+    background-color: #404040;
+}
+
+QPushButton[accessibleName='HighlightButton']:hover {
+    background-color: #4B4B4B;
 }
 
 QWidget > QPushButton[accessibleName='HighlightButton']:checked {
@@ -111,6 +116,7 @@ Stile Pulsanti MenuNav
 QWidget[accessibleName='MenuNav'] > QPushButton {
     
     border-width:0px;
+    background-color: #404040;
     border-radius:30px;
     font-size: 30px;
     max-width:60px;
@@ -119,4 +125,12 @@ QWidget[accessibleName='MenuNav'] > QPushButton {
     min-height:60px;
     padding: 0px;
     margin: 0px;
+}
+
+QWidget[accessibleName='MenuNav'] > QPushButton:hover {
+    background-color: #4B4B4B;
+}
+
+QWidget[accessibleName='MenuNav'] > QPushButton:checked {
+    background-color: #565656;
 }
