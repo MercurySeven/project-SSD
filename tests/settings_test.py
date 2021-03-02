@@ -29,7 +29,7 @@ class TestSettings(unittest.TestCase):
         result = self.settings.get_config("Generale", "quota")
         self.assertIsNone(result)
 
-        result = self.settings.get_config("Generale", "port")
+        result = self.settings.get_config("General", "port")
         self.assertIsNone(result)
 
     def test_update_quota_disco(self) -> None:
