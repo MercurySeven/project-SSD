@@ -1,6 +1,7 @@
 import unittest
 import os
-from settings import Settings
+import sys
+from src.settings import Settings
 
 
 class TestSettings(unittest.TestCase):
@@ -62,6 +63,8 @@ class TestSettings(unittest.TestCase):
         feature = self.settings.get_config("Extra", "darkmode")
         self.assertEqual(feature, "True")
 
+    @unittest.skipUnless(sys.platform.startswith("win") or
+                         sys.platform.startswith("darwin"), "requires Windows or MacOs")
     def test_file_already_exists(self) -> None:
         local_settings = Settings(os.path.join("tests", "config.ini"))
         quota_disco = local_settings.get_quota_disco()
