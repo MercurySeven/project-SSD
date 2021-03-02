@@ -43,7 +43,7 @@ class WatchWidget(QWidget):
         self.syncButton = QPushButton(self)
         syncIcon = QIcon(QPixmap(':/icons/reload.png'))
         self.syncButton.setIcon(syncIcon)
-        self.syncButton.setIconSize(QSize(50,50))
+        self.syncButton.setIconSize(QSize(50, 50))
         self.syncButton.setCheckable(True)
         self.syncButton.setChecked(False)
         self.syncButton.setAccessibleName('HighlightButton')
@@ -51,7 +51,7 @@ class WatchWidget(QWidget):
 
         self.menu_label = QLabel(self)
         self.menu_label.setAlignment(Qt.AlignCenter)
-        self.menu_label.setText("_____________")
+        self.menu_label.setText("• • •")
 
         # create layout
         self.layout = QVBoxLayout()
