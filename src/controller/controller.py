@@ -7,7 +7,7 @@ from model.watcher import Watcher
 from time import sleep
 from threading import Thread
 
-from network.metaData import (metaData, Policy)
+from network.metadata import (MetaData, Policy)
 
 
 class Controller(QObject):
@@ -26,7 +26,7 @@ class Controller(QObject):
         self.view.mainWidget.settingsWidget.Sg_path_changed.connect(
             self.reboot)
 
-        self.algorithm = metaData()
+        self.algorithm = MetaData()
 
         sync = Thread(target=self.background, daemon=True)
         sync.start()
@@ -47,6 +47,6 @@ class Controller(QObject):
         while True:
             # sync do_stuff()
             if self.watcher.status():
-                self.algorithm.applyChanges(
+                self.algorithm.apply_changes(
                     Policy.lastUpdate)
             sleep(20)

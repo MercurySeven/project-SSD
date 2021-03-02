@@ -18,7 +18,7 @@ class Server:
         transport = AIOHTTPTransport(url=self.url)
         self.client: Client = Client(transport=transport)
 
-    def sendToServer(self, filePath: str, lastUpdate: str) -> None:
+    def send_to_server(self, filePath: str, lastUpdate: str) -> None:
         """Richiede il percorso del file e l'orario di ultima modifica"""
         query = gql('''
                 mutation SingleUpload($file: Upload!, $datetime: String!) {
@@ -42,7 +42,7 @@ class Server:
 
             print(result)
 
-    def downloadFromServer(self, fileName: str) -> None:
+    def download_from_server(self, fileName: str) -> None:
         """
             Scarica il file dal server e lo salva nel path, filename deve
             comprendere anche l'estensione
@@ -77,7 +77,7 @@ class Server:
 
             os.utime(path, (last_update, last_update))
 
-    def getAllFiles(self) -> Dict[str, str]:
+    def get_all_files(self) -> Dict[str, str]:
         """Restituisce il nome dei file con l'ultima modifica"""
         query = gql('''
                 query {
@@ -94,7 +94,7 @@ class Server:
 
         return response
 
-    def removeFileByName(self, fileName: str) -> None:
+    def remove_file_by_name(self, fileName: str) -> None:
         """Rimuove il file dal cloud"""
         query = gql('''
                 mutation RemoveFile($fileName: String!) {

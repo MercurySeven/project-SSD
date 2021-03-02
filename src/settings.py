@@ -11,7 +11,7 @@ last_update = os.path.getmtime(file_name)
 
 
 def check_file() -> None:
-    print(os.path.abspath("."))
+    print(os.path.abspath(file_name))
     if os.path.isfile(file_name):
         logger.info("Carico impostazioni da file: " + file_name)
         __read_from_file()
