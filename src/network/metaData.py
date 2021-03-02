@@ -170,7 +170,7 @@ class metaData:
                 if dir == root:
                     p.append(f"{root}{name}")
                 else:
-                    p.append(f"{root}\\{name}")
+                    p.append(os.path.join(root, name))
         data = []
         for file in p:
             data.append(self.metadata(file))
