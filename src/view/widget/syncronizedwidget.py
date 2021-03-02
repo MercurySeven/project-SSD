@@ -27,10 +27,13 @@ class SyncronizedWidget(QWidget):
         self.scrollArea.setAccessibleName('FileScroll')
         # self.scrollArea.setStyleSheet("background-color:blue;")
         self.scrollArea.setWidgetResizable(True)
+        self.scrollArea.setLayout(QVBoxLayout())
+        self.scrollArea.layout().setSpacing(0)
         self.scrollArea.horizontalScrollBar().setEnabled(False)
 
         self.fileWindow = QWidget(self)
         fileLayout = QVBoxLayout()
+        fileLayout.setContentsMargins(0,0,0,0)
         # create layout
 
         layout.addWidget(self.header)
