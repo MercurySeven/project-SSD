@@ -37,16 +37,19 @@ class metaData:
         return self.server.getAllFiles()
 
     def updateDiff(self):
-        self.newFilesClient = []
-        self.newFilesClient = []
-        self.updateFilesClient = []
-        self.updateFileServer = []
+        self.newFilesClient.clear()
+        self.newFilesServer.clear()
+        self.updateFilesClient.clear()
+        self.updateFileServer.clear()
+
+        file_presenti_nel_server = self.getDataServer()
+        file_presenti_nel_client = self.getDataClient()
         # controllo che tutti i file del server siano uguali a quelli del client e la data di ultima modifica
-        for server_file in self.getDataServer():
+        for server_file in file_presenti_nel_server:
             nome = server_file["Nome"]
             ultimaModifica = server_file["DataUltimaModifica"]
             trovato = False
-            for client_file in self.getDataClient():
+            for client_file in file_presenti_nel_client:
                 if nome == client_file["Nome"]:
                     if ultimaModifica != client_file["DataUltimaModifica"]:
                         if ultimaModifica > client_file["DataUltimaModifica"]:
@@ -64,11 +67,11 @@ class metaData:
                 self.newFilesServer.append([nome, ultimaModifica])
 
         # controllo che tutti i file nel client sono uguali al quelli nel server
-        for client_file in self.getDataClient():
+        for client_file in file_presenti_nel_client:
             nome = client_file["Nome"]
             ultimaModifica = client_file["DataUltimaModifica"]
             trovato = False
-            for y in self.getDataServer():
+            for y in file_presenti_nel_server:
                 if nome == y["Nome"]:
                     trovato = True
                     break
@@ -164,7 +167,7 @@ class metaData:
             'Dimensione': size,
             'DataUltimaModifica': ultima_modifica
         }
-        print("->>>>>>>>>>>>>>>>>>>>Data ultima modifica: " + ultima_modifica)
+        print(f"Nome: {name} data ultima modifica: {ultima_modifica}")
         return data
 
     def getDataClient(self) -> list:
