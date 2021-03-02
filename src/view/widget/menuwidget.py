@@ -10,8 +10,8 @@ class MenuWidget(QWidget):
 
         self.setAccessibleName('MenuNav')
 
-        fileIcon = QIcon(QPixmap('icons/copy.png'))
-        settingsIcon = QIcon(QPixmap('icons/settings.png'))
+        fileIcon = QIcon(QPixmap(':/icons/copy.png'))
+        settingsIcon = QIcon(QPixmap(':/icons/settings.png'))
 
         syncronizedButton = QPushButton(self)
         syncronizedButton.setIcon(fileIcon)

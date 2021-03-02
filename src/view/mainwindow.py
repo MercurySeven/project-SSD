@@ -13,7 +13,7 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
 
         self.setWindowTitle("SSD: Zextras Drive Desktop")
-        self.setWindowIcon(QIcon("logo.png"))
+        self.setWindowIcon(QIcon(":icons/logo.png"))
 
         # widgets
         self.mainWidget = MainWidget(self)

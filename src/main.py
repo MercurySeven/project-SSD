@@ -1,5 +1,6 @@
 import sys
 import logging
+import view.icons
 
 from PySide6.QtCore import (QCoreApplication)
 from PySide6.QtWidgets import (QApplication, QFileDialog)
@@ -48,7 +49,7 @@ if __name__ == "__main__":
 
     controller = Controller()
 
-    system_tray = SystemTrayIcon("logo.png", app)
+    system_tray = SystemTrayIcon(":/icons/logo.png", app)
     system_tray.exit_option.triggered.connect(app.quit)
     system_tray.show_option.triggered.connect(controller.show_app)
     system_tray.show()
