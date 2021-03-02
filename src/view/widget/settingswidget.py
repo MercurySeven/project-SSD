@@ -4,6 +4,8 @@ from PySide6.QtWidgets import (
     QFileDialog, QRadioButton)
 from settings import Settings
 
+from view.widget.subwidget.diskquota import diskQuota
+
 
 class SettingsWidget(QWidget):
 
@@ -49,6 +51,14 @@ class SettingsWidget(QWidget):
         self.radioRemote.clicked.connect(lambda: self.setPriority(
             self.radioRemote))
 
+        # Impostazioni quota disco
+
+        self.diskLabel = QLabel(self)
+        self.diskLabel.setText(
+            "Quota disco")
+        self.diskLabel.setAccessibleName('Subtitle')
+
+        self.diskQuota = diskQuota(self)
         # connect
         self.changePathButton.clicked.connect(self.setPath)
 
@@ -69,6 +79,8 @@ class SettingsWidget(QWidget):
         layout.addLayout(pathLayout)
         layout.addWidget(self.priorityLabel)
         layout.addLayout(radioLayout)
+        layout.addWidget(self.diskLabel)
+        layout.addWidget(self.diskQuota)
         layout.addStretch()
         self.setLayout(layout)
 

@@ -17,30 +17,24 @@ class MenuWidget(QWidget):
         syncronizedButton.setIcon(fileIcon)
         syncronizedButton.setIconSize(QSize(30, 30))
 
-        diskQuotaButton = QPushButton(self)
         settingsButton = QPushButton(self)
         settingsButton.setIcon(settingsIcon)
         settingsButton.setIconSize(QSize(30, 30))
 
         # connect to actions
         syncronizedButton.clicked.connect(self.showSyncronized)
-        diskQuotaButton.clicked.connect(self.showDiskQuota)
         settingsButton.clicked.connect(self.showSettings)
 
         # layout
         vbox = QVBoxLayout()
         vbox.setAlignment(Qt.AlignCenter)
         vbox.addWidget(syncronizedButton)
-        vbox.addWidget(diskQuotaButton)
         vbox.addStretch()
         vbox.addWidget(settingsButton)
         self.setLayout(vbox)
 
     def showSyncronized(self):
         self.parent().swidget.setCurrentWidget(self.parent().syncronizedWidget)
-
-    def showDiskQuota(self):
-        self.parent().swidget.setCurrentWidget(self.parent().diskquotaWidget)
 
     def showSettings(self):
         self.parent().swidget.setCurrentWidget(self.parent().settingsWidget)

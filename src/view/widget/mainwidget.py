@@ -1,7 +1,6 @@
 from PySide6 import QtCore
 from PySide6.QtWidgets import (
     QVBoxLayout, QHBoxLayout, QWidget, QStackedWidget)
-from view.widget.diskquotawidget import DiskQuotaWidget
 from view.widget.menuwidget import MenuWidget
 from view.widget.syncronizedwidget import SyncronizedWidget
 from view.widget.settingswidget import SettingsWidget
@@ -31,7 +30,6 @@ class MainWidget(QWidget):
         self.menuWidget = MenuWidget(self)
         self.syncronizedWidget = SyncronizedWidget(self)
 
-        self.diskquotaWidget = DiskQuotaWidget(self)
         self.settingsWidget = SettingsWidget(self)
 
         # self.listOfFiles = Directory(
@@ -41,7 +39,6 @@ class MainWidget(QWidget):
         self.swidget = QStackedWidget()
         self.swidget.setAccessibleName("Stacked")
         self.swidget.addWidget(self.syncronizedWidget)
-        self.swidget.addWidget(self.diskquotaWidget)
         self.swidget.addWidget(self.settingsWidget)
 
         # create layout
