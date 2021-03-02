@@ -6,6 +6,8 @@ from typing import Optional
 file_name = "config.ini"
 config = configparser.ConfigParser()
 logger = logging.getLogger("settings")
+os.chdir(os.path.dirname(os.path.realpath(__file__)))
+print(os.path.abspath(file_name))
 last_update = os.path.getmtime(file_name)
 
 
