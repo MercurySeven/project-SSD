@@ -8,16 +8,16 @@ from PySide6.QtCore import QSettings
 
 class Settings:
 
-    def __init__(self):
-        self.filename = "config.ini"
+    def __init__(self, file_name: str = "config.ini"):
+        self.file_name = file_name
         self.config = configparser.ConfigParser()
         self.logger = logging.getLogger("settings")
         self.__check_file()
         self.env_settings = QSettings()
 
     def __check_file(self) -> None:
-        if os.path.isfile(self.filename):
-            self.logger.info("Carico impostazioni da file: " + self.filename)
+        if os.path.isfile(self.file_name):
+            self.logger.info("Carico impostazioni da file: " + self.file_name)
             self.__read_from_file()
         else:
             self.logger.info(
@@ -39,18 +39,18 @@ class Settings:
 
     def __read_from_file(self) -> None:
         """Legge le impostazioni dal file"""
-        self.config.read(self.filename)
-        self.last_update = os.path.getmtime(self.filename)
+        self.config.read(self.file_name)
+        self.last_update = os.path.getmtime(self.file_name)
 
     def __write_on_file(self) -> None:
         """Salva le impostazioni su file"""
-        with open(self.filename, 'w') as configfile:
+        with open(self.file_name, 'w') as configfile:
             self.config.write(configfile)
-        self.last_update = os.path.getmtime(self.filename)
+        self.last_update = os.path.getmtime(self.file_name)
 
     def get_config(self, section: str, config: str) -> Optional[str]:
         """Ritorna il valore della config desiderata, None se inesistente"""
-        new_time = os.path.getmtime(self.filename)
+        new_time = os.path.getmtime(self.file_name)
 
         # Il file è stato modificato lo ricarico
         if new_time > self.last_update:
@@ -87,6 +87,9 @@ class Settings:
 
     def update_config(self, section: str, config: str, value: str) -> None:
         """Aggiunge o aggiorna una config"""
+        if section not in self.config.sections():
+            self.config[section] = {}
+
         self.config[section][config] = value
         self.__write_on_file()
         self.logger.info("New save: " + section + "/" +
