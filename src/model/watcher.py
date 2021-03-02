@@ -9,8 +9,6 @@ class Watcher:
     with signals or manually using the reboot method or run method
     """
 
-    is_running = False
-
     def __init__(self):
         """
         Constructor for Watcher class, used to setup some public variables(path) and hidden
@@ -22,6 +20,7 @@ class Watcher:
         # off
         self.observer = Observer()
         self.path = lambda: settings.get_path()
+        self.is_running: bool = False
 
     def run(self, watch):
         """
@@ -74,6 +73,9 @@ class Watcher:
         """
         self.run(False)
         self.run(True)
+    
+    def status(self) -> bool:
+        return self.is_running
 
 
 class MyHandler(PatternMatchingEventHandler):

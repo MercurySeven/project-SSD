@@ -21,7 +21,7 @@ class Controller(QObject):
         # Attivo il watchdog nella root definita dall'utente
         self.watcher = Watcher()
 
-        self.view.mainWidget.watchWidget.Sg_watch.connect(self.watcher.run)
+        self.view.mainWidget.watchWidget.Sg_watch.connect(self.Sl_watch)
 
         self.view.mainWidget.settingsWidget.Sg_path_changed.connect(
             self.reboot)
@@ -39,9 +39,14 @@ class Controller(QObject):
     def reboot(self):
         self.watcher.reboot()
 
+    @Slot(bool)
+    def Sl_watch(self, state):
+        self.watcher.run(state)
+
     def background(self):
         while True:
             # sync do_stuff()
-            self.algorithm.applyChanges(
-                Policy.lastUpdate)
+            if self.watcher.status():
+                self.algorithm.applyChanges(
+                    Policy.lastUpdate)
             sleep(20)

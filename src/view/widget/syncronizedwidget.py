@@ -23,22 +23,23 @@ class SyncronizedWidget(QWidget):
         self.header = FileWidget('Nome', 'Creazione', 'Ultima Modifica', 'Tipo', 'Grandezza', 'Stato Sync')
         self.header.setAccessibleName('FileHeader')
 
-        scrollArea = QScrollArea()
-        scrollArea.setAccessibleName('FileScroll')
-        scrollArea.setWidgetResizable(True)
-        scrollArea.horizontalScrollBar().setEnabled(False)
+        self.scrollArea = QScrollArea()
+        self.scrollArea.setAccessibleName('FileScroll')
+        # self.scrollArea.setStyleSheet("background-color:blue;")
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollArea.horizontalScrollBar().setEnabled(False)
 
-        fileWindow = QWidget(self)
+        self.fileWindow = QWidget(self)
         fileLayout = QVBoxLayout()
         # create layout
 
         layout.addWidget(self.header)
         for widget in self.listOfFileWidget:
             fileLayout.addWidget(widget)
-            widget.setAccessibleName('File')
-        fileWindow.setLayout(fileLayout)
-        fileWindow.setParent(scrollArea)
-        scrollArea.setWidget(fileWindow)
-        layout.addWidget(scrollArea)
+            widget.setParent(self.fileWindow)
+        self.fileWindow.setLayout(fileLayout)
+        self.fileWindow.setParent(self.scrollArea)
+        self.scrollArea.setWidget(self.fileWindow)
+        layout.addWidget(self.scrollArea)
         self.setLayout(layout)
 
