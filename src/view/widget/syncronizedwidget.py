@@ -22,9 +22,9 @@ class SyncronizedWidget(QWidget):
         for file in self.current_dir.files:
             self.listOfFileWidget.append(FileWidget(file.getName(), file.getCreationDate(), file.getLastModifiedDate(), file.getType(), file.getSize(), file.getStatus()))
 
-        #for widget in self.listOfFileWidget:
-        #    self.layout.addWidget(widget)
-        # self.setLayout(self.layout)
+        for widget in self.listOfFileWidget:
+            self.layout.addWidget(widget)
+        self.setLayout(self.layout)
         # create layout
         # layout = QVBoxLayout()
         # layout.addWidget(self.label)
