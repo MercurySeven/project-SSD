@@ -1,6 +1,6 @@
 
 import os
-from src.model.file import File
+from model.file import File
 from datetime import datetime
 
 class Directory:

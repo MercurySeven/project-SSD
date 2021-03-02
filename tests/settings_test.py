@@ -1,6 +1,6 @@
 import unittest
 import os
-from src.settings import Settings
+from settings import Settings
 
 
 class TestSettings(unittest.TestCase):
