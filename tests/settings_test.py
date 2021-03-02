@@ -67,9 +67,14 @@ class TestSettings(unittest.TestCase):
         quota_disco = local_settings.get_quota_disco()
         self.assertEqual(quota_disco, 1024)
 
+        self.assertEqual(local_settings.config, self.settings.config)
+
         local_settings.update_quota_disco("123456")
 
+        self.assertNotEqual(local_settings.config, self.settings.config)
+
         quota_disco = self.settings.get_quota_disco()
+        self.assertEqual(local_settings.config, self.settings.config)
         self.assertEqual(quota_disco, 123456)
 
 
