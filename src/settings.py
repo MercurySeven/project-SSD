@@ -3,18 +3,15 @@ import os.path
 import logging
 from typing import Optional
 
-from PySide6.QtCore import QSettings
-
-file_name = os.path.join(os.path.dirname(os.path.realpath(__file__)), "config.ini")
+file_name = "config.ini"
 config = configparser.ConfigParser()
 logger = logging.getLogger("settings")
 last_update = os.path.getmtime(file_name)
-# __check_file()
-env_settings = QSettings()
+# check_file()
 
 
 def check_file() -> None:
-    print(os.path.curdir)
+    print(os.path.abspath("."))
     if os.path.isfile(file_name):
         logger.info("Carico impostazioni da file: " + file_name)
         __read_from_file()
@@ -107,13 +104,3 @@ def update_config(section: str, passed_config: str, value: str) -> None:
 def update_quota_disco(value: str) -> None:
     """Aggiorna la quota disco"""
     update_config("General", "quota", value)
-
-
-def get_path() -> str:
-    return env_settings.value("sync_path")
-
-
-def update_path(new_path: str) -> None:
-    global env_settings
-    env_settings.setValue("sync_path", new_path)
-    env_settings.sync()  # Aggisce come da cache e forza l'agg.

@@ -2,7 +2,7 @@ import sys
 import logging
 import view.icons
 
-from PySide6.QtCore import (QCoreApplication)
+from PySide6.QtCore import (QCoreApplication, QSettings)
 from PySide6.QtWidgets import (QApplication, QFileDialog)
 
 from controller.controller import Controller
@@ -21,7 +21,8 @@ if __name__ == "__main__":
     app.setQuitOnLastWindowClosed(False)
 
     # initialize settings
-    settings.check_file()
+    env_settings = QSettings()
+    # settings.check_file()
 
     # initialize logging format
     logging.basicConfig(level=logging.INFO,
@@ -31,7 +32,7 @@ if __name__ == "__main__":
     # settings.update_path(None) # debug
 
     # Controlliamo se l'utente ha già settato il PATH della cartella
-    if not settings.get_path():
+    if not env_settings.value("sync_path"):
         dialog = QFileDialog()
         dialog.setFileMode(QFileDialog.Directory)
         dialog.setViewMode(QFileDialog.Detail)  # provare anche .List
@@ -45,8 +46,9 @@ if __name__ == "__main__":
 
         sync_path = dialog.selectedFiles()
         if (len(sync_path) == 1):
-            settings.update_path(sync_path[0])
-            print("Nuova directory: " + settings.get_path())
+            env_settings.setValue("sync_path", sync_path[0])
+            env_settings.sync()
+            print("Nuova directory: " + env_settings.value("sync_path"))
 
     controller = Controller()
 

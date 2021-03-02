@@ -1,9 +1,9 @@
-from enum import Enum
 import os
+from enum import Enum
 from datetime import datetime
 from network.server import Server
-import settings
 from typing import Dict
+from PySide6.QtCore import (QSettings)
 
 
 class Policy(Enum):
@@ -23,7 +23,8 @@ class metaData:
         # file nel server che sono più aggiornati rispetto a quelli nel client
         self.updateFileServer: list[list[str, str]] = []
         """percorso cartella locale"""
-        self.directory: str = settings.get_path()
+        env_settings = QSettings()
+        self.directory: str = env_settings.value("sync_path")
 
         self.server: Server = Server()
 

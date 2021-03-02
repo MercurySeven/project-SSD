@@ -2,16 +2,18 @@ import base64
 import os
 import time
 import datetime
+import settings
 from gql import gql, Client
 from gql.transport.aiohttp import AIOHTTPTransport
-import settings
 from typing import Dict
+from PySide6.QtCore import (QSettings)
 
 
 class Server:
 
     def __init__(self):
         self.url: str = settings.get_server_url()
+        self.env_settings = QSettings()
 
         transport = AIOHTTPTransport(url=self.url)
         self.client: Client = Client(transport=transport)
@@ -65,7 +67,7 @@ class Server:
         if response != "0":
             base64_bytes = base64_string.encode('ascii')
 
-            path = os.path.join(settings.get_path(), fileName)
+            path = os.path.join(self.env_settings.value("sync_path"), fileName)
 
             with open(path, "wb") as fh:
                 fh.write(base64.decodebytes(base64_bytes))

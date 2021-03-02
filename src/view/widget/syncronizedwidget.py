@@ -1,5 +1,6 @@
-from PySide6.QtCore import (Signal, Slot, Qt)
-from PySide6.QtWidgets import (QLabel, QVBoxLayout, QHBoxLayout, QWidget, QScrollArea, QSizePolicy)
+from PySide6.QtCore import (Signal, Slot, Qt, QSettings)
+from PySide6.QtWidgets import (
+    QLabel, QVBoxLayout, QHBoxLayout, QWidget, QScrollArea, QSizePolicy)
 from model.directory import Directory
 
 from view.widget.subwidget.filewidget import FileWidget
@@ -15,12 +16,15 @@ class SyncronizedWidget(QWidget):
         super(SyncronizedWidget, self).__init__(parent)
 
         layout = QVBoxLayout()
-        self.current_dir = Directory('', settings.get_path())
+        self.env_settings = QSettings()
+        self.current_dir = Directory('', self.env_settings.value("sync_path"))
         self.listOfFileWidget = []
         for file in self.current_dir.files:
-            self.listOfFileWidget.append(FileWidget(file.getName(), file.getCreationDate(), file.getLastModifiedDate(), file.getType(), file.getSize(), file.getStatus()))
-        
-        self.header = FileWidget('Nome', 'Creazione', 'Ultima Modifica', 'Tipo', 'Grandezza', 'Stato Sync')
+            self.listOfFileWidget.append(FileWidget(file.getName(), file.getCreationDate(
+            ), file.getLastModifiedDate(), file.getType(), file.getSize(), file.getStatus()))
+
+        self.header = FileWidget(
+            'Nome', 'Creazione', 'Ultima Modifica', 'Tipo', 'Grandezza', 'Stato Sync')
         self.header.setAccessibleName('FileHeader')
 
         self.scrollArea = QScrollArea()
@@ -42,4 +46,3 @@ class SyncronizedWidget(QWidget):
         self.scrollArea.setWidget(self.fileWindow)
         layout.addWidget(self.scrollArea)
         self.setLayout(layout)
-

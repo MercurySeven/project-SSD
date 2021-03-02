@@ -1,7 +1,7 @@
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
+from PySide6.QtCore import (QSettings)
 import logging
-import settings
 
 
 class Watcher:
@@ -19,7 +19,9 @@ class Watcher:
         # could be deleted, for now it's just to avoid Exceptions when turning
         # off
         self.observer = Observer()
-        self.path = lambda: settings.get_path()
+        env_settings = QSettings()
+
+        self.path = lambda: env_settings.value("sync_path")
         self.is_running: bool = False
 
     def run(self, watch):
@@ -73,7 +75,7 @@ class Watcher:
         """
         self.run(False)
         self.run(True)
-    
+
     def status(self) -> bool:
         return self.is_running
 
