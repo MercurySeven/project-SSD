@@ -33,13 +33,13 @@ class MainWidget(QWidget):
 
         self.settingsWidget = SettingsWidget(self)
 
-        self.current_dir = Directory('', self.settingsWidget.settings.get_path())
-        self.listOfFileWidget = []
-        for file in self.current_dir.files:
-            self.listOfFileWidget.append(FileWidget(file.getName(), file.getCreationDate(), file.getLastModifiedDate(), file.getType(), file.getSize(), file.getStatus()))
+        # self.current_dir = Directory('', self.settingsWidget.settings.get_path())
+        # self.listOfFileWidget = []
+        # for file in self.current_dir.files:
+        #   self.listOfFileWidget.append(FileWidget(file.getName(), file.getCreationDate(), file.getLastModifiedDate(), file.getType(), file.getSize(), file.getStatus()))
 
-        for file in self.listOfFileWidget:
-            self.central_view.addLayout(file)
+        #for file in self.listOfFileWidget:
+         #   self.central_view.addLayout(file)
         # stacked
         self.swidget = QStackedWidget()
         self.swidget.setAccessibleName("Stacked")
