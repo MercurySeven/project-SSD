@@ -79,28 +79,28 @@ class MetaData:
              -aggiungo i nuovi file presenti nel server
              -elimino i file che non son presenti nel server
              -aggiorno nel client tutti i file che hanno DataUltimaModifica differente dal server (anche se hanno una data di ultima modifica maggiore vince il server)"""
-        for y in self._update_file_server:
+        for nome_file, _ in self._update_file_server:
             # devo cancellare i file nel client con nome y["nome"] e esportare dal server il file y["nome"] e caricarlo nel client
-            file_path = os.path.join(self.directory, y[0])
-            self.server.download_from_server(file_path, y[1])
-        for y in self._update_files_client:
+            file_path = os.path.join(self.directory, nome_file)
+            self.server.download_from_server(file_path)
+        for nome_file, _ in self._update_files_client:
             # stessa cosa di sopra
-            file_path = os.path.join(self.directory, y[0])
-            self.server.download_from_server(file_path, y[1])
+            file_path = os.path.join(self.directory, nome_file)
+            self.server.download_from_server(file_path)
 
     def apply_change_client(self):
         """aggiorno il server:
             -aggiungo i nuovi file presenti nel client
             -elimino i file che non son presenti nel nel Client
             -aggiorno nel server tutti i file che hanno DataUltimaModifica differente dal client (anche se hanno una data di ultima modifica maggiore vince il client)"""
-        for i in self._update_files_client:
+        for nome_file, data in self._update_files_client:
             """invio i file aggiornati nel client al server"""
-            file_path = os.path.join(self.directory, i[0])
-            self.server.send_to_server(file_path, i[1])
-        for y in self._update_file_server:
+            file_path = os.path.join(self.directory, nome_file)
+            self.server.send_to_server(file_path, data)
+        for nome_file, _ in self._update_file_server:
             """ripristino i file nel server alla versione che è presente nel client"""
             for i in self.get_data_client():
-                if i["Nome"] == y[0]:
+                if i["Nome"] == nome_file:
                     file_path = os.path.join(self.directory, i['Nome'])
                     self.server.send_to_server(
                         file_path, i["DataUltimaModifica"])
@@ -110,24 +110,24 @@ class MetaData:
         """sincronizzo i nuovi file
            aggiungo nel server solo i file che nel client hanno l ultima modifica maggiore
            aggiorno nel client i file che nel server hanno ultima modifica maggiore"""
-        for i in self._update_files_client:
+        for nome_file, data in self._update_files_client:
             """aggiorno il file nel server"""
-            file_path = os.path.join(self.directory, i[0])
-            self.server.send_to_server(file_path, i[1])
-        for i in self._update_file_server:
+            file_path = os.path.join(self.directory, nome_file)
+            self.server.send_to_server(file_path, data)
+        for nome_file, _ in self._update_file_server:
             """aggiorno i file nel client"""
-            self.server.download_from_server(i[0])
+            self.server.download_from_server(nome_file)
 
     def default_operations(self) -> None:
         """Scarico i file che non sono presenti nel client
            Carico i file che non sono presenti nel server"""
-        for i in self._new_files_client:
+        for nome_file, data in self._new_files_client:
             """upload i file che non sono presenti nel server"""
-            file_path = os.path.join(self.directory, i[0])
-            self.server.send_to_server(file_path, i[1])
-        for i in self._new_files_server:
+            file_path = os.path.join(self.directory, nome_file)
+            self.server.send_to_server(file_path, data)
+        for nome_file, _ in self._new_files_server:
             """download i file che non sono presenti nel client"""
-            self.server.download_from_server(i[0])
+            self.server.download_from_server(nome_file)
 
     def apply_changes(self, policy: Policy) -> None:
         self.update_diff()
