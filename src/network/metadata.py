@@ -15,23 +15,18 @@ class Policy(Enum):
 class MetaData:
     def __init__(self):
         # file che son nel client e non sono nel server
-        self._new_files_client: list[list[str, str]] = []
+        self._new_files_client: list[list[str]] = []
         # file che son nel server e non sono nel client
-        self._new_files_server: list[list[str, str]] = []
+        self._new_files_server: list[list[str]] = []
         # file nel client che sono più aggiornati rispetto a quelli nel server
-        self._update_files_client: list[list[str, str]] = []
+        self._update_files_client: list[list[str]] = []
         # file nel server che sono più aggiornati rispetto a quelli nel client
-        self._update_file_server: list[list[str, str]] = []
+        self._update_file_server: list[list[str]] = []
         """percorso cartella locale"""
         env_settings = QSettings()
         self.directory: str = env_settings.value("sync_path")
 
         self.server: Server = Server()
-
-        # metadata dei file nel client
-        #  self.getDataClient()
-        # """metadata dei file nel server"""
-        # self.getDataServer()
 
     def get_data_server(self) -> Dict[str, str]:
         return self.server.get_all_files()
@@ -84,13 +79,6 @@ class MetaData:
              -aggiungo i nuovi file presenti nel server
              -elimino i file che non son presenti nel server
              -aggiorno nel client tutti i file che hanno DataUltimaModifica differente dal server (anche se hanno una data di ultima modifica maggiore vince il server)"""
-        for i in self._new_files_server:
-            """download dei file non presenti nel client"""
-            # TODO
-        for i in self._new_files_client:
-            """rimuovo i file non presenti nel server"""
-            file_path = os.path.join(self.directory, i[0])
-            os.remove(file_path, i[1])
         for y in self._update_file_server:
             # devo cancellare i file nel client con nome y["nome"] e esportare dal server il file y["nome"] e caricarlo nel client
             file_path = os.path.join(self.directory, i[0])
@@ -105,14 +93,6 @@ class MetaData:
             -aggiungo i nuovi file presenti nel client
             -elimino i file che non son presenti nel nel Client
             -aggiorno nel server tutti i file che hanno DataUltimaModifica differente dal client (anche se hanno una data di ultima modifica maggiore vince il client)"""
-        for i in self._new_files_client:
-            """aggiorno nel server i nuovi file presenti nel Client"""
-            file_path = os.path.join(self.directory, i[0])
-            self.server.send_to_server(file_path, i[1])
-            print(f"aggiunto al server il file {i[0]}")
-        for i in self._new_files_server:
-            """elimino i nuovi file nel server"""
-            self.server.remove_file_by_name(i[0])
         for i in self._update_files_client:
             """invio i file aggiornati nel client al server"""
             file_path = os.path.join(self.directory, i[0])
@@ -130,14 +110,6 @@ class MetaData:
         """sincronizzo i nuovi file
            aggiungo nel server solo i file che nel client hanno l ultima modifica maggiore
            aggiorno nel client i file che nel server hanno ultima modifica maggiore"""
-        for i in self._new_files_client:
-            """upload i file client che non sono presenti nel server"""
-            file_path = os.path.join(self.directory, i[0])
-            self.server.send_to_server(file_path, i[1])
-
-        for i in self._new_files_server:
-            """scarico i file che non sono presenti nel client"""
-            self.server.download_from_server(i[0])
         for i in self._update_files_client:
             """aggiorno il file nel server"""
             file_path = os.path.join(self.directory, i[0])
@@ -146,8 +118,20 @@ class MetaData:
             """aggiorno i file nel client"""
             self.server.download_from_server(i[0])
 
+    def default_operations(self) -> None:
+        """Scarico i file che non sono presenti nel client
+           Carico i file che non sono presenti nel server"""
+        for i in self._new_files_client:
+            """upload i file che non sono presenti nel server"""
+            file_path = os.path.join(self.directory, i[0])
+            self.server.send_to_server(file_path, i[1])
+        for i in self._new_files_server:
+            """download i file che non sono presenti nel client"""
+            self.server.download_from_server(i[0])
+
     def apply_changes(self, policy: Policy) -> None:
         self.update_diff()
+        self.default_operations()
         if policy == Policy.Client:
             self.apply_change_client()
         elif policy == Policy.Server:

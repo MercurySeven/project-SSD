@@ -22,7 +22,6 @@ if __name__ == "__main__":
 
     # initialize settings
     env_settings = QSettings()
-    # settings.check_file()
 
     # initialize logging format
     logging.basicConfig(level=logging.INFO,
