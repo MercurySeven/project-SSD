@@ -1,19 +1,35 @@
 from PySide6.QtWidgets import (QHBoxLayout, QWidget, QToolButton, QLabel, QVBoxLayout)
 from PySide6 import QtCore
 from PySide6.QtGui import QPixmap, QIcon
-from PySide6.QtCore import Qt, QSize
+from PySide6.QtCore import Qt, QSize, QTimer, Signal, Slot, QSettings
+
+from subprocess import call
+import os
 
 
 class FileWidget(QToolButton):
+
+    doubleClicked = Signal()
+    clicked = Signal()
+
     def __init__(self, name, creation_date, last_modified_date, type, size, status):
         super(FileWidget, self).__init__()
+
+        self.env_settings = QSettings()
+
+        self.timer = QTimer()
+        self.timer.setSingleShot(True)
+        self.timer.timeout.connect(self.clicked.emit)
+        super().clicked.connect(self.checkDoubleClick)
+
+        self.doubleClicked.connect(self.onDoubleclick)
 
         self.setAccessibleName('File')
 
         fileIcon = QIcon(QPixmap(':/icons/copy.png'))
 
         self.setIcon(fileIcon)
-        self.setIconSize(QSize(50, 50))
+        self.setIconSize(QSize(45, 45))
         self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
         
         self.name = str(name)
@@ -39,4 +55,15 @@ class FileWidget(QToolButton):
         
         self.layout().addWidget(self.contextWindow)'''
         # add fields to structure
+
+    @Slot()
+    def checkDoubleClick(self):
+        if self.timer.isActive():
+            self.doubleClicked.emit()
+            self.timer.stop()
+        else:
+            self.timer.start(250)
+
+    def onDoubleclick(self):
+        call(['xdg-open', self.env_settings.value("sync_path") + '/' + self.name])
 
