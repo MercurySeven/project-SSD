@@ -1,84 +1,66 @@
 import unittest
 import os
-import sys
-from src.settings import Settings
+
+from src import settings
 
 
 class TestSettings(unittest.TestCase):
 
     def setUp(self):
         """Metodo che viene chiamato prima di ogni metodo"""
-        self.settings = Settings(os.path.join("tests", "config.ini"))
-        self.settings.create_standard_settings()
+        settings.create_standard_settings()
 
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""
-        os.remove(self.settings.file_name)
+        os.remove(settings.file_name)
 
     def test_get_server_url(self) -> None:
-        url = self.settings.get_server_url()
+        url = settings.get_server_url()
         self.assertEqual(url, "http://20.56.176.12:80/")
 
     def test_get_server_url_with_slash(self) -> None:
-        self.settings.update_config(
+        settings.update_config(
             "Connection", "address", "http://20.56.176.12/")
-        url = self.settings.get_server_url()
+        url = settings.get_server_url()
         self.assertEqual(url, "http://20.56.176.12:80/")
 
     def test_get_quota_disco(self) -> None:
-        quota_disco = self.settings.get_quota_disco()
+        quota_disco = settings.get_quota_disco()
         self.assertEqual(quota_disco, 1024)
 
     def test_get_config(self) -> None:
-        result = self.settings.get_config("Connection", "port")
+        result = settings.get_config("Connection", "port")
         self.assertEqual(result, "80")
 
-        result = self.settings.get_config("Generale", "quota")
+        result = settings.get_config("Generale", "quota")
         self.assertIsNone(result)
 
-        result = self.settings.get_config("General", "port")
+        result = settings.get_config("General", "port")
         self.assertIsNone(result)
 
     def test_update_quota_disco(self) -> None:
-        self.settings.update_quota_disco("1234567")
-        self.assertEqual(self.settings.get_quota_disco(), 1234567)
+        settings.update_quota_disco("1234567")
+        self.assertEqual(settings.get_quota_disco(), 1234567)
 
-        self.settings.update_quota_disco("1000")
-        self.assertEqual(self.settings.get_quota_disco(), 1000)
+        settings.update_quota_disco("1000")
+        self.assertEqual(settings.get_quota_disco(), 1000)
 
     def test_get_quota_disco_fix(self) -> None:
-        self.settings.update_quota_disco("ABCDEFG")
-        self.assertEqual(self.settings.get_quota_disco(), 1024)
+        settings.update_quota_disco("ABCDEFG")
+        self.assertEqual(settings.get_quota_disco(), 1024)
 
     def test_update_config(self) -> None:
-        self.settings.update_config("Connection", "port", "22")
-        url = self.settings.get_server_url()
+        settings.update_config("Connection", "port", "22")
+        url = settings.get_server_url()
         self.assertEqual(url, "http://20.56.176.12:22/")
 
-        self.settings.update_config("Connection", "proxy", "3500")
-        proxy = self.settings.get_config("Connection", "proxy")
+        settings.update_config("Connection", "proxy", "3500")
+        proxy = settings.get_config("Connection", "proxy")
         self.assertEqual(proxy, "3500")
 
-        self.settings.update_config("Extra", "darkmode", "True")
-        feature = self.settings.get_config("Extra", "darkmode")
+        settings.update_config("Extra", "darkmode", "True")
+        feature = settings.get_config("Extra", "darkmode")
         self.assertEqual(feature, "True")
-
-    @unittest.skipUnless(sys.platform.startswith("win") or
-                         sys.platform.startswith("darwin"), "requires Windows or MacOs")
-    def test_file_already_exists(self) -> None:
-        local_settings = Settings(os.path.join("tests", "config.ini"))
-        quota_disco = local_settings.get_quota_disco()
-        self.assertEqual(quota_disco, 1024)
-
-        self.assertEqual(local_settings.config, self.settings.config)
-
-        local_settings.update_quota_disco("123456")
-
-        self.assertNotEqual(local_settings.config, self.settings.config)
-
-        quota_disco = self.settings.get_quota_disco()
-        self.assertEqual(local_settings.config, self.settings.config)
-        self.assertEqual(quota_disco, 123456)
 
 
 if __name__ == "__main__":

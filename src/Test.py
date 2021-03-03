@@ -1,24 +1,24 @@
-from network.metaData import metaData, Policy
+from network.metadata import MetaData, Policy
 from network.server import Server
 import os
 import unittest
-from settings import Settings
+import settings
 
 
 class Test(unittest.TestCase):
 
     def test_uno(self):
         """controllo l'inserimento di un file e l'eliminazione (politica Client)"""
-        metadata = metaData()
+        metadata = MetaData()
         # server = Server()
         file_path = os.path.join(metadata.directory, "file_uno.txt")
         file_uno = open(file_path, "w")
         file_uno.close()
-        metadata.applyChanges(Policy.Client)
-        for i in metadata.getDataServer():
+        metadata.apply_changes(Policy.Client)
+        for i in metadata.get_data_server():
             trovato = False
             data = False
-            for y in metadata.getDataClient():
+            for y in metadata.get_data_client():
                 if i['Nome'] == y['Nome']:
                     trovato = True
                     if i['DataUltimaModifica'] == y['DataUltimaModifica']:
@@ -27,10 +27,10 @@ class Test(unittest.TestCase):
             self.assertTrue(trovato)
             self.assertTrue(data)
         os.remove(file_path)
-        metadata.applyChanges(Policy.Client)
+        metadata.apply_changes(Policy.Client)
         nome = "file_uno.txt"
         trovato = False
-        for i in metadata.getDataServer():
+        for i in metadata.get_data_server():
             if i['Nome'] == nome:
                 trovato = True
                 break
@@ -38,16 +38,16 @@ class Test(unittest.TestCase):
 
     def test_updateFile(self):
         """controllo l'aggiornamento di un file nel client (politica Client)"""
-        metadata = metaData()
+        metadata = MetaData()
         # server = Server()
         file_path = os.path.join(metadata.directory, "file_uno.txt")
         file_uno = open(file_path, "w")
         file_uno.close()
-        metadata.applyChanges(Policy.Client)
-        for i in metadata.getDataServer():
+        metadata.apply_changes(Policy.Client)
+        for i in metadata.get_data_server():
             trovato = False
             data = False
-            for y in metadata.getDataClient():
+            for y in metadata.get_data_client():
                 if i['Nome'] == y['Nome']:
                     trovato = True
                     if i['DataUltimaModifica'] == y['DataUltimaModifica']:
@@ -58,11 +58,11 @@ class Test(unittest.TestCase):
         file_uno = open(file_path, "a")
         file_uno.write("nuova riga")
         file_uno.close()
-        metadata.applyChanges(Policy.Client)
-        for i in metadata.getDataServer():
+        metadata.apply_changes(Policy.Client)
+        for i in metadata.get_data_server():
             trovato = False
             data = False
-            for y in metadata.getDataClient():
+            for y in metadata.get_data_client():
                 if i['Nome'] == y['Nome']:
                     trovato = True
                     if i['DataUltimaModifica'] == y['DataUltimaModifica']:
@@ -71,10 +71,10 @@ class Test(unittest.TestCase):
             self.assertTrue(trovato)
             self.assertTrue(data)
         os.remove(file_path)
-        metadata.applyChanges(Policy.Client)
+        metadata.apply_changes(Policy.Client)
         nome = "file_uno.txt"
         trovato = False
-        for i in metadata.getDataServer():
+        for i in metadata.get_data_server():
             if i['Nome'] == nome:
                 trovato = True
                 break
@@ -82,7 +82,7 @@ class Test(unittest.TestCase):
 
     def test_due(self):
         """controllo last Update"""
-        metadata = metaData()
+        metadata = MetaData()
         # server = Server()
         file_path1 = os.path.join(metadata.directory, "file_uno.txt")
         file_uno = open(file_path1, "w")
@@ -90,17 +90,17 @@ class Test(unittest.TestCase):
         file_path2 = os.path.join(metadata.directory, "file_due.txt")
         file_due = open(file_path2, 'w')
         file_due.close()
-        metadata.applyChanges(Policy.lastUpdate)
-        for i in metadata.getDataServer():
+        metadata.apply_changes(Policy.lastUpdate)
+        for i in metadata.get_data_server():
             trovato = False
-            for y in metadata.getDataClient():
+            for y in metadata.get_data_client():
                 if i['Nome'] == y['Nome']:
                     trovato = True
                     break
             self.assertTrue(trovato)
-        for i in metadata.getDataClient():
+        for i in metadata.get_data_client():
             trovato = False
-            for y in metadata.getDataServer():
+            for y in metadata.get_data_server():
                 if i['Nome'] == y['Nome']:
                     trovato = True
                     break
@@ -109,17 +109,17 @@ class Test(unittest.TestCase):
         file_path3 = os.path.join(metadata.directory, "file_tre.txt")
         file_tre = open(file_path3, 'w')
         file_tre.close()
-        metadata.applyChanges(Policy.lastUpdate)
-        for i in metadata.getDataServer():
+        metadata.apply_changes(Policy.lastUpdate)
+        for i in metadata.get_data_server():
             trovato = False
-            for y in metadata.getDataClient():
+            for y in metadata.get_data_client():
                 if i['Nome'] == y['Nome']:
                     trovato = True
                     break
             self.assertTrue(trovato)
-        for i in metadata.getDataClient():
+        for i in metadata.get_data_client():
             trovato = False
-            for y in metadata.getDataServer():
+            for y in metadata.get_data_server():
                 if i['Nome'] == y['Nome']:
                     trovato = True
                     break
@@ -127,24 +127,24 @@ class Test(unittest.TestCase):
         os.remove(file_path1)
         os.remove(file_path2)
         os.remove(file_path3)
-        metadata.applyChanges(Policy.Client)
+        metadata.apply_changes(Policy.Client)
         nome = "file_uno.txt"
         trovato = False
-        for i in metadata.getDataServer():
+        for i in metadata.get_data_server():
             if i['Nome'] == nome:
                 trovato = True
                 break
         self.assertFalse(trovato)
         nome = "file_due.txt"
         trovato = False
-        for i in metadata.getDataServer():
+        for i in metadata.get_data_server():
             if i['Nome'] == nome:
                 trovato = True
                 break
         self.assertFalse(trovato)
         nome = "file_tre.txt"
         trovato = False
-        for i in metadata.getDataServer():
+        for i in metadata.get_data_server():
             if i['Nome'] == nome:
                 trovato = True
                 break

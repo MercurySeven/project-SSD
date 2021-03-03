@@ -1,45 +1,44 @@
 class File:
     def __init__(self, name, creation_date, last_modified_date, type, size, status):
-        self.__name = name
-        self.__creation_date = creation_date
-        self.__last_modified_date = last_modified_date
-        self.__type = type
-        self.__size = size
-        self.__status = status
+        self._name = name
+        self._creation_date = creation_date
+        self._last_modified_date = last_modified_date
+        self._type = type
+        self._size = size
+        self._status = status
 
-    def getName(self):
-        return self.__name
+    def get_name(self):
+        return self._name
 
-    def getCreationDate(self):
-        return self.__creation_date
+    def get_creation_date(self):
+        return self._creation_date
 
-    def getLastModifiedDate(self):
-        return self.__last_modified_date
+    def get_last_modified_date(self):
+        return self._last_modified_date
 
-    def getType(self):
-        return self.__type
+    def get_type(self):
+        return self._type
 
-    def getSize(self):
-        return self.__size
+    def get_size(self):
+        return self._size
 
-    def getStatus(self):
-        return self.__status
+    def get_status(self):
+        return self._status
 
-    def setName(self, name):
-        self.__name = name
+    def set_name(self, name):
+        self._name = name
 
+    def set_creation_date(self, creation_date):
+        self._creation_date = creation_date
 
-    def setCreationDate(self, creation_date):
-        self.__creation_date = creation_date
+    def set_last_modified_date(self, last_modified_date):
+        self._last_modified_date = last_modified_date
 
-    def setLastModifiedDate(self, last_modified_date):
-        self.__last_modified_date = last_modified_date
+    def set_type(self, type):
+        self._type = type
 
-    def setType(self, type):
-        self.__type = type
+    def set_size(self, size):
+        self._size = size
 
-    def setSize(self, size):
-        self.__size = size
-
-    def setStatus(self, status):
-        self.__status = status
+    def set_status(self, status):
+        self._status = status

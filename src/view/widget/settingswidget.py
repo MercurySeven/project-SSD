@@ -1,4 +1,4 @@
-from PySide6.QtCore import (Signal, Slot, Qt)
+from PySide6.QtCore import (Signal, Slot, Qt, QSettings)
 from PySide6.QtWidgets import (
     QLabel, QVBoxLayout, QHBoxLayout, QWidget, QPushButton,
     QFileDialog, QRadioButton)
@@ -16,6 +16,7 @@ class SettingsWidget(QWidget):
         super(SettingsWidget, self).__init__(parent)
 
         # environment variables
+        self.env_settings = QSettings()
 
         self.setObjectName('Settings')
 
@@ -84,7 +85,7 @@ class SettingsWidget(QWidget):
         self.setLayout(layout)
 
     def updatePathText(self) -> None:
-        self.path_label.setText(settings.get_path())
+        self.path_label.setText(self.env_settings.value("sync_path"))
 
     @Slot()
     def setPath(self):
@@ -98,9 +99,9 @@ class SettingsWidget(QWidget):
         if dialog.exec_():
             sync_path = dialog.selectedFiles()
             if (len(sync_path) == 1):
-                settings.update_path(sync_path[0])
+                self.env_settings.setValue("sync_path", sync_path[0])
+                self.env_settings.sync()
                 self.updatePathText()
-                print("Nuova directory impostata: " + settings.get_path())
 
                 self.Sg_path_changed.emit()
 

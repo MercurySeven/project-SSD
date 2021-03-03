@@ -3,25 +3,20 @@ import os.path
 import logging
 from typing import Optional
 
-from PySide6.QtCore import QSettings
 
-file_name = os.path.join(os.path.dirname(os.path.realpath(__file__)), "config.ini")
-config = configparser.ConfigParser()
-logger = logging.getLogger("settings")
-last_update = os.path.getmtime(file_name)
-# __check_file()
-env_settings = QSettings()
+def __read_from_file() -> None:
+    """Legge le impostazioni dal file"""
+    config.read(file_name)
+    global last_update
+    last_update = os.path.getmtime(file_name)
 
 
-def check_file() -> None:
-    print(os.path.curdir)
-    if os.path.isfile(file_name):
-        logger.info("Carico impostazioni da file: " + file_name)
-        __read_from_file()
-    else:
-        logger.info(
-            "File di impostazioni non esistente, verrà creato")
-        create_standard_settings()
+def __write_on_file() -> None:
+    """Salva le impostazioni su file"""
+    with open(file_name, 'w') as configfile:
+        config.write(configfile)
+    global last_update
+    last_update = os.path.getmtime(file_name)
 
 
 def create_standard_settings() -> None:
@@ -38,19 +33,14 @@ def create_standard_settings() -> None:
     __write_on_file()
 
 
-def __read_from_file() -> None:
-    """Legge le impostazioni dal file"""
-    config.read(file_name)
-    global last_update
-    last_update = os.path.getmtime(file_name)
-
-
-def __write_on_file() -> None:
-    """Salva le impostazioni su file"""
-    with open(file_name, 'w') as configfile:
-        config.write(configfile)
-    global last_update
-    last_update = os.path.getmtime(file_name)
+def check_file() -> None:
+    if os.path.isfile(file_name):
+        logger.info("Carico impostazioni da file: " + file_name)
+        __read_from_file()
+    else:
+        logger.info(
+            "File di impostazioni non esistente, verrà creato")
+        create_standard_settings()
 
 
 def get_config(section: str, passed_config: str) -> Optional[str]:
@@ -109,11 +99,15 @@ def update_quota_disco(value: str) -> None:
     update_config("General", "quota", value)
 
 
-def get_path() -> str:
-    return env_settings.value("sync_path")
+# Assoulutamente da sistemare, fatto per evitare di testare
+# direttamente sul file di config personale
+if __name__ == "src.settings":
+    file_name = "tests/config.ini"
+else:
+    file_name = "config.ini"
+config = configparser.ConfigParser()
+logger = logging.getLogger("settings")
+if os.path.exists(file_name):
+    last_update = os.path.getmtime(file_name)
 
-
-def update_path(new_path: str) -> None:
-    global env_settings
-    env_settings.setValue("sync_path", new_path)
-    env_settings.sync()  # Aggisce come da cache e forza l'agg.
+check_file()
