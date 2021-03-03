@@ -10,7 +10,6 @@ import os
 class FileWidget(QToolButton):
 
     doubleClicked = Signal()
-    clicked = Signal()
 
     def __init__(self, name, creation_date, last_modified_date, type, size, status):
         super(FileWidget, self).__init__()
@@ -18,8 +17,7 @@ class FileWidget(QToolButton):
         self.env_settings = QSettings()
         self.timer = QTimer()
         self.timer.setSingleShot(True)
-        self.timer.timeout.connect(self.clicked.emit)
-        super().clicked.connect(self.checkDoubleClick)
+        self.clicked.connect(self.checkDoubleClick)
 
         self.doubleClicked.connect(self.onDoubleclick)
 
@@ -55,12 +53,12 @@ class FileWidget(QToolButton):
         self.layout().addWidget(self.contextWindow)'''
         # add fields to structure
 
-    @Slot()
     def checkDoubleClick(self):
         if self.timer.isActive():
             self.doubleClicked.emit()
             self.timer.stop()
-        else:
+        
+        if self.timer.isActive() is False:
             self.timer.start(250)
 
     def onDoubleclick(self):
