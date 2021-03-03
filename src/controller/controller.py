@@ -49,4 +49,4 @@ class Controller(QObject):
             if self.watcher.status():
                 self.algorithm.apply_changes(
                     Policy.lastUpdate)
-            sleep(20)
+                sleep(20)
