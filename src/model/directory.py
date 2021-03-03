@@ -21,12 +21,11 @@ class Directory:
             os.chdir(self.path)  # punto critico dell'app!
             for entry in dir_entries:
                 dir = os.path.join(str(self.path), entry.name)
-                # content_type = magic.from_file( dir, mime=True)
                 file = File(entry.name,
                             datetime.fromtimestamp(os.stat(entry.name).st_ctime).strftime("%Y-%m-%d %H:%M:%S"),
                             datetime.fromtimestamp(os.stat(entry.name).st_mtime).strftime("%Y-%m-%d %H:%M:%S"),
                             self.define_type(entry.name),
-                            str(os.stat(entry.name).st_size) + " Byte", os.stat(entry.name).st_size)
+                            str(os.stat(entry.name).st_size), os.stat(entry.name).st_size)
                 self.files.append(file)
         os.chdir(restore_path)
 

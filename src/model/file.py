@@ -4,7 +4,7 @@ class File:
         self._creation_date = creation_date
         self._last_modified_date = last_modified_date
         self._type = type
-        self._size = size
+        self._size = self.right_size(size)
         self._status = status
 
     def get_name(self):
@@ -20,7 +20,7 @@ class File:
         return self._type
 
     def get_size(self):
-        return self._size
+        return str(self._size)
 
     def get_status(self):
         return self._status
@@ -38,7 +38,16 @@ class File:
         self._type = type
 
     def set_size(self, size):
-        self._size = size
+        self._size = self.right_size(str(size))
 
     def set_status(self, status):
         self._status = status
+
+    def right_size(self, str):
+        if len(str)>3 and len(str)<7:
+            return (str[:-3]+" KB")
+        if len(str)>6 and len(str)<9:
+            return (str[: -6]+ " MB")
+        if len(str)>8:
+            return (str[: -8]+ " GB")
+        else: return (str+ " Byte")
