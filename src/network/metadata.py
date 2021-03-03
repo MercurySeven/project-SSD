@@ -81,12 +81,12 @@ class MetaData:
              -aggiorno nel client tutti i file che hanno DataUltimaModifica differente dal server (anche se hanno una data di ultima modifica maggiore vince il server)"""
         for y in self._update_file_server:
             # devo cancellare i file nel client con nome y["nome"] e esportare dal server il file y["nome"] e caricarlo nel client
-            file_path = os.path.join(self.directory, i[0])
-            self.server.download_from_server(file_path, i[1])
+            file_path = os.path.join(self.directory, y[0])
+            self.server.download_from_server(file_path, y[1])
         for y in self._update_files_client:
             # stessa cosa di sopra
-            file_path = os.path.join(self.directory, i[0])
-            self.server.download_from_server(file_path, i[1])
+            file_path = os.path.join(self.directory, y[0])
+            self.server.download_from_server(file_path, y[1])
 
     def apply_change_client(self):
         """aggiorno il server:
