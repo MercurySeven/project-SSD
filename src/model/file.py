@@ -38,7 +38,7 @@ class File:
         self._type = type
 
     def set_size(self, size):
-        self._size = self.right_size(str(size))
+        self._size = size
 
     def set_status(self, status):
         self._status = status

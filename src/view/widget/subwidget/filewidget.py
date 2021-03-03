@@ -1,8 +1,8 @@
 from PySide6.QtWidgets import (QHBoxLayout, QWidget, QToolButton, QLabel, QVBoxLayout)
 from PySide6 import QtCore
 from PySide6.QtGui import QPixmap, QIcon
-from PySide6.QtCore import Qt, QSize, QTimer, Signal, Slot, QSettings
-
+from PySide6.QtCore import Qt, QSize, QTimer, Signal, Slot, QSettings, QPointF
+from PySide6.QtGui import QHoverEvent
 from subprocess import call
 import os
 
@@ -16,7 +16,6 @@ class FileWidget(QToolButton):
         super(FileWidget, self).__init__()
 
         self.env_settings = QSettings()
-
         self.timer = QTimer()
         self.timer.setSingleShot(True)
         self.timer.timeout.connect(self.clicked.emit)
@@ -36,11 +35,11 @@ class FileWidget(QToolButton):
         self.creation_date = str(creation_date)
         self.last_modified_date = str(last_modified_date)
         self.type = str(type)
-        self.size = str(size), self
+        self.size = str(size)
         self.status = str(status)
 
         self.setText(self.name)
-
+        self.setToolTip("Ultima modifica: " + self.last_modified_date + "\n Size: "+ self.size)
         '''self.contextWindow = QWidget()
         self.contextWindow.nameLabel = QLabel()
         self.contextWindow.nameLabel.setText(self.name)

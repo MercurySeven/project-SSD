@@ -25,7 +25,7 @@ class Directory:
                             datetime.fromtimestamp(os.stat(entry.name).st_ctime).strftime("%Y-%m-%d %H:%M:%S"),
                             datetime.fromtimestamp(os.stat(entry.name).st_mtime).strftime("%Y-%m-%d %H:%M:%S"),
                             self.define_type(entry.name),
-                            str(os.stat(entry.name).st_size), os.stat(entry.name).st_size)
+                            str(os.stat(entry.name).st_size), "stato file")
                 self.files.append(file)
         os.chdir(restore_path)
 
