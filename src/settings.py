@@ -3,12 +3,6 @@ import os.path
 import logging
 from typing import Optional
 
-file_name = "config.ini"
-config = configparser.ConfigParser()
-logger = logging.getLogger("settings")
-if os.path.exists(file_name):
-    last_update = os.path.getmtime(file_name)
-
 
 def __read_from_file() -> None:
     """Legge le impostazioni dal file"""
@@ -40,7 +34,6 @@ def create_standard_settings() -> None:
 
 
 def check_file() -> None:
-    print(os.path.abspath(file_name))
     if os.path.isfile(file_name):
         logger.info("Carico impostazioni da file: " + file_name)
         __read_from_file()
@@ -50,25 +43,18 @@ def check_file() -> None:
         create_standard_settings()
 
 
-check_file()
-
-
 def get_config(section: str, passed_config: str) -> Optional[str]:
     """Ritorna il valore della config desiderata, None se inesistente"""
     new_time = os.path.getmtime(file_name)
-    print(os.path.abspath(file_name))
 
     # Il file è stato modificato lo ricarico
     if new_time > last_update:
         __read_from_file()
         logger.debug("Impostazioni cambiate, file ricaricato")
 
-    print(config.sections())
     if section not in config.sections():
-        print("primo if fallito")
         return None
     if passed_config not in config[section]:
-        print("Secondo if fallito")
         return None
     return config[section][passed_config]
 
@@ -111,3 +97,17 @@ def update_config(section: str, passed_config: str, value: str) -> None:
 def update_quota_disco(value: str) -> None:
     """Aggiorna la quota disco"""
     update_config("General", "quota", value)
+
+
+# Assoulutamente da sistemare, fatto per evitare di testare
+# direttamente sul file di config personale
+if __name__ == "src.settings":
+    file_name = "tests/config.ini"
+else:
+    file_name = "config.ini"
+config = configparser.ConfigParser()
+logger = logging.getLogger("settings")
+if os.path.exists(file_name):
+    last_update = os.path.getmtime(file_name)
+
+check_file()

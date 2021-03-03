@@ -1,6 +1,5 @@
 import unittest
 import os
-import sys
 
 from src import settings
 
@@ -62,21 +61,6 @@ class TestSettings(unittest.TestCase):
         settings.update_config("Extra", "darkmode", "True")
         feature = settings.get_config("Extra", "darkmode")
         self.assertEqual(feature, "True")
-
-    def test_file_already_exists(self) -> None:
-        local_settings = settings  # Settings(os.path.join("tests", "config.ini"))
-        quota_disco = local_settings.get_quota_disco()
-        self.assertEqual(quota_disco, 1024)
-
-        self.assertEqual(local_settings.config, settings.config)
-
-        local_settings.update_quota_disco("123456")
-
-        self.assertEqual(local_settings.config, settings.config)
-
-        quota_disco = settings.get_quota_disco()
-        self.assertEqual(local_settings.config, settings.config)
-        self.assertEqual(quota_disco, 123456)
 
 
 if __name__ == "__main__":
