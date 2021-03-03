@@ -1,7 +1,9 @@
-from PySide6.QtCore import (Signal, Slot, Qt, QSettings)
+from PySide6.QtCore import (Signal, Slot, Qt, QSettings, QUrl)
 from PySide6.QtWidgets import (
     QLabel, QVBoxLayout, QHBoxLayout, QWidget, QScrollArea, QSizePolicy, QGridLayout, QPushButton)
 from model.directory import Directory
+
+from PySide6.QtGui import QDesktopServices
 
 from view.widget.subwidget.filewidget import FileWidget
 from view.layouts.flowlayout import FlowLayout
@@ -40,6 +42,14 @@ class SyncronizedWidget(QWidget):
         self.updateButton.setText('Refresh')
         self.updateButton.clicked.connect(self.updateFiles)
 
+        self.fileButton = QPushButton(self)
+        self.fileButton.setText('Apri file manager')
+        self.fileButton.clicked.connect(self.showFolder)
+
+        buttonLayout = QHBoxLayout()
+        buttonLayout.addWidget(self.updateButton)
+        buttonLayout.addWidget(self.fileButton)
+
         self.fileLayout.addWidget
 
         self.addFiles()
@@ -50,7 +60,7 @@ class SyncronizedWidget(QWidget):
         self.scrollArea.setWidget(self.fileWindow)
 
         layout = QVBoxLayout()
-        layout.addWidget(self.updateButton)
+        layout.addLayout(buttonLayout)
         layout.addWidget(self.scrollArea)
         self.setLayout(layout)
 
@@ -80,5 +90,6 @@ class SyncronizedWidget(QWidget):
             self.fileLayout.addWidget(widget)
             widget.setParent(self.fileWindow)
 
-        
+    def showFolder(self):
+        QDesktopServices.openUrl(QUrl(self.env_settings.value("sync_path"), QUrl.TolerantMode)) 
 
