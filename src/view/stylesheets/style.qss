@@ -30,7 +30,7 @@ Stile Infobox in schermata a Dx
 QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] {
     background-color: #353535;
     border-radius: 6px;
-    max-width: 500;
+    max-width: 500px;
 }
 
 QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] > QWidget {
@@ -148,7 +148,7 @@ QWidget[accessibleName='Stacked'] QToolButton[accessibleName='File'] {
     width: 100%;
     text-align:bottom;
     background-color: #2A2A2A;
-    font: 12px
+    font: 14px
 }
 
 QWidget[accessibleName='Stacked'] QToolButton[accessibleName='File']:hover {
@@ -173,4 +173,10 @@ QWidget[accessibleName='FileScroll'] {
     border: 0px;
     border-radius: 6px;
     background-color: #353535;
+}
+QWidget[accessibleName='Stacked'] QToolButton[accessibleName='File'] QToolTip {
+    color: black;
+    padding: 3px;
+    border-radius: 6px;
+    font-size: 15px;
 }
