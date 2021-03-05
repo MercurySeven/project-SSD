@@ -11,6 +11,9 @@ class SettingsWidget(QWidget):
 
     # creating Signals
     Sg_path_changed = Signal()
+    Sg_policy_lastUpdate = Signal()
+    Sg_policy_Client = Signal()
+    Sg_policy_Server = Signal()
 
     def __init__(self, parent=None):
         super(SettingsWidget, self).__init__(parent)
@@ -51,6 +54,10 @@ class SettingsWidget(QWidget):
         self.radioRemote.clicked.connect(lambda: self.setPriority(
             self.radioRemote))
 
+        self.radioLastUpdate = QRadioButton("lastUpdate")
+        self.radioLastUpdate.clicked.connect(lambda: self.setPriority(
+            self.radioLastUpdate))
+
         # Impostazioni quota disco
 
         self.diskLabel = QLabel(self)
@@ -72,6 +79,7 @@ class SettingsWidget(QWidget):
         radioLayout.setAlignment(Qt.AlignLeft)
         radioLayout.addWidget(self.radioLocal)
         radioLayout.addWidget(self.radioRemote)
+        radioLayout.addWidget(self.radioLastUpdate)
 
         layout = QVBoxLayout()
         layout.addWidget(self.title)
@@ -107,6 +115,8 @@ class SettingsWidget(QWidget):
 
     def setPriority(self, b):
         if(b.text() == 'Locale'):
-            print("locale")
-        else:
-            print("remoto")
+            self.Sg_policy_Client.emit()
+        elif(b.text() == 'Remoto'):
+            self.Sg_policy_Server.emit()
+        elif(b.text() == 'lastUpdate'):
+            self.Sg_policy_lastUpdate.emit()

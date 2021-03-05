@@ -26,6 +26,7 @@ class MetaData:
         env_settings = QSettings()
         self.directory: str = env_settings.value("sync_path")
 
+        self.politica :Policy = Policy.lastUpdate
         self.server: Server = Server()
 
     def get_data_server(self) -> Dict[str, str]:
@@ -129,14 +130,18 @@ class MetaData:
             """download i file che non sono presenti nel client"""
             self.server.download_from_server(nome_file)
 
-    def apply_changes(self, policy: Policy) -> None:
+    def change_policy(self, policy):
+        self.politica=policy
+        print("modificato politica")
+
+    def apply_changes(self) -> None:
         self.update_diff()
         self.default_operations()
-        if policy == Policy.Client:
+        if self.politica == Policy.Client:
             self.apply_change_client()
-        elif policy == Policy.Server:
+        elif self.politica == Policy.Server:
             self.apply_change_server()
-        elif Policy.lastUpdate:
+        elif self.politica == Policy.lastUpdate:
             self.apply_change_last_update()
         else:
             print("Invalid policy")

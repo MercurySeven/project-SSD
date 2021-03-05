@@ -26,6 +26,10 @@ class Controller(QObject):
         self.view.mainWidget.settingsWidget.Sg_path_changed.connect(
             self.reboot)
 
+        self.view.mainWidget.settingsWidget.Sg_policy_Client.connect(lambda : self.Sl_change_policy("Client"))
+        self.view.mainWidget.settingsWidget.Sg_policy_Server.connect(lambda: self.Sl_change_policy("Server"))
+        self.view.mainWidget.settingsWidget.Sg_policy_lastUpdate.connect(lambda: self.Sl_change_policy("lastUpdate"))
+
         self.algorithm = MetaData()
 
         sync = Thread(target=self.background, daemon=True)
@@ -39,6 +43,17 @@ class Controller(QObject):
     def reboot(self):
         self.watcher.reboot()
 
+    @Slot()
+    def Sl_change_policy(self, policy):
+        if policy == "Client":
+            self.algorithm.change_policy(Policy.Client)
+        elif policy == "Server":
+            self.algorithm.change_policy(Policy.Server)
+        elif policy == "lastUpdate":
+            self.algorithm.change_policy(Policy.lastUpdate)
+        else:
+            print("invalid policy")
+
     @Slot(bool)
     def Sl_watch(self, state):
         self.watcher.run(state)
@@ -47,6 +62,5 @@ class Controller(QObject):
         while True:
             # sync do_stuff()
             if self.watcher.status():
-                self.algorithm.apply_changes(
-                    Policy.lastUpdate)
+                self.algorithm.apply_changes()
                 sleep(20)
