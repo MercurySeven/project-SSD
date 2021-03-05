@@ -23,11 +23,13 @@ class MetaData:
         # file nel server che sono più aggiornati rispetto a quelli nel client
         self._update_file_server: list[list[str]] = []
         """percorso cartella locale"""
-        env_settings = QSettings()
-        self.directory: str = env_settings.value("sync_path")
+        self.directory: str = None
 
         self.politica: Policy = Policy.lastUpdate
         self.server: Server = Server()
+
+    def setDirectory(self, path):
+        self.directory = path
 
     def get_data_server(self) -> Dict[str, str]:
         return self.server.get_all_files()

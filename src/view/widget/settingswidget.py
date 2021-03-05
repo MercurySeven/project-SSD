@@ -46,7 +46,6 @@ class SettingsWidget(QWidget):
         self.priorityLabel.setAccessibleName('Subtitle')
 
         self.radioLocal = QRadioButton("Locale")
-        self.radioLocal.setChecked(True)
         self.radioLocal.clicked.connect(lambda: self.setPriority(
             self.radioLocal))
 
@@ -55,6 +54,7 @@ class SettingsWidget(QWidget):
             self.radioRemote))
 
         self.radioLastUpdate = QRadioButton("lastUpdate")
+        self.radioLastUpdate.setChecked(True)
         self.radioLastUpdate.clicked.connect(lambda: self.setPriority(
             self.radioLastUpdate))
 

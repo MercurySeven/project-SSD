@@ -1,4 +1,4 @@
-from PySide6.QtCore import (QObject, Slot)
+from PySide6.QtCore import (QObject, Slot, QSettings)
 
 from view.mainwindow import MainWindow
 from model.watcher import Watcher
@@ -29,7 +29,9 @@ class Controller(QObject):
         self.view.mainWidget.settingsWidget.Sg_policy_Server.connect(lambda: self.Sl_change_policy("Server"))
         self.view.mainWidget.settingsWidget.Sg_policy_lastUpdate.connect(lambda: self.Sl_change_policy("lastUpdate"))
 
+        self.env_settings = QSettings()
         self.algorithm = MetaData()
+        self.algorithm.setDirectory(self.env_settings.value("sync_path"))
 
         sync = Thread(target=self.background, daemon=True)
         sync.start()
@@ -40,6 +42,8 @@ class Controller(QObject):
 
     @Slot()
     def reboot(self):
+        self.env_settings.sync()
+        self.algorithm.setDirectory(self.env_settings.value("sync_path"))
         self.watcher.reboot()
 
     @Slot()
