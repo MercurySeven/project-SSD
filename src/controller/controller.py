@@ -1,6 +1,5 @@
 from PySide6.QtCore import (QObject, Slot)
 
-
 from view.mainwindow import MainWindow
 from model.watcher import Watcher
 
@@ -26,7 +25,7 @@ class Controller(QObject):
         self.view.mainWidget.settingsWidget.Sg_path_changed.connect(
             self.reboot)
 
-        self.view.mainWidget.settingsWidget.Sg_policy_Client.connect(lambda : self.Sl_change_policy("Client"))
+        self.view.mainWidget.settingsWidget.Sg_policy_Client.connect(lambda: self.Sl_change_policy("Client"))
         self.view.mainWidget.settingsWidget.Sg_policy_Server.connect(lambda: self.Sl_change_policy("Server"))
         self.view.mainWidget.settingsWidget.Sg_policy_lastUpdate.connect(lambda: self.Sl_change_policy("lastUpdate"))
 

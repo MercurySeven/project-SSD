@@ -114,9 +114,9 @@ class SettingsWidget(QWidget):
                 self.Sg_path_changed.emit()
 
     def setPriority(self, b):
-        if(b.text() == 'Locale'):
+        if b.text() == 'Locale':
             self.Sg_policy_Client.emit()
-        elif(b.text() == 'Remoto'):
+        elif b.text() == 'Remoto' :
             self.Sg_policy_Server.emit()
-        elif(b.text() == 'lastUpdate'):
+        elif b.text() == 'lastUpdate':
             self.Sg_policy_lastUpdate.emit()

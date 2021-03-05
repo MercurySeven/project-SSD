@@ -26,7 +26,7 @@ class MetaData:
         env_settings = QSettings()
         self.directory: str = env_settings.value("sync_path")
 
-        self.politica :Policy = Policy.lastUpdate
+        self.politica: Policy = Policy.lastUpdate
         self.server: Server = Server()
 
     def get_data_server(self) -> Dict[str, str]:
@@ -131,8 +131,8 @@ class MetaData:
             self.server.download_from_server(nome_file)
 
     def change_policy(self, policy):
-        self.politica=policy
-        print("modificato politica")
+        self.politica = policy
+        print(f"modificato politica {self.politica}")
 
     def apply_changes(self) -> None:
         self.update_diff()
