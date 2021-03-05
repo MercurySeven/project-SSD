@@ -2,7 +2,7 @@ on: [push]
 name: SonarCloud
 jobs:
   sonarcloud:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
     - uses: actions/checkout@v2
@@ -29,8 +29,8 @@ jobs:
 
     - name: Test
       run: |
-        coverage run -m unittest discover -p "*_test.py"
-        coverage xml
+        coverage run -m unittest discover -v -p "*_test.py"
+        coverage xml -i
 
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master

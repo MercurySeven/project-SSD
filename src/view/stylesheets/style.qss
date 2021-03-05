@@ -1,0 +1,182 @@
+QWidget{
+    background-color: #2A2A2A;
+    color: rgb(190, 190, 190);
+}
+
+QWidget > QWidget {
+    background-color: #404040;
+}
+
+/* 
+Stile Schermata Dx
+*/
+QWidget[accessibleName='Stacked'] > QWidget {
+    background-color: #2A2A2A;
+}
+QWidget[accessibleName='Stacked'] >  QWidget > QWidget{
+    background-color: #2A2A2A;
+}
+QWidget[accessibleName='Stacked'] >  QWidget > QPushButton{
+    background-color: #353535;
+}
+QWidget[accessibleName='Stacked'] >  QWidget > QPushButton:hover{
+    background-color: #404040;
+}
+
+/* 
+Stile Infobox in schermata a Dx
+*/
+
+QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] {
+    background-color: #353535;
+    border-radius: 6px;
+    max-width: 500px;
+}
+
+QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] > QWidget {
+    background-color: #353535;
+}
+
+QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] > QProgressBar {
+    background-color: #404040;
+    border-radius: 6px;
+}
+
+QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] > QProgressBar:chunk {
+    background-color: #4B4B4B;
+    border-radius: 6px;
+}
+
+QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] > QLineEdit {
+    background-color: #404040;
+    border-radius: 6px;
+    border: 0px;
+    padding: 5px;
+}
+
+/* 
+Stile Label default
+*/
+QLabel[accessibleName='Title']{
+    font-size: 30px;
+    margin-bottom: 0px;
+    font-weight: bold;
+
+}
+QLabel[accessibleName='Subtitle']{
+    font-weight: bold;
+}
+
+/* 
+Stile Pulsanti default
+*/
+QWidget > QPushButton{
+    background-color: #4B4B4B;
+    margin:5px;
+    border:0px;
+    border-radius: 6px;
+    color: rgb(190, 190, 190);
+    padding: 5px;
+}
+
+QWidget > QPushButton:hover {
+    background-color: #565656;
+}
+
+QPushButton[accessibleName='HighlightButton'] {
+    
+    border-width:0px;
+    border-radius:50px;
+    font-size: 70px;
+    max-width:100px;
+    max-height:100px;
+    min-width:100px;
+    min-height:100px;
+    padding: 0px;
+    margin: 0px;
+    background-color: #404040;
+}
+
+QPushButton[accessibleName='HighlightButton']:hover {
+    background-color: #4B4B4B;
+}
+
+QWidget > QPushButton[accessibleName='HighlightButton']:checked {
+    background-color: #783dbd
+}
+
+QWidget > QPushButton[accessibleName='HighlightButton']:checked:hover {
+    color: white
+}
+
+/* 
+Stile Pulsanti MenuNav
+*/
+
+QWidget[accessibleName='MenuNav'] > QPushButton {
+    
+    border-width:0px;
+    background-color: #404040;
+    border-radius:30px;
+    font-size: 30px;
+    max-width:60px;
+    max-height:60px;
+    min-width:60px;
+    min-height:60px;
+    padding: 0px;
+    margin: 0px;
+}
+
+QWidget[accessibleName='MenuNav'] > QPushButton:hover {
+    background-color: #4B4B4B;
+}
+
+QWidget[accessibleName='MenuNav'] > QPushButton:checked {
+    background-color: #565656;
+}
+
+/* 
+Stile File
+*/
+
+QWidget[accessibleName='Stacked'] QToolButton[accessibleName='File'] {
+    border-radius: 6px;
+    min-width: 100px;
+    max-width: 100px;
+    min-height: 100px;
+    max-height: 100px;
+    width: 100%;
+    text-align:bottom;
+    background-color: #2A2A2A;
+    font: 14px
+}
+
+QWidget[accessibleName='Stacked'] QToolButton[accessibleName='File']:hover {
+    background-color: #353535;
+}
+
+QWidget[accessibleName='FileScroll'] QScrollBar {
+    width: 6px;
+    border-radius: 6px;
+    color: #404040;
+}
+
+QWidget[accessibleName='FileScroll'] > QWidget > QWidget{
+    padding: 0;
+    margin: 0;
+    border: 0px;
+    border-radius: 6px;
+    background-color: #2A2A2A;
+}
+
+QWidget[accessibleName='FileScroll'] {
+    border: 0px;
+    border-radius: 6px;
+    background-color: #353535;
+}
+QWidget[accessibleName='Stacked'] QToolButton[accessibleName='File'] QToolTip {
+    color: black;
+    padding: 3px;
+    border-radius: 6px;
+    font-size: 15px;
+}
