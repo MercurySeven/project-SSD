@@ -42,6 +42,7 @@ class Controller(QObject):
             self.Sl_update_size)
 
         sync = Thread(target=self.background, daemon=True)
+        sync.setName("algorithm's thread")
         sync.start()
 
     @Slot()

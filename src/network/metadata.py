@@ -26,7 +26,8 @@ class MetaData:
         self.directory = path
 
         self._politica: Policy = Policy.lastUpdate
-        self._api = API("mer1", "mercury2021.")
+        # TODO: Da sistemare non appena finiamo il refactor
+        self._api = API("***", "***")
         self._logger = logging.getLogger("metadata")
 
     def setDirectory(self, path: str):
