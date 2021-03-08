@@ -7,7 +7,6 @@ from PySide6.QtWidgets import (QApplication, QFileDialog)
 
 from controller.controller import Controller
 from view.system_tray_icon import SystemTrayIcon
-import settings
 
 if __name__ == "__main__":
 
@@ -26,8 +25,9 @@ if __name__ == "__main__":
     # initialize logging format
     logging.basicConfig(level=logging.INFO,
                         format="%(levelname)s:%(filename)s:%(asctime)s:%(message)s")
-    # rimuove i log spammosi di aiohttp.py
+    # rimuove i log spammosi di rete
     logging.getLogger("gql.transport.aiohttp").setLevel(logging.WARNING)
+    logging.getLogger("gql.transport.requests").setLevel(logging.WARNING)
     # settings.update_path(None) # debug
 
     # Controlliamo se l'utente ha già settato il PATH della cartella
@@ -40,7 +40,7 @@ if __name__ == "__main__":
 
         # L'utente non ha selezionato la cartella
         if not dialog.exec_():
-            settings.update_path(None)
+            env_settings.setValue("sync_path", None)
             sys.exit()
 
         sync_path = dialog.selectedFiles()

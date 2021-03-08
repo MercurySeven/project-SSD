@@ -17,7 +17,6 @@ class Controller(QObject):
         self.view = MainWindow()
         self.view.show()
 
-
         # Attivo il watchdog nella root definita dall'utente
         self.watcher = Watcher()
 
@@ -26,24 +25,29 @@ class Controller(QObject):
         self.view.mainWidget.settingsWidget.Sg_path_changed.connect(
             self.reboot)
 
-        self.view.mainWidget.settingsWidget.Sg_policy_Client.connect(lambda: self.Sl_change_policy("Client"))
-        self.view.mainWidget.settingsWidget.Sg_policy_Server.connect(lambda: self.Sl_change_policy("Server"))
-        self.view.mainWidget.settingsWidget.Sg_policy_lastUpdate.connect(lambda: self.Sl_change_policy("lastUpdate"))
+        self.view.mainWidget.settingsWidget.Sg_policy_Client.connect(
+            lambda: self.Sl_change_policy("Client"))
+        self.view.mainWidget.settingsWidget.Sg_policy_Server.connect(
+            lambda: self.Sl_change_policy("Server"))
+        self.view.mainWidget.settingsWidget.Sg_policy_lastUpdate.connect(
+            lambda: self.Sl_change_policy("lastUpdate"))
 
         self.env_settings = QSettings()
-        self.algorithm = MetaData()
-        self.algorithm.setDirectory(self.env_settings.value("sync_path"))
+        self.algorithm = MetaData(self.env_settings.value("sync_path"))
 
         # imposto le dimensioni della quota disco
-        self.view.mainWidget.settingsWidget.diskQuota.updateSpace(self.algorithm.get_size())
-        self.view.mainWidget.settingsWidget.diskQuota.Sg_update_space.connect(self.Sl_update_size)
+        self.view.mainWidget.settingsWidget.diskQuota.updateSpace(
+            self.algorithm.get_size())
+        self.view.mainWidget.settingsWidget.diskQuota.Sg_update_space.connect(
+            self.Sl_update_size)
 
         sync = Thread(target=self.background, daemon=True)
         sync.start()
 
     @Slot()
     def Sl_update_size(self):
-        self.view.mainWidget.settingsWidget.diskQuota.updateSpace(self.algorithm.get_size())
+        self.view.mainWidget.settingsWidget.diskQuota.updateSpace(
+            self.algorithm.get_size())
 
     @Slot()
     def show_app(self):
@@ -53,7 +57,8 @@ class Controller(QObject):
     def reboot(self):
         self.env_settings.sync()
         self.algorithm.setDirectory(self.env_settings.value("sync_path"))
-        self.view.mainWidget.settingsWidget.diskQuota.updateSpace(self.algorithm.get_size())
+        self.view.mainWidget.settingsWidget.diskQuota.updateSpace(
+            self.algorithm.get_size())
         self.watcher.reboot()
 
     @Slot()

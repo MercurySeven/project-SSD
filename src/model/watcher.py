@@ -64,6 +64,7 @@ class Watcher:
         # Lo richiamo ogni volta perchè non posso far ripartire lo stesso
         # thread
         self.observer = Observer()
+        self.observer.setName("watchdog's thread")
         self.observer.schedule(event_handler, self.path(), recursive=True)
         self.observer.start()
 

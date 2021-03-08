@@ -1,9 +1,10 @@
 import os
 import logging
 import requests
-import query_model
+import math
+import src.network.query_model as query_model
 from datetime import datetime
-from cookie_session import CookieSession
+from src.network.cookie_session import CookieSession
 from gql import gql, Client
 from gql.transport.requests import RequestsHTTPTransport
 from PySide6.QtCore import (QSettings)
@@ -40,8 +41,8 @@ class API:
             use_json=True
         )
 
-        self.client: Client = Client(
-            transport=_transport, fetch_schema_from_transport=True)
+        self.client = Client(transport=_transport,
+                             fetch_schema_from_transport=True)
         self._logger = logging.getLogger("server")
 
     def get_info_from_email(self) -> dict[str, str]:
@@ -95,6 +96,8 @@ class API:
         }
 
         file_name = os.path.basename(file_path)
+        updated_at = math.trunc(os.stat(file_path).st_mtime)
+        created_at = math.trunc(os.stat(file_path).st_ctime)
         # TODO:
         # - Da capire come gestire le cartelle
         # - Inviare i metadati al server
@@ -102,7 +105,9 @@ class API:
             "command": "upload",
             "name": file_name,
             "content": open(file_path, "rb"),
-            "parent": self.get_user_id() + "/LOCAL_ROOT"
+            "parent": self.get_user_id() + "/LOCAL_ROOT",
+            "updated-at": updated_at,
+            "created-at": created_at
         }
 
         response = requests.post(
