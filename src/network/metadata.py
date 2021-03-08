@@ -176,6 +176,17 @@ class MetaData:
         #    json.dump(data, outfile, indent=4)
         return data
 
+    def get_size(self) -> int:
+        total_size = 0
+        for dirpath, dirnames, filenames in os.walk(self.directory):
+            for f in filenames:
+                fp = os.path.join(dirpath, f)
+                # skip if it is symbolic link
+                if not os.path.islink(fp):
+                    total_size += os.path.getsize(fp)
+
+        return total_size
+
 
 """
 print(f"file presenti nel client {metadata.getDataClient()}")

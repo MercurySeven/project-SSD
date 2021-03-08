@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import (
     QWidget, QProgressBar, QLabel, QVBoxLayout, QLineEdit)
-from PySide6.QtCore import (QSettings)
+from PySide6.QtCore import (QSettings, Signal)
 from PySide6.QtGui import (QIntValidator)
 
 import os
@@ -11,19 +11,10 @@ import settings
 from PySide6.QtCore import Qt
 
 
-def get_size(start_path: str = '.') -> int:
-    total_size = 0
-    for dirpath, dirnames, filenames in os.walk(start_path):
-        for f in filenames:
-            fp = os.path.join(dirpath, f)
-            # skip if it is symbolic link
-            if not os.path.islink(fp):
-                total_size += os.path.getsize(fp)
-
-    return total_size
-
 
 class diskQuota(QWidget):
+
+    Sg_update_space = Signal()
 
     def __init__(self, parent=None):
         super(diskQuota, self).__init__(parent)
@@ -32,7 +23,7 @@ class diskQuota(QWidget):
 
         self.setAccessibleName('InfoBox')
 
-        folderSize = get_size(self.env_settings.value("sync_path"))
+        self.folderSize = 0
         maxSize = settings.get_quota_disco()
 
         # Barra riempimento disco
@@ -44,10 +35,10 @@ class diskQuota(QWidget):
         self.diskProgress = QProgressBar()
         self.diskProgress.setFormat('')
         self.diskProgress.setRange(0, maxSize)
-        self.diskProgress.setValue(folderSize)
+        self.diskProgress.setValue(self.folderSize)
         self.diskQuota = QLabel()
         self.diskQuota.setText(
-            f"{folderSize} su {self.convert_size(maxSize)}")
+            f"{self.folderSize} su {self.convert_size(maxSize)}")
 
         # Modifica spazio dedicato
 
@@ -59,7 +50,7 @@ class diskQuota(QWidget):
         self.dedicatedSpace.setValidator(onlyInt)
         self.dedicatedSpace.setText(str(maxSize))
 
-        self.dedicatedSpace.returnPressed.connect(self.updateSpace)
+        self.dedicatedSpace.returnPressed.connect(self.aggiorna)
 
         diskLayout = QVBoxLayout()
         diskLayout.setAlignment(Qt.AlignLeft)
@@ -71,16 +62,19 @@ class diskQuota(QWidget):
 
         self.setLayout(diskLayout)
 
-    def updateSpace(self):
+    def aggiorna(self):
+        self.Sg_update_space.emit()
 
-        folderSize = get_size(self.env_settings.value("sync_path"))
+    def updateSpace(self, size):
+
+        self.folderSize = size
         settings.update_quota_disco(self.dedicatedSpace.text())
         maxSize = settings.get_quota_disco()
 
         self.diskProgress.setRange(0, maxSize)
-        self.diskProgress.setValue(folderSize)
+        self.diskProgress.setValue(self.folderSize)
         self.diskQuota.setText(
-            f"{folderSize} su {self.convert_size(maxSize)}")
+            f"{self.folderSize} su {self.convert_size(maxSize)}")
 
     @staticmethod
     def convert_size(size_bytes: int) -> str:
@@ -98,3 +92,4 @@ class diskQuota(QWidget):
         p = math.pow(1024, i)
         s = round(size_bytes / p, 2)
         return "%s %s" % (s, size_name[i])
+

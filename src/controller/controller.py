@@ -17,6 +17,7 @@ class Controller(QObject):
         self.view = MainWindow()
         self.view.show()
 
+
         # Attivo il watchdog nella root definita dall'utente
         self.watcher = Watcher()
 
@@ -33,8 +34,16 @@ class Controller(QObject):
         self.algorithm = MetaData()
         self.algorithm.setDirectory(self.env_settings.value("sync_path"))
 
+        # imposto le dimensioni della quota disco
+        self.view.mainWidget.settingsWidget.diskQuota.updateSpace(self.algorithm.get_size())
+        self.view.mainWidget.settingsWidget.diskQuota.Sg_update_space.connect(self.Sl_update_size)
+
         sync = Thread(target=self.background, daemon=True)
         sync.start()
+
+    @Slot()
+    def Sl_update_size(self):
+        self.view.mainWidget.settingsWidget.diskQuota.updateSpace(self.algorithm.get_size())
 
     @Slot()
     def show_app(self):
@@ -44,6 +53,7 @@ class Controller(QObject):
     def reboot(self):
         self.env_settings.sync()
         self.algorithm.setDirectory(self.env_settings.value("sync_path"))
+        self.view.mainWidget.settingsWidget.diskQuota.updateSpace(self.algorithm.get_size())
         self.watcher.reboot()
 
     @Slot()
