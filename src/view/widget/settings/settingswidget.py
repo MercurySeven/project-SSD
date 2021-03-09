@@ -3,7 +3,7 @@ from PySide6.QtWidgets import (
     QLabel, QVBoxLayout, QHBoxLayout, QWidget, QPushButton,
     QFileDialog, QRadioButton)
 
-from view.widget.subwidget.diskquota import diskQuota
+from .diskquota import DiskQuota
 import settings
 
 
@@ -14,14 +14,18 @@ class SettingsWidget(QWidget):
     Sg_policy_lastUpdate = Signal()
     Sg_policy_Client = Signal()
     Sg_policy_Server = Signal()
+    Sg_dedicated_quota_changed = Signal()
 
     def __init__(self, parent=None):
         super(SettingsWidget, self).__init__(parent)
 
+        self.setObjectName('Settings')
+
         # environment variables
         self.env_settings = QSettings()
 
-        self.setObjectName('Settings')
+        # widgets
+        self.diskQuota = DiskQuota(self)
 
         # Titolo
         self.title = QLabel("Impostazioni", self)
@@ -34,10 +38,14 @@ class SettingsWidget(QWidget):
         self.titoloPath.setAccessibleName('Subtitle')
 
         self.path_label = QLabel(self)
+        self.path_label.setEnabled(False)
         self.updatePathText()
 
-        self.changePathButton = QPushButton('Cambia PATH', self)
+        self.changePathButton = QPushButton('Cambia', self)
         self.changePathButton.setMaximumWidth(150)
+
+        # connect
+        self.changePathButton.clicked.connect(self.setPath)
 
         # Impostazioni Priorità
         self.priorityLabel = QLabel(self)
@@ -59,17 +67,20 @@ class SettingsWidget(QWidget):
             self.radioLastUpdate))
 
         # Impostazioni quota disco
-
         self.diskLabel = QLabel(self)
         self.diskLabel.setText(
             "Quota disco")
         self.diskLabel.setAccessibleName('Subtitle')
         settings.check_file()
-        self.diskQuota = diskQuota(self)
-        # connect
-        self.changePathButton.clicked.connect(self.setPath)
+        
+        self.diskQuota.Sg_dedicated_quota_changed.connect(
+            self.__Sl_dedicated_quota_changed)
 
-        # create layout
+        # layout
+        self.init_layout()
+
+    def init_layout(self):
+
         pathLayout = QHBoxLayout()
         pathLayout.setAlignment(Qt.AlignLeft)
         pathLayout.addWidget(self.path_label)
@@ -94,6 +105,22 @@ class SettingsWidget(QWidget):
 
     def updatePathText(self) -> None:
         self.path_label.setText(self.env_settings.value("sync_path"))
+
+    @Slot(int)
+    def __Sl_dedicated_quota_changed(self, new_size: int) -> None:
+        # aggiorno la quota dedicata
+        settings.update_quota_disco(str(new_size))
+        # aggiorno il widget
+        self.Sl_update_used_quota(self.diskQuota.get_used_quota())
+
+        # avviso che la quota dedicata è cambiato
+        self.Sg_dedicated_quota_changed.emit()
+
+    @Slot(int)
+    def Sl_update_used_quota(self, size: int) -> None:
+        maxSize = settings.get_quota_disco()
+        # maxSize = self.env_settings.value("Disk/quota")
+        self.diskQuota.set_context((0, maxSize), size)
 
     @Slot()
     def setPath(self):

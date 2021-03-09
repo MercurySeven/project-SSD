@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import (
     QWidget, QProgressBar, QLabel, QVBoxLayout, QLineEdit)
-from PySide6.QtCore import (QSettings, Signal)
+from PySide6.QtCore import (QSettings, Signal, Slot)
 from PySide6.QtGui import (QIntValidator)
 
 import os
@@ -11,46 +11,43 @@ import settings
 from PySide6.QtCore import Qt
 
 
+class DiskQuota(QWidget):
 
-class diskQuota(QWidget):
-
-    Sg_update_space = Signal()
+    Sg_dedicated_quota_changed = Signal(int)
 
     def __init__(self, parent=None):
-        super(diskQuota, self).__init__(parent)
+        super(DiskQuota, self).__init__(parent)
 
-        self.env_settings = QSettings()
+        # self.env_settings = QSettings()
 
         self.setAccessibleName('InfoBox')
 
-        self.folderSize = 0
-        maxSize = settings.get_quota_disco()
-
         # Barra riempimento disco
-
         self.progressLabel = QLabel(self)
         self.progressLabel.setText('Spazio occupato')
         self.progressLabel.setAccessibleName('Subtitle')
 
-        self.diskProgress = QProgressBar()
+        self.diskProgress = QProgressBar(self)
         self.diskProgress.setFormat('')
-        self.diskProgress.setRange(0, maxSize)
-        self.diskProgress.setValue(self.folderSize)
-        self.diskQuota = QLabel()
-        self.diskQuota.setText(
-            f"{self.folderSize} su {self.convert_size(maxSize)}")
-
+        
+        self.diskQuota = QLabel(self)
+        
         # Modifica spazio dedicato
-
-        self.spaceLabel = QLabel('Spazio dedicato')
+        self.spaceLabel = QLabel('Spazio dedicato', self)
         self.spaceLabel.setAccessibleName('Subtitle')
 
-        self.dedicatedSpace = QLineEdit()
+        self.dedicatedSpace = QLineEdit(self)
         onlyInt = QIntValidator()
         self.dedicatedSpace.setValidator(onlyInt)
-        self.dedicatedSpace.setText(str(maxSize))
+        self.dedicatedSpace.returnPressed.connect(self.emit_changes)
 
-        self.dedicatedSpace.returnPressed.connect(self.aggiorna)
+        # init value
+        self.set_context((0, 0), 0)
+
+        # layout
+        self.init_layout()
+
+    def init_layout(self):
 
         diskLayout = QVBoxLayout()
         diskLayout.setAlignment(Qt.AlignLeft)
@@ -62,19 +59,33 @@ class diskQuota(QWidget):
 
         self.setLayout(diskLayout)
 
-    def aggiorna(self):
-        self.Sg_update_space.emit()
+    @Slot()
+    def emit_changes(self):
+        new_size = int(self.dedicatedSpace.text())
+        self.Sg_dedicated_quota_changed.emit(new_size)
 
-    def updateSpace(self, size):
+    def get_used_quota(self) -> int:
+        return self.diskProgress.value()
 
-        self.folderSize = size
-        settings.update_quota_disco(self.dedicatedSpace.text())
-        maxSize = settings.get_quota_disco()
-
-        self.diskProgress.setRange(0, maxSize)
-        self.diskProgress.setValue(self.folderSize)
-        self.diskQuota.setText(
-            f"{self.folderSize} su {self.convert_size(maxSize)}")
+    def set_context(self, progress_range: tuple[int, int], value: int) -> None:
+        """
+        Parameters
+        ----------
+        progress_range : tuple(int, int)
+            the range of the progress bar, range[0] = min, range[1] = max
+        value : int
+            actual value of the quota
+        """
+        try:
+            _min, _max = progress_range
+            self.diskProgress.setRange(_min, _max)
+            self.diskProgress.setValue(value)
+            self.diskQuota.setText(
+                f"{value} su {self.convert_size(_max)}")
+            self.dedicatedSpace.setText(str(_max))
+        except Exception as e:
+            # TODO migliorare la gestione delle eccezzioni
+            raise Exception(f"setting DiskQuota context failed: {str(e)}")
 
     @staticmethod
     def convert_size(size_bytes: int) -> str:
@@ -92,4 +103,3 @@ class diskQuota(QWidget):
         p = math.pow(1024, i)
         s = round(size_bytes / p, 2)
         return "%s %s" % (s, size_name[i])
-

@@ -36,10 +36,8 @@ class Controller(QObject):
         self.algorithm = MetaData(self.env_settings.value("sync_path"))
 
         # imposto le dimensioni della quota disco
-        self.view.mainWidget.settingsWidget.diskQuota.updateSpace(
+        self.view.mainWidget.settingsWidget.Sl_update_used_quota(
             self.algorithm.get_size())
-        self.view.mainWidget.settingsWidget.diskQuota.Sg_update_space.connect(
-            self.Sl_update_size)
 
         sync = Thread(target=self.background, daemon=True)
         sync.setName("algorithm's thread")
@@ -47,7 +45,8 @@ class Controller(QObject):
 
     @Slot()
     def Sl_update_size(self):
-        self.view.mainWidget.settingsWidget.diskQuota.updateSpace(
+        """permette l'aggiornamento automatico della quota utilizzata"""
+        self.view.mainWidget.settingsWidget.Sl_update_used_quota(
             self.algorithm.get_size())
 
     @Slot()

@@ -3,7 +3,7 @@ from PySide6.QtWidgets import (
     QVBoxLayout, QHBoxLayout, QWidget, QStackedWidget)
 from view.widget.menuwidget import MenuWidget
 from view.widget.syncronizedwidget import SyncronizedWidget
-from view.widget.settingswidget import SettingsWidget
+from view.widget.settings import SettingsWidget
 from PySide6.QtCore import Qt
 
 from view.widget.watchwidget import WatchWidget
