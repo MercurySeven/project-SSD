@@ -68,15 +68,11 @@ class API:
             if files["type"] == "File":
                 # Bisogna dividere la data per 1000,
                 # Zextras la restituisce in millisecondi
-                # TODO: Da verificare con l'algoritmo,
-                # forse si può confrontare solo gli interi
-                # senza convertire in data
-                data = str(datetime.fromtimestamp(
-                    files["updated_at"] / 1000))
                 result.append({
                     "id": files["id"],
                     "name": files["name"],
-                    "updated_at": data,
+                    "updated_at": files["updated_at"] / 1000,
+                    "created_at": files["created_at"] / 1000,
                     "size": files["size"]
                 })
         self._logger.info(
@@ -94,7 +90,6 @@ class API:
         created_at = math.trunc(os.stat(file_path).st_ctime)
         # TODO:
         # - Da capire come gestire le cartelle
-        # - Inviare i metadati al server
         multipart_form = {
             "command": "upload",
             "name": file_name,
@@ -117,7 +112,9 @@ class API:
     def download_from_server(self,
                              file_path: str,
                              file_name: str,
-                             file_id: str) -> None:
+                             file_id: str,
+                             created_at: int,
+                             updated_at: int) -> None:
         """ Scarica il file dal server e lo salva nel path,
             filename con l'estensione e path
         """
@@ -133,6 +130,8 @@ class API:
             path = os.path.join(file_path, file_name)
             with open(path, "wb") as fh:
                 fh.write(response.content)
+            # Cambiare la data di creazione sembra non funzionare
+            os.utime(path, (created_at, updated_at))
         else:
             self._logger.info(
                 f"Download del file {file_name}, fallito")

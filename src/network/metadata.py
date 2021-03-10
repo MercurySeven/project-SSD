@@ -1,8 +1,8 @@
 import os
+import math
 import logging
 import settings
 from enum import Enum
-from datetime import datetime
 from .api import API
 from typing import Dict
 
@@ -34,9 +34,6 @@ class MetaData:
     def setDirectory(self, path: str):
         self.directory = path
 
-    def get_data_server(self) -> Dict[str, str]:
-        return self._api.get_all_files()
-
     def get_data_client(self) -> list:
         p = []
         for root, dirs, files in os.walk(self.directory):
@@ -53,8 +50,9 @@ class MetaData:
     def metadata(self, file: str) -> dict:
         name = os.path.basename(file)
         size = os.path.getsize(file)
-        updated_at = datetime.fromtimestamp(
-            os.stat(file).st_mtime).strftime("%Y-%m-%d %H:%M:%S")
+        # Tronchiamo per ottenere i secondi, evitando di creare
+        # un datetime
+        updated_at = math.trunc(os.stat(file).st_mtime)
 
         data = {
             'name': name,
@@ -71,13 +69,14 @@ class MetaData:
         self._update_files_client.clear()
         self._update_file_server.clear()
 
-        file_presenti_nel_server = self.get_data_server()
+        file_presenti_nel_server = self._api.get_all_files()
         file_presenti_nel_client = self.get_data_client()
         # controllo che tutti i file del server siano uguali a quelli del
         # client e la data di ultima modifica
         for server_file in file_presenti_nel_server:
             name = server_file["name"]
             updated_at = server_file["updated_at"]
+            created_at = server_file["created_at"]
             id = server_file["id"]
             trovato = False
             for client_file in file_presenti_nel_client:
@@ -87,7 +86,7 @@ class MetaData:
                             self._logger.info(
                                 f"{name} è stato modificato nel server")
                             self._update_file_server.append(
-                                [name, updated_at, id])
+                                [name, updated_at, created_at, id])
                         else:
                             self._logger.info(
                                 f"{name} è stato modificato nel client")
@@ -97,7 +96,8 @@ class MetaData:
                     break
             if not trovato:
                 self._logger.info(f"Il file {name} non è presente nel client")
-                self._new_files_server.append([name, updated_at, id])
+                self._new_files_server.append(
+                    [name, updated_at, created_at, id])
 
         # controllo che tutti i file nel client
         # sono uguali al quelli nel server
@@ -156,9 +156,10 @@ class MetaData:
             """aggiorno il file nel server"""
             file_path = os.path.join(self.directory, name)
             self._api.upload_to_server(file_path)
-        for name, updated_at, id in self._update_file_server:
+        for name, updated_at, created_at, id in self._update_file_server:
             """aggiorno i file nel client"""
-            self._api.download_from_server(self.directory, name, id)
+            self._api.download_from_server(
+                self.directory, name, id, created_at, updated_at)
 
     def default_operations(self) -> None:
         """Scarico i file che non sono presenti nel client
@@ -167,9 +168,10 @@ class MetaData:
             """upload i file che non sono presenti nel server"""
             file_path = os.path.join(self.directory, name)
             self._api.upload_to_server(file_path)
-        for name, updated_at, id in self._new_files_server:
+        for name, updated_at, created_at, id in self._new_files_server:
             """download i file che non sono presenti nel client"""
-            self._api.download_from_server(self.directory, name, id)
+            self._api.download_from_server(
+                self.directory, name, id, created_at, updated_at)
 
     def change_policy(self, policy):
         self._politica = policy
@@ -178,14 +180,16 @@ class MetaData:
     def apply_changes(self) -> None:
         self.update_diff()
         self.default_operations()
-        if self._politica == Policy.Client:
-            self.apply_change_client()
-        elif self._politica == Policy.Server:
-            self.apply_change_server()
-        elif self._politica == Policy.lastUpdate:
-            self.apply_change_last_update()
-        else:
-            self._logger.info("Invalid policy")
+        self.apply_change_last_update()
+        # Da rifare le altre policy
+        # if self._politica == Policy.Client:
+        #     self.apply_change_client()
+        # elif self._politica == Policy.Server:
+        #     self.apply_change_server()
+        # elif self._politica == Policy.lastUpdate:
+        #     self.apply_change_last_update()
+        # else:
+        #     self._logger.info("Invalid policy")
 
     def get_size(self) -> int:
         total_size = 0

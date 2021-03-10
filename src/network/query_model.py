@@ -24,8 +24,9 @@ class Query:
         query GetNode ($id: ID!) {
             getNode(id: $id) {
                 id
-                created_at
                 name
+                created_at
+                updated_at
                 type
                 ... on Folder {
                     children(limit:50) {
@@ -41,11 +42,9 @@ class Query:
             created_at
             updated_at
             type
-            ...file
-        }
-
-        fragment file on File {
-            size
+            ... on File {
+                size
+            }
         }
         """
 
