@@ -2,15 +2,16 @@ import os
 import math
 import logging
 import settings
-from enum import Enum
+from enum import Enum, auto
 from .api import API
-from typing import Dict
 
 
 class Policy(Enum):
     Client = 1
     Server = 2
     lastUpdate = 3
+    CLIENT = auto()
+    MANUAL = auto()
 
 
 class MetaData:
