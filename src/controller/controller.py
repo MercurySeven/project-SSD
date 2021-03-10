@@ -57,7 +57,7 @@ class Controller(QObject):
     def reboot(self):
         self.env_settings.sync()
         self.algorithm.setDirectory(self.env_settings.value("sync_path"))
-        self.view.mainWidget.settingsWidget.diskQuota.updateSpace(
+        self.view.mainWidget.settingsWidget.Sl_update_used_quota(
             self.algorithm.get_size())
         self.watcher.reboot()
 
