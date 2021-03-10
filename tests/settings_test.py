@@ -14,23 +14,13 @@ class TestSettings(unittest.TestCase):
         """Metodo che viene chiamato dopo ogni metodo"""
         os.remove(settings.file_name)
 
-    def test_get_server_url(self) -> None:
-        url = settings.get_server_url()
-        self.assertEqual(url, "http://20.56.176.12:80/")
-
-    def test_get_server_url_with_slash(self) -> None:
-        settings.update_config(
-            "Connection", "address", "http://20.56.176.12/")
-        url = settings.get_server_url()
-        self.assertEqual(url, "http://20.56.176.12:80/")
-
     def test_get_quota_disco(self) -> None:
         quota_disco = settings.get_quota_disco()
         self.assertEqual(quota_disco, 1024)
 
     def test_get_config(self) -> None:
-        result = settings.get_config("Connection", "port")
-        self.assertEqual(result, "80")
+        result = settings.get_config("General", "quota")
+        self.assertEqual(result, "1024")
 
         result = settings.get_config("Generale", "quota")
         self.assertIsNone(result)
@@ -50,14 +40,6 @@ class TestSettings(unittest.TestCase):
         self.assertEqual(settings.get_quota_disco(), 1024)
 
     def test_update_config(self) -> None:
-        settings.update_config("Connection", "port", "22")
-        url = settings.get_server_url()
-        self.assertEqual(url, "http://20.56.176.12:22/")
-
-        settings.update_config("Connection", "proxy", "3500")
-        proxy = settings.get_config("Connection", "proxy")
-        self.assertEqual(proxy, "3500")
-
         settings.update_config("Extra", "darkmode", "True")
         feature = settings.get_config("Extra", "darkmode")
         self.assertEqual(feature, "True")
