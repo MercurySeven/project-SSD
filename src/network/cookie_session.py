@@ -73,8 +73,8 @@ class CookieSession:
             return True
         return False
 
-    def get_cookie_str(self) -> str:
-        result: str = ""
-        for cookie in self._session.cookies:
-            result += f"{cookie.name}={cookie.value}; "
-        return result
+    def get_auth_token(self) -> str:
+        cookies = dict_from_cookiejar(self._session.cookies)
+        if "ZM_AUTH_TOKEN" in cookies.keys():
+            return "ZM_AUTH_TOKEN=" + cookies["ZM_AUTH_TOKEN"]
+        return ""
