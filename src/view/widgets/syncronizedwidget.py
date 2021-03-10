@@ -5,7 +5,7 @@ from model import Directory
 
 from PySide6.QtGui import QDesktopServices
 
-from view.widget.subwidget.filewidget import FileWidget
+from view.widgets.subwidget.filewidget import FileWidget
 from view.layouts.flowlayout import FlowLayout
 import settings
 

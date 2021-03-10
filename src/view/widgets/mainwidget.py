@@ -1,12 +1,11 @@
 from PySide6 import QtCore
 from PySide6.QtWidgets import (
     QVBoxLayout, QHBoxLayout, QWidget, QStackedWidget)
-from view.widget.menuwidget import MenuWidget
-from view.widget.syncronizedwidget import SyncronizedWidget
-from view.widget.settings import SettingsWidget
+from .menuwidget import MenuWidget 
+from .syncronizedwidget import SyncronizedWidget
+from .watchwidget import WatchWidget
+from view.widgets.settings import SettingsWidget
 from PySide6.QtCore import Qt
-
-from view.widget.watchwidget import WatchWidget
 import re
 
 
