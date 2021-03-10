@@ -82,8 +82,6 @@ class MetaData:
             for client_file in file_presenti_nel_client:
                 if name == client_file["name"]:
                     if updated_at != client_file["updated_at"]:
-                        print(
-                            f"Server: {updated_at}, client {client_file['updated_at']}")
                         if updated_at > client_file["updated_at"]:
                             self._logger.info(
                                 f"{name} è stato modificato nel server")

@@ -25,11 +25,6 @@ def create_standard_settings() -> None:
         "Quota": "1024"
     }
 
-    config["Connection"] = {
-        "address": "http://20.56.176.12",
-        "port": "80"
-    }
-
     __write_on_file()
 
 
@@ -57,18 +52,6 @@ def get_config(section: str, passed_config: str) -> Optional[str]:
     if passed_config not in config[section]:
         return None
     return config[section][passed_config]
-
-
-def get_server_url() -> str:
-    """Resituisce l'indirizzo del server"""
-    address = get_config("Connection", "address")
-    port = get_config("Connection", "port")
-
-    # Elimino lo slash se presente
-    if address[-1] == "/":
-        address = address[:-1]
-
-    return address + ":" + port + "/"
 
 
 def get_quota_disco() -> int:

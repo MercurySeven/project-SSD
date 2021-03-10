@@ -28,7 +28,7 @@ class API:
         if not session.is_logged():
             raise ValueError("Email o password non valide")
 
-        self._cookie = session.get_cookie_str()
+        self._cookie = session.get_auth_token()
 
         _headers = {
             "Content-Type": "application/json",
