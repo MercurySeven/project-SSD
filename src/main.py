@@ -5,7 +5,7 @@ import view.icons
 from PySide6.QtCore import (QCoreApplication, QSettings)
 from PySide6.QtWidgets import (QApplication, QFileDialog)
 
-from controller.controller import Controller
+from controllers import Controller
 from view.system_tray_icon import SystemTrayIcon
 
 if __name__ == "__main__":
