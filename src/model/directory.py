@@ -1,6 +1,6 @@
 
 import os
-from model.file import File
+from .file import File
 from datetime import datetime
 
 

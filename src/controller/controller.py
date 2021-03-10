@@ -1,7 +1,7 @@
 from PySide6.QtCore import (QObject, Slot, QSettings)
 
 from view.mainwindow import MainWindow
-from model.watcher import Watcher
+from model import Watcher
 
 from time import sleep
 from threading import Thread

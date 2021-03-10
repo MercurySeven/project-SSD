@@ -1,7 +1,7 @@
 from PySide6.QtCore import (Signal, Slot, Qt, QSettings, QUrl)
 from PySide6.QtWidgets import (
     QLabel, QVBoxLayout, QHBoxLayout, QWidget, QScrollArea, QSizePolicy, QGridLayout, QPushButton)
-from model.directory import Directory
+from model import Directory
 
 from PySide6.QtGui import QDesktopServices
 
