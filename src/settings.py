@@ -22,7 +22,13 @@ def __write_on_file() -> None:
 def create_standard_settings() -> None:
     """Genera il file di impostazioni standard"""
     config["General"] = {
-        "Quota": "1024"
+        "quota": "1024"
+    }
+
+    # TODO: Da rimuovere
+    config["Login"] = {
+        "username": "user",
+        "password": "pwd"
     }
 
     __write_on_file()
@@ -64,6 +70,16 @@ def get_quota_disco() -> int:
         logger.warning("Il valore di quota disco non è int")
         update_config("General", "quota", "1024")
         return 1024
+
+
+def get_username() -> str:
+    """Non usare questo metodo"""
+    return get_config("Login", "username")
+
+
+def get_password() -> str:
+    """Non usare questo metodo"""
+    return get_config("Login", "password")
 
 
 def update_config(section: str, passed_config: str, value: str) -> None:

@@ -1,5 +1,6 @@
 import os
 import logging
+import settings
 from enum import Enum
 from datetime import datetime
 from .api import API
@@ -27,7 +28,7 @@ class MetaData:
 
         self._politica: Policy = Policy.lastUpdate
         # TODO: Da sistemare non appena finiamo il refactor
-        self._api = API("***", "***")
+        self._api = API(settings.get_username(), settings.get_password())
         self._logger = logging.getLogger("metadata")
 
     def setDirectory(self, path: str):
