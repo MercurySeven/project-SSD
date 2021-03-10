@@ -72,7 +72,7 @@ class SettingsWidget(QWidget):
             "Quota disco")
         self.diskLabel.setAccessibleName('Subtitle')
         settings.check_file()
-        
+
         self.diskQuota.Sg_dedicated_quota_changed.connect(
             self.__Sl_dedicated_quota_changed)
 
@@ -130,7 +130,6 @@ class SettingsWidget(QWidget):
         dialog.setOption(QFileDialog.ShowDirsOnly)
         dialog.setOption(QFileDialog.DontResolveSymlinks)
 
-        # L'utente non ha selezionato la cartella
         if dialog.exec_():
             sync_path = dialog.selectedFiles()
             if (len(sync_path) == 1):

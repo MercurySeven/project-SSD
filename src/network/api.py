@@ -2,9 +2,9 @@ import os
 import logging
 import requests
 import math
-import src.network.query_model as query_model
+from .query_model import Query
+from .cookie_session import CookieSession
 from datetime import datetime
-from src.network.cookie_session import CookieSession
 from gql import gql, Client
 from gql.transport.requests import RequestsHTTPTransport
 from PySide6.QtCore import (QSettings)
@@ -47,11 +47,8 @@ class API:
 
     def get_info_from_email(self) -> dict[str, str]:
         """Ritorna l'id e il nome dell'account"""
-        query = gql(query_model.get_info_from_email())
-        params = {
-            "email": self._email
-        }
-        response = self.client.execute(query, variable_values=params)
+        query, params = Query.GET_INFO_FROM_EMAIL(self._email)
+        response = self.client.execute(gql(query), variable_values=params)
         return response["getUserByEmail"]
 
     def get_user_id(self) -> str:
@@ -62,11 +59,8 @@ class API:
 
     def get_all_files(self) -> list:
         """Restituisce il nome dei file con l'ultima modifica"""
-        query = gql(query_model.get_all_files())
-        params = {
-            "id": "LOCAL_ROOT"
-        }
-        response = self.client.execute(query, variable_values=params)
+        query, params = Query.GET_ALL_FILES("LOCAL_ROOT")
+        response = self.client.execute(gql(query), variable_values=params)
         result: list = []
         for files in response["getNode"]["children"]:
             # Tenere questa linea fino a quando non caricheremo

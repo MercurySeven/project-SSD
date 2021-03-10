@@ -1,5 +1,4 @@
-from network.metadata import MetaData, Policy
-from network.server import Server
+from network import MetaData, Policy, Server
 import os
 import unittest
 import settings

@@ -6,7 +6,7 @@ from model.watcher import Watcher
 from time import sleep
 from threading import Thread
 
-from network.metadata import (MetaData, Policy)
+from network import (MetaData, Policy)
 
 
 class Controller(QObject):
@@ -81,4 +81,4 @@ class Controller(QObject):
             # sync do_stuff()
             if self.watcher.status():
                 self.algorithm.apply_changes()
-                sleep(20)
+            sleep(20)

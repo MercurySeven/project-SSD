@@ -2,7 +2,7 @@ import os
 import logging
 from enum import Enum
 from datetime import datetime
-from network.api import API
+from .api import API
 from typing import Dict
 
 
