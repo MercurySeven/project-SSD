@@ -1,15 +1,15 @@
+from PySide6.QtCore import (Slot)
 from PySide6.QtWidgets import (QSystemTrayIcon, QMenu)
 from PySide6.QtGui import (QAction, QIcon)
 
 
-class SystemTrayIcon(QSystemTrayIcon):
+class NotificationIcon(QSystemTrayIcon):
 
-    def __init__(self, icon_path: str, parent=None):
+    def __init__(self, parent=None):
         """Custom SystemTrayIcon, richiede in input il path dell'icona"""
-        QSystemTrayIcon.__init__(self, QIcon(icon_path), parent)
+        QSystemTrayIcon.__init__(self, QIcon("./icons/logo.png"), parent)
         self.setVisible(True)
         self.setToolTip("Zextras Drive Desktop")
-        # self.showMessage("Mercury Seven", "Sembra che funzioni", msecs=5000)
 
         menu = QMenu()
         self.show_option = QAction("Mostra")
@@ -20,3 +20,6 @@ class SystemTrayIcon(QSystemTrayIcon):
         menu.addAction(self.exit_option)
 
         self.setContextMenu(menu)
+
+    def show_message(self, title: str, msg: str, duration: int = 1000):
+        self.showMessage(title, msg, msecs=duration)

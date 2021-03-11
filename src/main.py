@@ -5,7 +5,6 @@ from PySide6.QtCore import (QCoreApplication, QSettings)
 from PySide6.QtWidgets import (QApplication, QFileDialog)
 
 from controllers import Controller
-from view.system_tray_icon import SystemTrayIcon
 
 if __name__ == "__main__":
 
@@ -47,11 +46,6 @@ if __name__ == "__main__":
             env_settings.sync()
             print("Nuova directory: " + env_settings.value("sync_path"))
 
-    controller = Controller()
-
-    system_tray = SystemTrayIcon("./icons/logo.png", app)
-    system_tray.exit_option.triggered.connect(app.quit)
-    system_tray.show_option.triggered.connect(controller.show_app)
-    system_tray.show()
+    controller = Controller(app)
 
     sys.exit(app.exec_())

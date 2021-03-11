@@ -3,5 +3,6 @@ from .policy_controller import PolicyController
 
 __all__ = [
     "Controller",
-    "PolicyController"
+    "PolicyController",
+    "NotificationIconController"
 ]

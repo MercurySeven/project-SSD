@@ -1,4 +1,5 @@
 from PySide6.QtCore import (QObject, Slot, QSettings)
+from PySide6.QtWidgets import (QApplication)
 
 from view import MainWindow
 from model import Watcher
@@ -7,15 +8,20 @@ from time import sleep
 from threading import Thread
 
 from network import (MetaData, Policy)
+from .notification_icon import (NotificationIconController)
 
 
 class Controller(QObject):
 
-    def __init__(self, parent=None):
+    def __init__(self, app: QApplication, parent=None):
         super(Controller, self).__init__(parent)
 
         self.view = MainWindow()
         self.view.show()
+
+        # Non so se ci vada il parent su Notification...
+        self.notification_icon = NotificationIconController(app, parent)
+        self.notification_icon.Sg_show_app.connect(lambda: self.view.show())
 
         # Attivo il watchdog nella root definita dall'utente
         self.watcher = Watcher()
@@ -48,16 +54,14 @@ class Controller(QObject):
             self.algorithm.get_size())
 
     @Slot()
-    def show_app(self):
-        self.view.show()
-
-    @Slot()
     def reboot(self):
         self.env_settings.sync()
         self.algorithm.set_directory(self.env_settings.value("sync_path"))
         self.view.mainWidget.settingsWidget.Sl_update_used_quota(
             self.algorithm.get_size())
         self.watcher.reboot()
+        self.notification_icon.send_message(
+            "SSD: Zextras Drive Desktop", "Observer riavviato", 1000)
 
     @Slot()
     def Sl_change_policy(self, policy: Policy):
