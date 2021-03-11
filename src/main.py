@@ -1,6 +1,5 @@
 import sys
 import logging
-import view.icons
 
 from PySide6.QtCore import (QCoreApplication, QSettings)
 from PySide6.QtWidgets import (QApplication, QFileDialog)
@@ -16,19 +15,18 @@ if __name__ == "__main__":
 
     # start main application
     app = QApplication(sys.argv)
-
+    # utile per avere l'icona di notifica
     app.setQuitOnLastWindowClosed(False)
 
     # initialize settings
     env_settings = QSettings()
 
     # initialize logging format
-    logging.basicConfig(level=logging.INFO,
-                        format="%(levelname)s:%(filename)s:%(asctime)s:%(message)s")
+    _format = "%(levelname)s:%(filename)s:%(asctime)s:%(message)s"
+    logging.basicConfig(level=logging.INFO, format=_format)
     # rimuove i log spammosi di rete
     logging.getLogger("gql.transport.aiohttp").setLevel(logging.WARNING)
     logging.getLogger("gql.transport.requests").setLevel(logging.WARNING)
-    # settings.update_path(None) # debug
 
     # Controlliamo se l'utente ha già settato il PATH della cartella
     if not env_settings.value("sync_path"):
@@ -51,7 +49,7 @@ if __name__ == "__main__":
 
     controller = Controller()
 
-    system_tray = SystemTrayIcon(":/icons/logo.png", app)
+    system_tray = SystemTrayIcon("./icons/logo.png", app)
     system_tray.exit_option.triggered.connect(app.quit)
     system_tray.show_option.triggered.connect(controller.show_app)
     system_tray.show()

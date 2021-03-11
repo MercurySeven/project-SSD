@@ -22,7 +22,7 @@ class FileWidget(QToolButton):
 
         self.setAccessibleName('File')
 
-        file_icon = QIcon(QPixmap(':/icons/copy.png'))
+        file_icon = QIcon('./icons/copy.png')
 
         self.setIcon(file_icon)
         self.setIconSize(QSize(45, 45))
