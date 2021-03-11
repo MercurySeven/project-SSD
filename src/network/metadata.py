@@ -77,7 +77,7 @@ class MetaData:
             name = server_file["name"]
             updated_at = server_file["updated_at"]
             created_at = server_file["created_at"]
-            id = server_file["id"]
+            file_id = server_file["id"]
             trovato = False
             for client_file in file_presenti_nel_client:
                 if name == client_file["name"]:
@@ -86,18 +86,18 @@ class MetaData:
                             self._logger.info(
                                 f"{name} è stato modificato nel server")
                             self._update_file_server.append(
-                                [name, updated_at, created_at, id])
+                                [name, updated_at, created_at, file_id])
                         else:
                             self._logger.info(
                                 f"{name} è stato modificato nel client")
                             self._update_files_client.append(
-                                [name, client_file['updated_at'], id])
+                                [name, client_file['updated_at'], file_id])
                     trovato = True
                     break
             if not trovato:
                 self._logger.info(f"Il file {name} non è presente nel client")
                 self._new_files_server.append(
-                    [name, updated_at, created_at, id])
+                    [name, updated_at, created_at, file_id])
 
         # controllo che tutti i file nel client
         # sono uguali al quelli nel server
