@@ -44,7 +44,7 @@ class File:
         self._file_type = _file_type
 
     def set_size(self, size: int) -> None:
-        self._size = size
+        self._size = self._right_size(size)
 
     def set_status(self, status: str) -> None:
         self._status = status
