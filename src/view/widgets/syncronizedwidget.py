@@ -17,7 +17,6 @@ class SyncronizedWidget(QWidget):
     def __init__(self, parent=None):
         super(SyncronizedWidget, self).__init__(parent)
 
-        layout = QVBoxLayout()
         self.env_settings = QSettings()
         self.current_dir = Directory('', self.env_settings.value("sync_path"))
         self.listOfFileWidget = []
@@ -80,9 +79,8 @@ class SyncronizedWidget(QWidget):
 
         self.listOfFileWidget.clear()
 
-        for file in self.current_dir.files:
-            self.listOfFileWidget.append(FileWidget(file.get_name(), file.get_creation_date(
-            ), file.get_last_modified_date(), file.get_type(), file.get_size(), file.get_status()))
+        for _file in self.current_dir.files:
+            self.listOfFileWidget.append(FileWidget(_file))
 
         for widget in self.listOfFileWidget:
             self.fileLayout.addWidget(widget)

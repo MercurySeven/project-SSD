@@ -12,10 +12,10 @@ class Directory:
         self.files = []
         self.update_list_of_files()
 
-    def add_file(self, file):
+    def add_file(self, file: File) -> None:
         self.files.append(file)
 
-    def update_list_of_files(self):
+    def update_list_of_files(self) -> None:
         restore_path = os.getcwd()
         with os.scandir(self.path) as dir_entries:
             os.chdir(self.path)  # punto critico dell'app!
@@ -34,6 +34,6 @@ class Directory:
     def __convert_to_date(self, date: float) -> str:
         return datetime.fromtimestamp(date).strftime("%Y-%m-%d %H:%M:%S")
 
-    def define_type(self, file_type: str):
+    def define_type(self, file_type: str) -> str:
         pos = file_type.rfind('.')
         return file_type[(pos + 1):]

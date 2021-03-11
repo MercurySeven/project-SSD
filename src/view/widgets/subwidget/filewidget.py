@@ -1,17 +1,16 @@
-from PySide6.QtWidgets import (QHBoxLayout, QWidget, QToolButton, QLabel, QVBoxLayout)
-from PySide6 import QtCore
-from PySide6.QtGui import QPixmap, QIcon
-from PySide6.QtCore import Qt, QSize, QTimer, Signal, Slot, QSettings, QPointF
-from PySide6.QtGui import QHoverEvent
-from subprocess import call
 import os
+from PySide6.QtWidgets import (QToolButton)
+from PySide6.QtGui import (QPixmap, QIcon)
+from PySide6.QtCore import (Qt, QSize, QTimer, Signal, QSettings)
+from subprocess import call
+from src.model import File
 
 
 class FileWidget(QToolButton):
 
     doubleClicked = Signal()
 
-    def __init__(self, name, creation_date, last_modified_date, type, size, status):
+    def __init__(self, file: File):
         super(FileWidget, self).__init__()
 
         self.env_settings = QSettings()
@@ -23,21 +22,22 @@ class FileWidget(QToolButton):
 
         self.setAccessibleName('File')
 
-        fileIcon = QIcon(QPixmap(':/icons/copy.png'))
+        file_icon = QIcon(QPixmap(':/icons/copy.png'))
 
-        self.setIcon(fileIcon)
+        self.setIcon(file_icon)
         self.setIconSize(QSize(45, 45))
         self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
-        
-        self.name = str(name)
-        self.creation_date = str(creation_date)
-        self.last_modified_date = str(last_modified_date)
-        self.type = str(type)
-        self.size = str(size)
-        self.status = str(status)
+
+        self.name = file.get_name()
+        self.creation_date = file.get_creation_date()
+        self.last_modified_date = file.get_last_modified_date()
+        self.type = file.get_type()
+        self.size = file.get_size()
+        self.status = file.get_status()
 
         self.setText(self.name)
-        self.setToolTip("Ultima modifica: " + self.last_modified_date + "\n Size: "+ self.size)
+        self.setToolTip("Ultima modifica: " +
+                        self.last_modified_date + "\nSize: " + self.size)
 
         '''self.contextWindow = QWidget()
         self.contextWindow.nameLabel = QLabel()
@@ -50,7 +50,7 @@ class FileWidget(QToolButton):
         self.contextWindow.setLayout(contextLayout)
 
         self.setLayout(QVBoxLayout())
-        
+
         self.layout().addWidget(self.contextWindow)'''
         # add fields to structure
 
@@ -58,10 +58,10 @@ class FileWidget(QToolButton):
         if self.timer.isActive():
             self.doubleClicked.emit()
             self.timer.stop()
-        
+
         if self.timer.isActive() is False:
             self.timer.start(250)
 
     def onDoubleclick(self):
-        call(['xdg-open', self.env_settings.value("sync_path") + '/' + self.name])
-
+        path = os.path.join(self.env_settings.value("sync_path"), self.name)
+        call(['xdg-open', path])
