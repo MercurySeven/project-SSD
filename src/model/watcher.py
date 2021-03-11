@@ -78,8 +78,10 @@ class Watcher:
 
         :return: Nothing
         """
+        was_running = self.is_running
         self.run(False)
-        self.run(True)
+        if was_running:
+            self.run(True)
 
     def status(self) -> bool:
         return self.is_running
