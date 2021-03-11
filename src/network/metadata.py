@@ -7,11 +7,8 @@ from .api import API
 
 
 class Policy(Enum):
-    Client = 1
-    Server = 2
-    lastUpdate = 3
-    CLIENT = auto()
-    MANUAL = auto()
+    Client = auto()
+    Manual = auto()
 
 
 class MetaData:
@@ -27,12 +24,12 @@ class MetaData:
         """percorso cartella locale"""
         self.directory = path
 
-        self._politica: Policy = Policy.lastUpdate
+        self._politica: Policy = Policy.Client
         # TODO: Da sistemare non appena finiamo il refactor
         self._api = API(settings.get_username(), settings.get_password())
         self._logger = logging.getLogger("metadata")
 
-    def set_directory(self, path: str):
+    def set_directory(self, path: str) -> None:
         self.directory = path
 
     def get_data_client(self) -> list:
@@ -63,7 +60,7 @@ class MetaData:
         self._logger.info(f"Name: {name} updated at: {updated_at}")
         return data
 
-    def update_diff(self):
+    def update_diff(self) -> None:
         self._new_files_client.clear()
         self._new_files_server.clear()
         self._update_files_client.clear()
@@ -173,7 +170,7 @@ class MetaData:
             self._api.download_from_server(
                 self.directory, name, id, created_at, updated_at)
 
-    def change_policy(self, policy):
+    def change_policy(self, policy: Policy) -> None:
         self._politica = policy
         self._logger.info(f"modificato politica {self._politica}")
 
@@ -181,17 +178,9 @@ class MetaData:
         self.update_diff()
         self.default_operations()
         self.apply_change_last_update()
-        # Da rifare le altre policy
-        # if self._politica == Policy.Client:
-        #     self.apply_change_client()
-        # elif self._politica == Policy.Server:
-        #     self.apply_change_server()
-        # elif self._politica == Policy.lastUpdate:
-        #     self.apply_change_last_update()
-        # else:
-        #     self._logger.info("Invalid policy")
 
     def get_size(self) -> int:
+        # TODO: Da spostare da qua
         total_size = 0
         for dirpath, dirnames, filenames in os.walk(self.directory):
             for f in filenames:
@@ -201,19 +190,3 @@ class MetaData:
                     total_size += os.path.getsize(fp)
 
         return total_size
-
-
-"""
-print(f"file presenti nel client {metadata.getDataClient()}")
-print(f"file presenti nel server {metadata.getDataServer()}")
-metadata.updateDiff()
-print(f"nuovi file nel server {metadata.newFilesServer}")
-print(f"nuovi file nel client {metadata.newFilesClient}")
-print(f"file aggiornati nel client {metadata.updateFilesClient}")
-print(f"file aggiornati nel client {metadata.updateFileServer}")
-server = Server()
-metadata.applyChanges(Policy.lastUpdate)
-
-for i in metadata.getDataServer():
-    server.removeFileByName(f"{i['Nome']}")
-"""

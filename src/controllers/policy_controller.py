@@ -20,9 +20,5 @@ class PolicyController(QObject):
 
         if policy == "Client":
             self.algorithm.change_policy(Policy.Client)
-        elif policy == "Server":
-            self.algorithm.change_policy(Policy.Server)
-        elif policy == "lastUpdate":
-            self.algorithm.change_policy(Policy.lastUpdate)
-        else:
-            print("invalid policy")
+        elif policy == "Manual":
+            self.algorithm.change_policy(Policy.Manual)

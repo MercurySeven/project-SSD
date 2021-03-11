@@ -11,9 +11,8 @@ class SettingsWidget(QWidget):
 
     # creating Signals
     Sg_path_changed = Signal()
-    Sg_policy_lastUpdate = Signal()
-    Sg_policy_Client = Signal()
-    Sg_policy_Server = Signal()
+    Sg_policy_client = Signal()
+    Sg_policy_manuale = Signal()
     Sg_dedicated_quota_changed = Signal()
 
     def __init__(self, parent=None):
@@ -50,26 +49,19 @@ class SettingsWidget(QWidget):
         # Impostazioni Priorità
         self.priorityLabel = QLabel(self)
         self.priorityLabel.setText(
-            "Seleziona a quale archivio dare la priorità")
+            "Seleziona la politica di gestione dei conflitti")
         self.priorityLabel.setAccessibleName('Subtitle')
 
-        self.radioLocal = QRadioButton("Locale")
-        self.radioLocal.clicked.connect(lambda: self.setPriority(
-            self.radioLocal))
+        self.radio_client = QRadioButton("Client")
+        self.radio_client.setChecked(True)
+        self.radio_client.clicked.connect(lambda: self.setPriority("Client"))
 
-        self.radioRemote = QRadioButton("Remoto")
-        self.radioRemote.clicked.connect(lambda: self.setPriority(
-            self.radioRemote))
-
-        self.radioLastUpdate = QRadioButton("lastUpdate")
-        self.radioLastUpdate.setChecked(True)
-        self.radioLastUpdate.clicked.connect(lambda: self.setPriority(
-            self.radioLastUpdate))
+        self.radio_manuale = QRadioButton("Manuale")
+        self.radio_manuale.clicked.connect(lambda: self.setPriority("Manuale"))
 
         # Impostazioni quota disco
         self.diskLabel = QLabel(self)
-        self.diskLabel.setText(
-            "Quota disco")
+        self.diskLabel.setText("Quota disco")
         self.diskLabel.setAccessibleName('Subtitle')
         settings.check_file()
 
@@ -88,9 +80,8 @@ class SettingsWidget(QWidget):
 
         radio_layout = QHBoxLayout()
         radio_layout.setAlignment(Qt.AlignLeft)
-        radio_layout.addWidget(self.radioLocal)
-        radio_layout.addWidget(self.radioRemote)
-        radio_layout.addWidget(self.radioLastUpdate)
+        radio_layout.addWidget(self.radio_client)
+        radio_layout.addWidget(self.radio_manuale)
 
         layout = QVBoxLayout()
         layout.addWidget(self.title)
@@ -139,10 +130,8 @@ class SettingsWidget(QWidget):
 
                 self.Sg_path_changed.emit()
 
-    def setPriority(self, b):
-        if b.text() == 'Locale':
-            self.Sg_policy_Client.emit()
-        elif b.text() == 'Remoto':
-            self.Sg_policy_Server.emit()
-        elif b.text() == 'lastUpdate':
-            self.Sg_policy_lastUpdate.emit()
+    def setPriority(self, policy: str):
+        if policy == "Client":
+            self.Sg_policy_client.emit()
+        elif policy == 'Manuale':
+            self.Sg_policy_manuale.emit()

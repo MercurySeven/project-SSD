@@ -25,12 +25,10 @@ class Controller(QObject):
         self.view.mainWidget.settingsWidget.Sg_path_changed.connect(
             self.reboot)
 
-        self.view.mainWidget.settingsWidget.Sg_policy_Client.connect(
-            lambda: self.Sl_change_policy("Client"))
-        self.view.mainWidget.settingsWidget.Sg_policy_Server.connect(
-            lambda: self.Sl_change_policy("Server"))
-        self.view.mainWidget.settingsWidget.Sg_policy_lastUpdate.connect(
-            lambda: self.Sl_change_policy("lastUpdate"))
+        self.view.mainWidget.settingsWidget.Sg_policy_client.connect(
+            lambda: self.Sl_change_policy(Policy.Client))
+        self.view.mainWidget.settingsWidget.Sg_policy_manuale.connect(
+            lambda: self.Sl_change_policy(Policy.Manual))
 
         self.env_settings = QSettings()
         self.algorithm = MetaData(self.env_settings.value("sync_path"))
@@ -62,15 +60,8 @@ class Controller(QObject):
         self.watcher.reboot()
 
     @Slot()
-    def Sl_change_policy(self, policy):
-        if policy == "Client":
-            self.algorithm.change_policy(Policy.Client)
-        elif policy == "Server":
-            self.algorithm.change_policy(Policy.Server)
-        elif policy == "lastUpdate":
-            self.algorithm.change_policy(Policy.lastUpdate)
-        else:
-            print("invalid policy")
+    def Sl_change_policy(self, policy: Policy):
+        self.algorithm.change_policy(policy)
 
     @Slot(bool)
     def Sl_watch(self, state):
