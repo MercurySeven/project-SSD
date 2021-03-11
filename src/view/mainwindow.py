@@ -13,16 +13,10 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
 
         self.setWindowTitle("SSD: Zextras Drive Desktop")
-        self.setWindowIcon(QIcon(":icons/logo.png"))
+        self.setWindowIcon(QIcon("./icons/logo.png"))
 
         # widgets
         self.mainWidget = MainWidget(self)
-
-        # Non più necessario ma da controllare
-        # create layout
-        # layout = QVBoxLayout()
-        # layout.addWidget(self.mainWidget)
-        # self.setLayout(layout)
 
         # !! MainWindow must have a central widget !!
         self.setCentralWidget(self.mainWidget)
