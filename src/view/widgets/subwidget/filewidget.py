@@ -1,6 +1,6 @@
 import os
 from PySide6.QtWidgets import (QToolButton)
-from PySide6.QtGui import (QPixmap, QIcon)
+from PySide6.QtGui import (QIcon)
 from PySide6.QtCore import (Qt, QSize, QTimer, Signal, QSettings)
 from subprocess import call
 from src.model import File

@@ -1,7 +1,7 @@
-from PySide6.QtCore import Signal, Slot, Qt, QSize
+from PySide6.QtCore import (Signal, Slot, Qt, QSize)
 from PySide6.QtWidgets import (QPushButton, QLabel,
                                QVBoxLayout, QWidget)
-from PySide6.QtGui import QPixmap, QIcon
+from PySide6.QtGui import (QIcon)
 
 
 class WatchWidget(QWidget):

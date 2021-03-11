@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import (QPushButton, QVBoxLayout, QWidget)
 from PySide6.QtCore import (Qt, QSize)
-from PySide6.QtGui import QPixmap, QIcon
+from PySide6.QtGui import (QIcon)
 
 
 class MenuWidget(QWidget):
