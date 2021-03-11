@@ -20,15 +20,20 @@ class Directory:
         with os.scandir(self.path) as dir_entries:
             os.chdir(self.path)  # punto critico dell'app!
             for entry in dir_entries:
-                dir = os.path.join(str(self.path), entry.name)
+                created_at = os.stat(entry.name).st_ctime
+                updated_at = os.stat(entry.name).st_mtime
                 file = File(entry.name,
-                            datetime.fromtimestamp(os.stat(entry.name).st_ctime).strftime("%Y-%m-%d %H:%M:%S"),
-                            datetime.fromtimestamp(os.stat(entry.name).st_mtime).strftime("%Y-%m-%d %H:%M:%S"),
+                            self.__convert_to_date(created_at),
+                            self.__convert_to_date(updated_at),
                             self.define_type(entry.name),
-                            str(os.stat(entry.name).st_size), "stato file")
+                            str(os.stat(entry.name).st_size),
+                            "stato file")
                 self.files.append(file)
         os.chdir(restore_path)
 
-    def define_type(self, str):
-        pos = str.rfind('.')
-        return str[(pos + 1):]
+    def __convert_to_date(self, date: float) -> str:
+        return datetime.fromtimestamp(date).strftime("%Y-%m-%d %H:%M:%S")
+
+    def define_type(self, file_type: str):
+        pos = file_type.rfind('.')
+        return file_type[(pos + 1):]

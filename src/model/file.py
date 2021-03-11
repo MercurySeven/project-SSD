@@ -1,53 +1,60 @@
 class File:
-    def __init__(self, name, creation_date, last_modified_date, type, size, status):
+    def __init__(self,
+                 name: str,
+                 creation_date: str,
+                 last_modified_date: str,
+                 file_type: str,
+                 size: int,
+                 status: str):
         self._name = name
         self._creation_date = creation_date
         self._last_modified_date = last_modified_date
-        self._type = type
-        self._size = self.right_size(size)
+        self._file_type = file_type
+        self._size = self._right_size(size)
         self._status = status
 
-    def get_name(self):
+    def get_name(self) -> str:
         return self._name
 
-    def get_creation_date(self):
+    def get_creation_date(self) -> str:
         return self._creation_date
 
-    def get_last_modified_date(self):
+    def get_last_modified_date(self) -> str:
         return self._last_modified_date
 
-    def get_type(self):
-        return self._type
+    def get_type(self) -> str:
+        return self._file_type
 
-    def get_size(self):
+    def get_size(self) -> str:
         return str(self._size)
 
-    def get_status(self):
+    def get_status(self) -> str:
         return self._status
 
-    def set_name(self, name):
+    def set_name(self, name: str) -> None:
         self._name = name
 
-    def set_creation_date(self, creation_date):
+    def set_creation_date(self, creation_date: str) -> None:
         self._creation_date = creation_date
 
-    def set_last_modified_date(self, last_modified_date):
+    def set_last_modified_date(self, last_modified_date: str) -> None:
         self._last_modified_date = last_modified_date
 
-    def set_type(self, type):
-        self._type = type
+    def set_type(self, _file_type: str) -> None:
+        self._file_type = _file_type
 
-    def set_size(self, size):
+    def set_size(self, size: int) -> None:
         self._size = size
 
-    def set_status(self, status):
+    def set_status(self, status: str) -> None:
         self._status = status
 
-    def right_size(self, str):
-        if len(str)>3 and len(str)<7:
-            return (str[:-3]+" KB")
-        if len(str)>6 and len(str)<9:
-            return (str[: -6]+ " MB")
-        if len(str)>8:
-            return (str[: -8]+ " GB")
-        else: return (str+ " Byte")
+    def _right_size(self, size: int) -> str:
+        if len(size) > 3 and len(str) < 7:
+            return (size[:-3]+" KB")
+        if len(size) > 6 and len(str) < 9:
+            return (size[: -6] + " MB")
+        if len(size) > 8:
+            return (size[: -8] + " GB")
+        else:
+            return (size + " Byte")

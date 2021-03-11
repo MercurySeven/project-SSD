@@ -1,4 +1,4 @@
-from PySide6.QtCore import (QObject, Slot, QSettings)
+from PySide6.QtCore import (QObject, Slot)
 from network import (MetaData, Policy)
 from view.widgets.settings import PolicySettings
 
