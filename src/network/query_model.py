@@ -2,7 +2,7 @@
 class Query:
 
     @staticmethod
-    def GET_INFO_FROM_EMAIL(email: str) -> tuple[str, dict[str, str]]:
+    def get_info_from_email(email: str) -> tuple[str, dict[str, str]]:
         query = """
         query GetUserByEmail($email: String!) {
             getUserByEmail(email: $email) {
@@ -19,7 +19,7 @@ class Query:
         return (query, params)
 
     @staticmethod
-    def GET_ALL_FILES(ID: str) -> tuple[str, dict[str, str]]:
+    def get_all_files(node_id: str) -> tuple[str, dict[str, str]]:
         query = """
         query GetNode ($id: ID!) {
             getNode(id: $id) {
@@ -49,7 +49,7 @@ class Query:
         """
 
         params = {
-            "id": ID
+            "id": node_id
         }
 
         return (query, params)

@@ -32,7 +32,7 @@ class MetaData:
         self._api = API(settings.get_username(), settings.get_password())
         self._logger = logging.getLogger("metadata")
 
-    def setDirectory(self, path: str):
+    def set_directory(self, path: str):
         self.directory = path
 
     def get_data_client(self) -> list:
@@ -60,8 +60,7 @@ class MetaData:
             'size': size,
             'updated_at': updated_at
         }
-        self._logger.info(
-            f"Nome: {name} data ultima modifica: {updated_at}")
+        self._logger.info(f"Name: {name} updated at: {updated_at}")
         return data
 
     def update_diff(self):

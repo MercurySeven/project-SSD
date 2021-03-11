@@ -56,7 +56,7 @@ class Controller(QObject):
     @Slot()
     def reboot(self):
         self.env_settings.sync()
-        self.algorithm.setDirectory(self.env_settings.value("sync_path"))
+        self.algorithm.set_directory(self.env_settings.value("sync_path"))
         self.view.mainWidget.settingsWidget.Sl_update_used_quota(
             self.algorithm.get_size())
         self.watcher.reboot()
@@ -81,4 +81,4 @@ class Controller(QObject):
             # sync do_stuff()
             if self.watcher.status():
                 self.algorithm.apply_changes()
-            sleep(20)
+            sleep(5)

@@ -41,8 +41,8 @@ class WatchWidget(QWidget):
         self.running_label.setAccessibleName('Subtitle')
 
         self.syncButton = QPushButton(self)
-        syncIcon = QIcon(QPixmap(':/icons/reload.png'))
-        self.syncButton.setIcon(syncIcon)
+        sync_icon = QIcon(QPixmap(':/icons/reload.png'))
+        self.syncButton.setIcon(sync_icon)
         self.syncButton.setIconSize(QSize(50, 50))
         self.syncButton.setCheckable(True)
         self.syncButton.setChecked(False)

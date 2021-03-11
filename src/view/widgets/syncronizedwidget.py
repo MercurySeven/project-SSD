@@ -36,7 +36,7 @@ class SyncronizedWidget(QWidget):
         # contenitore per file
 
         self.fileWindow = QWidget(self)
-        self.fileLayout.setContentsMargins(0,0,0,0)
+        self.fileLayout.setContentsMargins(0, 0, 0, 0)
 
         self.updateButton = QPushButton(self)
         self.updateButton.setText('Refresh')
@@ -46,9 +46,9 @@ class SyncronizedWidget(QWidget):
         self.fileButton.setText('Apri file manager')
         self.fileButton.clicked.connect(self.showFolder)
 
-        buttonLayout = QHBoxLayout()
-        buttonLayout.addWidget(self.updateButton)
-        buttonLayout.addWidget(self.fileButton)
+        button_layout = QHBoxLayout()
+        button_layout.addWidget(self.updateButton)
+        button_layout.addWidget(self.fileButton)
 
         self.fileLayout.addWidget
 
@@ -60,13 +60,13 @@ class SyncronizedWidget(QWidget):
         self.scrollArea.setWidget(self.fileWindow)
 
         layout = QVBoxLayout()
-        layout.addLayout(buttonLayout)
+        layout.addLayout(button_layout)
         layout.addWidget(self.scrollArea)
         self.setLayout(layout)
 
     def updateFiles(self):
 
-        for i in reversed(range(self.fileLayout.count())): 
+        for i in reversed(range(self.fileLayout.count())):
             self.fileLayout.itemAt(i).widget().deleteLater()
 
         self.current_dir = Directory('', self.env_settings.value("sync_path"))
@@ -85,11 +85,10 @@ class SyncronizedWidget(QWidget):
             self.listOfFileWidget.append(FileWidget(file.get_name(), file.get_creation_date(
             ), file.get_last_modified_date(), file.get_type(), file.get_size(), file.get_status()))
 
-
         for widget in self.listOfFileWidget:
             self.fileLayout.addWidget(widget)
             widget.setParent(self.fileWindow)
 
     def showFolder(self):
-        QDesktopServices.openUrl(QUrl(self.env_settings.value("sync_path"), QUrl.TolerantMode)) 
-
+        QDesktopServices.openUrl(
+            QUrl(self.env_settings.value("sync_path"), QUrl.TolerantMode))

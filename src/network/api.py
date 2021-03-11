@@ -4,7 +4,6 @@ import requests
 import math
 from .query_model import Query
 from .cookie_session import CookieSession
-from datetime import datetime
 from gql import gql, Client
 from gql.transport.requests import RequestsHTTPTransport
 from PySide6.QtCore import (QSettings)
@@ -47,7 +46,7 @@ class API:
 
     def get_info_from_email(self) -> dict[str, str]:
         """Ritorna l'id e il nome dell'account"""
-        query, params = Query.GET_INFO_FROM_EMAIL(self._email)
+        query, params = Query.get_info_from_email(self._email)
         response = self.client.execute(gql(query), variable_values=params)
         return response["getUserByEmail"]
 
@@ -57,9 +56,9 @@ class API:
             self._user_id = self.get_info_from_email()["id"]
         return self._user_id
 
-    def get_all_files(self) -> list:
+    def get_all_files(self, node_id: str = "LOCAL_ROOT") -> list:
         """Restituisce il nome dei file con l'ultima modifica"""
-        query, params = Query.GET_ALL_FILES("LOCAL_ROOT")
+        query, params = Query.get_all_files(node_id)
         response = self.client.execute(gql(query), variable_values=params)
         result: list = []
         for files in response["getNode"]["children"]:
@@ -135,11 +134,3 @@ class API:
         else:
             self._logger.info(
                 f"Download del file {file_name}, fallito")
-
-
-# if __name__ == "__main__":
-#     s = API("***", "***")
-#     print(s.get_all_files())
-#     s.download_from_server(
-#         ".", "lorem.txt", "f443ca17-f0c7-48e7-9bc3-2c2f8641898a")
-#     print(s.upload_to_server("log.mer"))

@@ -47,7 +47,7 @@ class CookieSession:
             return True
 
         if not (self._username and self._password):
-            raise Exception("no username and password found")
+            raise ValueError("no username and password found")
 
         # dati estrapolati dalla chiamata post di login nel browser
         # il codice csrf è generato dinamicamente

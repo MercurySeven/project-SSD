@@ -18,8 +18,6 @@ class DiskQuota(QWidget):
     def __init__(self, parent=None):
         super(DiskQuota, self).__init__(parent)
 
-        # self.env_settings = QSettings()
-
         self.setAccessibleName('InfoBox')
 
         # Barra riempimento disco
@@ -29,16 +27,15 @@ class DiskQuota(QWidget):
 
         self.diskProgress = QProgressBar(self)
         self.diskProgress.setFormat('')
-        
+
         self.diskQuota = QLabel(self)
-        
+
         # Modifica spazio dedicato
         self.spaceLabel = QLabel('Spazio dedicato', self)
         self.spaceLabel.setAccessibleName('Subtitle')
 
         self.dedicatedSpace = QLineEdit(self)
-        onlyInt = QIntValidator()
-        self.dedicatedSpace.setValidator(onlyInt)
+        self.dedicatedSpace.setValidator(QIntValidator())
         self.dedicatedSpace.returnPressed.connect(self.emit_changes)
 
         # init value
@@ -49,15 +46,15 @@ class DiskQuota(QWidget):
 
     def init_layout(self):
 
-        diskLayout = QVBoxLayout()
-        diskLayout.setAlignment(Qt.AlignLeft)
-        diskLayout.addWidget(self.progressLabel)
-        diskLayout.addWidget(self.diskProgress)
-        diskLayout.addWidget(self.diskQuota)
-        diskLayout.addWidget(self.spaceLabel)
-        diskLayout.addWidget(self.dedicatedSpace)
+        disk_layout = QVBoxLayout()
+        disk_layout.setAlignment(Qt.AlignLeft)
+        disk_layout.addWidget(self.progressLabel)
+        disk_layout.addWidget(self.diskProgress)
+        disk_layout.addWidget(self.diskQuota)
+        disk_layout.addWidget(self.spaceLabel)
+        disk_layout.addWidget(self.dedicatedSpace)
 
-        self.setLayout(diskLayout)
+        self.setLayout(disk_layout)
 
     @Slot()
     def emit_changes(self):

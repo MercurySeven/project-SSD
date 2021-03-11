@@ -81,23 +81,23 @@ class SettingsWidget(QWidget):
 
     def init_layout(self):
 
-        pathLayout = QHBoxLayout()
-        pathLayout.setAlignment(Qt.AlignLeft)
-        pathLayout.addWidget(self.path_label)
-        pathLayout.addWidget(self.changePathButton)
+        path_layout = QHBoxLayout()
+        path_layout.setAlignment(Qt.AlignLeft)
+        path_layout.addWidget(self.path_label)
+        path_layout.addWidget(self.changePathButton)
 
-        radioLayout = QHBoxLayout()
-        radioLayout.setAlignment(Qt.AlignLeft)
-        radioLayout.addWidget(self.radioLocal)
-        radioLayout.addWidget(self.radioRemote)
-        radioLayout.addWidget(self.radioLastUpdate)
+        radio_layout = QHBoxLayout()
+        radio_layout.setAlignment(Qt.AlignLeft)
+        radio_layout.addWidget(self.radioLocal)
+        radio_layout.addWidget(self.radioRemote)
+        radio_layout.addWidget(self.radioLastUpdate)
 
         layout = QVBoxLayout()
         layout.addWidget(self.title)
         layout.addWidget(self.titoloPath)
-        layout.addLayout(pathLayout)
+        layout.addLayout(path_layout)
         layout.addWidget(self.priorityLabel)
-        layout.addLayout(radioLayout)
+        layout.addLayout(radio_layout)
         layout.addWidget(self.diskLabel)
         layout.addWidget(self.diskQuota)
         layout.addStretch()
@@ -118,9 +118,9 @@ class SettingsWidget(QWidget):
 
     @Slot(int)
     def Sl_update_used_quota(self, size: int) -> None:
-        maxSize = settings.get_quota_disco()
+        max_size = settings.get_quota_disco()
         # maxSize = self.env_settings.value("Disk/quota")
-        self.diskQuota.set_context((0, maxSize), size)
+        self.diskQuota.set_context((0, max_size), size)
 
     @Slot()
     def setPath(self):
@@ -142,7 +142,7 @@ class SettingsWidget(QWidget):
     def setPriority(self, b):
         if b.text() == 'Locale':
             self.Sg_policy_Client.emit()
-        elif b.text() == 'Remoto' :
+        elif b.text() == 'Remoto':
             self.Sg_policy_Server.emit()
         elif b.text() == 'lastUpdate':
             self.Sg_policy_lastUpdate.emit()

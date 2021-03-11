@@ -2,6 +2,7 @@ from PySide6.QtWidgets import (QPushButton, QVBoxLayout, QWidget)
 from PySide6.QtCore import (Qt, QSize)
 from PySide6.QtGui import QPixmap, QIcon
 
+
 class MenuWidget(QWidget):
 
     def __init__(self, parent):
@@ -10,16 +11,16 @@ class MenuWidget(QWidget):
 
         self.setAccessibleName('MenuNav')
 
-        fileIcon = QIcon(QPixmap(':/icons/copy.png'))
-        settingsIcon = QIcon(QPixmap(':/icons/settings.png'))
+        file_icon = QIcon(QPixmap(':/icons/copy.png'))
+        settings_icon = QIcon(QPixmap(':/icons/settings.png'))
 
         self.syncronizedButton = QPushButton(self)
-        self.syncronizedButton.setIcon(fileIcon)
+        self.syncronizedButton.setIcon(file_icon)
         self.syncronizedButton.setIconSize(QSize(30, 30))
         self.syncronizedButton.setCheckable(True)
 
         self.settingsButton = QPushButton(self)
-        self.settingsButton.setIcon(settingsIcon)
+        self.settingsButton.setIcon(settings_icon)
         self.settingsButton.setIconSize(QSize(30, 30))
         self.settingsButton.setCheckable(True)
         self.syncronizedButton.setChecked(False)
