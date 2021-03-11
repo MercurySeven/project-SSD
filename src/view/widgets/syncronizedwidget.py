@@ -1,13 +1,12 @@
-from PySide6.QtCore import (Signal, Slot, Qt, QSettings, QUrl)
+from PySide6.QtCore import (QSettings, QUrl)
 from PySide6.QtWidgets import (
-    QLabel, QVBoxLayout, QHBoxLayout, QWidget, QScrollArea, QSizePolicy, QGridLayout, QPushButton)
+    QVBoxLayout, QHBoxLayout, QWidget, QScrollArea, QPushButton)
 from model import Directory
 
 from PySide6.QtGui import QDesktopServices
 
 from view.widgets.subwidget.filewidget import FileWidget
 from view.layouts.flowlayout import FlowLayout
-import settings
 
 
 class SyncronizedWidget(QWidget):

@@ -1,7 +1,6 @@
-from PySide6.QtWidgets import (
-    QWidget, QProgressBar, QLabel, QVBoxLayout, QLineEdit)
+from PySide6.QtWidgets import (QWidget)
 
-from PySide6.QtCore import (QSettings, Signal, Slot)
+from PySide6.QtCore import (Signal)
 
 from network import Policy
 

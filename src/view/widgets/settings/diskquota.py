@@ -1,12 +1,9 @@
 from PySide6.QtWidgets import (
     QWidget, QProgressBar, QLabel, QVBoxLayout, QLineEdit)
-from PySide6.QtCore import (QSettings, Signal, Slot)
+from PySide6.QtCore import (Signal, Slot)
 from PySide6.QtGui import (QIntValidator)
 
-import os
 import math
-
-import settings
 
 from PySide6.QtCore import Qt
 

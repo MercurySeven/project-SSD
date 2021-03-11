@@ -5,13 +5,15 @@ import logging
 
 
 class Watcher:
-    """the Watcher class is used to activate or deactivate the watchdog thread, this is usually done automatically
-    with signals or manually using the reboot method or run method
+    """the Watcher class is used to activate or deactivate the watchdog thread,
+    this is usually done automatically with signals or manually using
+    the reboot method or run method
     """
 
     def __init__(self):
         """
-        Constructor for Watcher class, used to setup some public variables(path) and hidden
+        Constructor for Watcher class, used to setup some public
+        variables(path) and hidden
         :param path: the path that the watchdog will observe
         """
 
@@ -28,8 +30,10 @@ class Watcher:
         """
         method used to turn on or off the watchdog thread
 
-        :param watch: boolean variable that is used to turn on the watchdog if true and off if false
-        :return: True if the requested action was done and False if ignored (ex turning off when already off)
+        :param watch: boolean variable that is used to turn on
+            the watchdog if true and off if false
+        :return: True if the requested action was done and False
+            if ignored (ex turning off when already off)
         """
         print("called watchdog")
         if not watch:
@@ -88,7 +92,8 @@ class MyHandler(PatternMatchingEventHandler):
 
     def __init__(self):
         """
-        This constructor is used to setup which file needs to be ignored when caught by the observer
+        This constructor is used to setup which file needs to be ignored when
+        caught by the observer
         """
         super(
             MyHandler,
