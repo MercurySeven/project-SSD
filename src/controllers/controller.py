@@ -60,8 +60,7 @@ class Controller(QObject):
         self.view.mainWidget.settingsWidget.Sl_update_used_quota(
             self.algorithm.get_size())
         self.watcher.reboot()
-        self.notification_icon.send_message(
-            "SSD: Zextras Drive Desktop", "Observer riavviato", 1000)
+        self.notification_icon.send_message("Watcher riavviato")
 
     @Slot()
     def Sl_change_policy(self, policy: Policy):
