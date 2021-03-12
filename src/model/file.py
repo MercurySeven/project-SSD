@@ -51,10 +51,10 @@ class File:
 
     def _right_size(self, size: int) -> str:
         if len(size) > 3 and len(str) < 7:
-            return (size[:-3]+" KB")
+            return size[:-3]+" KB"
         if len(size) > 6 and len(str) < 9:
-            return (size[: -6] + " MB")
+            return size[: -6] + " MB"
         if len(size) > 8:
-            return (size[: -8] + " GB")
+            return size[: -8] + " GB"
         else:
-            return (size + " Byte")
+            return size + " Byte"
