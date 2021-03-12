@@ -50,9 +50,9 @@ class File:
         self._status = status
 
     def _right_size(self, size: int) -> str:
-        if len(size) > 3 and len(str) < 7:
+        if len(size) > 3 and len(size) < 7:
             return size[:-3]+" KB"
-        if len(size) > 6 and len(str) < 9:
+        if len(size) > 6 and len(size) < 9:
             return size[: -6] + " MB"
         if len(size) > 8:
             return size[: -8] + " GB"
