@@ -1,5 +1,5 @@
 from PySide6.QtCore import (QObject, Slot, QSettings)
-from PySide6.QtWidgets import (QApplication)
+from PySide6.QtWidgets import (QApplication, QFileDialog)
 
 from view import MainWindow
 from model import Watcher
@@ -16,6 +16,27 @@ class Controller(QObject):
     def __init__(self, app: QApplication, parent=None):
         super(Controller, self).__init__(parent)
 
+        # initialize settings
+        env_settings = QSettings()
+        # Controlliamo se l'utente ha già settato il PATH della cartella
+        if not env_settings.value("sync_path"):
+            dialog = QFileDialog()
+            dialog.setFileMode(QFileDialog.Directory)
+            dialog.setViewMode(QFileDialog.Detail)  # provare anche .List
+            dialog.setOption(QFileDialog.ShowDirsOnly)
+            dialog.setOption(QFileDialog.DontResolveSymlinks)
+
+            # L'utente non ha selezionato la cartella
+            if not dialog.exec_():
+                env_settings.setValue("sync_path", None)
+                app.quit()
+
+            sync_path = dialog.selectedFiles()
+            if (len(sync_path) == 1):
+                env_settings.setValue("sync_path", sync_path[0])
+                env_settings.sync()
+                print("Nuova directory: " + env_settings.value("sync_path"))
+
         self.view = MainWindow()
         self.view.show()
 
@@ -28,8 +49,8 @@ class Controller(QObject):
 
         self.view.mainWidget.watchWidget.Sg_watch.connect(self.Sl_watch)
 
-        self.view.mainWidget.settingsWidget.Sg_path_changed.connect(
-            self.reboot)
+        # self.view.mainWidget.settingsWidget.Sg_path_changed.connect(
+        #     self.reboot)
 
         self.view.mainWidget.settingsWidget.Sg_policy_client.connect(
             lambda: self.Sl_change_policy(Policy.Client))
