@@ -1,2 +1,0 @@
-dare un'occhiata qui, modulo wathdog
-http://thepythoncorner.com/dev/how-to-create-a-watchdog-in-python-to-look-for-filesystem-changes/

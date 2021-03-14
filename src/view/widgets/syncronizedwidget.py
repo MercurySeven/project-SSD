@@ -87,5 +87,5 @@ class SyncronizedWidget(QWidget):
             widget.setParent(self.fileWindow)
 
     def showFolder(self):
-        QDesktopServices.openUrl(
-            QUrl(self.env_settings.value("sync_path"), QUrl.TolerantMode))
+        path = QUrl.fromUserInput(self.env_settings.value("sync_path"))
+        QDesktopServices.openUrl(path)
