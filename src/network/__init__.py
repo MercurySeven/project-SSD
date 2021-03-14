@@ -4,7 +4,6 @@ from .policy import Policy
 
 __all__ = [
     "API",
-    "Policy",
     "MetaData",
     "Policy"
 ]

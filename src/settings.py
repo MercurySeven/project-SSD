@@ -2,7 +2,6 @@ import configparser
 import os.path
 import logging
 from typing import Optional
-from network.policy import Policy
 
 
 def __read_from_file() -> None:
@@ -84,14 +83,14 @@ def get_password() -> str:
     return get_config("Login", "password")
 
 
-def get_policy() -> Policy:
+def get_policy() -> int:
     "Ritorna la policy salvata"
     try:
-        return Policy(int(get_config("General", "policy")))
+        return int(get_config("General", "policy"))
     except ValueError:
         logger.warning("Il valore di policy è errata")
-        update_policy(Policy.Client.value)
-        return Policy.Client
+        update_policy(1)
+        return 1
 
 
 def update_config(section: str, passed_config: str, value: str) -> None:
@@ -110,9 +109,9 @@ def update_quota_disco(value: str) -> None:
     update_config("General", "quota", value)
 
 
-def update_policy(policy: Policy) -> None:
+def update_policy(policy: int) -> None:
     """Aggiorna la policy"""
-    update_config("General", "policy", str(policy.value))
+    update_config("General", "policy", str(policy))
 
 
 # Assoulutamente da sistemare, fatto per evitare di testare

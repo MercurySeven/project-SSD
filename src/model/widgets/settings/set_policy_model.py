@@ -1,5 +1,5 @@
 from PySide6.QtCore import (QObject, Signal)
-from network.metadata import Policy
+from network import Policy
 import settings
 
 
@@ -11,8 +11,8 @@ class SetPolicyModel(QObject):
         super(SetPolicyModel, self).__init__(None)
 
     def get_policy(self) -> Policy:
-        return settings.get_policy()
+        return Policy(settings.get_policy())
 
     def set_policy(self, new_policy: Policy) -> None:
-        settings.update_policy(new_policy)
+        settings.update_policy(new_policy.value)
         self.Sg_model_changed.emit()
