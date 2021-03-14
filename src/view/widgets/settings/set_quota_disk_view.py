@@ -44,9 +44,6 @@ class SetQuotaDiskView(QWidget):
         self.dedicatedSpace.setValidator(QIntValidator())
         self.dedicatedSpace.returnPressed.connect(self.emit_changes)
 
-        # init value
-        # self.set_context((0, 0), 0)
-
         # layout
         disk_layout = QVBoxLayout()
         disk_layout.setAlignment(Qt.AlignLeft)
@@ -75,27 +72,5 @@ class SetQuotaDiskView(QWidget):
         value = self._model.get_size()
         self.diskQuota.setText(f"{value} su {new_max_quota}")
         self.dedicatedSpace.setText(str(new_max_quota_raw))
+        self.diskProgress.setRange(0, new_max_quota_raw)
         self.diskProgress.setValue(value)
-
-        # def get_used_quota(self) -> int:
-        #     return self.diskProgress.value()
-
-    # def set_context(self, progress_range: tuple[int, int], value: int) -> None:
-    #     """
-    #     Parameters
-    #     ----------
-    #     progress_range : tuple(int, int)
-    #         the range of the progress bar, range[0] = min, range[1] = max
-    #     value : int
-    #         actual value of the quota
-    #     """
-    #     try:
-    #         _min, _max = progress_range
-    #         self.diskProgress.setRange(_min, _max)
-    #         self.diskProgress.setValue(value)
-    #         self.diskQuota.setText(
-    #             f"{value} su {self.convert_size(_max)}")
-    #         self.dedicatedSpace.setText(str(_max))
-    #     except Exception as e:
-    #         # TODO migliorare la gestione delle eccezzioni
-    #         raise Exception(f"setting DiskQuota failed: {str(e)}")
