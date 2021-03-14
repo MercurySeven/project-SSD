@@ -1,8 +1,7 @@
 import os
 from PySide6.QtWidgets import (QToolButton)
-from PySide6.QtGui import (QIcon)
-from PySide6.QtCore import (Qt, QSize, QTimer, Signal, QSettings)
-from subprocess import call
+from PySide6.QtGui import (QIcon, QDesktopServices)
+from PySide6.QtCore import (Qt, QSize, QTimer, Signal, QSettings, QUrl)
 from src.model import File
 
 
@@ -64,4 +63,5 @@ class FileWidget(QToolButton):
 
     def onDoubleclick(self):
         path = os.path.join(self.env_settings.value("sync_path"), self.name)
-        call(['xdg-open', path])
+        file_path = QUrl.fromUserInput(path)
+        QDesktopServices.openUrl(file_path)
