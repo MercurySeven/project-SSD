@@ -3,7 +3,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import (Signal, Slot)
 
 from network import Policy
-from model.widgets.settings import SetPolicyModel
+from model.widgets import SettingsModel
 from controllers.widgets.settings import SetPolicyController
 
 
@@ -12,7 +12,7 @@ class SetPolicyView(QWidget):
     Sg_policy_changed = Signal(Policy)
 
     def __init__(self,
-                 model: SetPolicyModel,
+                 model: SettingsModel,
                  controller: SetPolicyController,
                  parent=None):
         super(SetPolicyView, self).__init__(parent)

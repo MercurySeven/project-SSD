@@ -1,10 +1,10 @@
 from PySide6.QtCore import (QObject, Slot)
-from model.widgets.settings import SetQuotaDiskModel
+from model.widgets import SettingsModel
 
 
 class SetQuotaDiskController(QObject):
 
-    def __init__(self, model: SetQuotaDiskModel, parent=None):
+    def __init__(self, model: SettingsModel, parent=None):
         super(SetQuotaDiskController, self).__init__(parent)
         self.model = model
 

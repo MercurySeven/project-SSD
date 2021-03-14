@@ -1,10 +1,10 @@
 from PySide6.QtCore import (QObject, Slot)
-from model.widgets.settings import SetPathModel
+from model.widgets import SettingsModel
 
 
 class SetPathController(QObject):
 
-    def __init__(self, model: SetPathModel, parent=None):
+    def __init__(self, model: SettingsModel, parent=None):
         super(SetPathController, self).__init__(parent)
 
         self.model = model

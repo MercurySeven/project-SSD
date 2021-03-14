@@ -1,11 +1,11 @@
 from PySide6.QtCore import (QObject, Slot)
 from network import Policy
-from model.widgets.settings import SetPolicyModel
+from model.widgets import SettingsModel
 
 
 class SetPolicyController(QObject):
 
-    def __init__(self, model: SetPolicyModel, parent=None):
+    def __init__(self, model: SettingsModel, parent=None):
         super(SetPolicyController, self).__init__(parent)
         self.model = model
 

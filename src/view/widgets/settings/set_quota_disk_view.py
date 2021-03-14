@@ -3,7 +3,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import (Qt, Signal, Slot)
 from PySide6.QtGui import (QIntValidator)
 
-from model.widgets.settings import SetQuotaDiskModel
+from model.widgets import SettingsModel
 from controllers.widgets.settings import SetQuotaDiskController
 
 
@@ -12,7 +12,7 @@ class SetQuotaDiskView(QWidget):
     Sg_dedicated_quota_changed = Signal(int)
 
     def __init__(self,
-                 model: SetQuotaDiskModel,
+                 model: SettingsModel,
                  controller: SetQuotaDiskController,
                  parent=None):
         super(SetQuotaDiskView, self).__init__(parent)
@@ -72,9 +72,10 @@ class SetQuotaDiskView(QWidget):
     def Sl_model_changed(self):
         new_max_quota = self._model.get_quota_disco()
         new_max_quota_raw = self._model.get_quota_disco_raw()
-        value = 0
+        value = self._model.get_size()
         self.diskQuota.setText(f"{value} su {new_max_quota}")
         self.dedicatedSpace.setText(str(new_max_quota_raw))
+        self.diskProgress.setValue(value)
 
         # def get_used_quota(self) -> int:
         #     return self.diskProgress.value()

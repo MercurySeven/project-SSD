@@ -140,15 +140,3 @@ class MetaData:
         self.update_diff()
         self.default_operations()
         self.apply_change_last_update()
-
-    def get_size(self) -> int:
-        # TODO: Da spostare da qua
-        total_size = 0
-        for dirpath, dirnames, filenames in os.walk(self.directory):
-            for f in filenames:
-                fp = os.path.join(dirpath, f)
-                # skip if it is symbolic link
-                if not os.path.islink(fp):
-                    total_size += os.path.getsize(fp)
-
-        return total_size

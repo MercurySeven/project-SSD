@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import (
     QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QFileDialog)
 from PySide6.QtCore import (Slot, Signal)
-from model.widgets.settings import SetPathModel
+from model.widgets import SettingsModel
 from controllers.widgets.settings import SetPathController
 
 
@@ -10,7 +10,7 @@ class SetPathView(QWidget):
     Sg_new_path = Signal(str)
 
     def __init__(self,
-                 model: SetPathModel,
+                 model: SettingsModel,
                  controller: SetPathController,
                  parent=None):
         super(SetPathView, self).__init__(parent)

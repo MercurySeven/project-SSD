@@ -4,8 +4,7 @@ from PySide6.QtWidgets import (QLabel, QVBoxLayout, QWidget)
 from .set_quota_disk_view import SetQuotaDiskView
 from .set_path_view import SetPathView
 from .set_policy_view import SetPolicyView
-from model.widgets.settings import (
-    SetPathModel, SetPolicyModel, SetQuotaDiskModel)
+from model.widgets import SettingsModel
 from controllers.widgets.settings import (
     SetPathController, SetPolicyController, SetQuotaDiskController)
 import settings
@@ -30,23 +29,21 @@ class SettingsWidget(QWidget):
         self.title.setAccessibleName("Title")
 
         # Impostazioni path
-        self.set_path_model = SetPathModel()
-        self.set_path_controller = SetPathController(self.set_path_model)
+        self.settings_model = SettingsModel()
+        self.set_path_controller = SetPathController(self.settings_model)
         self.set_path_view = SetPathView(
-            self.set_path_model, self.set_path_controller)
+            self.settings_model, self.set_path_controller)
 
         # Impostazioni Priorità
-        self.set_policy_model = SetPolicyModel()
-        self.set_policy_controller = SetPolicyController(self.set_policy_model)
+        self.set_policy_controller = SetPolicyController(self.settings_model)
         self.set_policy_view = SetPolicyView(
-            self.set_policy_model, self.set_policy_controller)
+            self.settings_model, self.set_policy_controller)
 
         # Impostazioni quota disco
-        self.set_quota_disk_model = SetQuotaDiskModel()
         self.set_quota_disk_controller = SetQuotaDiskController(
-            self.set_quota_disk_model)
+            self.settings_model)
         self.set_quota_disk_view = SetQuotaDiskView(
-            self.set_quota_disk_model, self.set_quota_disk_controller)
+            self.settings_model, self.set_quota_disk_controller)
 
         # Perchè questa roba?
         settings.check_file()
