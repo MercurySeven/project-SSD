@@ -111,7 +111,7 @@ class MyHandler(PatternMatchingEventHandler):
         self.logger.setLevel(logging.INFO)
 
         formatter = logging.Formatter(
-            '%(asctime)s:%(levelname)s:%(pathname)s:%(funcName)s:%(process)d:%(thread)d:%(message)s')
+            '%(asctime)s:%(levelname)s:%(pathname)s:%(process)d:%(message)s')
 
         file_handler = logging.FileHandler('log.mer')
 

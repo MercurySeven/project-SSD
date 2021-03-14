@@ -110,45 +110,12 @@ class MetaData:
                 self._logger.info(f"Il file {name} non è presente nel server")
                 self._new_files_client.append([name, updated_at])
 
-    def apply_change_server(self):
-        """aggiorno il client:
-             -aggiungo i nuovi file presenti nel server
-             -elimino i file che non son presenti nel server
-             -aggiorno nel client tutti i file che hanno DataUltimaModifica
-                differente dal server (anche se hanno una data di
-                ultima modifica maggiore vince il server)"""
-        for name, updated_at, id in self._update_file_server:
-            # devo cancellare i file nel client con nome y["nome"] e esportare
-            # dal server il file y["nome"] e caricarlo nel client
-            self._api.download_from_server(self.directory, name, id)
-        for name, updated_at, id in self._update_files_client:
-            # stessa cosa di sopra
-            self._api.download_from_server(self.directory, name, id)
-
-    def apply_change_client(self):
-        """aggiorno il server:
-            -aggiungo i nuovi file presenti nel client
-            -elimino i file che non son presenti nel nel Client
-            -aggiorno nel server tutti i file che hanno DataUltimaModifica
-               differente dal client (anche se hanno una data di ultima
-               modifica maggiore vince il client)"""
-
-        for name, _ in self._update_files_client:
-            """invio i file aggiornati nel client al server"""
-            file_path = os.path.join(self.directory, name)
-            self._api.upload_to_server(file_path)
-        for name, updated_at, id in self._update_file_server:
-            """ripristino i file nel server alla versione che è presente nel client"""
-            for i in self.get_data_client():
-                if i["name"] == name:
-                    file_path = os.path.join(self.directory, name)
-                    self._api.upload_to_server(file_path)
-                    break
-
     def apply_change_last_update(self) -> None:
         """sincronizzo i nuovi file
-           aggiungo nel server solo i file che nel client hanno l'ultima modifica maggiore
-           aggiorno nel client i file che nel server hanno ultima modifica maggiore"""
+           aggiungo nel server solo i file che nel client
+           hanno l'ultima modifica maggiore
+           aggiorno nel client i file che nel server
+           hanno ultima modifica maggiore"""
         for name, updated_at, id in self._update_files_client:
             """aggiorno il file nel server"""
             file_path = os.path.join(self.directory, name)

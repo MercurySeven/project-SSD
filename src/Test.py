@@ -1,13 +1,13 @@
 from network import MetaData, Policy
 import os
 import unittest
-import settings
 
 
 class Test(unittest.TestCase):
 
     def test_uno(self):
-        """controllo l'inserimento di un file e l'eliminazione (politica Client)"""
+        """controllo l'inserimento di un file e
+        l'eliminazione (politica Client)"""
         metadata = MetaData()
         # server = Server()
         file_path = os.path.join(metadata.directory, "file_uno.txt")

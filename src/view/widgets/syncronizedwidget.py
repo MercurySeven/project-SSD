@@ -46,8 +46,6 @@ class SyncronizedWidget(QWidget):
         button_layout.addWidget(self.updateButton)
         button_layout.addWidget(self.fileButton)
 
-        self.fileLayout.addWidget
-
         self.addFiles()
 
         self.fileWindow.setParent(self.scrollArea)
