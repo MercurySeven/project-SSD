@@ -1,19 +1,18 @@
 from PySide6.QtCore import (Signal, Slot, Qt, QSettings)
-from PySide6.QtWidgets import (
-    QLabel, QVBoxLayout, QHBoxLayout, QWidget, QRadioButton)
+from PySide6.QtWidgets import (QLabel, QVBoxLayout, QWidget)
 
 from .diskquota import DiskQuota
 from .set_path_view import SetPathView
-from model.widgets.settings import SetPathModel
-from controllers.widgets.settings import SetPathController
+from .set_policy_view import SetPolicyView
+from model.widgets.settings import (SetPathModel, SetPolicyModel)
+from controllers.widgets.settings import (
+    SetPathController, SetPolicyController)
 import settings
 
 
 class SettingsWidget(QWidget):
 
     # creating Signals
-    Sg_policy_client = Signal()
-    Sg_policy_manuale = Signal()
     Sg_dedicated_quota_changed = Signal()
 
     def __init__(self, parent=None):
@@ -39,17 +38,10 @@ class SettingsWidget(QWidget):
             self.set_path_model, self.set_path_controller)
 
         # Impostazioni Priorità
-        self.priorityLabel = QLabel(self)
-        self.priorityLabel.setText(
-            "Seleziona la politica di gestione dei conflitti")
-        self.priorityLabel.setAccessibleName('Subtitle')
-
-        self.radio_client = QRadioButton("Client")
-        self.radio_client.setChecked(True)
-        self.radio_client.clicked.connect(lambda: self.setPriority("Client"))
-
-        self.radio_manuale = QRadioButton("Manuale")
-        self.radio_manuale.clicked.connect(lambda: self.setPriority("Manuale"))
+        self.set_policy_model = SetPolicyModel()
+        self.set_policy_controller = SetPolicyController(self.set_policy_model)
+        self.set_policy_view = SetPolicyView(
+            self.set_policy_model, self.set_policy_controller)
 
         # Impostazioni quota disco
         self.diskLabel = QLabel(self)
@@ -65,19 +57,10 @@ class SettingsWidget(QWidget):
 
     def init_layout(self):
 
-        path_layout = QHBoxLayout()
-        path_layout.setAlignment(Qt.AlignLeft)
-
-        radio_layout = QHBoxLayout()
-        radio_layout.setAlignment(Qt.AlignLeft)
-        radio_layout.addWidget(self.radio_client)
-        radio_layout.addWidget(self.radio_manuale)
-
         layout = QVBoxLayout()
         layout.addWidget(self.title)
         layout.addWidget(self.set_path_view)
-        layout.addWidget(self.priorityLabel)
-        layout.addLayout(radio_layout)
+        layout.addWidget(self.set_policy_view)
         layout.addWidget(self.diskLabel)
         layout.addWidget(self.diskQuota)
         layout.addStretch()
@@ -98,9 +81,3 @@ class SettingsWidget(QWidget):
         max_size = settings.get_quota_disco()
         # maxSize = self.env_settings.value("Disk/quota")
         self.diskQuota.set_context((0, max_size), size)
-
-    def setPriority(self, policy: str):
-        if policy == "Client":
-            self.Sg_policy_client.emit()
-        elif policy == 'Manuale':
-            self.Sg_policy_manuale.emit()

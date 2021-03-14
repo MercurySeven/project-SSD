@@ -2,6 +2,7 @@ import configparser
 import os.path
 import logging
 from typing import Optional
+from network.policy import Policy
 
 
 def __read_from_file() -> None:
@@ -22,7 +23,8 @@ def __write_on_file() -> None:
 def create_standard_settings() -> None:
     """Genera il file di impostazioni standard"""
     config["General"] = {
-        "quota": "1024"
+        "quota": "1024",
+        "policy": "1"
     }
 
     # TODO: Da rimuovere
@@ -68,7 +70,7 @@ def get_quota_disco() -> int:
         return result
     except ValueError:
         logger.warning("Il valore di quota disco non è int")
-        update_config("General", "quota", "1024")
+        update_quota_disco("1024")
         return 1024
 
 
@@ -80,6 +82,16 @@ def get_username() -> str:
 def get_password() -> str:
     """Non usare questo metodo"""
     return get_config("Login", "password")
+
+
+def get_policy() -> Policy:
+    "Ritorna la policy salvata"
+    try:
+        return Policy(int(get_config("General", "policy")))
+    except ValueError:
+        logger.warning("Il valore di policy è errata")
+        update_policy(Policy.Client.value)
+        return Policy.Client
 
 
 def update_config(section: str, passed_config: str, value: str) -> None:
@@ -96,6 +108,11 @@ def update_config(section: str, passed_config: str, value: str) -> None:
 def update_quota_disco(value: str) -> None:
     """Aggiorna la quota disco"""
     update_config("General", "quota", value)
+
+
+def update_policy(policy: Policy) -> None:
+    """Aggiorna la policy"""
+    update_config("General", "policy", str(policy.value))
 
 
 # Assoulutamente da sistemare, fatto per evitare di testare

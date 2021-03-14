@@ -2,13 +2,8 @@ import os
 import math
 import logging
 import settings
-from enum import Enum, auto
+from .policy import Policy
 from .api import API
-
-
-class Policy(Enum):
-    Client = auto()
-    Manual = auto()
 
 
 class MetaData:

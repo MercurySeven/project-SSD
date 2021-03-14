@@ -1,11 +1,11 @@
 from .settingswidget import SettingsWidget
 from .diskquota import DiskQuota
-from .policy_settings_widget import PolicySettings
+from .set_policy_view import SetPolicyView
 from .set_path_view import SetPathView
 
 __all__ = [
     "SettingsWidget",
     "DiskQuota",
-    "PolicySettings",
+    "SetPolicyView",
     "SetPathView"
 ]
