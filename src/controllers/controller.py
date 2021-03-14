@@ -56,8 +56,8 @@ class Controller(QObject):
         self.algorithm = MetaData(self.env_settings.value("sync_path"))
 
         # imposto le dimensioni della quota disco
-        self.view.mainWidget.settingsWidget.Sl_update_used_quota(
-            self.algorithm.get_size())
+        # self.view.mainWidget.settingsWidget.Sl_update_used_quota(
+        #     self.algorithm.get_size())
 
         sync = Thread(target=self.background, daemon=True)
         sync.setName("algorithm's thread")

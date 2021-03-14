@@ -1,12 +1,13 @@
 from PySide6.QtCore import (Signal, Slot, Qt, QSettings)
 from PySide6.QtWidgets import (QLabel, QVBoxLayout, QWidget)
 
-from .diskquota import DiskQuota
+from .set_quota_disk_view import SetQuotaDiskView
 from .set_path_view import SetPathView
 from .set_policy_view import SetPolicyView
-from model.widgets.settings import (SetPathModel, SetPolicyModel)
+from model.widgets.settings import (
+    SetPathModel, SetPolicyModel, SetQuotaDiskModel)
 from controllers.widgets.settings import (
-    SetPathController, SetPolicyController)
+    SetPathController, SetPolicyController, SetQuotaDiskController)
 import settings
 
 
@@ -18,18 +19,15 @@ class SettingsWidget(QWidget):
     def __init__(self, parent=None):
         super(SettingsWidget, self).__init__(parent)
 
-        self.setObjectName('Settings')
+        self.setObjectName("Settings")
 
         # environment variables
         self.env_settings = QSettings()
 
-        # widgets
-        self.diskQuota = DiskQuota(self)
-
         # Titolo
         self.title = QLabel("Impostazioni", self)
         self.title.setAlignment(Qt.AlignLeft)
-        self.title.setAccessibleName('Title')
+        self.title.setAccessibleName("Title")
 
         # Impostazioni path
         self.set_path_model = SetPathModel()
@@ -44,40 +42,39 @@ class SettingsWidget(QWidget):
             self.set_policy_model, self.set_policy_controller)
 
         # Impostazioni quota disco
-        self.diskLabel = QLabel(self)
-        self.diskLabel.setText("Quota disco")
-        self.diskLabel.setAccessibleName('Subtitle')
+        self.set_quota_disk_model = SetQuotaDiskModel()
+        self.set_quota_disk_controller = SetQuotaDiskController(
+            self.set_quota_disk_model)
+        self.set_quota_disk_view = SetQuotaDiskView(
+            self.set_quota_disk_model, self.set_quota_disk_controller)
+
+        # Perchè questa roba?
         settings.check_file()
 
-        self.diskQuota.Sg_dedicated_quota_changed.connect(
-            self.__Sl_dedicated_quota_changed)
+        # self.diskQuota.Sg_dedicated_quota_changed.connect(
+        #     self.__Sl_dedicated_quota_changed)
 
         # layout
-        self.init_layout()
-
-    def init_layout(self):
-
         layout = QVBoxLayout()
         layout.addWidget(self.title)
         layout.addWidget(self.set_path_view)
         layout.addWidget(self.set_policy_view)
-        layout.addWidget(self.diskLabel)
-        layout.addWidget(self.diskQuota)
+        layout.addWidget(self.set_quota_disk_view)
         layout.addStretch()
         self.setLayout(layout)
 
-    @Slot(int)
-    def __Sl_dedicated_quota_changed(self, new_size: int) -> None:
-        # aggiorno la quota dedicata
-        settings.update_quota_disco(str(new_size))
-        # aggiorno il widget
-        self.Sl_update_used_quota(self.diskQuota.get_used_quota())
+    # @Slot(int)
+    # def __Sl_dedicated_quota_changed(self, new_size: int) -> None:
+    #     # aggiorno la quota dedicata
+    #     settings.update_quota_disco(str(new_size))
+    #     # aggiorno il widget
+    #     self.Sl_update_used_quota(self.diskQuota.get_used_quota())
 
-        # avviso che la quota dedicata è cambiato
-        self.Sg_dedicated_quota_changed.emit()
+    #     # avviso che la quota dedicata è cambiato
+    #     self.Sg_dedicated_quota_changed.emit()
 
-    @Slot(int)
-    def Sl_update_used_quota(self, size: int) -> None:
-        max_size = settings.get_quota_disco()
-        # maxSize = self.env_settings.value("Disk/quota")
-        self.diskQuota.set_context((0, max_size), size)
+    # @Slot(int)
+    # def Sl_update_used_quota(self, size: int) -> None:
+    #     max_size = settings.get_quota_disco()
+    #     # maxSize = self.env_settings.value("Disk/quota")
+    #     self.diskQuota.set_context((0, max_size), size)
