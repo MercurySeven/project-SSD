@@ -1,4 +1,5 @@
 from PySide6.QtCore import (QObject, Signal, QSettings)
+from typing import Optional
 from src.network import Policy
 import src.settings as settings
 import math
@@ -20,7 +21,7 @@ class SettingsModel(QObject):
         settings.update_policy(new_policy.value)
         self.Sg_model_changed.emit()
 
-    def get_path(self) -> str:
+    def get_path(self) -> Optional[str]:
         return self.env_settings.value("sync_path")
 
     def set_path(self, new_path: str) -> None:
@@ -43,7 +44,7 @@ class SettingsModel(QObject):
     @staticmethod
     def convert_size(size_bytes: int) -> str:
         if size_bytes == 0:
-            return "0B"
+            return "0 B"
         size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
         i = int(math.floor(math.log(size_bytes, 1024)))
         p = math.pow(1024, i)
