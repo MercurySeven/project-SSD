@@ -4,6 +4,9 @@ import logging
 from typing import Optional
 
 
+file_name = "config.ini"
+
+
 def __read_from_file() -> None:
     """Legge le impostazioni dal file"""
     config.read(file_name)
@@ -19,7 +22,7 @@ def __write_on_file() -> None:
     last_update = os.path.getmtime(file_name)
 
 
-def create_standard_settings() -> None:
+def create_standard_settings(file_path: str = file_name) -> None:
     """Genera il file di impostazioni standard"""
     config["General"] = {
         "quota": "1024",
@@ -31,7 +34,8 @@ def create_standard_settings() -> None:
         "username": "user",
         "password": "pwd"
     }
-
+    global file_name
+    file_name = file_path
     __write_on_file()
 
 
@@ -114,9 +118,6 @@ def update_policy(policy: int) -> None:
     update_config("General", "policy", str(policy))
 
 
-# Assoulutamente da sistemare, fatto per evitare di testare
-# direttamente sul file di config personale
-file_name = "config.ini"
 config = configparser.ConfigParser()
 logger = logging.getLogger("settings")
 if os.path.exists(file_name):

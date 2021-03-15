@@ -8,7 +8,7 @@ class TestSettings(unittest.TestCase):
 
     def setUp(self):
         """Metodo che viene chiamato prima di ogni metodo"""
-        settings.create_standard_settings()
+        settings.create_standard_settings("tests/config.ini")
 
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""
@@ -43,6 +43,15 @@ class TestSettings(unittest.TestCase):
         settings.update_config("Extra", "darkmode", "True")
         feature = settings.get_config("Extra", "darkmode")
         self.assertEqual(feature, "True")
+
+    def test_update_policy(self) -> None:
+        settings.update_policy(2)
+        value = settings.get_policy()
+        self.assertEqual(value, 2)
+
+    def test_get_policy(self) -> None:
+        value = settings.get_policy()
+        self.assertEqual(value, 1)
 
 
 if __name__ == "__main__":
