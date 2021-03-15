@@ -1,11 +1,11 @@
 from PySide6.QtCore import (Qt)
 from PySide6.QtWidgets import (QLabel, QVBoxLayout, QWidget)
 
-from .set_quota_disk_view import SetQuotaDiskView
-from .set_path_view import SetPathView
-from .set_policy_view import SetPolicyView
-from model.widgets import SettingsModel
-from controllers.widgets.settings import (
+from src.view.widgets.settings import SetQuotaDiskView
+from src.view.widgets.settings import SetPathView
+from src.view.widgets.settings import SetPolicyView
+from src.model.widgets import SettingsModel
+from src.controllers.widgets.settings import (
     SetPathController, SetPolicyController, SetQuotaDiskController)
 
 

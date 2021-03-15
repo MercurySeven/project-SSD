@@ -3,11 +3,11 @@ from PySide6.QtCore import (Qt, QSize)
 from PySide6.QtGui import (QIcon)
 
 
-class MenuWidget(QWidget):
+class LateralMenuWidget(QWidget):
 
     def __init__(self, parent):
 
-        super(MenuWidget, self).__init__(parent)
+        super(LateralMenuWidget, self).__init__(parent)
 
         self.setAccessibleName('MenuNav')
 

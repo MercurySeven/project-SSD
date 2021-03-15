@@ -1,11 +1,7 @@
-from .mainwidget import MainWidget
-from .menuwidget import MenuWidget
-from .syncronizedwidget import SyncronizedWidget
 from .watchwidget import WatchWidget
+from .filewidget import FileWidget
 
 __all__ = [
-    "MainWidget",
-    "MenuWidget",
-    "SyncronizedWidget",
-    "WatchWidget"
+    "WatchWidget",
+    "FileWidget"
 ]

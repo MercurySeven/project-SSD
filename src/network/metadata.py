@@ -1,7 +1,7 @@
 import os
 import math
 import logging
-import settings
+import src.settings as settings
 from .policy import Policy
 from .api import API
 

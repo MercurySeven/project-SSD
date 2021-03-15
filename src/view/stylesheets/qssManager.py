@@ -4,7 +4,7 @@ from PySide6 import QtCore
 '''
 Da usare per settare le stylesheet dei widget
 importare con
-    from view.widgets.stylesheets.qssManager import setQss
+    from src.view.widgets.stylesheets.qssManager import setQss
 '''
 
 

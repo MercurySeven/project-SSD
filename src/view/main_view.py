@@ -1,9 +1,8 @@
 from PySide6.QtWidgets import (QMainWindow)
 from PySide6.QtGui import (QIcon)
 
-from view.widgets import MainWidget
-
-from view.stylesheets.qssManager import setQss
+from src.view.stylesheets.qssManager import setQss
+from .main_widget import MainWidget
 
 
 class MainWindow(QMainWindow):

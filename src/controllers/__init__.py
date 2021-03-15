@@ -1,7 +1,7 @@
 from .controller import Controller
-from .notification_icon import NotificationIconController
+from .notification_controller import NotificationController
 
 __all__ = [
     "Controller",
-    "NotificationIconController"
+    "NotificationController"
 ]

@@ -1,5 +1,5 @@
 from PySide6.QtCore import (QObject, Slot)
-from model.widgets import SettingsModel
+from src.model.widgets import SettingsModel
 
 
 class SetPathController(QObject):

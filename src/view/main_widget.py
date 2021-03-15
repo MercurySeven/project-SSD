@@ -1,11 +1,12 @@
-from PySide6 import QtCore
 from PySide6.QtWidgets import (
     QVBoxLayout, QHBoxLayout, QWidget, QStackedWidget)
-from .menuwidget import MenuWidget
-from .syncronizedwidget import SyncronizedWidget
-from .watchwidget import WatchWidget
-from view.widgets.settings import SettingsWidget
+from PySide6 import QtCore
 import re
+
+from src.view.widgets import (WatchWidget)
+from .file_syncronized_widget import FileSyncronizedWidget
+from .settings_widget import SettingsWidget
+from .lateral_menu_widget import LateralMenuWidget
 
 
 class MainWidget(QWidget):
@@ -24,9 +25,9 @@ class MainWidget(QWidget):
         # widgets
         self.watchWidget = WatchWidget(self)
 
-        self.menuWidget = MenuWidget(self)
+        self.menuWidget = LateralMenuWidget(self)
 
-        self.syncronizedWidget = SyncronizedWidget(self)
+        self.syncronizedWidget = FileSyncronizedWidget(self)
 
         self.settingsWidget = SettingsWidget(self)
 

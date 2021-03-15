@@ -1,6 +1,6 @@
 from PySide6.QtCore import (QObject, Signal, QSettings)
-from network import Policy
-import settings
+from src.network import Policy
+import src.settings as settings
 import math
 import os
 

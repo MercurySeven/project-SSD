@@ -116,10 +116,7 @@ def update_policy(policy: int) -> None:
 
 # Assoulutamente da sistemare, fatto per evitare di testare
 # direttamente sul file di config personale
-if __name__ == "src.settings":
-    file_name = "tests/config.ini"
-else:
-    file_name = "config.ini"
+file_name = "config.ini"
 config = configparser.ConfigParser()
 logger = logging.getLogger("settings")
 if os.path.exists(file_name):

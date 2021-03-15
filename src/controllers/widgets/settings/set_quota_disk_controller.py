@@ -1,5 +1,5 @@
 from PySide6.QtCore import (QObject, Slot)
-from model.widgets import SettingsModel
+from src.model.widgets import SettingsModel
 
 
 class SetQuotaDiskController(QObject):
@@ -10,4 +10,5 @@ class SetQuotaDiskController(QObject):
 
     @Slot(int)
     def Sl_change_quota_disco(self, new_quota):
-        self.model.set_quota_disco(str(new_quota))
+        if self.model.get_quota_disco_raw() != new_quota:
+            self.model.set_quota_disco(str(new_quota))

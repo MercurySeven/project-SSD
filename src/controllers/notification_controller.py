@@ -1,16 +1,16 @@
 from PySide6.QtCore import (QObject, Signal)
 from PySide6.QtWidgets import (QApplication)
-from src.view.notification_icon import NotificationIcon
+from src.view.notification_view import NotificationView
 
 
-class NotificationIconController(QObject):
+class NotificationController(QObject):
 
     Sg_show_app = Signal()
 
     def __init__(self, app: QApplication, parent: QObject = None):
-        super(NotificationIconController, self).__init__(parent)
+        super(NotificationController, self).__init__(parent)
 
-        self.notification_view = NotificationIcon(app)
+        self.notification_view = NotificationView(app)
 
         self.notification_view.exit_option.triggered.connect(app.quit)
         self.notification_view.show_option.triggered.connect(

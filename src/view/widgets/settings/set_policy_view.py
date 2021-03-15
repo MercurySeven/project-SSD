@@ -2,9 +2,9 @@ from PySide6.QtWidgets import (
     QWidget, QLabel, QRadioButton, QVBoxLayout, QHBoxLayout)
 from PySide6.QtCore import (Signal, Slot)
 
-from network import Policy
-from model.widgets import SettingsModel
-from controllers.widgets.settings import SetPolicyController
+from src.network import Policy
+from src.model.widgets import SettingsModel
+from src.controllers.widgets.settings import SetPolicyController
 
 
 class SetPolicyView(QWidget):

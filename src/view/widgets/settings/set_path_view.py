@@ -1,8 +1,8 @@
 from PySide6.QtWidgets import (
     QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QFileDialog)
 from PySide6.QtCore import (Slot, Signal)
-from model.widgets import SettingsModel
-from controllers.widgets.settings import SetPathController
+from src.model.widgets import SettingsModel
+from src.controllers.widgets.settings import SetPathController
 
 
 class SetPathView(QWidget):

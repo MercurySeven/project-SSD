@@ -2,7 +2,7 @@ from PySide6.QtWidgets import (QSystemTrayIcon, QMenu)
 from PySide6.QtGui import (QAction, QIcon)
 
 
-class NotificationIcon(QSystemTrayIcon):
+class NotificationView(QSystemTrayIcon):
 
     def __init__(self, parent=None):
         """Custom SystemTrayIcon, richiede in input il path dell'icona"""
