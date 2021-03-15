@@ -22,7 +22,7 @@ def __write_on_file() -> None:
     last_update = os.path.getmtime(file_name)
 
 
-def create_standard_settings(file_path: str = file_name) -> None:
+def create_standard_settings() -> None:
     """Genera il file di impostazioni standard"""
     config["General"] = {
         "quota": "1024",
@@ -34,8 +34,6 @@ def create_standard_settings(file_path: str = file_name) -> None:
         "username": "user",
         "password": "pwd"
     }
-    global file_name
-    file_name = file_path
     __write_on_file()
 
 
@@ -92,7 +90,7 @@ def get_policy() -> int:
     try:
         return int(get_config("General", "policy"))
     except ValueError:
-        logger.warning("Il valore di policy è errata")
+        logger.warning("Il valore di policy non è int")
         update_policy(1)
         return 1
 

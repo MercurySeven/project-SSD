@@ -38,9 +38,6 @@ class SettingsWidget(QWidget):
         self.set_quota_disk_view = SetQuotaDiskView(
             self.settings_model, self.set_quota_disk_controller)
 
-        # Perchè questa roba?
-        # settings.check_file()
-
         # layout
         layout = QVBoxLayout()
         layout.addWidget(self.title)

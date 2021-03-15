@@ -8,7 +8,8 @@ class TestSettings(unittest.TestCase):
 
     def setUp(self):
         """Metodo che viene chiamato prima di ogni metodo"""
-        settings.create_standard_settings("tests/config.ini")
+        settings.file_name = "tests/config.ini"
+        settings.create_standard_settings()
 
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""
@@ -52,6 +53,10 @@ class TestSettings(unittest.TestCase):
     def test_get_policy(self) -> None:
         value = settings.get_policy()
         self.assertEqual(value, 1)
+
+    def test_get_policy_fix(self) -> None:
+        settings.update_config("General", "policy", "ABCDE")
+        self.assertEqual(settings.get_policy(), 1)
 
 
 if __name__ == "__main__":
