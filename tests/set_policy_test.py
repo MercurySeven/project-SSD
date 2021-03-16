@@ -4,7 +4,7 @@ import sys
 from PySide6.QtWidgets import QApplication, QWidget
 
 
-from src.view.widgets.settings import SetPolicyView
+from src.view.widgets.settings.set_policy_view import SetPolicyView
 from src.model.widgets import SettingsModel
 from src.controllers.widgets.settings import SetPolicyController
 
