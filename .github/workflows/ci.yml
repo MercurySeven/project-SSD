@@ -39,7 +39,8 @@ jobs:
     - if: runner.os == 'Linux'
       name: "Dipendenze aggiuntive linux"
       run: |
-        sudo apt install libopengl0 -y
+        sudo apt-get update
+        sudo apt-get install ffmpeg libsm6 libxext6 libopengl0 -y
 
     - name: Install dependencies
       run: |
