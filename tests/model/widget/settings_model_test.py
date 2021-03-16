@@ -1,8 +1,8 @@
 import unittest
 import os
-from src.model.widgets import SettingsModel
-from src.network import Policy
-import src.settings as settings
+from src.model.widgets.settings_model import SettingsModel
+from src.network.policy import Policy
+from src import settings
 
 
 class TestSettings(unittest.TestCase):

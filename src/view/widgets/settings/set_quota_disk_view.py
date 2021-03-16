@@ -3,8 +3,8 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import (Qt, Signal, Slot)
 from PySide6.QtGui import (QIntValidator)
 
-from src.model.widgets import SettingsModel
-from src.controllers.widgets.settings import SetQuotaDiskController
+from src.model.widgets.settings_model import SettingsModel
+from src.controllers.widgets.settings.set_quota_disk_controller import SetQuotaDiskController
 
 
 class SetQuotaDiskView(QWidget):

@@ -4,7 +4,7 @@ import logging
 from PySide6.QtCore import (QCoreApplication)
 from PySide6.QtWidgets import (QApplication)
 
-from src.controllers import Controller
+from src.controllers.controller import Controller
 
 if __name__ == "__main__":
 

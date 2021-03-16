@@ -6,7 +6,7 @@ from PySide6 import QtCore
 import re
 
 from src.view.stylesheets.qssManager import setQss
-from src.view.widgets import (WatchWidget)
+from src.view.widgets.watchwidget import WatchWidget
 from .file_syncronized_widget import FileSyncronizedWidget
 from .settings_widget import SettingsWidget
 from .lateral_menu_widget import LateralMenuWidget
