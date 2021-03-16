@@ -45,7 +45,7 @@ jobs:
       name: "Dipendenze aggiuntive Ubuntu"
       run: |
         sudo apt-get update
-        sudo apt-get install libegl1 libopengl0 -y
+        sudo apt-get install libegl1 libopengl0 libxcb-xinerama0 -y
         pip install opencv-python
 
     - name: Test
