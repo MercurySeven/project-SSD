@@ -45,7 +45,10 @@ jobs:
       name: "Dipendenze aggiuntive Ubuntu"
       run: |
         sudo apt-get update
-        sudo apt-get install libegl1 libopengl0 libqt5x11extras5 -y
+        sudo apt-get install libegl1 libopengl0 -y
+        sudo apt-get --reinstall install libqt5dbus5 \
+        libqt5widgets5 libqt5network5 libqt5gui5 libqt5core5a \
+        libdouble-conversion1 libxcb-xinerama0
 
 
     - name: Test
