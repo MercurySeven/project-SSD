@@ -1,7 +1,9 @@
 from PySide6.QtCore import (QObject, Slot, QSettings)
 from PySide6.QtWidgets import (QApplication, QFileDialog)
-
-from src.view.main_view import MainWindow
+try:
+    from src.view.main_view import MainWindow
+except ImportError:
+    print("OK")
 from src.model import Watcher
 
 from time import sleep
