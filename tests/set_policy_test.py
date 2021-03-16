@@ -17,6 +17,9 @@ class SetPolicyViewTest(unittest.TestCase):
 
     def setUp(self) -> None:
         """ Create the GUI """
+
+        settings.file_name = "tests/config.ini"
+        settings.create_standard_settings()
         self.settings_model = SettingsModel()
         self.set_policy_controller = SetPolicyController(self.settings_model)
         self.widget = QWidget()
@@ -24,8 +27,7 @@ class SetPolicyViewTest(unittest.TestCase):
             self.settings_model,
             self.set_policy_controller,
             self.widget)
-        settings.file_name = "tests/config.ini"
-        settings.create_standard_settings()
+
 
     def tearDown(self) -> None:
         """Metodo che viene chiamato dopo ogni metodo"""
@@ -33,8 +35,8 @@ class SetPolicyViewTest(unittest.TestCase):
 
     def test_defaults(self):
         """ Test the widget in the default state """
-        self.assertEqual(self.policy_test._client.isChecked(), False)
-        self.assertEqual(self.policy_test._manual.isChecked(), True)
+        self.assertEqual(self.policy_test._client.isChecked(), True)
+        self.assertEqual(self.policy_test._manual.isChecked(), False)
 
     def test_update_client(self):
         """ Test the state after setting client radio button true """
