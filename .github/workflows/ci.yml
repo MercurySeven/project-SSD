@@ -45,8 +45,7 @@ jobs:
       name: "Dipendenze aggiuntive Ubuntu"
       run: |
         sudo apt-get update
-        sudo apt-get install libegl1 libopengl0 -y
-        sudo apt-get install --reinstall libxcb-xinerama0
+        sudo apt-get install libegl1 libopengl0 libqt5x11extras5 -y
 
 
     - name: Test
