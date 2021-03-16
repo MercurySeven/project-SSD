@@ -37,11 +37,10 @@ jobs:
          ${{ runner.os }}-pip-
          
     - if: runner.os == 'Linux'
-      name: "Dipendenze aggiuntive linux"
+      name: "Dipendenze aggiuntive Ubuntu"
       run: |
         sudo apt-get update
-        sudo apt-get install libglu1 -y
-        sudo apt-get install libopengl0 -y
+        sudo apt-get install libegl1 libopengl0 -y
 
     - name: Install dependencies
       run: |
