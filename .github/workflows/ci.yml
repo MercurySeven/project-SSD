@@ -46,7 +46,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install libegl1 libopengl0 -y
-        pip3 install opencv-python==4.1.2.30
+        pip install opencv-python
 
     - name: Test
       run: |
