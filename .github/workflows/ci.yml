@@ -35,6 +35,11 @@ jobs:
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
          ${{ runner.os }}-pip-
+         
+    - if: runner.os == 'Linux'
+      name: "Dipendenze aggiuntive linux"
+      run: |
+        sudo apt install libopengl0 -y
 
     - name: Install dependencies
       run: |
