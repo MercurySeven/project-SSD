@@ -35,17 +35,18 @@ jobs:
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
          ${{ runner.os }}-pip-
-         
-    - if: runner.os == 'Linux'
-      name: "Dipendenze aggiuntive Ubuntu"
-      run: |
-        sudo apt-get update
-        sudo apt-get install libegl1 libopengl0 -y
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+
+    - if: runner.os == 'Linux'
+      name: "Dipendenze aggiuntive Ubuntu"
+      run: |
+        sudo apt-get update
+        sudo apt-get install libegl1 libopengl0 -y
+        pip3 install opencv-python==4.1.2.30
 
     - name: Test
       run: |
