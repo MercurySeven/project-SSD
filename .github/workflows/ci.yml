@@ -45,10 +45,7 @@ jobs:
       name: "Dipendenze aggiuntive Ubuntu"
       run: |
         sudo apt-get update
-        sudo apt-get install qt5-default
-        sudo apt-get install libopengl0 libxcb-xinerama0 -y
-        sudo apt-get install -qq libegl1-mesa
-        export DISPLAY=:0
+        sudo apt install libxcb-xinerama0 -y
 
 
     - name: Test
