@@ -40,7 +40,7 @@ jobs:
       name: "Dipendenze aggiuntive linux"
       run: |
         sudo apt-get update
-        sudo apt-get install libgl1-mesa-glx -y
+        sudo apt-get install libglu1-mesa:i386 -y
         sudo apt-get install libopengl0 -y
 
     - name: Install dependencies
