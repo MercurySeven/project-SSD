@@ -1,9 +1,12 @@
 from PySide6.QtCore import (Qt)
 from PySide6.QtWidgets import (QLabel, QVBoxLayout, QWidget)
+try:
+    from src.view.widgets.settings import SetQuotaDiskView
+    from src.view.widgets.settings import SetPathView
+    from src.view.widgets.settings import SetPolicyView
+except ImportError:
+    print("Import error caught")
 
-from src.view.widgets.settings import SetQuotaDiskView
-from src.view.widgets.settings import SetPathView
-from src.view.widgets.settings import SetPolicyView
 from src.model.widgets import SettingsModel
 from src.controllers.widgets.settings import (
     SetPathController, SetPolicyController, SetQuotaDiskController)
