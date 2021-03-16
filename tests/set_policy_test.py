@@ -1,9 +1,10 @@
+import os
 import unittest
 import sys
 # Serve perchè sennò non puoi avere widget
 from PySide6.QtWidgets import QApplication, QWidget
 
-
+from src import settings
 from src.view.widgets.settings.set_policy_view import SetPolicyView
 from src.model.widgets import SettingsModel
 from src.controllers.widgets.settings import SetPolicyController
@@ -23,6 +24,12 @@ class SetPolicyViewTest(unittest.TestCase):
             self.settings_model,
             self.set_policy_controller,
             self.widget)
+        settings.file_name = "tests/config.ini"
+        settings.create_standard_settings()
+
+    def tearDown(self) -> None:
+        """Metodo che viene chiamato dopo ogni metodo"""
+        os.remove(settings.file_name)
 
     def test_defaults(self):
         """ Test the widget in the default state """
