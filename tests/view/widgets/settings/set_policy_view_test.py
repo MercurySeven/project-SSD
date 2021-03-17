@@ -37,6 +37,11 @@ class SetPolicyViewTest(unittest.TestCase):
         """ Test the widget in the default state """
         self.assertEqual(self.policy_test._client.isChecked(), True)
         self.assertEqual(self.policy_test._manual.isChecked(), False)
+        self.assertEqual(self.policy_test._titolo.text(),
+                         "Seleziona la politica di gestione dei conflitti")
+        self.assertEqual(self.policy_test._titolo.accessibleName(), 'Subtitle')
+        self.assertEqual(self.policy_test._client.text(), "Client")
+        self.assertEqual(self.policy_test._manual.text(), "Manuale")
 
     def test_update_client(self):
         """ Test the state after setting client radio button true """
@@ -59,6 +64,15 @@ class SetPolicyViewTest(unittest.TestCase):
         self.policy_test._manual.click()
         self.assertEqual(self.policy_test._client.isChecked(), False)
         self.assertEqual(self.policy_test._manual.isChecked(), True)
+
+    def test_manual_to_client(self):
+        """ Set manual to true then client to false """
+        self.policy_test._manual.click()
+        self.assertEqual(self.policy_test._client.isChecked(), False)
+        self.assertEqual(self.policy_test._manual.isChecked(), True)
+        self.policy_test._client.click()
+        self.assertEqual(self.policy_test._client.isChecked(), True)
+        self.assertEqual(self.policy_test._manual.isChecked(), False)
 
 
 if __name__ == "__main__":
