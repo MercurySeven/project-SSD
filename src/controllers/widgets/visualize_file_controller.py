@@ -1,4 +1,4 @@
-from PySide6.QtCore import (QObject, Slot, Signal, QSettings)
+from PySide6.QtCore import (Slot, Signal)
 from PySide6.QtWidgets import (QWidget)
 from src.model.files_model import FilesModel
 

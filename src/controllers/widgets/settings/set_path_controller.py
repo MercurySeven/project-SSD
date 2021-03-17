@@ -1,4 +1,4 @@
-from PySide6.QtCore import (Slot, Signal)
+from PySide6.QtCore import (Slot)
 from src.model.widgets.settings_model import SettingsModel
 
 

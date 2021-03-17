@@ -2,7 +2,7 @@ from PySide6.QtWidgets import (
     QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QStackedWidget)
 from PySide6.QtGui import (QIcon)
 from PySide6 import QtCore
-from PySide6.QtCore import (Slot, Signal)
+from PySide6.QtCore import (Signal)
 
 import re
 
@@ -12,7 +12,6 @@ from .file_syncronized_widget import FileSyncronizedWidget
 from .settings_widget import SettingsWidget
 from .lateral_menu_widget import LateralMenuWidget
 from src.controllers.widgets.visualize_file_controller import VisualizeFileController
-from typing import TypedDict
 from src.model.files_model import FilesModel
 
 
@@ -93,6 +92,7 @@ class MainWidget(QWidget):
         self.syncronizedWidget.update_content(list_of_files, list_of_dirs)
         self.swidget.setCurrentWidget(self.syncronizedWidget)
 
-    # metodo chiamato da lateral_menu_widget per scatenare il segnale che arriva al modello per aggiornare la lista di file
+    # metodo chiamato da lateral_menu_widget per scatenare il segnale
+    # che arriva al modello per aggiornare la lista di file
     def call_controller_for_list_file(self):
         self.showFiles.emit()

@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import (QPushButton, QVBoxLayout, QWidget)
-from PySide6.QtCore import (Qt, QSize, Slot, Signal)
+from PySide6.QtCore import (Qt, QSize)
 from PySide6.QtGui import (QIcon)
 
 
@@ -37,8 +37,6 @@ class LateralMenuWidget(QWidget):
         vbox.addWidget(self.settingsButton)
         self.setLayout(vbox)
         self.syncronizedButton.setChecked(True)
-
-
 
     def showSyncronized(self):
         self.parent().swidget.setCurrentWidget(self.parent().syncronizedWidget)

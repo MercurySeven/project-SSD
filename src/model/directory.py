@@ -32,7 +32,10 @@ class Directory:
                                 "stato file")
                     self.files.update({file.get_name(): file})
                 else:
-                    self.dirs.update({str(entry.name): Directory(entry.name, str(os.path) + '/' + entry.name)})
+                    path = os.path.join(str(os.path), entry.name)
+                    self.dirs.update({
+                        str(entry.name): Directory(entry.name, path)
+                    })
         os.chdir(restore_path)
 
     def __convert_to_date(self, date: float) -> str:
