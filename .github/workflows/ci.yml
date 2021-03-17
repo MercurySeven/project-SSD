@@ -50,7 +50,7 @@ jobs:
         sudo apt install tree 
         pwd
         ls -la
-        cd /usr/lib/
+        cd /usr/lib/qt
         tree
         export QT_PLUGIN_PATH=/usr/lib/qt/plugins
 
