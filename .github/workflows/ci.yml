@@ -53,8 +53,7 @@ jobs:
         export QT_DEBUG_PLUGINS=1
         export DISPLAY=:0
         export QT_QPA_PLATFORM=minimal
-        cd /usr/lib/qt/x86_64-linux-gnu/
-        ldd libxcb.so
+        export QT_QPA_PLATFORM_PLUGIN_PATH=/opt/project-SSD/libs/Qt/plugins/platforms
 
 
 
