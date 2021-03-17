@@ -84,7 +84,7 @@ class MainWidget(QWidget):
 
         # stylesheet
         for i in self.findChildren(QWidget, ):
-            if re.findall("view.widget", str(i)):
+            if re.findall("view", str(i)):
                 i.setAttribute(QtCore.Qt.WA_StyledBackground, True)
 
         self.showFiles.connect(self.visualize_file_controller.update_visualization)

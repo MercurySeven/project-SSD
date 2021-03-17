@@ -16,10 +16,22 @@ QWidget[accessibleName='Stacked'] > QWidget {
 QWidget[accessibleName='Stacked'] >  QWidget > QWidget{
     background-color: #2A2A2A;
 }
+
+QWidget[accessibleName='Stacked'] >  QWidget > QWidget > QWidget{
+    background-color: #2A2A2A;
+}
+
 QWidget[accessibleName='Stacked'] >  QWidget > QPushButton{
     background-color: #353535;
 }
 QWidget[accessibleName='Stacked'] >  QWidget > QPushButton:hover{
+    background-color: #404040;
+}
+
+QWidget[accessibleName='Stacked'] >  QWidget > QWidget > QPushButton{
+    background-color: #353535;
+}
+QWidget[accessibleName='Stacked'] >  QWidget > QWidget > QPushButton:hover{
     background-color: #404040;
 }
 
