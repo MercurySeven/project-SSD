@@ -9,11 +9,12 @@ class Directory:
     def __init__(self, name, path):
         self.name = name
         self.path = path
-        self.files = []
+        self.files = {}
+        self.dirs = {}
         self.update_list_of_files()
 
     def add_file(self, file: File) -> None:
-        self.files.append(file)
+        self.files.update({file.get_name(): file})
 
     def update_list_of_files(self) -> None:
         restore_path = os.getcwd()
@@ -22,13 +23,16 @@ class Directory:
             for entry in dir_entries:
                 created_at = os.stat(entry.name).st_ctime
                 updated_at = os.stat(entry.name).st_mtime
-                file = File(entry.name,
-                            self.__convert_to_date(created_at),
-                            self.__convert_to_date(updated_at),
-                            self.define_type(entry.name),
-                            str(os.stat(entry.name).st_size),
-                            "stato file")
-                self.files.append(file)
+                if os.path.isfile(entry.name):
+                    file = File(entry.name,
+                                self.__convert_to_date(created_at),
+                                self.__convert_to_date(updated_at),
+                                self.define_type(entry.name),
+                                str(os.stat(entry.name).st_size),
+                                "stato file")
+                    self.files.update({file.get_name(): file})
+                else:
+                    self.dirs.update({str(entry.name): Directory(entry.name, str(os.path) + '/' + entry.name)})
         os.chdir(restore_path)
 
     def __convert_to_date(self, date: float) -> str:
