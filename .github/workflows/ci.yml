@@ -47,6 +47,8 @@ jobs:
         sudo apt-get update
         sudo apt-get install libopengl0 libxcb-xinerama0 -y
         sudo apt-get install -qq libegl1-mesa
+        export QT_PLUGIN_PATH=/opt/hostedtoolcache/Python/3.9.1/x64/lib/python3.9/site-packages/PySide6/plugins/
+
 
 
     - name: Test
