@@ -47,8 +47,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install libopengl0 libxcb-xinerama0 -y
         sudo apt-get install -qq libegl1-mesa
-        export | grep -i display
-        declare -x DISPLAY=":0
+        export QT_QPA_PLATFORM=offscreen
 
 
 
