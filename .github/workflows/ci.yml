@@ -47,7 +47,12 @@ jobs:
         sudo apt-get update
         sudo apt-get install libopengl0 libxcb-xinerama0 -y
         sudo apt-get install -qq libegl1-mesa
-        urh -platformpluginpath /usr/lib/qt/plugins/platforms
+        sudo apt install tree 
+        pwd
+        ls -la
+        cd /usr/lib/
+        tree
+        export QT_PLUGIN_PATH=/usr/lib/qt/plugins
 
 
     - name: Test
