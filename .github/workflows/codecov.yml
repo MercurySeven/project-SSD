@@ -1,0 +1,43 @@
+name: Codecov
+on: [push]
+jobs:
+  run:
+    name: Codecov
+    runs-on: windows-latest
+    env:
+      OS: windows-latest
+      PYTHON: '3.9.1'
+    steps:
+
+    - uses: actions/checkout@master
+
+    - name: Setup Python
+      uses: actions/setup-python@master
+      with:
+        python-version: 3.9.1
+
+    - uses: actions/cache@v2
+      with:
+        path: ~/.cache/pip
+        key: linux-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          linux-pip-
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Generate coverage report
+      run: |
+        coverage run --source=src -m unittest discover -v -s "./tests/" -p "*_test.py"
+        coverage xml -i
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        files: ./coverage.xml
+        flags: unittests, uitests
+        env_vars: OS,PYTHON
+        name: codecov-umbrella
+        verbose: true

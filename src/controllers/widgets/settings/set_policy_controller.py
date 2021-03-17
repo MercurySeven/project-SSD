@@ -1,6 +1,6 @@
 from PySide6.QtCore import (QObject, Slot)
-from src.network import Policy
-from src.model.widgets import SettingsModel
+from src.network.policy import Policy
+from src.model.widgets.settings_model import SettingsModel
 
 
 class SetPolicyController(QObject):

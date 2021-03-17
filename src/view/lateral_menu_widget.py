@@ -26,7 +26,7 @@ class LateralMenuWidget(QWidget):
         self.syncronizedButton.setChecked(False)
 
         # connect to actions
-        self.syncronizedButton.clicked.connect(self.showSyncronized)
+        self.syncronizedButton.clicked.connect(self.parent().call_controller_for_list_file)
         self.settingsButton.clicked.connect(self.showSettings)
 
         # layout
@@ -36,7 +36,6 @@ class LateralMenuWidget(QWidget):
         vbox.addStretch()
         vbox.addWidget(self.settingsButton)
         self.setLayout(vbox)
-
         self.syncronizedButton.setChecked(True)
 
     def showSyncronized(self):

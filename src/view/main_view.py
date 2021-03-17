@@ -2,14 +2,17 @@ from PySide6.QtWidgets import (
     QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QStackedWidget)
 from PySide6.QtGui import (QIcon)
 from PySide6 import QtCore
+from PySide6.QtCore import (Signal)
 
 import re
 
 from src.view.stylesheets.qssManager import setQss
-from src.view.widgets import (WatchWidget)
+from src.view.widgets.watchwidget import WatchWidget
 from .file_syncronized_widget import FileSyncronizedWidget
 from .settings_widget import SettingsWidget
 from .lateral_menu_widget import LateralMenuWidget
+from src.controllers.widgets.visualize_file_controller import VisualizeFileController
+from src.model.files_model import FilesModel
 
 
 class MainWindow(QMainWindow):
@@ -34,10 +37,16 @@ class MainWindow(QMainWindow):
 
 
 class MainWidget(QWidget):
+    # Signals
+    showFiles = Signal()
 
     def __init__(self, parent=None):
 
         super(MainWidget, self).__init__(parent)
+        # model
+        self.files_model = FilesModel()
+        # controller
+        self.visualize_file_controller = VisualizeFileController(self, self.files_model)
         # layouts
         # Grid di struttura dell'applicazione
         self.mainGrid = QHBoxLayout(self)
@@ -76,4 +85,14 @@ class MainWidget(QWidget):
         for i in self.findChildren(QWidget, ):
             if re.findall("view", str(i)):
                 i.setAttribute(QtCore.Qt.WA_StyledBackground, True)
-                print(i)
+
+        self.showFiles.connect(self.visualize_file_controller.update_visualization)
+
+    def update_view(self, list_of_files: dict, list_of_dirs: dict) -> None:
+        self.syncronizedWidget.update_content(list_of_files, list_of_dirs)
+        self.swidget.setCurrentWidget(self.syncronizedWidget)
+
+    # metodo chiamato da lateral_menu_widget per scatenare il segnale
+    # che arriva al modello per aggiornare la lista di file
+    def call_controller_for_list_file(self):
+        self.showFiles.emit()

@@ -1,14 +1,13 @@
 from PySide6.QtCore import (QObject, Slot, QSettings)
 from PySide6.QtWidgets import (QApplication, QFileDialog)
-
 from src.view.main_view import MainWindow
-from src.model import Watcher
+from src.model.watcher import Watcher
 
 from time import sleep
 from threading import Thread
 
-from src.network import (MetaData)
-from .notification_controller import (NotificationController)
+from src.network.metadata import MetaData
+from .notification_controller import NotificationController
 
 
 class Controller(QObject):
