@@ -41,26 +41,15 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - if: runner.os == 'Linux'
-      name: "Dipendenze aggiuntive Ubuntu"
-      run: |
-        sudo apt-get update
-        sudo apt-get install libopengl0 libxcb-xinerama0 -y
-        sudo apt-get install -qq libegl1-mesa
-        sudo apt-cache search qt5 | grep 'X11 extras'
-        sudo apt-get install libqt5x11extras5 libqt5x11extras5-dev -y
-        sudo apt-get install pyqt5-dev-tools -y
-        export QT_DEBUG_PLUGINS=1
-        export DISPLAY=:0
-        export QT_QPA_PLATFORM=minimal
-        cd /opt/hostedtoolcache/Python/3.9.1/x64/lib/python3.9/site-packages/PySide6/plugins/platforms
-        export QT_QPA_PLATFORM_PLUGIN_PATH=/opt/project-SSD/libs/Qt/plugins/platforms
-
-
-
-    - name: Test
+    - if: runner.os != 'Linux'
+      name: Test All
       run: |
         python -m unittest discover -v -s "./tests/" -p "*_test.py"
+
+    - if: runner.os == 'Linux'
+      name: Unit Test
+      run: |
+        python -m unittest discover -v -s "./tests/model/" -p "*_test.py"
 
   notify:
     name: Slack Notification

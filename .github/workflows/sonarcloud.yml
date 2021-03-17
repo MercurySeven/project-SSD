@@ -2,7 +2,7 @@ on: [push]
 name: SonarCloud
 jobs:
   sonarcloud:
-    runs-on: ubuntu-20.04
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v2
