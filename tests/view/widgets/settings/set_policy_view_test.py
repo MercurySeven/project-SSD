@@ -9,6 +9,11 @@ from src.view.widgets.settings.set_policy_view import SetPolicyView
 from src.model.widgets.settings_model import SettingsModel
 from src.controllers.widgets.settings.set_policy_controller import SetPolicyController
 
+import PySide6
+dirname = os.path.dirname(PySide6.__file__)
+plugin_path = os.path.join(dirname, 'plugins', 'platforms')
+os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = plugin_path
+
 app = QApplication(sys.argv)
 
 
