@@ -74,5 +74,6 @@ class MainWidget(QWidget):
 
         # stylesheet
         for i in self.findChildren(QWidget, ):
-            if re.findall("view.widget", str(i)):
+            if re.findall("view", str(i)):
                 i.setAttribute(QtCore.Qt.WA_StyledBackground, True)
+                print(i)
