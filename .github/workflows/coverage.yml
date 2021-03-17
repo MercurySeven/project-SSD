@@ -2,6 +2,7 @@ name: Codecov
 on: [push]
 jobs:
   run:
+    name: Codecov
     runs-on: windows-latest
     env:
       OS: windows-latest
