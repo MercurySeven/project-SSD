@@ -3,9 +3,6 @@ on: [push]
 jobs:
   run:
     runs-on: windows-latest
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
     env:
       OS: windows-latest
       PYTHON: '3.9.1'
