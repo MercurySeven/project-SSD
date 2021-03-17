@@ -47,13 +47,14 @@ jobs:
         sudo apt-get update
         sudo apt-get install libopengl0 libxcb-xinerama0 -y
         sudo apt-get install -qq libegl1-mesa
+        sudo apt-cache search qt6 | grep 'X11 extras'
+        export QT_DEBUG_PLUGINS=1
         export QT_QPA_PLATFORM=offscreen
 
 
 
     - name: Test
       run: |
-        export QT_DEBUG_PLUGINS=1
         python -m unittest discover -v -s "./tests/" -p "*_test.py"
 
   notify:
