@@ -21,16 +21,15 @@ class SettingsWidget(QWidget):
         self.title.setAlignment(Qt.AlignLeft)
         self.title.setAccessibleName("Title")
 
-        # Impostazioni path
+        # Impostazioni Path
         self.settings_model = SettingsModel()
         self.set_path_controller = SetPathController(self.settings_model)
         self.set_path_view = SetPathView(
             self.settings_model, self.set_path_controller)
 
-        # Impostazioni Priorità
-        self.set_policy_controller = SetPolicyController(self.settings_model)
-        self.set_policy_view = SetPolicyView(
-            self.settings_model, self.set_policy_controller)
+        # Impostazioni Policy
+        self.set_policy_view = SetPolicyView(self.settings_model)
+        self.set_policy_controller = SetPolicyController(self.settings_model, self.set_policy_view)
 
         # Impostazioni quota disco
         self.set_quota_disk_controller = SetQuotaDiskController(

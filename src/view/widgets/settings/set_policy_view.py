@@ -4,66 +4,56 @@ from PySide6.QtCore import (Signal, Slot)
 
 from src.network.policy import Policy
 from src.model.widgets.settings_model import SettingsModel
-from src.controllers.widgets.settings.set_policy_controller import SetPolicyController
 
 
 class SetPolicyView(QWidget):
 
-    Sg_policy_changed = Signal(Policy)
+    Sg_view_changed = Signal()
 
     def __init__(self,
                  model: SettingsModel,
-                 controller: SetPolicyController,
                  parent=None):
         super(SetPolicyView, self).__init__(parent)
 
         self._model = model
-        self._controller = controller
 
         self._titolo = QLabel()
         self._titolo.setText(
             "Seleziona la politica di gestione dei conflitti")
         self._titolo.setAccessibleName('Subtitle')
 
-        self._client = QRadioButton("Client")
-        self._manual = QRadioButton("Manuale")
+        self.client = QRadioButton("Client")
+        self.manual = QRadioButton("Manuale")
         self.Sl_model_changed()
 
         layout = QVBoxLayout()
         layout.addWidget(self._titolo)
 
         sub_layout = QHBoxLayout()
-        sub_layout.addWidget(self._client)
-        sub_layout.addWidget(self._manual)
+        sub_layout.addWidget(self.client)
+        sub_layout.addWidget(self.manual)
 
         layout.addLayout(sub_layout)
         self.setLayout(layout)
 
-        self._client.clicked.connect(lambda: self.Sl_client_checked())
-        self._manual.clicked.connect(lambda: self.Sl_manual_checked())
-
-        self._model.Sg_model_changed.connect(lambda: self.Sl_model_changed())
-        self.Sg_policy_changed.connect(self._controller.Sl_change_policy)
+        self.client.clicked.connect(lambda: self.Sl_client_checked())
+        self.manual.clicked.connect(lambda: self.Sl_manual_checked())
 
     @Slot()
     def Sl_client_checked(self):
-        if self._client.isChecked():
-            self.Sg_policy_changed.emit(Policy.Client)
+        if self.client.isChecked():
+            self.Sg_view_changed.emit()
 
     @Slot()
     def Sl_manual_checked(self):
-        if self._manual.isChecked():
-            self.Sg_policy_changed.emit(Policy.Manual)
+        if self.manual.isChecked():
+            self.Sg_view_changed.emit()
 
     @Slot()
     def Sl_model_changed(self):
-        new_policy = self._model.get_policy()
-        self._update_policy(new_policy)
-
-    def _update_policy(self, policy: Policy):
-        if policy == Policy.Manual:
-            self._client.setChecked(False)
-            self._manual.setChecked(True)
+        if self._model.get_policy() == Policy.Manual:
+            self.client.setChecked(False)
+            self.manual.setChecked(True)
         else:
-            self._client.setChecked(True)
-            self._manual.setChecked(False)
+            self.client.setChecked(True)
+            self.manual.setChecked(False)
