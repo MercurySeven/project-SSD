@@ -50,5 +50,6 @@ class SetPolicyViewTest(unittest.TestCase):
         self.path_test.change_path_button.click()
         self.assertEqual(self.path_test.path.text(), self.settings_model.get_path())
 
+
 if __name__ == "__main__":
     unittest.main()
