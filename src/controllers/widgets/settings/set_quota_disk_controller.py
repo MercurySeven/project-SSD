@@ -1,14 +1,18 @@
-from PySide6.QtCore import (QObject, Slot)
+from PySide6.QtCore import Slot
 from src.model.widgets.settings_model import SettingsModel
+from src.view.widgets.settings.set_quota_disk_view import SetQuotaDiskView
 
 
-class SetQuotaDiskController(QObject):
+class SetQuotaDiskController:
 
-    def __init__(self, model: SettingsModel, parent=None):
-        super(SetQuotaDiskController, self).__init__(parent)
-        self.model = model
+    def __init__(self, model: SettingsModel, view: SetQuotaDiskView):
+        self._model = model
+        self._view = view
 
-    @Slot(int)
-    def Sl_change_quota_disco(self, new_quota):
-        if self.model.get_quota_disco_raw() != new_quota:
-            self.model.set_quota_disco(str(new_quota))
+        self._view.Sg_view_changed.connect(self.Sl_view_changed)
+
+    @Slot()
+    def Sl_view_changed(self):
+        new_quota = self._view.dedicatedSpace.text()
+        if self._model.get_quota_disco_raw() != int(new_quota):
+            self._model.set_quota_disco(new_quota)

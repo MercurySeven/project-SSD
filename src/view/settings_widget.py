@@ -32,10 +32,9 @@ class SettingsWidget(QWidget):
         self.set_policy_controller = SetPolicyController(self.settings_model, self.set_policy_view)
 
         # Impostazioni quota disco
+        self.set_quota_disk_view = SetQuotaDiskView(self.settings_model)
         self.set_quota_disk_controller = SetQuotaDiskController(
-            self.settings_model)
-        self.set_quota_disk_view = SetQuotaDiskView(
-            self.settings_model, self.set_quota_disk_controller)
+            self.settings_model, self.set_quota_disk_view)
 
         # layout
         layout = QVBoxLayout()

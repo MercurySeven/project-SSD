@@ -1,24 +1,18 @@
-from PySide6.QtWidgets import (
-    QWidget, QProgressBar, QLabel, QVBoxLayout, QLineEdit)
+from PySide6.QtWidgets import (QWidget, QProgressBar, QLabel, QVBoxLayout, QLineEdit)
 from PySide6.QtCore import (Qt, Signal, Slot)
 from PySide6.QtGui import (QIntValidator)
 
 from src.model.widgets.settings_model import SettingsModel
-from src.controllers.widgets.settings.set_quota_disk_controller import SetQuotaDiskController
 
 
 class SetQuotaDiskView(QWidget):
 
-    Sg_dedicated_quota_changed = Signal(int)
+    Sg_view_changed = Signal()
 
-    def __init__(self,
-                 model: SettingsModel,
-                 controller: SetQuotaDiskController,
-                 parent=None):
+    def __init__(self, model: SettingsModel, parent=None):
         super(SetQuotaDiskView, self).__init__(parent)
 
         self._model = model
-        self._controller = controller
 
         self.setAccessibleName("InfoBox")
 
@@ -56,14 +50,11 @@ class SetQuotaDiskView(QWidget):
         self.setLayout(disk_layout)
         self.Sl_model_changed()
 
-        self._model.Sg_model_changed.connect(lambda: self.Sl_model_changed())
-        self.Sg_dedicated_quota_changed.connect(
-            self._controller.Sl_change_quota_disco)
+        self._model.Sg_model_changed.connect(self.Sl_model_changed)
 
     @Slot()
     def emit_changes(self):
-        new_size = int(self.dedicatedSpace.text())
-        self.Sg_dedicated_quota_changed.emit(new_size)
+        self.Sg_view_changed.emit()
 
     @Slot()
     def Sl_model_changed(self):

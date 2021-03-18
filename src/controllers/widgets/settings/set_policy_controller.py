@@ -11,10 +11,10 @@ class SetPolicyController:
         self._view = view
 
         self._model.Sg_model_changed.connect(lambda: self._view.Sl_model_changed())
-        self._view.Sg_view_changed.connect(self.Sl_change_view)
+        self._view.Sg_view_changed.connect(self.Sl_view_changed)
 
     @Slot()
-    def Sl_change_view(self):
+    def Sl_view_changed(self):
         client = self._view.client.isChecked()
         manual = self._view.manual.isChecked()
         if client and not manual:
