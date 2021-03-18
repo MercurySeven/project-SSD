@@ -12,6 +12,7 @@ from src.view.settings_widget import SettingsWidget
 
 app = QApplication(sys.argv)
 
+
 class SettingsViewTest(unittest.TestCase):
     """ Test the Policy view """
 
@@ -36,7 +37,7 @@ class SettingsViewTest(unittest.TestCase):
         os.remove(settings.file_name)
 
     def test_defaults(self):
-        """ Test the widget in the default state """
+        """ Test the path widget in the default state """
         self.assertEqual(self.path_test.titolo.text(), "Cartella da sincronizzare")
         self.assertEqual(self.path_test.titolo.accessibleName(), "Subtitle")
         path = ""
@@ -45,8 +46,18 @@ class SettingsViewTest(unittest.TestCase):
         self.assertEqual(self.path_test.path.text(), path)
         self.assertEqual(self.path_test.change_path_button.text(), "Cambia")
 
+        """ Test the policy widget in the default state """
+        self.assertEqual(self.policy_test.client.isChecked(), True)
+        self.assertEqual(self.policy_test.manual.isChecked(), False)
+        self.assertEqual(self.policy_test._titolo.text(),
+                         "Seleziona la politica di gestione dei conflitti")
+        self.assertEqual(self.policy_test._titolo.accessibleName(), 'Subtitle')
+        self.assertEqual(self.policy_test.client.text(), "Client")
+        self.assertEqual(self.policy_test.manual.text(), "Manuale")
+
     # patch is used to "make and empty shell" of the method passed so we can just check if
     # the methods gets called or not
+
     @patch("src.view.widgets.settings.set_path_view.SetPathView.Sl_show_file_dialog")
     def test_popup_file_dialog(self, mock_dialog):
         """ Test if popup dialog for choosing files get called once"""
@@ -61,16 +72,6 @@ class SettingsViewTest(unittest.TestCase):
         if self.settings_model.get_path() is not None:
             path = self.settings_model.get_path()
         self.assertEqual(self.path_test.path.text(), path)
-
-    def test_defaults(self):
-        """ Test the widget in the default state """
-        self.assertEqual(self.policy_test.client.isChecked(), True)
-        self.assertEqual(self.policy_test.manual.isChecked(), False)
-        self.assertEqual(self.policy_test._titolo.text(),
-                         "Seleziona la politica di gestione dei conflitti")
-        self.assertEqual(self.policy_test._titolo.accessibleName(), 'Subtitle')
-        self.assertEqual(self.policy_test.client.text(), "Client")
-        self.assertEqual(self.policy_test.manual.text(), "Manuale")
 
     def test_update_client(self):
         """ Test the state after setting client radio button true """
