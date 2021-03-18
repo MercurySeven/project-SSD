@@ -7,7 +7,9 @@ from PySide6.QtCore import (Signal)
 import re
 
 from src.view.stylesheets.qssManager import setQss
-from src.view.widgets.watchwidget import WatchWidget
+from src.view.widgets.sync_widget import SyncWidget
+from src.model.widgets.sync_model import SyncModel
+from src.controllers.widgets.sync_controller import SyncController
 from .file_syncronized_widget import FileSyncronizedWidget
 from .settings_widget import SettingsWidget
 from .lateral_menu_widget import LateralMenuWidget
@@ -56,7 +58,9 @@ class MainWidget(QWidget):
         self.central_view.setSpacing(0)
 
         # widgets
-        self.watchWidget = WatchWidget(self)
+        self.sync_model = SyncModel()
+        self.sync_widget = SyncWidget(self.sync_model)
+        self.sync_controller = SyncController(self.sync_model, self.sync_widget)
 
         self.menuWidget = LateralMenuWidget(self)
 
@@ -72,7 +76,7 @@ class MainWidget(QWidget):
 
         # create layout
         self.menu_laterale = QVBoxLayout()
-        self.menu_laterale.addWidget(self.watchWidget)
+        self.menu_laterale.addWidget(self.sync_widget)
         self.menu_laterale.addWidget(self.menuWidget)
         self.menu_laterale.setSpacing(0)
 

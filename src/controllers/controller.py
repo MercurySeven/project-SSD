@@ -45,18 +45,15 @@ class Controller(QObject):
 
         # Attivo il watchdog nella root definita dall'utente
         self.watcher = Watcher()
+        self.Sl_sync_model_changed()
+        self.view.mainWidget.sync_model.Sg_model_changed.connect(self.Sl_sync_model_changed)
 
-        self.view.mainWidget.watchWidget.Sg_watch.connect(self.Sl_watch)
-
-        # self.view.mainWidget.settingsWidget.Sg_path_changed.connect(
-        #     self.reboot)
+        # Ripristino il riavvio di watchdog, quando cambio path
+        self.view.mainWidget.settingsWidget.settings_model.Sg_model_changed.connect(
+            self.Sl_path_updated)
 
         self.env_settings = QSettings()
         self.algorithm = MetaData(self.env_settings.value("sync_path"))
-
-        # imposto le dimensioni della quota disco
-        # self.view.mainWidget.settingsWidget.Sl_update_used_quota(
-        #     self.algorithm.get_size())
 
         sync = Thread(target=self.background, daemon=True)
         sync.setName("algorithm's thread")
@@ -69,16 +66,16 @@ class Controller(QObject):
             self.algorithm.get_size())
 
     @Slot()
-    def reboot(self):
+    def Sl_path_updated(self):
+        new_path = self.view.mainWidget.settingsWidget.settings_model.get_path()
         self.env_settings.sync()
-        self.algorithm.set_directory(self.env_settings.value("sync_path"))
-        self.view.mainWidget.settingsWidget.Sl_update_used_quota(
-            self.algorithm.get_size())
+        self.algorithm.set_directory(new_path)
         self.watcher.reboot()
         self.notification_icon.send_message("Watcher riavviato")
 
-    @Slot(bool)
-    def Sl_watch(self, state):
+    @Slot()
+    def Sl_sync_model_changed(self):
+        state = self.view.mainWidget.sync_model.get_state()
         self.watcher.run(state)
 
     def background(self):

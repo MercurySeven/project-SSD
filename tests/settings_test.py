@@ -58,6 +58,19 @@ class TestSettings(unittest.TestCase):
         settings.update_config("General", "policy", "ABCDE")
         self.assertEqual(settings.get_policy(), 1)
 
+    def test_is_sync(self) -> None:
+        value = settings.get_is_synch()
+        self.assertFalse(value)
+
+    def test_update_is_sync(self) -> None:
+        settings.update_is_sync(True)
+        value = settings.get_is_synch()
+        self.assertTrue(value)
+
+        settings.update_is_sync(False)
+        value = settings.get_is_synch()
+        self.assertFalse(value)
+
 
 if __name__ == "__main__":
     unittest.main()

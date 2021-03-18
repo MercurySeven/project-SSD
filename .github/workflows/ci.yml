@@ -50,6 +50,7 @@ jobs:
       name: Unit Test
       run: |
         python -m unittest discover -v -s "./tests/model/" -p "*_test.py"
+        python -m unittest discover -v -s "./tests/" -p "settings_test.py"
 
   notify:
     name: Slack Notification

@@ -26,7 +26,8 @@ def create_standard_settings() -> None:
     """Genera il file di impostazioni standard"""
     config["General"] = {
         "quota": "1024",
-        "policy": "1"
+        "policy": "1",
+        "is_sync": "off"
     }
 
     # TODO: Da rimuovere
@@ -95,6 +96,11 @@ def get_policy() -> int:
         return 1
 
 
+def get_is_synch() -> bool:
+    "Ritorna lo stato di sincronizzazione"
+    return get_config("General", "is_sync") == "on"
+
+
 def update_config(section: str, passed_config: str, value: str) -> None:
     """Aggiunge o aggiorna una config"""
     if section not in config.sections():
@@ -114,6 +120,11 @@ def update_quota_disco(value: str) -> None:
 def update_policy(policy: int) -> None:
     """Aggiorna la policy"""
     update_config("General", "policy", str(policy))
+
+
+def update_is_sync(state: bool) -> None:
+    """Aggiorna lo stato di sincronizzazione"""
+    update_config("General", "is_sync", "on" if state else "off")
 
 
 config = configparser.ConfigParser()
