@@ -36,8 +36,8 @@ class SetPolicyView(QWidget):
         layout.addLayout(sub_layout)
         self.setLayout(layout)
 
-        self.client.clicked.connect(lambda: self.Sl_client_checked())
-        self.manual.clicked.connect(lambda: self.Sl_manual_checked())
+        self.client.clicked.connect(self.Sl_client_checked)
+        self.manual.clicked.connect(self.Sl_manual_checked)
 
     @Slot()
     def Sl_client_checked(self):
