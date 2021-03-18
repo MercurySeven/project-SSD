@@ -22,12 +22,9 @@ class SetPolicyViewTest(unittest.TestCase):
         settings.file_name = "tests/config.ini"
         settings.create_standard_settings()
         self.settings_model = SettingsModel()
-        self.set_policy_controller = SetPolicyController(self.settings_model)
         self.widget = QWidget()
-        self.policy_test = SetPolicyView(
-            self.settings_model,
-            self.set_policy_controller,
-            self.widget)
+        self.policy_test = SetPolicyView(self.settings_model, self.widget)
+        self.set_policy_controller = SetPolicyController(self.settings_model, self.policy_test)
 
     def tearDown(self) -> None:
         """Metodo che viene chiamato dopo ogni metodo"""
@@ -35,44 +32,44 @@ class SetPolicyViewTest(unittest.TestCase):
 
     def test_defaults(self):
         """ Test the widget in the default state """
-        self.assertEqual(self.policy_test._client.isChecked(), True)
-        self.assertEqual(self.policy_test._manual.isChecked(), False)
+        self.assertEqual(self.policy_test.client.isChecked(), True)
+        self.assertEqual(self.policy_test.manual.isChecked(), False)
         self.assertEqual(self.policy_test._titolo.text(),
                          "Seleziona la politica di gestione dei conflitti")
         self.assertEqual(self.policy_test._titolo.accessibleName(), 'Subtitle')
-        self.assertEqual(self.policy_test._client.text(), "Client")
-        self.assertEqual(self.policy_test._manual.text(), "Manuale")
+        self.assertEqual(self.policy_test.client.text(), "Client")
+        self.assertEqual(self.policy_test.manual.text(), "Manuale")
 
     def test_update_client(self):
         """ Test the state after setting client radio button true """
-        self.policy_test._client.click()
-        self.assertEqual(self.policy_test._client.isChecked(), True)
-        self.assertEqual(self.policy_test._manual.isChecked(), False)
+        self.policy_test.client.click()
+        self.assertEqual(self.policy_test.client.isChecked(), True)
+        self.assertEqual(self.policy_test.manual.isChecked(), False)
 
     def test_update_manual(self):
         """ Test the state after setting manual radio button true """
         # QTest.mouseClick(self.policy_test._manual, Qt.LeftButton)
-        self.policy_test._manual.click()
-        self.assertEqual(self.policy_test._client.isChecked(), False)
-        self.assertEqual(self.policy_test._manual.isChecked(), True)
+        self.policy_test.manual.click()
+        self.assertEqual(self.policy_test.client.isChecked(), False)
+        self.assertEqual(self.policy_test.manual.isChecked(), True)
 
     def test_client_to_manual(self):
         """ Set client to true then manual to true """
-        self.policy_test._client.click()
-        self.assertEqual(self.policy_test._client.isChecked(), True)
-        self.assertEqual(self.policy_test._manual.isChecked(), False)
-        self.policy_test._manual.click()
-        self.assertEqual(self.policy_test._client.isChecked(), False)
-        self.assertEqual(self.policy_test._manual.isChecked(), True)
+        self.policy_test.client.click()
+        self.assertEqual(self.policy_test.client.isChecked(), True)
+        self.assertEqual(self.policy_test.manual.isChecked(), False)
+        self.policy_test.manual.click()
+        self.assertEqual(self.policy_test.client.isChecked(), False)
+        self.assertEqual(self.policy_test.manual.isChecked(), True)
 
     def test_manual_to_client(self):
         """ Set manual to true then client to false """
-        self.policy_test._manual.click()
-        self.assertEqual(self.policy_test._client.isChecked(), False)
-        self.assertEqual(self.policy_test._manual.isChecked(), True)
-        self.policy_test._client.click()
-        self.assertEqual(self.policy_test._client.isChecked(), True)
-        self.assertEqual(self.policy_test._manual.isChecked(), False)
+        self.policy_test.manual.click()
+        self.assertEqual(self.policy_test.client.isChecked(), False)
+        self.assertEqual(self.policy_test.manual.isChecked(), True)
+        self.policy_test.client.click()
+        self.assertEqual(self.policy_test.client.isChecked(), True)
+        self.assertEqual(self.policy_test.manual.isChecked(), False)
 
 
 if __name__ == "__main__":
