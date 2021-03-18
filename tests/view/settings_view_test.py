@@ -55,6 +55,13 @@ class SettingsViewTest(unittest.TestCase):
         self.assertEqual(self.policy_test.client.text(), "Client")
         self.assertEqual(self.policy_test.manual.text(), "Manuale")
 
+        """ Test the quota disk widget in the default state """
+        self.assertEqual(self.quota_test.accessibleName(), "InfoBox")
+        self.assertEqual(self.quota_test.title.text(), "Quota disco")
+        self.assertEqual(self.quota_test.title.accessibleName(), "Subtitle")
+        self.assertEqual(self.quota_test.progressLabel.text(), "Spazio occupato")
+        self.assertEqual(self.quota_test.progressLabel.accessibleName(), "Subtitle")
+
     # patch is used to "make and empty shell" of the method passed so we can just check if
     # the methods gets called or not
 
@@ -103,6 +110,20 @@ class SettingsViewTest(unittest.TestCase):
         self.policy_test.client.click()
         self.assertEqual(self.policy_test.client.isChecked(), True)
         self.assertEqual(self.policy_test.manual.isChecked(), False)
+
+    def test_quota_change(self):
+        """ Test changing the quota"""
+        self.quota_test.dedicatedSpace.setText("2222")
+        self.quota_test.emit_changes()
+        value = self.settings_model.get_size()
+        new_max_quota = self.settings_model.get_quota_disco()
+        new_max_quota_raw = self.settings_model.get_quota_disco_raw()
+        self.assertEqual(self.quota_test.diskQuota.text(), f"{value} su {new_max_quota}")
+        self.assertEqual(self.quota_test.dedicatedSpace.text(), str(new_max_quota_raw))
+        self.assertEqual(self.quota_test.diskProgress.value(), value)
+        print("test value = " + new_max_quota)
+        print("test raw value = " + str(new_max_quota_raw))
+        print("test valore = " + str(value))
 
 
 if __name__ == "__main__":
