@@ -7,11 +7,11 @@ from src.model.widgets.settings_model import SettingsModel
 class SetPathView(QWidget):
     Sg_view_changed = Signal(str)
 
-    def __init__(self, model: SettingsModel, debug=False, parent=None):
+    def __init__(self, model: SettingsModel, parent=None):
         super(SetPathView, self).__init__(parent)
 
         self._model = model
-        self.debug = debug
+        self.debug = False
         self.titolo = QLabel()
         self.titolo.setText("Cartella da sincronizzare")
         self.titolo.setAccessibleName("Subtitle")

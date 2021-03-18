@@ -13,10 +13,10 @@ class SettingsController:
         self._view.set_policy_view.Sg_view_changed.connect(self.Sl_view_policy_changed)
 
         self._model.Sg_model_changed.connect(self._view.set_quota_disk_view.Sl_model_changed)
-        self._view.Sg_view_changed.connect(self.Sl_view_quota_disk_changed)
+        self._view.set_quota_disk_view.Sg_view_changed.connect(self.Sl_view_quota_disk_changed)
 
         self._model.Sg_model_changed.connect(self._view.set_path_view.Sl_model_changed)
-        self._view.Sg_view_changed.connect(self.Sg_set_path_view_changed)
+        self._view.set_path_view.Sg_view_changed.connect(self.Sg_set_path_view_changed)
 
 
     @Slot()
