@@ -121,9 +121,6 @@ class SettingsViewTest(unittest.TestCase):
         self.assertEqual(self.quota_test.diskQuota.text(), f"{value} su {new_max_quota}")
         self.assertEqual(self.quota_test.dedicatedSpace.text(), str(new_max_quota_raw))
         self.assertEqual(self.quota_test.diskProgress.value(), value)
-        print("test value = " + new_max_quota)
-        print("test raw value = " + str(new_max_quota_raw))
-        print("test valore = " + str(value))
 
 
 if __name__ == "__main__":
