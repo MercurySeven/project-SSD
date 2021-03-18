@@ -48,7 +48,10 @@ class SetPolicyViewTest(unittest.TestCase):
         self.path_test.path.setText("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
         self.assertEqual(self.path_test.path.text(), "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
         self.path_test.change_path_button.click()
-        self.assertEqual(self.path_test.path.text(), self.settings_model.get_path())
+        path = ""
+        if self.settings_model.get_path() is not None:
+            path = self.settings_model.get_path()
+        self.assertEqual(self.path_test.path.text(), path)
 
 
 if __name__ == "__main__":
