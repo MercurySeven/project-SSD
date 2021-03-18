@@ -19,7 +19,7 @@ class SetPolicyViewTest(unittest.TestCase):
         settings.create_standard_settings()
         self.settings_model = SettingsModel()
         self.widget = QWidget()
-        self.path_test = SetPathView(self.settings_model, self.widget)
+        self.path_test = SetPathView(self.settings_model, True)
         self.set_policy_controller = SetPathController(self.settings_model, self.path_test)
 
     def tearDown(self) -> None:
@@ -44,6 +44,11 @@ class SetPolicyViewTest(unittest.TestCase):
         self.path_test.change_path_button.click()
         mock_dialog.assert_called_once()
 
+    def test_popup_file_dialog_interaction(self):
+        self.path_test.path.setText("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+        self.assertEqual(self.path_test.path.text(), "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+        self.path_test.change_path_button.click()
+        self.assertEqual(self.path_test.path.text(), self.settings_model.get_path())
 
 if __name__ == "__main__":
     unittest.main()
