@@ -11,7 +11,6 @@ class VisualizeFileController:
         self.model = model
         self.view = view
 
-
     @Slot()
     def update_visualization(self) -> None:
         list_of_files, list_of_dirs = self.model.update_view()
