@@ -48,7 +48,7 @@ class SetPathView(QWidget):
 
         if self.debug or dialog.exec_():
             sync_path = dialog.selectedFiles()
-            if self.debug or len(sync_path) == 1:
-                if self.debug:
-                    sync_path = ["test"]
+            if self.debug:
+                sync_path = ["test"]
+            if len(sync_path) == 1:
                 self.Sg_view_changed.emit(sync_path[0])
