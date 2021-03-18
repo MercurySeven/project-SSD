@@ -32,7 +32,10 @@ class SetPolicyViewTest(unittest.TestCase):
         """ Test the widget in the default state """
         self.assertEqual(self.path_test.titolo.text(), "Cartella da sincronizzare")
         self.assertEqual(self.path_test.titolo.accessibleName(), "Subtitle")
-        self.assertEqual(self.path_test.path.text(), self.settings_model.get_path())
+        path = ""
+        if self.settings_model.get_path() is not None:
+            path = self.settings_model.get_path()
+        self.assertEqual(self.path_test.path.text(), path)
         self.assertEqual(self.path_test.change_path_button.text(), "Cambia")
 
 
