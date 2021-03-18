@@ -2,7 +2,7 @@ from PySide6.QtCore import (Slot)
 from src.model.widgets.settings_model import SettingsModel
 
 
-class SetPathController():
+class SetPathController:
 
     def __init__(self, model: SettingsModel, parent=None):
 

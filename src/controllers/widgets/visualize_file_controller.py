@@ -1,5 +1,6 @@
 from PySide6.QtCore import (Slot, Signal)
 from PySide6.QtWidgets import (QWidget)
+
 from src.model.files_model import FilesModel
 
 
@@ -10,7 +11,8 @@ class VisualizeFileController:
         self.model = model
         self.view = view
 
+
     @Slot()
     def update_visualization(self) -> None:
-        list_of_files, list_of_dirs = self.model.update_view("ciao")
+        list_of_files, list_of_dirs = self.model.update_view()
         self.view.update_view(list_of_files, list_of_dirs)
