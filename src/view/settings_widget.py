@@ -23,9 +23,8 @@ class SettingsWidget(QWidget):
 
         # Impostazioni Path
         self.settings_model = SettingsModel()
-        self.set_path_controller = SetPathController(self.settings_model)
-        self.set_path_view = SetPathView(
-            self.settings_model, self.set_path_controller)
+        self.set_path_view = SetPathView(self.settings_model)
+        self.set_path_controller = SetPathController(self.settings_model, self.set_path_view)
 
         # Impostazioni Policy
         self.set_policy_view = SetPolicyView(self.settings_model)

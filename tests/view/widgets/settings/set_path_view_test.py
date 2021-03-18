@@ -17,12 +17,9 @@ class SetPolicyViewTest(unittest.TestCase):
         settings.file_name = "tests/config.ini"
         settings.create_standard_settings()
         self.settings_model = SettingsModel()
-        self.set_policy_controller = SetPathController(self.settings_model)
         self.widget = QWidget()
-        self.path_test = SetPathView(
-            self.settings_model,
-            self.set_policy_controller,
-            self.widget)
+        self.path_test = SetPathView(self.settings_model, self.widget)
+        self.set_policy_controller = SetPathController(self.settings_model, self.path_test)
 
     def tearDown(self) -> None:
         """Metodo che viene chiamato dopo ogni metodo"""

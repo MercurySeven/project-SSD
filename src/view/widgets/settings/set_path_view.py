@@ -2,28 +2,25 @@ from PySide6.QtWidgets import (
     QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QFileDialog)
 from PySide6.QtCore import (Slot, Signal)
 from src.model.widgets.settings_model import SettingsModel
-from src.controllers.widgets.settings.set_path_controller import SetPathController
 
 
 class SetPathView(QWidget):
 
-    Sg_new_path = Signal(str)
+    Sg_view_changed = Signal(str)
 
     def __init__(self,
                  model: SettingsModel,
-                 controller: SetPathController,
                  parent=None):
         super(SetPathView, self).__init__(parent)
 
-        self.model = model
-        self.controller = controller
+        self._model = model
 
         self.titolo = QLabel()
         self.titolo.setText("Cartella da sincronizzare")
         self.titolo.setAccessibleName("Subtitle")
 
         self.path = QLabel()
-        self.path.setText(self.model.get_path())
+        self.path.setText(self._model.get_path())
 
         self.change_path_button = QPushButton("Cambia")
         self.change_path_button.setMaximumWidth(150)
@@ -38,17 +35,15 @@ class SetPathView(QWidget):
         layout.addLayout(sub_layout)
         self.setLayout(layout)
 
-        self.change_path_button.clicked.connect(
-            lambda: self.Sl_show_file_dialog())
-        self.Sg_new_path.connect(self.controller.Sl_show_file_dialog_result)
-        self.model.Sg_model_changed.connect(lambda: self.Sl_model_changed())
+        self.change_path_button.clicked.connect(self.Sl_show_file_dialog)
+        self._model.Sg_model_changed.connect(self.Sl_model_changed)
 
     @Slot()
     def Sl_model_changed(self):
-        self.path.setText(self.model.get_path())
+        self.path.setText(self._model.get_path())
 
     @Slot()
-    def Sl_show_file_dialog(self) -> None:
+    def Sl_show_file_dialog(self):
         dialog = QFileDialog()
         dialog.setFileMode(QFileDialog.Directory)
         dialog.setViewMode(QFileDialog.Detail)
@@ -58,4 +53,4 @@ class SetPathView(QWidget):
         if dialog.exec_():
             sync_path = dialog.selectedFiles()
             if len(sync_path) == 1:
-                self.Sg_new_path.emit(sync_path[0])
+                self.Sg_view_changed.emit(sync_path[0])

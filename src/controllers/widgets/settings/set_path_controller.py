@@ -1,13 +1,17 @@
 from PySide6.QtCore import (Slot)
 from src.model.widgets.settings_model import SettingsModel
+from src.view.widgets.settings.set_path_view import SetPathView
 
 
 class SetPathController:
 
-    def __init__(self, model: SettingsModel, parent=None):
+    def __init__(self, model: SettingsModel, view: SetPathView):
+        self._model = model
+        self._view = view
 
-        self.model = model
+        self._view.Sg_view_changed.connect(self.Sg_view_changed)
 
     @Slot()
-    def Sl_show_file_dialog_result(self, value: str):
-        self.model.set_path(value)
+    def Sg_view_changed(self, value: str):
+        if len(value) > 0:
+            self._model.set_path(value)
