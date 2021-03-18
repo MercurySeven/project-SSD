@@ -12,7 +12,7 @@ from src.model.model import Model
 from src.model.widgets.sync_model import SyncModel
 from src.view.stylesheets.qssManager import setQss
 from src.view.widgets.sync_widget import SyncWidget
-from .file_syncronized_widget import FileSyncronizedWidget
+from .file_synchronized_widget import FileSyncronizedWidget
 from .lateral_menu_widget import LateralMenuWidget
 from .settings_widget import SettingsWidget
 

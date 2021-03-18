@@ -12,6 +12,7 @@ from src.view.main_view import MainWindow
 from .notification_controller import NotificationController
 from src.controllers.settings_controller import SettingsController
 
+
 class Controller(QObject):
 
     def __init__(self, app: QApplication, parent=None):
@@ -42,7 +43,8 @@ class Controller(QObject):
 
         # definizione delle view corrente
         self.model = Model()
-        self.visualize_file_controller = VisualizeFileController(self.view.main_widget, self.model.file_window)
+        self.visualize_file_controller = VisualizeFileController(
+            self.view.main_widget, self.model.file_window)
         self.current_view = self.model.file_window
 
         self.settings_controller = SettingsController()

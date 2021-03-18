@@ -61,11 +61,10 @@ class FileSyncronizedWidget(QWidget):
         QDesktopServices.openUrl(path)
 
     def update_content(self, list_of_files: dict, list_of_dirs: dict) -> None:
-        new_list_files = {k: list_of_files[k] for k in set(list_of_files) -
-                          set(self.list_of_file_widget)}
-        new_list_dirs = {
-            k: list_of_dirs[k] for k in set(list_of_dirs) - set(self.list_of_dirs_widget)
-        }
+        new_list_files = {k: list_of_files[k] for k in set(list_of_files) - set(self.list_of_file_widget)}
+        # new_list_dirs = {
+        # k: list_of_dirs[k] for k in set(list_of_dirs) - set(self.list_of_dirs_widget)
+        # }
         for k in new_list_files:
             self.list_of_file_widget.update({
                 new_list_files[k].get_name(): FileWidget(new_list_files[k])

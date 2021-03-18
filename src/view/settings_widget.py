@@ -24,7 +24,6 @@ class SettingsWidget(QWidget):
         # Impostazioni quota disco
         self.set_quota_disk_view = SetQuotaDiskView(model)
 
-
         # layout
         layout = QVBoxLayout()
         layout.addWidget(self.title)

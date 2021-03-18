@@ -26,7 +26,8 @@ class LateralMenuWidget(QWidget):
         self.syncronizedButton.setChecked(False)
 
         # connect to actions
-        self.syncronizedButton.clicked.connect(self.parent().call_controller_for_list_file) # qua va la chiamata solo per switchare di visuale
+        # qua va la chiamata solo per switchare di visuale
+        self.syncronizedButton.clicked.connect(self.parent().call_controller_for_list_file)
         self.settingsButton.clicked.connect(self.showSettings)
 
         # layout

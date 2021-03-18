@@ -18,7 +18,6 @@ class SettingsController:
         self._model.Sg_model_changed.connect(self._view.set_path_view.Sl_model_changed)
         self._view.set_path_view.Sg_view_changed.connect(self.Sg_set_path_view_changed)
 
-
     @Slot()
     def Sl_view_policy_changed(self):
         client = self._view.set_policy_view.client.isChecked()
