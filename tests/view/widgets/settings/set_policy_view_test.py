@@ -63,7 +63,7 @@ class SetPolicyViewTest(unittest.TestCase):
         self.assertEqual(self.policy_test.manual.isChecked(), True)
 
     def test_manual_to_client(self):
-        """ Set manual to true then client to false """
+        """ Set manual to true then client to true """
         self.policy_test.manual.click()
         self.assertEqual(self.policy_test.client.isChecked(), False)
         self.assertEqual(self.policy_test.manual.isChecked(), True)

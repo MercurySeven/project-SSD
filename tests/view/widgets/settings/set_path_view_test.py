@@ -1,6 +1,7 @@
 import os
 import unittest
 from PySide6.QtWidgets import QWidget
+from unittest.mock import patch
 
 from src import settings
 from src.view.widgets.settings.set_path_view import SetPathView
@@ -34,6 +35,14 @@ class SetPolicyViewTest(unittest.TestCase):
             path = self.settings_model.get_path()
         self.assertEqual(self.path_test.path.text(), path)
         self.assertEqual(self.path_test.change_path_button.text(), "Cambia")
+
+    # patch is used to "make and empty shell" of the method passed so we can just check if
+    # the methods gets called or not
+    @patch("src.view.widgets.settings.set_path_view.SetPathView.Sl_show_file_dialog")
+    def test_popup_file_dialog(self, mock_dialog):
+        """ Test if popup dialog for choosing files get called once"""
+        self.path_test.change_path_button.click()
+        mock_dialog.assert_called_once()
 
 
 if __name__ == "__main__":
