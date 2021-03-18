@@ -8,9 +8,7 @@ class SetPathView(QWidget):
 
     Sg_view_changed = Signal(str)
 
-    def __init__(self,
-                 model: SettingsModel,
-                 parent=None):
+    def __init__(self, model: SettingsModel, parent=None):
         super(SetPathView, self).__init__(parent)
 
         self._model = model
