@@ -11,12 +11,12 @@ class Directory:
         self.path = path
         self.files = {}
         self.dirs = {}
-        self.update_list_of_files()
+        self.update_list_of_content()
 
     def add_file(self, file: File) -> None:
         self.files.update({file.get_name(): file})
 
-    def update_list_of_files(self) -> None:
+    def update_list_of_content(self) -> None:
         restore_path = os.getcwd()
         with os.scandir(self.path) as dir_entries:
             os.chdir(self.path)  # punto critico dell'app!

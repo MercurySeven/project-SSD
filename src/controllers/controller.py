@@ -1,20 +1,21 @@
+from threading import Thread
+from time import sleep
+
 from PySide6.QtCore import (QObject, Slot, QSettings)
 from PySide6.QtWidgets import (QApplication, QFileDialog)
-from src.view.main_view import MainWindow
+
+from src.controllers.widgets.visualize_file_controller import VisualizeFileController
+from src.model.model import Model
 from src.model.watcher import Watcher
-
-from time import sleep
-from threading import Thread
-
 from src.network.metadata import MetaData
+from src.view.main_view import MainWindow
 from .notification_controller import NotificationController
-
+from src.controllers.settings_controller import SettingsController
 
 class Controller(QObject):
 
     def __init__(self, app: QApplication, parent=None):
         super(Controller, self).__init__(parent)
-
         # initialize settings
         env_settings = QSettings()
         # Controlliamo se l'utente ha già settato il PATH della cartella
@@ -31,7 +32,7 @@ class Controller(QObject):
                 app.quit()
 
             sync_path = dialog.selectedFiles()
-            if (len(sync_path) == 1):
+            if len(sync_path) == 1:
                 env_settings.setValue("sync_path", sync_path[0])
                 env_settings.sync()
                 print("Nuova directory: " + env_settings.value("sync_path"))
@@ -39,6 +40,12 @@ class Controller(QObject):
         self.view = MainWindow()
         self.view.show()
 
+        # definizione delle view corrente
+        self.model = Model()
+        self.visualize_file_controller = VisualizeFileController(self.view.main_widget, self.model.file_window)
+        self.current_view = self.model.file_window
+
+        self.settings_controller = SettingsController()
         # Non so se ci vada il parent su Notification...
         self.notification_icon = NotificationController(app, parent)
         self.notification_icon.Sg_show_app.connect(lambda: self.view.show())
@@ -84,3 +91,9 @@ class Controller(QObject):
             if self.watcher.status():
                 self.algorithm.apply_changes()
             sleep(5)
+
+    @Slot()
+    def switch_to_files(self):
+        del self.current_view
+        self.current_view = self.model.file_window
+        # chiama

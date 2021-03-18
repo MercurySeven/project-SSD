@@ -6,10 +6,9 @@ from PySide6.QtWidgets import QApplication, QWidget
 
 from src import settings
 from src.view.widgets.settings.set_policy_view import SetPolicyView
+from src.controllers.settings_controller import SettingsController
+from src.view.settings_widget import SettingsWidget
 from src.model.widgets.settings_model import SettingsModel
-from src.controllers.widgets.settings.set_policy_controller import SetPolicyController
-
-
 app = QApplication(sys.argv)
 
 
@@ -22,9 +21,11 @@ class SetPolicyViewTest(unittest.TestCase):
         settings.file_name = "tests/config.ini"
         settings.create_standard_settings()
         self.settings_model = SettingsModel()
-        self.widget = QWidget()
-        self.policy_test = SetPolicyView(self.settings_model, self.widget)
-        self.set_policy_controller = SetPolicyController(self.settings_model, self.policy_test)
+
+        self.settings_view = SettingsWidget(self.settings_model)
+        self.policy_test = self.settings_view.set_policy_view
+        self.settings_controller = SettingsController(self.settings_model, self.settings_view)
+
 
     def tearDown(self) -> None:
         """Metodo che viene chiamato dopo ogni metodo"""
