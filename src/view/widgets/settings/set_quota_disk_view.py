@@ -50,8 +50,6 @@ class SetQuotaDiskView(QWidget):
         self.setLayout(disk_layout)
         self.Sl_model_changed()
 
-        self._model.Sg_model_changed.connect(self.Sl_model_changed)
-
     @Slot()
     def emit_changes(self):
         self.Sg_view_changed.emit()

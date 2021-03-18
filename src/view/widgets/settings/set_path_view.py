@@ -34,7 +34,6 @@ class SetPathView(QWidget):
         self.setLayout(layout)
 
         self.change_path_button.clicked.connect(self.Sl_show_file_dialog)
-        self._model.Sg_model_changed.connect(self.Sl_model_changed)
 
     @Slot()
     def Sl_model_changed(self):

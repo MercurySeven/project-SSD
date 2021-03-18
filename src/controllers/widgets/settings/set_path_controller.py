@@ -9,6 +9,7 @@ class SetPathController:
         self._model = model
         self._view = view
 
+        self._model.Sg_model_changed.connect(self._view.Sl_model_changed)
         self._view.Sg_view_changed.connect(self.Sg_view_changed)
 
     @Slot()
