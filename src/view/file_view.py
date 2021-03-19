@@ -1,19 +1,15 @@
 from PySide6.QtCore import (QSettings, QUrl, Slot)
 from PySide6.QtGui import (QDesktopServices)
-from PySide6.QtWidgets import (
-    QVBoxLayout, QHBoxLayout, QWidget, QScrollArea, QPushButton)
+from PySide6.QtWidgets import (QVBoxLayout, QHBoxLayout, QWidget, QScrollArea, QPushButton)
 from src.view.layouts.flowlayout import FlowLayout
 from src.view.widgets.filewidget import FileWidget
 from src.model.files_model import FilesModel
 
 
-class FileSyncronizedWidget(QWidget):
-
-    # creating Signals
-    # TODO
+class FileView(QWidget):
 
     def __init__(self, model: FilesModel, parent=None):
-        super(FileSyncronizedWidget, self).__init__(parent)
+        super(FileView, self).__init__(parent)
 
         self.env_settings = QSettings()
         self.list_of_file_widget = {}
@@ -22,25 +18,20 @@ class FileSyncronizedWidget(QWidget):
         self.fileLayout = FlowLayout()
 
         # scroll area
-
         self.scrollArea = QScrollArea()
-
-        self.scrollArea.setAccessibleName('FileScroll')
-
+        self.scrollArea.setAccessibleName("FileScroll")
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.horizontalScrollBar().setEnabled(False)
 
         # contenitore per file
-
         self.fileWindow = QWidget(self)
         self.fileLayout.setContentsMargins(0, 0, 0, 0)
 
         self.updateButton = QPushButton(self)
-        self.updateButton.setText('Refresh')
-        # self.updateButton.clicked.connect(self.updateFiles)
+        self.updateButton.setText("Refresh")
 
         self.fileButton = QPushButton(self)
-        self.fileButton.setText('Apri file manager')
+        self.fileButton.setText("Apri file manager")
         self.fileButton.clicked.connect(self.show_folder)
 
         button_layout = QHBoxLayout()
@@ -83,6 +74,5 @@ class FileSyncronizedWidget(QWidget):
     @Slot()
     def Sl_update_list_files(self) -> None:
         """metodo chiamato dal notify del modello quando questo si aggiorna"""
-
         list_of_files, list_of_dirs = self._model.get_data()
         self.update_content(list_of_files, list_of_dirs)
