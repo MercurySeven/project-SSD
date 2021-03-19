@@ -81,6 +81,7 @@ class MainWidget(QWidget):
 
         # create layout
         self.menu_laterale = QVBoxLayout()
+        self.menu_laterale.setContentsMargins(0, 0, 0, 0)
         self.menu_laterale.setAlignment(Qt.AlignCenter)
         self.menu_laterale.addWidget(self.sync_widget)
         self.menu_laterale.addWidget(self.files_button)
