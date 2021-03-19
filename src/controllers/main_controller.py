@@ -77,6 +77,13 @@ class MainController(QObject):
         sync.setName("algorithm's thread")
         sync.start()
 
+    def background(self):
+        while True:
+            # sync do_stuff()
+            if self.watcher.status():
+                self.algorithm.apply_changes()
+            sleep(5)
+
     @Slot()
     def Sl_path_updated(self):
         new_path = self.model.settings_model.get_path()
@@ -90,13 +97,6 @@ class MainController(QObject):
     def Sl_sync_model_changed(self):
         state = self.model.sync_model.get_state()
         self.watcher.run(state)
-
-    def background(self):
-        while True:
-            # sync do_stuff()
-            if self.watcher.status():
-                self.algorithm.apply_changes()
-            sleep(5)
 
     @Slot()
     def Sl_switch_to_files(self):
