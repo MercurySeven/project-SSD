@@ -1,5 +1,6 @@
 from threading import Thread
 from time import sleep
+from os import path
 
 from PySide6.QtCore import (QObject, Slot, QSettings)
 from PySide6.QtWidgets import (QApplication, QFileDialog)
@@ -23,7 +24,8 @@ class Controller(QObject):
         self.env_settings = QSettings()
 
         # Controlliamo se l'utente ha già settato il PATH della cartella
-        if not self.env_settings.value("sync_path"):
+        check_path = self.env_settings.value("sync_path")
+        if not check_path or not path.isdir(check_path):
             dialog = QFileDialog()
             dialog.setFileMode(QFileDialog.Directory)
             dialog.setViewMode(QFileDialog.Detail)  # provare anche .List
