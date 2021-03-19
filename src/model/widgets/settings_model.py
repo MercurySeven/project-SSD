@@ -53,6 +53,8 @@ class SettingsModel(QObject):
 
     def get_size(self) -> int:
         total_size = 0
+        if not self.get_path():
+            return 0
         for dirpath, dirnames, filenames in os.walk(self.get_path()):
             for f in filenames:
                 fp = os.path.join(dirpath, f)

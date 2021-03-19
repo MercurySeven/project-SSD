@@ -125,7 +125,7 @@ QWidget > QPushButton[accessibleName='HighlightButton']:checked:hover {
 Stile Pulsanti MenuNav
 */
 
-QWidget[accessibleName='MenuNav'] > QPushButton {
+QPushButton[accessibleName='MenuNav']{
     
     border-width:0px;
     background-color: #404040;
@@ -139,11 +139,11 @@ QWidget[accessibleName='MenuNav'] > QPushButton {
     margin: 0px;
 }
 
-QWidget[accessibleName='MenuNav'] > QPushButton:hover {
+QPushButton:hover[accessibleName='MenuNav'] {
     background-color: #4B4B4B;
 }
 
-QWidget[accessibleName='MenuNav'] > QPushButton:checked {
+QPushButton:checked[accessibleName='MenuNav'] {
     background-color: #565656;
 }
 
