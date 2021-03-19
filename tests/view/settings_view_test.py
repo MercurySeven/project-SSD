@@ -71,7 +71,8 @@ class SettingsViewTest(unittest.TestCase):
         self.path_test.change_path_button.click()
         mock_dialog.assert_called_once()
 
-    def test_popup_file_dialog_interaction(self):
+    @patch("PySide6.QtWidgets.QDialog.exec_")
+    def test_popup_file_dialog_interaction(self, mock_dialog):
         self.path_test.path.setText("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
         self.assertEqual(self.path_test.path.text(), "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
         self.path_test.change_path_button.click()
@@ -79,6 +80,7 @@ class SettingsViewTest(unittest.TestCase):
         if self.settings_model.get_path() is not None:
             path = self.settings_model.get_path()
         self.assertEqual(self.path_test.path.text(), path)
+        mock_dialog.assert_called_once()
 
     def test_update_client(self):
         """ Test the state after setting client radio button true """
