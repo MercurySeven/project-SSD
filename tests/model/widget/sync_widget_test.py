@@ -2,7 +2,6 @@ import os
 import unittest
 
 from PySide6.QtCore import QSize
-from PySide6.QtGui import QIcon
 
 from src import settings
 from src.model.widgets.sync_model import SyncModel
