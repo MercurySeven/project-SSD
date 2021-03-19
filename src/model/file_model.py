@@ -5,11 +5,11 @@ from PySide6.QtCore import (QSettings, Signal, Slot, QObject)
 from src.model.directory import Directory
 
 
-class FilesModel(QObject):
+class FileModel(QObject):
     Sg_model_changed = Signal()
 
     def __init__(self):
-        super(FilesModel, self).__init__()
+        super(FileModel, self).__init__()
         self.settings = QSettings()
         self.base_dir = Directory("root_dir", self.settings.value("sync_path"))
 

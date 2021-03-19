@@ -68,7 +68,7 @@ class MainWidget(QWidget):
         self.settings_button.setCheckable(True)
         self.settings_button.setAccessibleName("MenuNav")
 
-        self.files_widget = FileView(self._model.files_model, self)
+        self.files_widget = FileView(self._model.file_model, self)
         self.settings_view = SettingsView(self._model.settings_model, self)
 
         # stacked
@@ -93,7 +93,7 @@ class MainWidget(QWidget):
         self.chage_current_view_to_files()
 
         self.files_button.clicked.connect(self.Sl_file_button_clicked)
-        self.files_button.clicked.connect(self._model.files_model.Sl_update_model)
+        self.files_button.clicked.connect(self._model.file_model.Sl_update_model)
         self.settings_button.clicked.connect(self.Sl_settings_button_clicked)
 
         # stylesheet

@@ -51,7 +51,7 @@ class Controller(QObject):
         self.sync_controller = SyncController(
             self.model.sync_model, self.view.main_widget.sync_widget)
         self.file_controller = FileController(
-            self.model.files_model, self.view.main_widget.files_widget)
+            self.model.file_model, self.view.main_widget.files_widget)
         self.settings_controller = SettingsController(
             self.model.settings_model, self.view.main_widget.settings_view)
 

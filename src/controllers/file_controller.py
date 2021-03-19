@@ -1,9 +1,9 @@
-from src.model.files_model import FilesModel
+from src.model.file_model import FileModel
 from src.view.file_view import FileView
 
 
 class FileController:
-    def __init__(self, model: FilesModel, view: FileView):
+    def __init__(self, model: FileModel, view: FileView):
         self._model = model
         self._view = view
         self._model.Sg_model_changed.connect(self._view.Sl_model_changed)

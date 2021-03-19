@@ -3,12 +3,12 @@ from PySide6.QtGui import (QDesktopServices)
 from PySide6.QtWidgets import (QVBoxLayout, QHBoxLayout, QWidget, QScrollArea, QPushButton, QLabel)
 from src.view.layouts.flowlayout import FlowLayout
 from src.view.widgets.filewidget import FileWidget
-from src.model.files_model import FilesModel
+from src.model.file_model import FileModel
 
 
 class FileView(QWidget):
 
-    def __init__(self, model: FilesModel, parent=None):
+    def __init__(self, model: FileModel, parent=None):
         super(FileView, self).__init__(parent)
 
         self.env_settings = QSettings()
