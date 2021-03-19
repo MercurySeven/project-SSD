@@ -80,10 +80,11 @@ class MainController(QObject):
     @Slot()
     def Sl_path_updated(self):
         new_path = self.model.settings_model.get_path()
-        self.env_settings.sync()
-        self.algorithm.set_directory(new_path)
-        self.watcher.reboot()
-        self.notification_icon.send_message("Watcher riavviato")
+        if self.algorithm.directory != new_path:
+            self.env_settings.sync()
+            self.algorithm.set_directory(new_path)
+            self.watcher.reboot()
+            self.notification_icon.send_message("Watcher riavviato")
 
     @Slot()
     def Sl_sync_model_changed(self):
