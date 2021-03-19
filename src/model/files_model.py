@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from PySide6.QtCore import (QSettings, Signal, QObject)
+from PySide6.QtCore import (QSettings, Signal, Slot, QObject)
 
 from src.model.directory import Directory
 
@@ -16,7 +16,8 @@ class FilesModel(QObject):
     # per ora ritorna solamente il contenuto del primo livello della directory
     # TODO ampliare la ricerca di una cartella e di un file
 
-    def update_model(self) -> None:
+    @Slot()
+    def Sl_update_model(self) -> None:
         self.base_dir.update_list_of_content()
         self.Sg_model_changed.emit()
 

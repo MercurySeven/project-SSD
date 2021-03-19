@@ -9,6 +9,7 @@ class VisualizeFileController:
         self.model = model
         self.view = view
         self.model.Sg_model_changed.connect(self.view.Sl_update_list_files)
+        self.view.updateButton.clicked.connect(self.model.Sl_update_model)
 
     @Slot()
     def switch_to_files(self) -> None:

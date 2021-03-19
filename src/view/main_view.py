@@ -7,7 +7,6 @@ from PySide6.QtWidgets import (
     QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QStackedWidget)
 
 from src.model.model import Model
-from src.model.widgets.sync_model import SyncModel
 from src.view.stylesheets.qssManager import setQss
 from src.view.widgets.sync_widget import SyncWidget
 from .file_synchronized_widget import FileSyncronizedWidget
@@ -77,17 +76,17 @@ class MainWidget(QWidget):
         self.central_view.addWidget(self.swidget)
         self.mainGrid.addLayout(self.menu_laterale)
         self.mainGrid.addLayout(self.central_view)
-        # self.setLayout(self.mainGrid)
+
+        self.menu_widget.files_button.clicked.connect(self.Sl_file_button_clicked)
+        self.menu_widget.files_button.clicked.connect(self._model.files_model.Sl_update_model)
+        self.menu_widget.settingsButton.clicked.connect(self.Sl_settings_button_clicked)
+
         # stylesheet
         for i in self.findChildren(QWidget, ):
             if re.findall("view", str(i)):
                 i.setAttribute(QtCore.Qt.WA_StyledBackground, True)
 
-        self.menu_widget.files_button.clicked.connect(self.Sl_file_button_clicked)
-        self.menu_widget.settingsButton.clicked.connect(self.Sl_settings_button_clicked)
-
-    # metodo chiamato da lateral_menu_widget per scatenare il segnale
-    # che arriva al modello per cambiare vista
+    # METODI PER CAMBIARE LA VISTA!!
 
     @Slot()
     def Sl_file_button_clicked(self):
@@ -106,7 +105,3 @@ class MainWidget(QWidget):
         self.swidget.setCurrentWidget(self.settings_view)
         self.menu_widget.settingsButton.setChecked(True)
         self.menu_widget.files_button.setChecked(False)
-
-    # def clear_layout(self, layout):
-    #  for i in reversed(range(layout.count())):
-    #     layout.itemAt(i).widget().setParent(None)
