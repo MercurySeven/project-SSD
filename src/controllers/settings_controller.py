@@ -1,11 +1,11 @@
-from src.view.settings_widget import SettingsWidget
+from src.view.settings_view import SettingsView
 from src.model.widgets.settings_model import SettingsModel
 from PySide6.QtCore import (Slot)
 from src.network.policy import Policy
 
 
 class SettingsController:
-    def __init__(self, model: SettingsModel, view: SettingsWidget):
+    def __init__(self, model: SettingsModel, view: SettingsView):
         self._model = model
         self._view = view
 

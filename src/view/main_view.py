@@ -14,7 +14,7 @@ from src.view.stylesheets.qssManager import setQss
 from src.view.widgets.sync_widget import SyncWidget
 from .file_synchronized_widget import FileSyncronizedWidget
 from .lateral_menu_widget import LateralMenuWidget
-from .settings_widget import SettingsWidget
+from .settings_view import SettingsView
 
 
 class MainWindow(QMainWindow):
@@ -65,13 +65,13 @@ class MainWidget(QWidget):
 
         self.menuWidget = LateralMenuWidget(self)
 
-        self.settingsWidget = SettingsWidget(self.model.settings_model, self)
+        self.settings_view = SettingsView(self.model.settings_model, self)
 
         # stacked
         # self.swidget = QStackedWidget()
         # self.swidget.setAccessibleName("Stacked")
         # self.swidget.addWidget(self.syncronizedWidget)
-        # self.swidget.addWidget(self.settingsWidget)
+        # self.swidget.addWidget(self.settings_view)
 
         # create layout
         self.menu_laterale = QVBoxLayout()

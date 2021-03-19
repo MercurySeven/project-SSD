@@ -7,10 +7,10 @@ from src.view.widgets.settings.set_policy_view import SetPolicyView
 from src.view.widgets.settings.set_quota_disk_view import SetQuotaDiskView
 
 
-class SettingsWidget(QWidget):
+class SettingsView(QWidget):
 
     def __init__(self, model: SettingsModel, parent=None):
-        super(SettingsWidget, self).__init__(parent)
+        super(SettingsView, self).__init__(parent)
         self.setObjectName("Settings")
         # Titolo
         self.title = QLabel("Impostazioni", self)

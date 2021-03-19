@@ -45,6 +45,6 @@ class LateralMenuWidget(QWidget):
         self.syncronizedButton.setChecked(True)
 
     def showSettings(self):
-        self.parent().swidget.setCurrentWidget(self.parent().settingsWidget)
+        self.parent().swidget.setCurrentWidget(self.parent().settings_view)
         self.syncronizedButton.setChecked(False)
         self.settingsButton.setChecked(True)

@@ -8,7 +8,7 @@ from PySide6.QtWidgets import QApplication
 from src import settings
 from src.model.widgets.settings_model import SettingsModel
 from src.controllers.settings_controller import SettingsController
-from src.view.settings_widget import SettingsWidget
+from src.view.settings_view import SettingsView
 
 app = QApplication(sys.argv)
 
@@ -22,7 +22,7 @@ class SettingsViewTest(unittest.TestCase):
         settings.file_name = "tests/config.ini"
         settings.create_standard_settings()
         self.settings_model = SettingsModel()
-        self.settings_view = SettingsWidget(self.settings_model)
+        self.settings_view = SettingsView(self.settings_model)
 
         self.path_test = self.settings_view.set_path_view
         self.policy_test = self.settings_view.set_policy_view

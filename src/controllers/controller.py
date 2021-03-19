@@ -58,7 +58,7 @@ class Controller(QObject):
         self.view.mainWidget.sync_model.Sg_model_changed.connect(self.Sl_sync_model_changed)
 
         # Ripristino il riavvio di watchdog, quando cambio path
-        self.view.mainWidget.settingsWidget.settings_model.Sg_model_changed.connect(
+        self.view.mainWidget.settings_view.settings_model.Sg_model_changed.connect(
             self.Sl_path_updated)
 
         self.env_settings = QSettings()
@@ -71,12 +71,12 @@ class Controller(QObject):
     @Slot()
     def Sl_update_size(self):
         """permette l'aggiornamento automatico della quota utilizzata"""
-        self.view.mainWidget.settingsWidget.Sl_update_used_quota(
+        self.view.mainWidget.settings_view.Sl_update_used_quota(
             self.algorithm.get_size())
 
     @Slot()
     def Sl_path_updated(self):
-        new_path = self.view.mainWidget.settingsWidget.settings_model.get_path()
+        new_path = self.view.mainWidget.settings_view.settings_model.get_path()
         self.env_settings.sync()
         self.algorithm.set_directory(new_path)
         self.watcher.reboot()
