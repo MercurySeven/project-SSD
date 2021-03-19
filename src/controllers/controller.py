@@ -48,9 +48,11 @@ class Controller(QObject):
             self.view.main_widget.files_widget, self.model.files_model)
         self.current_model = self.model.files_model
 
-        self.sync_controller = SyncController(self.model.sync_model, self.view.main_widget.sync_widget)
+        self.sync_controller = SyncController(
+            self.model.sync_model, self.view.main_widget.sync_widget)
 
-        self.settings_controller = SettingsController(self.model.settings_model, self.view.main_widget.settings_view)
+        self.settings_controller = SettingsController(
+            self.model.settings_model, self.view.main_widget.settings_view)
         # Non so se ci vada il parent su Notification...
         self.notification_icon = NotificationController(app, parent)
         self.notification_icon.Sg_show_app.connect(lambda: self.view.show())
@@ -64,6 +66,7 @@ class Controller(QObject):
         self.model.settings_model.Sg_model_changed.connect(self.Sl_path_updated)
 
         self.view.main_widget.Sg_switch_to_files.connect(self.Sl_switch_to_files)
+        self.view.main_widget.Sg_switch_to_settings.connect(self.Sl_switch_to_settings)
 
         self.env_settings = QSettings()
         self.algorithm = MetaData(self.env_settings.value("sync_path"))
@@ -100,6 +103,8 @@ class Controller(QObject):
 
     @Slot()
     def Sl_switch_to_files(self):
-        self.current_model = self.model.files_model
-        # chiama slot main_view per il cambio di finestra
-        self.view.main_widget.chage_current_window_to_files()
+        self.view.main_widget.chage_current_view_to_files()
+
+    @Slot()
+    def Sl_switch_to_settings(self):
+        self.view.main_widget.chage_current_view_to_settings()

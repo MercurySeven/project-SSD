@@ -37,8 +37,9 @@ class MainWindow(QMainWindow):
 
 
 class MainWidget(QWidget):
-    # Signals
+
     Sg_switch_to_files = Signal()
+    Sg_switch_to_settings = Signal()
 
     def __init__(self, model: Model, parent=None):
 
@@ -69,10 +70,11 @@ class MainWidget(QWidget):
         # create layout
         self.menu_laterale = QVBoxLayout()
         self.menu_laterale.addWidget(self.sync_widget)
+
         self.menu_laterale.addWidget(self.menu_widget)
         self.menu_laterale.setSpacing(0)
 
-        # self.central_view.addWidget(self.swidget)
+        self.central_view.addWidget(self.swidget)
         self.mainGrid.addLayout(self.menu_laterale)
         self.mainGrid.addLayout(self.central_view)
         # self.setLayout(self.mainGrid)
@@ -81,19 +83,29 @@ class MainWidget(QWidget):
             if re.findall("view", str(i)):
                 i.setAttribute(QtCore.Qt.WA_StyledBackground, True)
 
-
+        self.menu_widget.files_button.clicked.connect(self.Sl_file_button_clicked)
+        self.menu_widget.settingsButton.clicked.connect(self.Sl_settings_button_clicked)
 
     # metodo chiamato da lateral_menu_widget per scatenare il segnale
     # che arriva al modello per cambiare vista
+
     @Slot()
-    def call_controller_for_list_file(self):
+    def Sl_file_button_clicked(self):
         self.Sg_switch_to_files.emit()
 
+    @Slot()
+    def Sl_settings_button_clicked(self):
+        self.Sg_switch_to_settings.emit()
 
-    def chage_current_window_to_files(self) -> None:
+    def chage_current_view_to_files(self) -> None:
         self.swidget.setCurrentWidget(self.files_widget)
         self.menu_widget.settingsButton.setChecked(False)
-        self.menu_widget.syncronizedButton.setChecked(True)
+        self.menu_widget.files_button.setChecked(True)
+
+    def chage_current_view_to_settings(self) -> None:
+        self.swidget.setCurrentWidget(self.settings_view)
+        self.menu_widget.settingsButton.setChecked(True)
+        self.menu_widget.files_button.setChecked(False)
 
     @Slot()
     def update_view(self, list_of_files: dict, list_of_dirs: dict) -> None:

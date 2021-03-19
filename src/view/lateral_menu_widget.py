@@ -14,37 +14,37 @@ class LateralMenuWidget(QWidget):
         file_icon = QIcon('./icons/copy.png')
         settings_icon = QIcon('./icons/settings.png')
 
-        self.syncronizedButton = QPushButton(self)
-        self.syncronizedButton.setIcon(file_icon)
-        self.syncronizedButton.setIconSize(QSize(30, 30))
-        self.syncronizedButton.setCheckable(True)
+        self.files_button = QPushButton(self)
+        self.files_button.setIcon(file_icon)
+        self.files_button.setIconSize(QSize(30, 30))
+        self.files_button.setCheckable(True)
 
         self.settingsButton = QPushButton(self)
         self.settingsButton.setIcon(settings_icon)
         self.settingsButton.setIconSize(QSize(30, 30))
         self.settingsButton.setCheckable(True)
-        self.syncronizedButton.setChecked(False)
+        self.files_button.setChecked(False)
 
         # connect to actions
         # qua va la chiamata solo per switchare di visuale
-        self.syncronizedButton.clicked.connect(self.parent().call_controller_for_list_file)
-        self.settingsButton.clicked.connect(self.showSettings)
+        # self.files_button.clicked.connect(self.parent().call_controller_for_list_file)
+        # self.settingsButton.clicked.connect(self.showSettings)
 
         # layout
         vbox = QVBoxLayout()
         vbox.setAlignment(Qt.AlignCenter)
-        vbox.addWidget(self.syncronizedButton)
+        vbox.addWidget(self.files_button)
         vbox.addStretch()
         vbox.addWidget(self.settingsButton)
         self.setLayout(vbox)
-        self.syncronizedButton.setChecked(True)
+        self.files_button.setChecked(True)
 
    # def showSyncronized(self):
     #    self.parent().swidget.setCurrentWidget(self.parent().syncronizedWidget)
      #   self.settingsButton.setChecked(False)
-      #  self.syncronizedButton.setChecked(True)
+      #  self.files_button.setChecked(True)
 
     # def showSettings(self):
      #   self.parent().swidget.setCurrentWidget(self.parent().settings_view)
-      #  self.syncronizedButton.setChecked(False)
+      #  self.files_button.setChecked(False)
        # self.settingsButton.setChecked(True)
