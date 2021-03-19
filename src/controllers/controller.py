@@ -55,9 +55,7 @@ class Controller(QObject):
         self.settings_controller = SettingsController(
             self.model.settings_model, self.view.main_widget.settings_view)
 
-        # Non so se ci vada il parent su Notification...
-        self.notification_icon = NotificationController(app, parent)
-        self.notification_icon.Sg_show_app.connect(lambda: self.view.show())
+        self.notification_icon = NotificationController(app, self.view)
 
         # Attivo il watchdog nella root definita dall'utente
         self.watcher = Watcher()
