@@ -12,7 +12,7 @@ class FileSyncronizedWidget(QWidget):
     # creating Signals
     # TODO
 
-    def __init__(self, model: FilesModel,  parent=None):
+    def __init__(self, model: FilesModel, parent=None):
         super(FileSyncronizedWidget, self).__init__(parent)
 
         self.env_settings = QSettings()
@@ -56,7 +56,7 @@ class FileSyncronizedWidget(QWidget):
         layout.addLayout(button_layout)
         layout.addWidget(self.scrollArea)
         self.setLayout(layout)
-        self._model.get_data()
+        self.Sl_update_list_files()
 
     def show_folder(self):
         path = QUrl.fromUserInput(self.env_settings.value("sync_path"))
@@ -80,8 +80,9 @@ class FileSyncronizedWidget(QWidget):
         # for k in new_list_dirs:
         #    self.list_of_dirs_widget.update({k.get_name(): })
 
-    # metodo chiamato dal notify del modello quando questo si aggiorna
     @Slot()
     def Sl_update_list_files(self) -> None:
-        list_of_files, list_of_dirs = self.super().model.files_model.update_view()
-        self.syncronizedWidget.update_content(list_of_files, list_of_dirs)
+        """metodo chiamato dal notify del modello quando questo si aggiorna"""
+
+        list_of_files, list_of_dirs = self._model.get_data()
+        self.update_content(list_of_files, list_of_dirs)

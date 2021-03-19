@@ -107,11 +107,6 @@ class MainWidget(QWidget):
         self.menu_widget.settingsButton.setChecked(True)
         self.menu_widget.files_button.setChecked(False)
 
-    @Slot()
-    def update_view(self, list_of_files: dict, list_of_dirs: dict) -> None:
-        self.files_widget.update_content(list_of_files, list_of_dirs)
-        self.swidget.setCurrentWidget(self.syncronizedWidget)
-
     # def clear_layout(self, layout):
     #  for i in reversed(range(layout.count())):
     #     layout.itemAt(i).widget().setParent(None)

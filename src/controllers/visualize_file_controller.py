@@ -1,8 +1,8 @@
-from PySide6.QtCore import (Slot, Signal)
-from PySide6.QtWidgets import (QWidget)
+from PySide6.QtCore import (Slot)
 
 from src.model.files_model import FilesModel
 from src.view.file_synchronized_widget import FileSyncronizedWidget
+
 
 class VisualizeFileController:
     def __init__(self, view: FileSyncronizedWidget, model: FilesModel):
