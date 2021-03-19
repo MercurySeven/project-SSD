@@ -4,13 +4,14 @@ from time import sleep
 from PySide6.QtCore import (QObject, Slot, QSettings)
 from PySide6.QtWidgets import (QApplication, QFileDialog)
 
-from src.controllers.widgets.visualize_file_controller import VisualizeFileController
+from .visualize_file_controller import VisualizeFileController
 from src.model.model import Model
 from src.model.watcher import Watcher
 from src.network.metadata import MetaData
 from src.view.main_view import MainWindow
 from .notification_controller import NotificationController
 from src.controllers.settings_controller import SettingsController
+from .widgets.sync_controller import SyncController
 
 
 class Controller(QObject):
@@ -38,16 +39,18 @@ class Controller(QObject):
                 env_settings.sync()
                 print("Nuova directory: " + env_settings.value("sync_path"))
 
-        self.view = MainWindow()
+        self.model = Model()
+        self.view = MainWindow(self.model)
         self.view.show()
 
         # definizione delle view corrente
-        self.model = Model()
         self.visualize_file_controller = VisualizeFileController(
-            self.view.main_widget, self.model.file_window)
-        self.current_view = self.model.file_window
+            self.view.main_widget, self.model.files_model)
+        self.current_model = self.model.files_model
 
-        self.settings_controller = SettingsController()
+        self.sync_controller = SyncController(self.model.sync_model, self.view.main_widget.sync_widget)
+
+        self.settings_controller = SettingsController(self.model.settings_model, self.view.main_widget.settings_view)
         # Non so se ci vada il parent su Notification...
         self.notification_icon = NotificationController(app, parent)
         self.notification_icon.Sg_show_app.connect(lambda: self.view.show())
@@ -55,11 +58,12 @@ class Controller(QObject):
         # Attivo il watchdog nella root definita dall'utente
         self.watcher = Watcher()
         self.Sl_sync_model_changed()
-        self.view.mainWidget.sync_model.Sg_model_changed.connect(self.Sl_sync_model_changed)
+        self.model.sync_model.Sg_model_changed.connect(self.Sl_sync_model_changed)
 
         # Ripristino il riavvio di watchdog, quando cambio path
-        self.view.mainWidget.settings_view.settings_model.Sg_model_changed.connect(
-            self.Sl_path_updated)
+        self.model.settings_model.Sg_model_changed.connect(self.Sl_path_updated)
+
+        self.view.main_widget.Sg_switch_to_files.connect(self.Sl_switch_to_files)
 
         self.env_settings = QSettings()
         self.algorithm = MetaData(self.env_settings.value("sync_path"))
@@ -84,7 +88,7 @@ class Controller(QObject):
 
     @Slot()
     def Sl_sync_model_changed(self):
-        state = self.view.mainWidget.sync_model.get_state()
+        state = self.model.sync_model.get_state()
         self.watcher.run(state)
 
     def background(self):
@@ -95,7 +99,7 @@ class Controller(QObject):
             sleep(5)
 
     @Slot()
-    def switch_to_files(self):
-        del self.current_view
-        self.current_view = self.model.file_window
-        # chiama
+    def Sl_switch_to_files(self):
+        self.current_model = self.model.files_model
+        # chiama slot main_view per il cambio di finestra
+        self.view.main_widget.chage_current_window_to_files()

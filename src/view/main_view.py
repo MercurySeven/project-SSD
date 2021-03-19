@@ -6,8 +6,6 @@ from PySide6.QtGui import (QIcon)
 from PySide6.QtWidgets import (
     QMainWindow, QVBoxLayout, QHBoxLayout, QWidget)
 
-from src.controllers.controller import Controller
-from src.controllers.widgets.sync_controller import SyncController
 from src.model.model import Model
 from src.model.widgets.sync_model import SyncModel
 from src.view.stylesheets.qssManager import setQss
@@ -20,17 +18,17 @@ from .settings_view import SettingsView
 class MainWindow(QMainWindow):
     """This is the main view class"""
 
-    def __init__(self):
+    def __init__(self, model: Model):
         super(MainWindow, self).__init__()
 
         self.setWindowTitle("SSD: Zextras Drive Desktop")
         self.setWindowIcon(QIcon("./icons/logo.png"))
 
         # widgets
-        self.main_widget = MainWidget(self)
+        self.main_widget = MainWidget(model, self)
 
         # !! MainWindow must have a central widget !!
-        self.setCentralWidget(self.mainWidget)
+        self.setCentralWidget(self.main_widget)
 
         # style
         self.resize(1200, 800)
@@ -40,16 +38,14 @@ class MainWindow(QMainWindow):
 
 class MainWidget(QWidget):
     # Signals
-    switch_to_files = Signal()
+    Sg_switch_to_files = Signal()
 
-    def __init__(self, parent=None):
+    def __init__(self, model: Model, parent=None):
 
         super(MainWidget, self).__init__(parent)
         # gestione modello
-        self.model = Model()
-        self.model.file_window.notify_changes.connect(self.update_list_files)
-        # gestione controller
-        self.controller = Controller()
+        self._model = model
+        self._model.files_model.notify_changes.connect(self.update_list_files)
         # layouts
         # Grid di struttura dell'applicazione
         self.mainGrid = QHBoxLayout(self)
@@ -59,13 +55,12 @@ class MainWidget(QWidget):
         self.central_view.setSpacing(0)
 
         # widgets
-        self.sync_model = SyncModel()
-        self.sync_widget = SyncWidget(self.sync_model)
-        self.sync_controller = SyncController(self.sync_model, self.sync_widget)
+        self.sync_widget = SyncWidget(self._model.sync_model)
+
 
         self.menuWidget = LateralMenuWidget(self)
 
-        self.settings_view = SettingsView(self.model.settings_model, self)
+        self.settings_view = SettingsView(self._model.settings_model, self)
 
         # stacked
         # self.swidget = QStackedWidget()
@@ -88,13 +83,13 @@ class MainWidget(QWidget):
             if re.findall("view", str(i)):
                 i.setAttribute(QtCore.Qt.WA_StyledBackground, True)
 
-        self.switch_to_files.connect(self.controller.switch_to_files)
+
 
     # metodo chiamato da lateral_menu_widget per scatenare il segnale
     # che arriva al modello per cambiare vista
     @Slot()
     def call_controller_for_list_file(self):
-        self.switch_to_files.emit()
+        self.Sg_switch_to_files.emit()
 
     # metodo chiamato dal notify del modello quando questo si aggiorna
     @Slot()
@@ -102,7 +97,7 @@ class MainWidget(QWidget):
         list_of_files, list_of_dirs = self.files_model.update_view()
         self.syncronizedWidget.update_content(list_of_files, list_of_dirs)
 
-    @Slot()
+
     def chage_current_window_to_files(self) -> None:
         self.clear_layout(self.central_view)
         syncronizedWidget = FileSyncronizedWidget(self)
