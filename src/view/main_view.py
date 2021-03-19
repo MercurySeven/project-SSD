@@ -56,7 +56,7 @@ class MainWidget(QWidget):
         # widgets
         self.container_menu = QWidget(self)
         self.container_menu.setAccessibleName("MenuNav")
-        
+
         self.sync_widget = SyncWidget(self._model.sync_model)
 
         self.files_button = QPushButton(self)
