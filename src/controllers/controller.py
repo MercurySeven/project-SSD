@@ -79,14 +79,8 @@ class Controller(QObject):
         sync.start()
 
     @Slot()
-    def Sl_update_size(self):
-        """permette l'aggiornamento automatico della quota utilizzata"""
-        self.view.mainWidget.settings_view.Sl_update_used_quota(
-            self.algorithm.get_size())
-
-    @Slot()
     def Sl_path_updated(self):
-        new_path = self.view.mainWidget.settings_view.settings_model.get_path()
+        new_path = self.model.settings_model.get_path()
         self.env_settings.sync()
         self.algorithm.set_directory(new_path)
         self.watcher.reboot()
