@@ -7,6 +7,7 @@ from PySide6.QtGui import QIcon
 from src import settings
 from src.model.widgets.sync_model import SyncModel
 from src.view.widgets.sync_widget import SyncWidget
+from src.controllers.widgets.sync_controller import SyncController
 
 
 class SyncWidgetTest(unittest.TestCase):
@@ -18,6 +19,7 @@ class SyncWidgetTest(unittest.TestCase):
         settings.create_standard_settings()
         self.sync_model = SyncModel()
         self.test_sync = SyncWidget(self.sync_model)
+        self.controller = SyncController(self.sync_model, self.test_sync)
 
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""
@@ -43,6 +45,9 @@ class SyncWidgetTest(unittest.TestCase):
         self.assertEqual(self.test_sync.running_label.text(), "Attivata")
 
     def test_turn_off_sync(self):
+        self.test_sync.syncButton.click()
+        self.assertEqual(self.test_sync.syncButton.isChecked(), self.test_sync._model.get_state())
+        self.assertEqual(self.test_sync.running_label.text(), "Attivata")
         self.test_sync.syncButton.click()
         self.assertEqual(self.test_sync.syncButton.isChecked(), self.test_sync._model.get_state())
         self.assertEqual(self.test_sync.running_label.text(), "Disattivata")
