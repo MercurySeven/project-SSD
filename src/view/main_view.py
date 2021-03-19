@@ -1,16 +1,15 @@
 import re
 
 from PySide6 import QtCore
-from PySide6.QtCore import (Signal, Slot)
+from PySide6.QtCore import (Signal, Slot, QSize, Qt)
 from PySide6.QtGui import (QIcon)
 from PySide6.QtWidgets import (
-    QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QStackedWidget)
+    QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QStackedWidget, QPushButton)
 
 from src.model.model import Model
 from src.view.stylesheets.qssManager import setQss
 from src.view.widgets.sync_widget import SyncWidget
 from .file_view import FileView
-from .lateral_menu_widget import LateralMenuWidget
 from .settings_view import SettingsView
 
 
@@ -56,7 +55,19 @@ class MainWidget(QWidget):
 
         # widgets
         self.sync_widget = SyncWidget(self._model.sync_model)
-        self.menu_widget = LateralMenuWidget(self)
+
+        self.files_button = QPushButton(self)
+        self.files_button.setIcon(QIcon("./icons/copy.png"))
+        self.files_button.setIconSize(QSize(30, 30))
+        self.files_button.setCheckable(True)
+        self.files_button.setAccessibleName("MenuNav")
+
+        self.settings_button = QPushButton(self)
+        self.settings_button.setIcon(QIcon("./icons/settings.png"))
+        self.settings_button.setIconSize(QSize(30, 30))
+        self.settings_button.setCheckable(True)
+        self.settings_button.setAccessibleName("MenuNav")
+
         self.files_widget = FileView(self._model.files_model, self)
         self.settings_view = SettingsView(self._model.settings_model, self)
 
@@ -65,21 +76,26 @@ class MainWidget(QWidget):
         self.swidget.setAccessibleName("Stacked")
         self.swidget.addWidget(self.files_widget)
         self.swidget.addWidget(self.settings_view)
+        self.central_view.addWidget(self.swidget)
 
         # create layout
         self.menu_laterale = QVBoxLayout()
+        self.menu_laterale.setAlignment(Qt.AlignCenter)
         self.menu_laterale.addWidget(self.sync_widget)
-
-        self.menu_laterale.addWidget(self.menu_widget)
+        self.menu_laterale.addWidget(self.files_button)
+        self.menu_laterale.addStretch()
+        self.menu_laterale.addWidget(self.settings_button)
         self.menu_laterale.setSpacing(0)
 
-        self.central_view.addWidget(self.swidget)
         self.mainGrid.addLayout(self.menu_laterale)
         self.mainGrid.addLayout(self.central_view)
 
-        self.menu_widget.files_button.clicked.connect(self.Sl_file_button_clicked)
-        self.menu_widget.files_button.clicked.connect(self._model.files_model.Sl_update_model)
-        self.menu_widget.settingsButton.clicked.connect(self.Sl_settings_button_clicked)
+        self.chage_current_view_to_files()
+
+        # TODO:Sposta queste connessioni
+        self.files_button.clicked.connect(self.Sl_file_button_clicked)
+        self.files_button.clicked.connect(self._model.files_model.Sl_update_model)
+        self.settings_button.clicked.connect(self.Sl_settings_button_clicked)
 
         # stylesheet
         for i in self.findChildren(QWidget, ):
@@ -98,10 +114,10 @@ class MainWidget(QWidget):
 
     def chage_current_view_to_files(self) -> None:
         self.swidget.setCurrentWidget(self.files_widget)
-        self.menu_widget.settingsButton.setChecked(False)
-        self.menu_widget.files_button.setChecked(True)
+        self.settings_button.setChecked(False)
+        self.files_button.setChecked(True)
 
     def chage_current_view_to_settings(self) -> None:
         self.swidget.setCurrentWidget(self.settings_view)
-        self.menu_widget.settingsButton.setChecked(True)
-        self.menu_widget.files_button.setChecked(False)
+        self.settings_button.setChecked(True)
+        self.files_button.setChecked(False)
