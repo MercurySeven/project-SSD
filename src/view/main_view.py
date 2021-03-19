@@ -6,7 +6,7 @@ from PySide6.QtGui import (QIcon)
 from PySide6.QtWidgets import (
     QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QStackedWidget, QPushButton)
 
-from src.model.model import Model
+from src.model.main_model import MainModel
 from src.view.stylesheets.qssManager import setQss
 from src.view.widgets.sync_widget import SyncWidget
 from .file_view import FileView
@@ -16,7 +16,7 @@ from .settings_view import SettingsView
 class MainWindow(QMainWindow):
     """This is the main view class"""
 
-    def __init__(self, model: Model):
+    def __init__(self, model: MainModel):
         super(MainWindow, self).__init__()
 
         self.setWindowTitle("SSD: Zextras Drive Desktop")
@@ -39,7 +39,7 @@ class MainWidget(QWidget):
     Sg_switch_to_files = Signal()
     Sg_switch_to_settings = Signal()
 
-    def __init__(self, model: Model, parent=None):
+    def __init__(self, model: MainModel, parent=None):
 
         super(MainWidget, self).__init__(parent)
         # gestione modello

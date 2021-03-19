@@ -3,7 +3,7 @@ from src.model.widgets.settings_model import SettingsModel
 from src.model.widgets.sync_model import SyncModel
 
 
-class Model:
+class MainModel:
     def __init__(self):
         self.file_model = FileModel()
         self.settings_model = SettingsModel()

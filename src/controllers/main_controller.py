@@ -9,16 +9,15 @@ from .file_controller import FileController
 from .notification_controller import NotificationController
 from .settings_controller import SettingsController
 from .widgets.sync_controller import SyncController
-from src.model.model import Model
+from src.model.main_model import MainModel
 from src.model.watcher import Watcher
 from src.network.metadata import MetaData
 from src.view.main_view import MainWindow
 
 
-class Controller(QObject):
+class MainController(QObject):
 
-    def __init__(self, app: QApplication, parent=None):
-        super(Controller, self).__init__(parent)
+    def __init__(self, app: QApplication):
 
         # initialize settings
         self.env_settings = QSettings()
@@ -43,7 +42,7 @@ class Controller(QObject):
                 self.env_settings.sync()
                 print("Nuova directory: " + self.env_settings.value("sync_path"))
 
-        self.model = Model()
+        self.model = MainModel()
         self.view = MainWindow(self.model)
         self.view.show()
 

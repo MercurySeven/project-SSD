@@ -4,7 +4,7 @@ import logging
 from PySide6.QtCore import (QCoreApplication)
 from PySide6.QtWidgets import (QApplication)
 
-from src.controllers.controller import Controller
+from src.controllers.main_controller import MainController
 
 if __name__ == "__main__":
 
@@ -24,6 +24,6 @@ if __name__ == "__main__":
     logging.getLogger("gql.transport.aiohttp").setLevel(logging.WARNING)
     logging.getLogger("gql.transport.requests").setLevel(logging.WARNING)
 
-    controller = Controller(app)
+    controller = MainController(app)
 
     sys.exit(app.exec_())
