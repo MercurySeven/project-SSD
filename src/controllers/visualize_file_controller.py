@@ -2,14 +2,13 @@ from PySide6.QtCore import (Slot, Signal)
 from PySide6.QtWidgets import (QWidget)
 
 from src.model.files_model import FilesModel
-
+from src.view.file_synchronized_widget import FileSyncronizedWidget
 
 class VisualizeFileController:
-    switch_to_files = Signal(dict)
-
-    def __init__(self, view: QWidget, model: FilesModel):
+    def __init__(self, view: FileSyncronizedWidget, model: FilesModel):
         self.model = model
         self.view = view
+        self.model.Sg_model_changed.connect(self.view.Sl_update_list_files)
 
     @Slot()
     def switch_to_files(self) -> None:

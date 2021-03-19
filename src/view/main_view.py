@@ -4,7 +4,7 @@ from PySide6 import QtCore
 from PySide6.QtCore import (Signal, Slot)
 from PySide6.QtGui import (QIcon)
 from PySide6.QtWidgets import (
-    QMainWindow, QVBoxLayout, QHBoxLayout, QWidget)
+    QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QStackedWidget)
 
 from src.model.model import Model
 from src.model.widgets.sync_model import SyncModel
@@ -45,7 +45,7 @@ class MainWidget(QWidget):
         super(MainWidget, self).__init__(parent)
         # gestione modello
         self._model = model
-        self._model.files_model.notify_changes.connect(self.update_list_files)
+
         # layouts
         # Grid di struttura dell'applicazione
         self.mainGrid = QHBoxLayout(self)
@@ -56,22 +56,20 @@ class MainWidget(QWidget):
 
         # widgets
         self.sync_widget = SyncWidget(self._model.sync_model)
-
-
-        self.menuWidget = LateralMenuWidget(self)
-
+        self.menu_widget = LateralMenuWidget(self)
+        self.files_widget = FileSyncronizedWidget(self._model.files_model, self)
         self.settings_view = SettingsView(self._model.settings_model, self)
 
         # stacked
-        # self.swidget = QStackedWidget()
-        # self.swidget.setAccessibleName("Stacked")
-        # self.swidget.addWidget(self.syncronizedWidget)
-        # self.swidget.addWidget(self.settings_view)
+        self.swidget = QStackedWidget()
+        self.swidget.setAccessibleName("Stacked")
+        self.swidget.addWidget(self.files_widget)
+        self.swidget.addWidget(self.settings_view)
 
         # create layout
         self.menu_laterale = QVBoxLayout()
         self.menu_laterale.addWidget(self.sync_widget)
-        self.menu_laterale.addWidget(self.menuWidget)
+        self.menu_laterale.addWidget(self.menu_widget)
         self.menu_laterale.setSpacing(0)
 
         # self.central_view.addWidget(self.swidget)
@@ -91,18 +89,17 @@ class MainWidget(QWidget):
     def call_controller_for_list_file(self):
         self.Sg_switch_to_files.emit()
 
-    # metodo chiamato dal notify del modello quando questo si aggiorna
-    @Slot()
-    def update_list_files(self) -> None:
-        list_of_files, list_of_dirs = self.files_model.update_view()
-        self.syncronizedWidget.update_content(list_of_files, list_of_dirs)
-
 
     def chage_current_window_to_files(self) -> None:
-        self.clear_layout(self.central_view)
-        syncronizedWidget = FileSyncronizedWidget(self)
-        self.central_view.addWidget(syncronizedWidget)
+        self.swidget.setCurrentWidget(self.files_widget)
+        self.menu_widget.settingsButton.setChecked(False)
+        self.menu_widget.syncronizedButton.setChecked(True)
 
-    def clear_layout(self, layout):
-        for i in reversed(range(layout.count())):
-            layout.itemAt(i).widget().setParent(None)
+    @Slot()
+    def update_view(self, list_of_files: dict, list_of_dirs: dict) -> None:
+        self.files_widget.update_content(list_of_files, list_of_dirs)
+        self.swidget.setCurrentWidget(self.syncronizedWidget)
+
+    # def clear_layout(self, layout):
+    #  for i in reversed(range(layout.count())):
+    #     layout.itemAt(i).widget().setParent(None)

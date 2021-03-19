@@ -1,9 +1,10 @@
-from PySide6.QtCore import (QSettings, QUrl)
+from PySide6.QtCore import (QSettings, QUrl, Slot)
 from PySide6.QtGui import (QDesktopServices)
 from PySide6.QtWidgets import (
     QVBoxLayout, QHBoxLayout, QWidget, QScrollArea, QPushButton)
 from src.view.layouts.flowlayout import FlowLayout
 from src.view.widgets.filewidget import FileWidget
+from src.model.files_model import FilesModel
 
 
 class FileSyncronizedWidget(QWidget):
@@ -11,13 +12,13 @@ class FileSyncronizedWidget(QWidget):
     # creating Signals
     # TODO
 
-    def __init__(self, parent=None):
+    def __init__(self, model: FilesModel,  parent=None):
         super(FileSyncronizedWidget, self).__init__(parent)
 
         self.env_settings = QSettings()
         self.list_of_file_widget = {}
         self.list_of_dirs_widget = {}
-
+        self._model = model
         self.fileLayout = FlowLayout()
 
         # scroll area
@@ -55,6 +56,7 @@ class FileSyncronizedWidget(QWidget):
         layout.addLayout(button_layout)
         layout.addWidget(self.scrollArea)
         self.setLayout(layout)
+        self._model.get_data()
 
     def show_folder(self):
         path = QUrl.fromUserInput(self.env_settings.value("sync_path"))
@@ -77,3 +79,9 @@ class FileSyncronizedWidget(QWidget):
         # TODO creazione widget per directory e completamento di questo ciclo
         # for k in new_list_dirs:
         #    self.list_of_dirs_widget.update({k.get_name(): })
+
+    # metodo chiamato dal notify del modello quando questo si aggiorna
+    @Slot()
+    def Sl_update_list_files(self) -> None:
+        list_of_files, list_of_dirs = self.super().model.files_model.update_view()
+        self.syncronizedWidget.update_content(list_of_files, list_of_dirs)

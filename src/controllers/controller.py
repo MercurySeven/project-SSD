@@ -45,7 +45,7 @@ class Controller(QObject):
 
         # definizione delle view corrente
         self.visualize_file_controller = VisualizeFileController(
-            self.view.main_widget, self.model.files_model)
+            self.view.main_widget.files_widget, self.model.files_model)
         self.current_model = self.model.files_model
 
         self.sync_controller = SyncController(self.model.sync_model, self.view.main_widget.sync_widget)

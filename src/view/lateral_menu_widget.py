@@ -39,12 +39,12 @@ class LateralMenuWidget(QWidget):
         self.setLayout(vbox)
         self.syncronizedButton.setChecked(True)
 
-    def showSyncronized(self):
-        self.parent().swidget.setCurrentWidget(self.parent().syncronizedWidget)
-        self.settingsButton.setChecked(False)
-        self.syncronizedButton.setChecked(True)
+   # def showSyncronized(self):
+    #    self.parent().swidget.setCurrentWidget(self.parent().syncronizedWidget)
+     #   self.settingsButton.setChecked(False)
+      #  self.syncronizedButton.setChecked(True)
 
-    def showSettings(self):
-        self.parent().swidget.setCurrentWidget(self.parent().settings_view)
-        self.syncronizedButton.setChecked(False)
-        self.settingsButton.setChecked(True)
+    # def showSettings(self):
+     #   self.parent().swidget.setCurrentWidget(self.parent().settings_view)
+      #  self.syncronizedButton.setChecked(False)
+       # self.settingsButton.setChecked(True)
