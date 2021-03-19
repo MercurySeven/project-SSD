@@ -3,8 +3,6 @@ import unittest
 
 from src import settings
 from src.model.file_model import FileModel
-from src.model.main_model import MainModel
-from src.model.widgets.settings_model import SettingsModel
 from src.view.file_view import FileView
 
 
