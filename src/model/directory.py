@@ -1,5 +1,6 @@
 
 import os
+
 from .file import File
 from datetime import datetime
 
@@ -17,6 +18,8 @@ class Directory:
         self.files.update({file.get_name(): file})
 
     def update_list_of_content(self) -> None:
+        if not self.path or not os.path.isdir(self.path):
+            return
         restore_path = os.getcwd()
         with os.scandir(self.path) as dir_entries:
             os.chdir(self.path)  # punto critico dell'app!
