@@ -54,19 +54,20 @@ class MainWidget(QWidget):
         self.central_view.setSpacing(0)
 
         # widgets
+        self.container_menu = QWidget(self)
+        self.container_menu.setAccessibleName("MenuNav")
+        
         self.sync_widget = SyncWidget(self._model.sync_model)
 
         self.files_button = QPushButton(self)
         self.files_button.setIcon(QIcon("./icons/copy.png"))
         self.files_button.setIconSize(QSize(30, 30))
         self.files_button.setCheckable(True)
-        self.files_button.setAccessibleName("MenuNav")
 
         self.settings_button = QPushButton(self)
         self.settings_button.setIcon(QIcon("./icons/settings.png"))
         self.settings_button.setIconSize(QSize(30, 30))
         self.settings_button.setCheckable(True)
-        self.settings_button.setAccessibleName("MenuNav")
 
         self.files_widget = FileView(self._model.file_model, self)
         self.settings_view = SettingsView(self._model.settings_model, self)
@@ -87,7 +88,9 @@ class MainWidget(QWidget):
         self.menu_laterale.addWidget(self.settings_button)
         self.menu_laterale.setSpacing(0)
 
-        self.mainGrid.addLayout(self.menu_laterale)
+        self.container_menu.setLayout(self.menu_laterale)
+
+        self.mainGrid.addWidget(self.container_menu)
         self.mainGrid.addLayout(self.central_view)
 
         self.chage_current_view_to_files()
