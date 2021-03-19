@@ -8,4 +8,3 @@ class Model:
         self.files_model = FilesModel()
         self.settings_model = SettingsModel()
         self.sync_model = SyncModel()
-
