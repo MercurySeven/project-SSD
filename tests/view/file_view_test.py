@@ -29,5 +29,7 @@ class FileViewTest(unittest.TestCase):
 
     @patch("PySide6.QtGui.QDesktopServices.openUrl")
     def test_show_path_button(self, mock_dialog):
+        """ Test if show path button calls the right method and execute
+        Correctly"""
         self.file_view_test.show_path_button.click()
         mock_dialog.assert_called_once()
