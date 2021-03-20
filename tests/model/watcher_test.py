@@ -57,3 +57,8 @@ class WatcherTest(unittest.TestCase):
         self.assertEqual(self.test_watcher.is_running, False)
         self.test_watcher.run(False)
         self.assertEqual(self.test_watcher.is_running, False)
+
+    def test_background(self):
+        self.assertEqual(self.test_watcher.background(), False)
+
+
