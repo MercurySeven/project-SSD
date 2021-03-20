@@ -11,6 +11,7 @@ class FileWidgetTest(unittest.TestCase):
         self.file_view_test = FileWidget(self.file)
 
     def test_defaults(self):
-        self.assertEqual(self.file_view_test.toolTip(),
-                         "Ultima modifica: " + self.file.get_last_modified_date() + "\nSize: " + self.file.get_size())
+        to_compare = "Ultima modifica: " + self.file.get_last_modified_date() + "\nSize: " + \
+            self.file.get_size()
+        self.assertEqual(self.file_view_test.toolTip(), to_compare)
         self.assertEqual(self.file_view_test.text(), self.file.get_name())
