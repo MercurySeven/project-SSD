@@ -61,9 +61,9 @@ class FileWidgetTest(unittest.TestCase):
         mock_dialog.assert_not_called()
 
     @patch("PySide6.QtGui.QDesktopServices.openUrl")
-    def test_click_pause120_click(self, mock_dialog):
+    def test_click_pause050_click(self, mock_dialog):
         self.file_view_test.click()
-        time.sleep(0.120)
+        time.sleep(0.050)
         self.file_view_test.click()
         mock_dialog.assert_called_once()
 
