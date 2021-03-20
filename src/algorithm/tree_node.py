@@ -9,6 +9,7 @@ class TreeNode:
         self._name = payload.name
         self._updated_at = payload.updated_at
         self._type = payload.type
+        self._payload = payload
         self._children: list[TreeNode] = []
 
     def add_node(self, node: TreeNode) -> None:

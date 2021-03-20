@@ -42,6 +42,7 @@ class API:
 
         self.client = Client(transport=_transport, fetch_schema_from_transport=True)
         self._logger = logging.getLogger("server")
+        self._logger.info("COOKIE DI AUTH: " + self._cookie)
 
     def get_info_from_email(self) -> dict[str, str]:
         """Ritorna l'id e il nome dell'account"""
@@ -75,6 +76,13 @@ class API:
                 })
         self._logger.info(f"File presenti nel server: {len(result)} files")
         return result
+
+    def get_content_from_node(self, node_id: str = "LOCAL_ROOT") -> str:
+        """Restituisce il nome dei file con l'ultima modifica"""
+        query, params = Query.get_all_files(node_id)
+        response = self.client.execute(gql(query), variable_values=params)
+
+        return response
 
     def upload_to_server(self, file_path: str) -> None:
         """Richiede il file_path"""
