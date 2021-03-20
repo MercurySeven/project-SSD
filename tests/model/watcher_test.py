@@ -58,7 +58,17 @@ class WatcherTest(unittest.TestCase):
         self.test_watcher.run(False)
         self.assertEqual(self.test_watcher.is_running, False)
 
-    def test_background(self):
+    def test_background_false(self):
         self.assertEqual(self.test_watcher.background(), False)
 
+    def test_reboot_from_off(self):
+        self.test_watcher.run(False)
+        self.assertEqual(self.test_watcher.is_running, False)
+        self.test_watcher.reboot()
+        self.assertEqual(self.test_watcher.is_running, False)
 
+    def test_reboot_from_on(self):
+        self.test_watcher.run(True)
+        self.assertEqual(self.test_watcher.is_running, True)
+        self.test_watcher.reboot()
+        self.assertEqual(self.test_watcher.is_running, True)
