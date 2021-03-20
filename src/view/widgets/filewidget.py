@@ -61,7 +61,8 @@ class FileWidget(QToolButton):
             self.timer.start(250)
 
     def onDoubleclick(self):
-        sync_path = "" if self.env_settings.value("sync_path") is None else self.env_settings.value("sync_path")
+        sync_path = "" if self.env_settings.value("sync_path") is None else\
+            self.env_settings.value("sync_path")
         path = os.path.join(sync_path, self.name)
         file_path = QUrl.fromUserInput(path)
         QDesktopServices.openUrl(file_path)
