@@ -1,7 +1,6 @@
 # Progetto SSD C7 SWE 2020/2021
 ![CI](https://github.com/MercurySeven/project-SSD/workflows/CI/badge.svg)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=MercurySeven_project-SSD&metric=alert_status)](https://sonarcloud.io/dashboard?id=MercurySeven_project-SSD)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=MercurySeven_project-SSD&metric=coverage)](https://sonarcloud.io/dashboard?id=MercurySeven_project-SSD)
+[![codecov](https://codecov.io/gh/MercurySeven/project-SSD/branch/main/graph/badge.svg?token=QBCCBB1N52)](https://codecov.io/gh/MercurySeven/project-SSD)
 
 ## Composizione del gruppo
 - Daniele Giachetto

@@ -1,8 +1,0 @@
-<!DOCTYPE RCC><RCC version="1.0">
-<qresource>
-    <file>icons/copy.png</file>
-    <file>icons/logo.png</file>
-    <file>icons/reload.png</file>
-    <file>icons/settings.png</file>
-</qresource>
-</RCC>

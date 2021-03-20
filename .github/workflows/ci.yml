@@ -41,9 +41,16 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Test
+    - if: runner.os != 'Linux'
+      name: Test All
       run: |
-        python -m unittest discover -v -p "*_test.py"
+        python -m unittest discover -v -s "./tests/" -p "*_test.py"
+
+    - if: runner.os == 'Linux'
+      name: Unit Test
+      run: |
+        python -m unittest discover -v -s "./tests/model/" -p "*_test.py"
+        python -m unittest discover -v -s "./tests/" -p "settings_test.py"
 
   notify:
     name: Slack Notification

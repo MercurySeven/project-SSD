@@ -4,6 +4,9 @@ import logging
 from typing import Optional
 
 
+file_name = "config.ini"
+
+
 def __read_from_file() -> None:
     """Legge le impostazioni dal file"""
     config.read(file_name)
@@ -22,14 +25,16 @@ def __write_on_file() -> None:
 def create_standard_settings() -> None:
     """Genera il file di impostazioni standard"""
     config["General"] = {
-        "Quota": "1024"
+        "quota": "1024",
+        "policy": "1",
+        "is_sync": "off"
     }
 
-    config["Connection"] = {
-        "address": "http://20.56.176.12",
-        "port": "80"
+    # TODO: Da rimuovere
+    config["Login"] = {
+        "username": "user",
+        "password": "pwd"
     }
-
     __write_on_file()
 
 
@@ -38,8 +43,7 @@ def check_file() -> None:
         logger.info("Carico impostazioni da file: " + file_name)
         __read_from_file()
     else:
-        logger.info(
-            "File di impostazioni non esistente, verrà creato")
+        logger.info("File di impostazioni non esistente, verrà creato")
         create_standard_settings()
 
 
@@ -59,18 +63,6 @@ def get_config(section: str, passed_config: str) -> Optional[str]:
     return config[section][passed_config]
 
 
-def get_server_url() -> str:
-    """Resituisce l'indirizzo del server"""
-    address = get_config("Connection", "address")
-    port = get_config("Connection", "port")
-
-    # Elimino lo slash se presente
-    if address[-1] == "/":
-        address = address[:-1]
-
-    return address + ":" + port + "/"
-
-
 def get_quota_disco() -> int:
     """Restituisce la quota disco"""
     try:
@@ -79,8 +71,33 @@ def get_quota_disco() -> int:
         return result
     except ValueError:
         logger.warning("Il valore di quota disco non è int")
-        update_config("General", "quota", "1024")
+        update_quota_disco("1024")
         return 1024
+
+
+def get_username() -> str:
+    """Non usare questo metodo"""
+    return get_config("Login", "username")
+
+
+def get_password() -> str:
+    """Non usare questo metodo"""
+    return get_config("Login", "password")
+
+
+def get_policy() -> int:
+    "Ritorna la policy salvata"
+    try:
+        return int(get_config("General", "policy"))
+    except ValueError:
+        logger.warning("Il valore di policy non è int")
+        update_policy(1)
+        return 1
+
+
+def get_is_synch() -> bool:
+    "Ritorna lo stato di sincronizzazione"
+    return get_config("General", "is_sync") == "on"
 
 
 def update_config(section: str, passed_config: str, value: str) -> None:
@@ -90,8 +107,7 @@ def update_config(section: str, passed_config: str, value: str) -> None:
 
     config[section][passed_config] = value
     __write_on_file()
-    logger.info("New save: " + section + "/" +
-                passed_config + " with value: " + value)
+    logger.info(f"New save: {section}/{passed_config} with value: {value}")
 
 
 def update_quota_disco(value: str) -> None:
@@ -99,12 +115,16 @@ def update_quota_disco(value: str) -> None:
     update_config("General", "quota", value)
 
 
-# Assoulutamente da sistemare, fatto per evitare di testare
-# direttamente sul file di config personale
-if __name__ == "src.settings":
-    file_name = "tests/config.ini"
-else:
-    file_name = "config.ini"
+def update_policy(policy: int) -> None:
+    """Aggiorna la policy"""
+    update_config("General", "policy", str(policy))
+
+
+def update_is_sync(state: bool) -> None:
+    """Aggiorna lo stato di sincronizzazione"""
+    update_config("General", "is_sync", "on" if state else "off")
+
+
 config = configparser.ConfigParser()
 logger = logging.getLogger("settings")
 if os.path.exists(file_name):
