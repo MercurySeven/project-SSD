@@ -16,7 +16,8 @@ class TreeNode:
             raise ValueError("TreeNode was declared as File, it's not a folder")
 
         self._children.append(node)
-        self._updated_at = max(self._updated_at, node._updated_at)
+        # TODO: Da capire se tenere questa linea
+        # self._updated_at = max(self._updated_at, node._updated_at)
 
     def is_directory(self) -> bool:
         return self._type == Type.Folder
