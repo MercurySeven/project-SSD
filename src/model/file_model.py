@@ -2,7 +2,7 @@ from typing import Tuple
 
 from PySide6.QtCore import (QSettings, Signal, Slot, QObject)
 
-from src.model.directory import Directory
+from src.model.widgets.directory import Directory
 
 
 class FileModel(QObject):

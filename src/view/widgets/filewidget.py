@@ -2,7 +2,7 @@ import os
 from PySide6.QtWidgets import (QToolButton)
 from PySide6.QtGui import (QIcon, QDesktopServices)
 from PySide6.QtCore import (Qt, QSize, QTimer, Signal, QSettings, QUrl)
-from src.model.file import File
+from src.model.widgets.file import File
 
 
 class FileWidget(QToolButton):

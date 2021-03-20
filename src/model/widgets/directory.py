@@ -1,7 +1,7 @@
 
 import os
 
-from .file import File
+from src.model.widgets.file import File
 from datetime import datetime
 
 

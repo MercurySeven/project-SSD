@@ -1,6 +1,6 @@
 import unittest
 
-from src.model.file import File
+from src.model.widgets.file import File
 from src.view.widgets.filewidget import FileWidget
 from unittest.mock import patch
 
