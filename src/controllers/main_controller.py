@@ -13,6 +13,7 @@ from src.model.main_model import MainModel
 from src.model.watcher import Watcher
 from src.network.metadata import MetaData
 from src.view.main_view import MainWindow
+from src.algorithm import build_tree_from_system as btfs
 
 
 class MainController(QObject):
@@ -76,6 +77,16 @@ class MainController(QObject):
         sync = Thread(target=self.background, daemon=True)
         sync.setName("algorithm's thread")
         sync.start()
+
+        # SEZIONE TEST ALGORTIMO V2
+        algo_v2 = Thread(target=self.algoritomo_thread_v2, daemon=True)
+        algo_v2.setName("ALGORITMO V2")
+        algo_v2.start()
+
+    def algoritomo_thread_v2(self):
+        path = self.env_settings.value("sync_path")
+        tree = btfs.get_tree_from_system(path)
+        print(tree)
 
     def background(self):
         while True:
