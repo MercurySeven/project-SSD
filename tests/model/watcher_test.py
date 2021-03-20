@@ -72,3 +72,9 @@ class WatcherTest(unittest.TestCase):
         self.assertEqual(self.test_watcher.is_running, True)
         self.test_watcher.reboot()
         self.assertEqual(self.test_watcher.is_running, True)
+
+    def test_get_status(self):
+        self.test_watcher.run(True)
+        self.assertEqual(self.test_watcher.status(), True)
+        self.test_watcher.run(False)
+        self.assertEqual(self.test_watcher.status(), False)
