@@ -54,6 +54,7 @@ class Watcher:
                 return False
             else:
                 print("attiva thread watchdog")  # debug
+                path = "" if self.path() is None else self.path()
                 print("Controllo cartella: " + self.path())
                 self.is_running = True
                 return self.background()
