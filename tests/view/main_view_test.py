@@ -13,7 +13,7 @@ class MainWindowTest(unittest.TestCase):
         self.main_model = MainModel()
         self.main_window = MainWindow(self.main_model)
         self.main_widget_test = self.main_window.main_widget
-        self.main_widget_double = self.main_window.main_widget
+        self.main_widget_double = MainWidget(self.main_model)
 
     def test_defaults(self):
         self.assertEqual(self.main_widget_test.container_menu.accessibleName(),
