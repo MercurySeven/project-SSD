@@ -1,5 +1,5 @@
 import unittest
-
+import time
 from src.model.widgets.file import File
 from src.view.widgets.filewidget import FileWidget
 from unittest.mock import patch
@@ -47,6 +47,47 @@ class FileWidgetTest(unittest.TestCase):
     def test_quad_click(self, mock_dialog):
         """ Check that with a triple click the function
         gets called"""
+        self.file_view_test.click()
+        self.file_view_test.click()
+        self.file_view_test.click()
+        self.file_view_test.click()
+        self.assertEqual(mock_dialog.call_count, 3)
+
+    @patch("PySide6.QtGui.QDesktopServices.openUrl")
+    def test_click_pause500_click(self, mock_dialog):
+        self.file_view_test.click()
+        time.sleep(0.500)
+        self.file_view_test.click()
+        mock_dialog.assert_not_called()
+
+    @patch("PySide6.QtGui.QDesktopServices.openUrl")
+    def test_click_pause120_click(self, mock_dialog):
+        self.file_view_test.click()
+        time.sleep(0.120)
+        self.file_view_test.click()
+        mock_dialog.assert_called_once()
+
+    @patch("PySide6.QtGui.QDesktopServices.openUrl")
+    def test_click_pause_double_click(self, mock_dialog):
+        self.file_view_test.click()
+        time.sleep(0.500)
+        self.file_view_test.click()
+        self.file_view_test.click()
+        mock_dialog.assert_called_once()
+
+    @patch("PySide6.QtGui.QDesktopServices.openUrl")
+    def test_click_pause_triple_click(self, mock_dialog):
+        self.file_view_test.click()
+        time.sleep(0.500)
+        self.file_view_test.click()
+        self.file_view_test.click()
+        self.file_view_test.click()
+        self.assertEqual(mock_dialog.call_count, 2)
+
+    @patch("PySide6.QtGui.QDesktopServices.openUrl")
+    def test_click_pause_quad_click(self, mock_dialog):
+        self.file_view_test.click()
+        time.sleep(0.500)
         self.file_view_test.click()
         self.file_view_test.click()
         self.file_view_test.click()
