@@ -16,8 +16,7 @@ class SetPolicyView(QWidget):
         self._model = model
 
         self._titolo = QLabel()
-        self._titolo.setText(
-            "Seleziona la politica di gestione dei conflitti")
+        self._titolo.setText("Seleziona la politica di gestione dei conflitti")
         self._titolo.setAccessibleName('Subtitle')
 
         self.client = QRadioButton("Client")

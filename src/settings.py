@@ -43,8 +43,7 @@ def check_file() -> None:
         logger.info("Carico impostazioni da file: " + file_name)
         __read_from_file()
     else:
-        logger.info(
-            "File di impostazioni non esistente, verrà creato")
+        logger.info("File di impostazioni non esistente, verrà creato")
         create_standard_settings()
 
 
@@ -108,8 +107,7 @@ def update_config(section: str, passed_config: str, value: str) -> None:
 
     config[section][passed_config] = value
     __write_on_file()
-    logger.info("New save: " + section + "/" +
-                passed_config + " with value: " + value)
+    logger.info(f"New save: {section}/{passed_config} with value: {value}")
 
 
 def update_quota_disco(value: str) -> None:

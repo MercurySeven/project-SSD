@@ -40,8 +40,7 @@ class API:
             use_json=True
         )
 
-        self.client = Client(transport=_transport,
-                             fetch_schema_from_transport=True)
+        self.client = Client(transport=_transport, fetch_schema_from_transport=True)
         self._logger = logging.getLogger("server")
 
     def get_info_from_email(self) -> dict[str, str]:
@@ -74,8 +73,7 @@ class API:
                     "created_at": files["created_at"] / 1000,
                     "size": files["size"]
                 })
-        self._logger.info(
-            f"File presenti nel server: {len(result)} files")
+        self._logger.info(f"File presenti nel server: {len(result)} files")
         return result
 
     def upload_to_server(self, file_path: str) -> None:
@@ -98,12 +96,10 @@ class API:
             "created-at": created_at
         }
 
-        response = requests.post(
-            self._url_files, headers=headers, files=multipart_form)
+        response = requests.post(self._url_files, headers=headers, files=multipart_form)
 
         if response.status_code == requests.codes.ok:
-            self._logger.info(
-                f"Upload del file {file_name}, completato con successo")
+            self._logger.info(f"Upload del file {file_name}, completato con successo")
         else:
             self._logger.info(f"Upload del file {file_name}, fallito")
         return response.status_code == requests.codes.ok
@@ -124,13 +120,11 @@ class API:
         response = requests.get(url, headers=headers)
 
         if response.status_code == requests.codes.ok:
-            self._logger.info(
-                f"Download del file {file_name}, completato con successo")
+            self._logger.info(f"Download del file {file_name}, completato con successo")
             path = os.path.join(file_path, file_name)
             with open(path, "wb") as fh:
                 fh.write(response.content)
             # Cambiare la data di creazione sembra non funzionare
             os.utime(path, (created_at, updated_at))
         else:
-            self._logger.info(
-                f"Download del file {file_name}, fallito")
+            self._logger.info(f"Download del file {file_name}, fallito")

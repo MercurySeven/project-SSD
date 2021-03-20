@@ -35,8 +35,7 @@ class FileWidget(QToolButton):
         self.status = file.get_status()
 
         self.setText(self.name)
-        self.setToolTip("Ultima modifica: " +
-                        self.last_modified_date + "\nSize: " + self.size)
+        self.setToolTip("Ultima modifica: " + self.last_modified_date + "\nSize: " + self.size)
 
         '''self.contextWindow = QWidget()
         self.contextWindow.nameLabel = QLabel()
