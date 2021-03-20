@@ -1,3 +1,4 @@
+import os
 import unittest
 
 from src import settings
@@ -14,6 +15,10 @@ class MainWindowTest(unittest.TestCase):
         self.main_window = MainWindow(self.main_model)
         self.main_widget_test = self.main_window.main_widget
         self.main_widget_double = MainWidget(self.main_model)
+
+    def tearDown(self) -> None:
+        """Metodo che viene chiamato dopo ogni metodo"""
+        os.remove(settings.file_name)
 
     def test_defaults(self):
         self.assertEqual(self.main_widget_test.container_menu.accessibleName(),
