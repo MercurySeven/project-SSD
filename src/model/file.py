@@ -4,7 +4,7 @@ class File:
                  creation_date: str,
                  last_modified_date: str,
                  file_type: str,
-                 size: int,
+                 size: str,
                  status: str):
         self._name = name
         self._creation_date = creation_date
@@ -49,10 +49,10 @@ class File:
     def set_status(self, status: str) -> None:
         self._status = status
 
-    def _right_size(self, size: int) -> str:
-        if len(size) > 3 and len(size) < 7:
-            return size[:-3]+" KB"
-        if len(size) > 6 and len(size) < 9:
+    def _right_size(self, size: str) -> str:
+        if 3 < len(size) < 7:
+            return size[:-3] + " KB"
+        if 6 < len(size) < 9:
             return size[: -6] + " MB"
         if len(size) > 8:
             return size[: -8] + " GB"
