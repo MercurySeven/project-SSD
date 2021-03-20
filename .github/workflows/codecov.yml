@@ -19,9 +19,9 @@ jobs:
     - uses: actions/cache@v2
       with:
         path: ~/.cache/pip
-        key: linux-pip-${{ hashFiles('**/requirements.txt') }}
+        key: windows-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
-          linux-pip-
+          windows-pip-
 
     - name: Install dependencies
       run: |
