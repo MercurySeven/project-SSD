@@ -36,7 +36,7 @@ def get_tree_from_system(path: str,
     return parent_node
 
 
-def create_node_from_dict(dict: str) -> TreeNode:
+def _create_node_from_dict(dict: str) -> TreeNode:
     """Costruisce un TreeNode a partire dal dict"""
     """
         # Esempio
@@ -55,10 +55,11 @@ def create_node_from_dict(dict: str) -> TreeNode:
     return TreeNode(Node(id, name, type, created_at, updated_at))
 
 
-def _get_tree_from_json(json: str) -> TreeNode:
-    folder = create_node_from_dict(json)
-    for _file in json["children"]:
-        new_node = create_node_from_dict(_file)
+def get_tree_from_node_id(node_id: str = "LOCAL_ROOT") -> TreeNode:
+    json = api.get_content_from_node(node_id)
+    folder = _create_node_from_dict(json["getNode"])
+    for _file in json["getNode"]["children"]:
+        new_node = _create_node_from_dict(_file)
 
         if new_node.is_directory():
             # Fai chiamata web per il nuovo nodo
@@ -68,8 +69,3 @@ def _get_tree_from_json(json: str) -> TreeNode:
             folder.add_node(new_node)
 
     return folder
-
-
-def get_tree_from_node_id(node_id: str = "LOCAL_ROOT") -> TreeNode:
-    json = api.get_content_from_node(node_id)
-    return _get_tree_from_json(json["getNode"])
