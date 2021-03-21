@@ -24,9 +24,8 @@ def get_tree_from_system(path: str,
                          prev_node: TreeNode = None) -> TreeNode:
     """Funzione ricorsiva per costruire l'albero dato un path"""
     parent_node = _build_tree_node(path, root_name)
-    for f in os.listdir(path):
-        abs_path = os.path.join(path, f)
-        name = root_name + "/" + f
+    for name in os.listdir(path):
+        abs_path = os.path.join(path, name)
         if os.path.isdir(abs_path):
             get_tree_from_system(abs_path, name, parent_node)
         else:
