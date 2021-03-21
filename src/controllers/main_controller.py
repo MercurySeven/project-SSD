@@ -14,6 +14,8 @@ from src.model.watcher import Watcher
 from src.network.metadata import MetaData
 from src.view.main_view import MainWindow
 
+from src.view.login_screen import LoginScreen
+
 
 class MainController(QObject):
 
@@ -41,6 +43,10 @@ class MainController(QObject):
                 self.env_settings.setValue("sync_path", sync_path[0])
                 self.env_settings.sync()
                 print("Nuova directory: " + self.env_settings.value("sync_path"))
+
+        login_screen = LoginScreen()
+        login_screen.exec_()
+            
 
         self.model = MainModel()
         self.view = MainWindow(self.model)
