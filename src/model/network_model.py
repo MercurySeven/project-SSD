@@ -45,3 +45,12 @@ class NetworkModel(QObject):
 
     def is_logged(self):
         return api.is_logged()
+
+    def get_credentials(self) -> [str, str]:
+        return [settings.get_username(), settings.get_password()]
+
+    def get_username(self):
+        return settings.get_username() if settings.get_username() is not None else ""
+
+    def get_password(self):
+        return settings.get_password() if settings.get_password() is not None else ""

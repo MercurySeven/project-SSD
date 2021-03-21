@@ -28,6 +28,7 @@ class LoginScreen(QDialog):
         self.loginLabel.setAccessibleName('LoginLabel')
 
         self.userField = QLineEdit(self)
+        self.get_config_username()
 
         self.pswLabel = QLabel(self)
         self.pswLabel.setText('Password')
@@ -35,6 +36,7 @@ class LoginScreen(QDialog):
 
         self.pswField = QLineEdit(self)
         self.pswField.setEchoMode(QLineEdit.Password)
+        self.get_config_password()
 
         # pulsante invio form
 
@@ -60,3 +62,9 @@ class LoginScreen(QDialog):
         is_logged = self.model.is_logged()
         if is_logged:
             self.Sg_login_success.emit()
+
+    def get_config_username(self):
+        self.userField.setText(self.model.get_username())
+
+    def get_config_password(self):
+        self.pswField.setText(self.model.get_password())
