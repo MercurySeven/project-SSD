@@ -6,10 +6,15 @@ from PySide6.QtWidgets import (
 
 from src.view.stylesheets.qssManager import setQss
 
+from src.model.widgets.settings_model import SettingsModel
+
 import re
 
 
 class LoginScreen(QDialog):
+
+    Sg_login_submitted = Signal()
+
     def __init__(self, parent=None):
         super(LoginScreen, self).__init__(parent)
         # gestione modello
@@ -40,6 +45,7 @@ class LoginScreen(QDialog):
 
         self.loginButton = QPushButton(self)
         self.loginButton.setText('Login')
+        self.loginButton.clicked.connect(self.emit_changes)
 
         # gestione layout
 
@@ -55,6 +61,10 @@ class LoginScreen(QDialog):
 
         setQss("style.qss", self)
 
-        #for i in self.findChildren(QWidget, ):
-        #    if re.findall("view", str(i)):
-        #        i.setAttribute(QtCore.Qt.WA_StyledBackground, True)
+    @Slot()
+    def emit_changes(self):
+        self.Sg_login_submitted.emit()
+
+    @Slot()
+    def Sl_model_changed(self):
+        return 0

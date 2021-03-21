@@ -44,9 +44,8 @@ class MainController(QObject):
                 self.env_settings.sync()
                 print("Nuova directory: " + self.env_settings.value("sync_path"))
 
-        login_screen = LoginScreen()
-        login_screen.exec_()
-            
+        self.login_screen = LoginScreen()
+        self.login_screen.show()
 
         self.model = MainModel()
         self.view = MainWindow(self.model)
