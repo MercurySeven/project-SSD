@@ -14,7 +14,6 @@ from src.model.watcher import Watcher
 from src.network.metadata import MetaData
 from src.view.main_view import MainWindow
 from src.algorithm import build_tree_from_system as btfs
-from src import settings
 
 
 class MainController(QObject):
@@ -88,7 +87,8 @@ class MainController(QObject):
         # path = self.env_settings.value("sync_path")
         # tree = btfs.get_tree_from_system(path)
         # print(tree)
-        btfs.get_tree_from_drive(settings.get_username(), settings.get_password())
+        remote_tree = btfs.get_tree_from_node_id()
+        print(remote_tree)
 
     def background(self):
         while True:

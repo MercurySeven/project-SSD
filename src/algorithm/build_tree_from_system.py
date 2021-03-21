@@ -3,6 +3,9 @@ import math
 from .tree_node import TreeNode
 from src.model.network.node import Node, Type
 from src.network.api import API
+from src import settings
+
+api = API(settings.get_username(), settings.get_password())
 
 
 def build_tree_node(path: str, name: str) -> TreeNode:
@@ -53,17 +56,21 @@ def create_node_from_dict(dict: str) -> TreeNode:
     return TreeNode(Node(id, name, type, created_at, updated_at))
 
 
-def get_tree_from_drive_rec(json: str) -> TreeNode:
+def get_tree_from_json(json: str) -> TreeNode:
     folder = create_node_from_dict(json)
     for _file in json["children"]:
         new_node = create_node_from_dict(_file)
-        folder.add_node(new_node)
+
+        if new_node.is_directory():
+            # Fai chiamata web per il nuovo nodo
+            folder_tree_node = get_tree_from_node_id(new_node._payload.id)
+            folder.add_node(folder_tree_node)
+        else:
+            folder.add_node(new_node)
+
     return folder
 
 
-def get_tree_from_drive(email: str, password: str):
-    api = API(email, password)
-    json = api.get_content_from_node()
-    obj = json["getNode"]
-    node = get_tree_from_drive_rec(obj)
-    print(node._children[0]._payload.id)
+def get_tree_from_node_id(node_id: str = "LOCAL_ROOT") -> TreeNode:
+    json = api.get_content_from_node(node_id)
+    return get_tree_from_json(json["getNode"])
