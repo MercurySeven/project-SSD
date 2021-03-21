@@ -71,7 +71,7 @@ class CookieSession:
             # non servirà impostarli ad ogni chiamata
             self.__set_custom_headers()
             return True
-        return False
+        raise ConnectionError("Errore nella connessione con i server Zextras")
 
     def get_auth_token(self) -> str:
         cookies = dict_from_cookiejar(self._session.cookies)

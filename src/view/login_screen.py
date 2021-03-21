@@ -1,26 +1,21 @@
-from PySide6 import QtCore
-from PySide6.QtCore import (Signal, Slot, QSize, Qt)
-from PySide6.QtGui import (QIcon)
-from PySide6.QtWidgets import (
-    QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QLineEdit, QPushButton, QLabel, QDialog)
+from PySide6.QtCore import (Signal, Slot, Qt)
+from PySide6.QtWidgets import (QVBoxLayout, QLineEdit, QPushButton, QLabel, QDialog)
 
+from src.model.network_model import NetworkModel
 from src.view.stylesheets.qssManager import setQss
-
-from src.model.widgets.settings_model import SettingsModel
-
-import re
 
 
 class LoginScreen(QDialog):
 
-    Sg_login_submitted = Signal()
+    Sg_login_success = Signal()
 
-    def __init__(self, parent=None):
+    def __init__(self, model: NetworkModel, parent=None):
         super(LoginScreen, self).__init__(parent)
         # gestione modello
 
         # inizializzazione layout
         self.layout = QVBoxLayout()
+        self.model = model
 
         # label e filed
 
@@ -45,7 +40,6 @@ class LoginScreen(QDialog):
 
         self.loginButton = QPushButton(self)
         self.loginButton.setText('Login')
-        self.loginButton.clicked.connect(self.emit_changes)
 
         # gestione layout
 
@@ -62,9 +56,7 @@ class LoginScreen(QDialog):
         setQss("style.qss", self)
 
     @Slot()
-    def emit_changes(self):
-        self.Sg_login_submitted.emit()
-
-    @Slot()
     def Sl_model_changed(self):
-        return 0
+        is_logged = self.model.is_logged()
+        if is_logged:
+            self.Sg_login_success.emit()

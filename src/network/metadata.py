@@ -1,9 +1,8 @@
 import os
 import math
 import logging
-import src.settings as settings
+from . import api
 from .policy import Policy
-from .api import API
 
 
 class MetaData:
@@ -20,8 +19,6 @@ class MetaData:
         self.directory = path
 
         self._politica: Policy = Policy.Client
-        # TODO: Da sistemare non appena finiamo il refactor
-        self._api = API(settings.get_username(), settings.get_password())
         self._logger = logging.getLogger("metadata")
 
     def set_directory(self, path: str) -> None:
@@ -61,7 +58,7 @@ class MetaData:
         self._update_files_client.clear()
         self._update_file_server.clear()
 
-        file_presenti_nel_server = self._api.get_all_files()
+        file_presenti_nel_server = api.get_all_files()
         file_presenti_nel_client = self.get_data_client()
         # controllo che tutti i file del server siano uguali a quelli del
         # client e la data di ultima modifica
@@ -114,10 +111,10 @@ class MetaData:
         for name, updated_at, id in self._update_files_client:
             """aggiorno il file nel server"""
             file_path = os.path.join(self.directory, name)
-            self._api.upload_to_server(file_path)
+            api.upload_to_server(file_path)
         for name, updated_at, created_at, id in self._update_file_server:
             """aggiorno i file nel client"""
-            self._api.download_from_server(
+            api.download_from_server(
                 self.directory, name, id, created_at, updated_at)
 
     def default_operations(self) -> None:
@@ -126,10 +123,10 @@ class MetaData:
         for name, _ in self._new_files_client:
             """upload i file che non sono presenti nel server"""
             file_path = os.path.join(self.directory, name)
-            self._api.upload_to_server(file_path)
+            api.upload_to_server(file_path)
         for name, updated_at, created_at, id in self._new_files_server:
             """download i file che non sono presenti nel client"""
-            self._api.download_from_server(
+            api.download_from_server(
                 self.directory, name, id, created_at, updated_at)
 
     def change_policy(self, policy: Policy) -> None:
