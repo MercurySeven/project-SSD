@@ -64,6 +64,7 @@ QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] > QLineEdit 
     border-radius: 6px;
     border: 0px;
     padding: 5px;
+    margin:0px;
 }
 
 /* 
@@ -78,6 +79,32 @@ QLabel[accessibleName='Title']{
 QLabel[accessibleName='Subtitle']{
     font-weight: bold;
 }
+
+QLabel[accessibleName='LoginLabel']{
+    background-color: #2A2A2A;
+    margin-left:2px;
+}
+
+QLabel[accessibleName='LoginTitle']{
+    background-color: #2A2A2A;
+    font-size: 30px;
+    margin-bottom: 0px;
+    font-weight: bold;
+}
+
+/*
+Stile QLineEdit di default
+*/
+
+QWidget > QLineEdit {
+    background-color: #4B4B4B;
+    margin:5px;
+    border:0px;
+    border-radius: 6px;
+    color: rgb(190, 190, 190);
+    padding: 5px;
+}
+
 
 /* 
 Stile Pulsanti default

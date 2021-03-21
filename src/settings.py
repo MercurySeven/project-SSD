@@ -3,7 +3,6 @@ import os.path
 import logging
 from typing import Optional
 
-
 file_name = "config.ini"
 
 
@@ -34,6 +33,12 @@ def create_standard_settings() -> None:
     config["Login"] = {
         "username": "user",
         "password": "pwd"
+    }
+
+    config["Zextras"] = {
+        "url_base": "https://mail-eu-south.testarea.zextras.com/",
+        "url_graphql": "zx/drive/graphql/v1/",
+        "url_files": "service/extension/drive/"
     }
     __write_on_file()
 
@@ -123,6 +128,21 @@ def update_policy(policy: int) -> None:
 def update_is_sync(state: bool) -> None:
     """Aggiorna lo stato di sincronizzazione"""
     update_config("General", "is_sync", "on" if state else "off")
+
+
+def update_username(username: str) -> None:
+    """ Aggiorna l'username salvato """
+    update_config("Login", "username", username)
+
+
+def update_password(password: str) -> None:
+    """ Aggiorna la password salvata """
+    update_config("Login", "password", password)
+
+
+def update_login_credentials(username: str, password: str) -> None:
+    update_config("Login", "username", username)
+    update_config("Login", "password", password)
 
 
 config = configparser.ConfigParser()

@@ -41,6 +41,10 @@ class SettingsModel(QObject):
         settings.update_quota_disco(new_quota)
         self.Sg_model_changed.emit()
 
+    def is_logged():
+        if(True):
+            return True
+
     @staticmethod
     def convert_size(size_bytes: int) -> str:
         if size_bytes == 0:

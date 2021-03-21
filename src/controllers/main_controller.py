@@ -14,6 +14,9 @@ from src.model.watcher import Watcher
 from src.network.metadata import MetaData
 from src.view.main_view import MainWindow
 
+from src.view.login_screen import LoginScreen
+from src.model.network_model import NetworkModel
+
 
 class MainController(QObject):
 
@@ -21,6 +24,7 @@ class MainController(QObject):
 
         # initialize settings
         self.env_settings = QSettings()
+        self.app = app
 
         # Controlliamo se l'utente ha già settato il PATH della cartella
         check_path = self.env_settings.value("sync_path")
@@ -42,7 +46,26 @@ class MainController(QObject):
                 self.env_settings.sync()
                 print("Nuova directory: " + self.env_settings.value("sync_path"))
 
+        self.network_model = NetworkModel()
+        self.login_screen = LoginScreen(self.network_model)
+        self.login_screen.show()
         self.model = MainModel()
+
+        # Connetto login vista ai due slot del controller
+        self.login_screen.Sg_login_success.connect(self.Sl_logged_in)
+        self.login_screen.loginButton.clicked.connect(self.Sl_login)
+
+        self.network_model.Sg_model_changed.connect(self.login_screen.Sl_model_changed)
+
+        self.view = None
+        self.sync_controller = None
+        self.file_controller = None
+        self.settings_controller = None
+        self.notification_icon = None
+        self.watcher = None
+        self.algorithm = None
+
+    def create_main_window(self):
         self.view = MainWindow(self.model)
         self.view.show()
 
@@ -54,7 +77,7 @@ class MainController(QObject):
         self.settings_controller = SettingsController(
             self.model.settings_model, self.view.main_widget.settings_view)
 
-        self.notification_icon = NotificationController(app, self.view)
+        self.notification_icon = NotificationController(self.app, self.view)
 
         # Attivo il watchdog nella root definita dall'utente
         self.watcher = Watcher()
@@ -106,3 +129,15 @@ class MainController(QObject):
     @Slot()
     def Sl_switch_to_settings(self):
         self.view.main_widget.chage_current_view_to_settings()
+
+    @Slot()
+    def Sl_login(self):
+        pwd = self.login_screen.pswField.text()
+        user = self.login_screen.userField.text()
+        self.network_model.login(user, pwd)
+
+    @Slot()
+    def Sl_logged_in(self):
+        self.login_screen.hide()
+        self.login_screen.close()
+        self.create_main_window()
