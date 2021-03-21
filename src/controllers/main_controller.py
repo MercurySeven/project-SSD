@@ -13,7 +13,7 @@ from src.model.main_model import MainModel
 from src.model.watcher import Watcher
 from src.network.metadata import MetaData
 from src.view.main_view import MainWindow
-from src.algorithm import tree_builder, tree_comparator
+from src.algorithm import tree_builder, tree_comparator, os_handler
 
 
 class MainController(QObject):
@@ -76,7 +76,7 @@ class MainController(QObject):
 
         sync = Thread(target=self.background, daemon=True)
         sync.setName("algorithm's thread")
-        sync.start()
+        # sync.start() Fermo il vecchio algo
 
         # SEZIONE TEST ALGORTIMO V2
         algo_v2 = Thread(target=self.algoritomo_thread_v2, daemon=True)
@@ -85,16 +85,16 @@ class MainController(QObject):
 
     def algoritomo_thread_v2(self):
         path = self.env_settings.value("sync_path")
-        client_tree = tree_builder.get_tree_from_system(path)
-        remote_tree = tree_builder.get_tree_from_node_id()
-        print("*"*32)
-        print(client_tree)
-        print("*"*32)
-        print(remote_tree)
-        print("*"*32)
-
-        result = tree_comparator.compareFolders(client_tree, remote_tree)
-        print(result)
+        # client_tree = tree_builder.get_tree_from_system(path)
+        # remote_tree = tree_builder.get_tree_from_node_id()
+        # print("*"*32)
+        # print(client_tree)
+        # print("*"*32)
+        # print(remote_tree)
+        # print("*"*32)
+        # result = tree_comparator.compareFolders(client_tree, remote_tree)
+        # print(result)
+        # os_handler.download_folder(remote_tree, path)
 
     def background(self):
         while True:

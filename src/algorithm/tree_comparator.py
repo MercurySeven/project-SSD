@@ -1,4 +1,15 @@
 from .tree_node import TreeNode
+from enum import Enum
+
+
+class Actions(Enum):
+    CLIENT_NEW_FILE = 1  # Caricare un nuovo file presente nel client
+    SERVER_NEW_FILE = 2  # Scaricare un nuovo file presente nel server
+    CLIENT_UPDATE_FILE = 3  # Il client ha una nuova versione di file da caricare nel server
+    SERVER_UPDATE_FILE = 4  # Il server ha una nuova versione di file da scaricare nel client
+
+    CLIENT_NEW_FOLDER = 5  # Caricare una nuova cartella presente nel client
+    SERVER_NEW_FOLDER = 6  # Scaricare una nuova cartella presente nel server
 
 
 def get_only_files(children: list[TreeNode]) -> list[TreeNode]:
@@ -18,21 +29,24 @@ def compareFiles(client: list[TreeNode], server: list[TreeNode]) -> list:
             if cl_file._name == sr_file._name:
                 if cl_file._updated_at > sr_file._updated_at:
                     update_files.append({
-                        "name": cl_file._name,
-                        "action": "client aggiornato"
+                        "name": cl_file._name,  # TODO: Probabilemente non ci serve il nome
+                        "node": cl_file,
+                        "action": Actions.CLIENT_UPDATE_FILE
                     })
                 elif sr_file._updated_at > cl_file._updated_at:
                     update_files.append({
-                        "name": cl_file._name,
-                        "action": "server aggiornato"
+                        "name": cl_file._name,  # TODO: Probabilemente non ci serve il nome
+                        "node": sr_file,
+                        "action": Actions.SERVER_UPDATE_FILE
                     })
                 trovato = True
                 break
         if not trovato:
             # Il client ha un file che nel server non c'è
             update_files.append({
-                "name": cl_file._name,
-                "action": "client upload"
+                "name": cl_file._name,  # TODO: Probabilemente non ci serve il nome
+                "node": cl_file,
+                "action": Actions.CLIENT_NEW_FILE
             })
 
     for sr_file in server:
@@ -43,8 +57,9 @@ def compareFiles(client: list[TreeNode], server: list[TreeNode]) -> list:
         if not trovato:
             # Il server ha un file che nel client non c'è
             update_files.append({
-                "name": sr_file._name,
-                "action": "server download"
+                "name": sr_file._name,  # TODO: Probabilemente non ci serve il nome
+                "node": sr_file,
+                "action": Actions.SERVER_NEW_FILE
             })
 
     return update_files
@@ -70,8 +85,9 @@ def compareFolders(client: TreeNode, server: TreeNode) -> list:
         if not trovato:
             # Il client ha un cartella che nel server non c'è
             update_files.append({
-                "name": cl_folder._name,
-                "action": "client folder upload"
+                "name": cl_folder._name,  # TODO: Probabilemente non ci serve il nome
+                "node": cl_folder,
+                "action": Actions.CLIENT_NEW_FOLDER
             })
 
     for sr_folder in server_folders:
@@ -82,7 +98,8 @@ def compareFolders(client: TreeNode, server: TreeNode) -> list:
         if not trovato:
             # Il server ha una cartella che nel client non c'è
             update_files.append({
-                "name": sr_folder._name,
-                "action": "server folder download"
+                "name": sr_folder._name,  # TODO: Probabilemente non ci serve il nome
+                "node": sr_folder,
+                "action": Actions.SERVER_NEW_FOLDER
             })
     return update_files

@@ -4,6 +4,7 @@ import requests
 import math
 from .query_model import Query
 from .cookie_session import CookieSession
+from src.algorithm.tree_node import TreeNode
 from gql import gql, Client
 from gql.transport.requests import RequestsHTTPTransport
 from PySide6.QtCore import (QSettings)
@@ -78,7 +79,6 @@ class API:
         return result
 
     def get_content_from_node(self, node_id: str = "LOCAL_ROOT") -> str:
-        """Restituisce il nome dei file con l'ultima modifica"""
         query, params = Query.get_all_files(node_id)
         response = self.client.execute(gql(query), variable_values=params)
 
@@ -136,3 +136,24 @@ class API:
             os.utime(path, (created_at, updated_at))
         else:
             self._logger.info(f"Download del file {file_name}, fallito")
+
+    def download_node_from_server(self,
+                                  node: TreeNode,
+                                  path: str) -> None:
+        """ Il TreeNode viene scaricato e salvato nel path"""
+        headers = {
+            "cookie": self._cookie
+        }
+        payload = node._payload
+        url = f"{self._url_files}{self.get_user_id()}/{payload.id}"
+        response = requests.get(url, headers=headers)
+
+        if response.status_code == requests.codes.ok:
+            self._logger.info(f"Download del file {payload.name}, completato con successo")
+            path = os.path.join(path, payload.name)
+            with open(path, "wb") as fh:
+                fh.write(response.content)
+            # Cambiare la data di creazione sembra non funzionare
+            os.utime(path, (payload.created_at, payload.updated_at))
+        else:
+            self._logger.info(f"Download del file {payload.name}, fallito")
