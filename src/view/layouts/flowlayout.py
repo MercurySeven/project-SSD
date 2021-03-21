@@ -23,13 +23,13 @@ class FlowLayout(QLayout):
         return len(self._item_list)
 
     def itemAt(self, index):
-        if index >= 0 and index < len(self._item_list):
+        if 0 <= index < len(self._item_list):
             return self._item_list[index]
 
         return None
 
     def takeAt(self, index):
-        if index >= 0 and index < len(self._item_list):
+        if 0 <= index < len(self._item_list):
             return self._item_list.pop(index)
 
         return None

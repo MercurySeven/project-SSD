@@ -1,3 +1,5 @@
+import os
+
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
 from PySide6.QtCore import (QSettings)
@@ -43,7 +45,6 @@ class Watcher:
             else:
                 self.observer.unschedule_all()
                 self.observer.stop()
-                self.observer.join()
                 print("disattiva watchdog thread")  # debug
                 self.is_running = False
                 return True
@@ -53,10 +54,10 @@ class Watcher:
                 return False
             else:
                 print("attiva thread watchdog")  # debug
-                print("Controllo cartella: " + self.path())
+                path = "" if self.path() is None else self.path()
+                print("Controllo cartella: " + path)
                 self.is_running = True
-                self.background()
-                return True
+                return self.background()
 
     def background(self):
         """
@@ -69,8 +70,12 @@ class Watcher:
         # thread
         self.observer = Observer()
         self.observer.setName("watchdog's thread")
-        self.observer.schedule(event_handler, self.path(), recursive=True)
-        self.observer.start()
+        if self.path() is not None and os.path.isdir(self.path()):
+            self.observer.schedule(event_handler, self.path(), recursive=True)
+            self.observer.start()
+            return True
+        else:
+            return False
 
     def reboot(self):
         """
