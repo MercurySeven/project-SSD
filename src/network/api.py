@@ -44,8 +44,18 @@ def login(_email: str, _pwd: str):
     client = Client(transport=_transport, fetch_schema_from_transport=True)
 
 
+def logout() -> bool:
+    global cookie
+    global client
+    global session
+    cookie = None
+    client = None
+    session = None
+    return True
+
+
 def is_logged():
-    return session if session is not None else False
+    return session.is_logged() if session is not None else False
 
 
 def set_username_and_pwd(_email: str, _pwd: str) -> None:

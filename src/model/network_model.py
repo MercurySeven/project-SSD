@@ -57,3 +57,9 @@ class NetworkModel(QObject):
 
     def get_password(self) -> str:
         return settings.get_password() if settings.get_password() is not None else ""
+
+    def logout(self) -> bool:
+        if api.logout():
+            self.message = ""
+            return True
+        return False

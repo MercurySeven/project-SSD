@@ -14,11 +14,12 @@ class CookieSession:
         self._password = password
         self._web_ui = "https://mail-eu-south.testarea.zextras.com/"
         self._session = Session()
-        self._login()
+        self.logged = False
+        self.logged = self._login()
 
     def is_logged(self) -> bool:
         cookies = dict_from_cookiejar(self._session.cookies)
-        return True if "ZM_AUTH_TOKEN" in cookies.keys() else False
+        return True if self.logged is True or "ZM_AUTH_TOKEN" in cookies.keys() else False
 
     def __csrf(self) -> str:
         # questa chiamata setta i cookie di sessione che conterranno il codice
