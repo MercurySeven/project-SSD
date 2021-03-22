@@ -17,7 +17,7 @@ class LoginScreen(QDialog):
         self.layout = QVBoxLayout()
         self.model = model
 
-        # label e filed
+        # label e field
 
         self.loginTitle = QLabel(self)
         self.loginTitle.setText("Effettua l'accesso")
