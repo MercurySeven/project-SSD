@@ -17,7 +17,7 @@ class Direcory_Widget(QToolButton):
         self.timer.setSingleShot(True)
         self.clicked.connect(self.check_double_click)
 
-        self.doubleClicked.connect(self.on_double_click)
+        self.Sg_double_clicked.connect(self.on_double_click)
 
         self.setAccessibleName('Directory')
 
