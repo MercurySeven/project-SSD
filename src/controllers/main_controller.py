@@ -1,21 +1,20 @@
+from os import path
 from threading import Thread
 from time import sleep
-from os import path
 
 from PySide6.QtCore import (QObject, Slot, QSettings)
 from PySide6.QtWidgets import (QApplication, QFileDialog)
 
+from src.model.main_model import MainModel
+from src.model.network_model import NetworkModel
+from src.model.watcher import Watcher
+from src.network.metadata import MetaData
+from src.view.login_screen import LoginScreen
+from src.view.main_view import MainWindow
 from .file_controller import FileController
 from .notification_controller import NotificationController
 from .settings_controller import SettingsController
 from .widgets.sync_controller import SyncController
-from src.model.main_model import MainModel
-from src.model.watcher import Watcher
-from src.network.metadata import MetaData
-from src.view.main_view import MainWindow
-
-from src.view.login_screen import LoginScreen
-from src.model.network_model import NetworkModel
 
 
 class MainController(QObject):
@@ -48,9 +47,8 @@ class MainController(QObject):
 
         self.network_model = NetworkModel()
         self.login_screen = LoginScreen(self.network_model)
-        self.login_screen.show()
+        # self.login_screen.show()
         self.model = MainModel()
-
         # Connetto login vista ai due slot del controller
         self.login_screen.Sg_login_success.connect(self.Sl_logged_in)
         self.login_screen.loginButton.clicked.connect(self.Sl_login)
@@ -64,6 +62,7 @@ class MainController(QObject):
         self.notification_icon = None
         self.watcher = None
         self.algorithm = None
+        self.create_main_window()
 
     def create_main_window(self):
         self.view = MainWindow(self.model)
