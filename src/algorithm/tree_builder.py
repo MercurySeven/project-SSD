@@ -16,7 +16,7 @@ def _build_tree_node(path: str, name: str) -> TreeNode:
     created_at = math.trunc(os.stat(path).st_ctime)
     updated_at = math.trunc(os.stat(path).st_mtime)
 
-    return TreeNode(Node(id, name, type, created_at, updated_at))
+    return TreeNode(Node(id, name, type, created_at, updated_at, path))
 
 
 def get_tree_from_system(path: str,

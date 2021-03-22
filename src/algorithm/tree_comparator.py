@@ -87,6 +87,7 @@ def compareFolders(client: TreeNode, server: TreeNode) -> list:
             update_files.append({
                 "name": cl_folder.get_name(),  # TODO: Probabilemente non ci serve il nome
                 "node": cl_folder,
+                "id": server._payload.id,
                 "action": Actions.CLIENT_NEW_FOLDER
             })
 
@@ -100,6 +101,7 @@ def compareFolders(client: TreeNode, server: TreeNode) -> list:
             update_files.append({
                 "name": sr_folder.get_name(),  # TODO: Probabilemente non ci serve il nome
                 "node": sr_folder,
+                "path": client._payload.path,
                 "action": Actions.SERVER_NEW_FOLDER
             })
     return update_files

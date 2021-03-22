@@ -14,6 +14,7 @@ from src.model.watcher import Watcher
 from src.network.metadata import MetaData
 from src.view.main_view import MainWindow
 from src.algorithm import tree_builder, tree_comparator, os_handler
+from src.algorithm.tree_comparator import Actions
 
 
 class MainController(QObject):
@@ -85,16 +86,25 @@ class MainController(QObject):
 
     def algoritomo_thread_v2(self):
         path = self.env_settings.value("sync_path")
-        # client_tree = tree_builder.get_tree_from_system(path)
-        # remote_tree = tree_builder.get_tree_from_node_id()
+        client_tree = tree_builder.get_tree_from_system(path)
+        remote_tree = tree_builder.get_tree_from_node_id()
+        print("*"*32)
+        print(client_tree)
+        print("*"*32)
+        print(remote_tree)
+
+        # print(remote_tree._children[3]._children[0]._parent._parent.get_name())
         # print("*"*32)
-        # print(client_tree)
-        # print("*"*32)
-        # print(remote_tree)
-        # print("*"*32)
-        # result = tree_comparator.compareFolders(client_tree, remote_tree)
-        # print(result)
+        result = tree_comparator.compareFolders(client_tree, remote_tree)
+        for r in result:
+            if r["action"] == Actions.CLIENT_NEW_FOLDER:
+                print(r["node"])
+                node = r["node"]
+                id_parent = r["id"]
+                os_handler.upload_folder(node, id_parent)
+        print(result)
         # os_handler.download_folder(remote_tree, path)
+        # os_handler.upload_folder(client_tree)
 
     def background(self):
         while True:

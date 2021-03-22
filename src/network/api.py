@@ -159,3 +159,31 @@ class API:
             os.utime(path, (payload.created_at, payload.updated_at))
         else:
             self._logger.info(f"Download del file {payload.name}, fallito")
+
+    def upload_node_to_server(self, node: TreeNode, parent_id: str = "LOCAL_ROOT") -> None:
+        """Carica un nodo, all'interno del parent passato"""
+        headers = {
+            "cookie": self._cookie
+        }
+
+        name = node.get_name()
+        content = open(node._payload.path, "rb")
+        updated_at = node.get_updated_at()
+        created_at = node._payload.created_at
+
+        multipart_form = {
+            "command": "upload",
+            "name": name,
+            "content": content,
+            "parent": self.get_user_id() + "/" + parent_id,
+            "updated-at": updated_at,
+            "created-at": created_at
+        }
+
+        response = requests.post(self._url_files, headers=headers, files=multipart_form)
+
+        if response.status_code == requests.codes.ok:
+            self._logger.info(f"Upload del file {name}, completato con successo")
+        else:
+            self._logger.info(f"Upload del file {name}, fallito")
+        return response.status_code == requests.codes.ok
