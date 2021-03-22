@@ -43,14 +43,17 @@ class NetworkModel(QObject):
                              ) -> None:
         api.download_from_server(file_path, file_name, file_id, created_at, updated_at)
 
-    def is_logged(self):
+    def is_logged(self) -> bool:
         return api.is_logged()
+
+    def get_message(self) -> str:
+        return self.message
 
     def get_credentials(self) -> [str, str]:
         return [settings.get_username(), settings.get_password()]
 
-    def get_username(self):
+    def get_username(self) -> str:
         return settings.get_username() if settings.get_username() is not None else ""
 
-    def get_password(self):
+    def get_password(self) -> str:
         return settings.get_password() if settings.get_password() is not None else ""

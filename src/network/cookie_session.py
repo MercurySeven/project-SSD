@@ -14,7 +14,7 @@ class CookieSession:
         self._password = password
         self._web_ui = "https://mail-eu-south.testarea.zextras.com/"
         self._session = Session()
-        self.__login()
+        self._login()
 
     def is_logged(self) -> bool:
         cookies = dict_from_cookiejar(self._session.cookies)
@@ -42,7 +42,7 @@ class CookieSession:
         }
         self._session.headers.update(headers)
 
-    def __login(self) -> bool:
+    def _login(self) -> bool:
         if self.is_logged():
             return True
 
