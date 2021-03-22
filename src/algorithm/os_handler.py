@@ -17,8 +17,7 @@ def download_folder(node: TreeNode, path: str) -> None:
 
 
 def upload_folder(node: TreeNode, parent_folder_id: str = "LOCAL_ROOT") -> None:
-    if parent_folder_id != "LOCAL_ROOT":
-        parent_folder_id = api.create_folder(node.get_name(), parent_folder_id)
+    parent_folder_id = api.create_folder(node.get_name(), parent_folder_id)
 
     for _node in node._children:
         if not _node.is_directory():
