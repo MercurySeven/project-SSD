@@ -11,7 +11,7 @@ def download_folder(node: TreeNode, path: str) -> None:
         if not _node.is_directory():
             api.download_node_from_server(_node, path)
         else:
-            path_folder = os.path.join(path, _node._name)
+            path_folder = os.path.join(path, _node.get_name())
             os.mkdir(path_folder)
             created_at = _node._payload.created_at
             updated_at = _node._payload.updated_at

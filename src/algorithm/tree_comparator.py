@@ -26,16 +26,16 @@ def compareFiles(client: list[TreeNode], server: list[TreeNode]) -> list:
     for cl_file in client:
         trovato = False
         for sr_file in server:
-            if cl_file._name == sr_file._name:
-                if cl_file._updated_at > sr_file._updated_at:
+            if cl_file.get_name() == sr_file.get_name():
+                if cl_file.get_updated_at() > sr_file.get_updated_at():
                     update_files.append({
-                        "name": cl_file._name,  # TODO: Probabilemente non ci serve il nome
+                        "name": cl_file.get_name(),  # TODO: Probabilemente non ci serve il nome
                         "node": cl_file,
                         "action": Actions.CLIENT_UPDATE_FILE
                     })
-                elif sr_file._updated_at > cl_file._updated_at:
+                elif sr_file.get_updated_at() > cl_file.get_updated_at():
                     update_files.append({
-                        "name": cl_file._name,  # TODO: Probabilemente non ci serve il nome
+                        "name": cl_file.get_name(),  # TODO: Probabilemente non ci serve il nome
                         "node": sr_file,
                         "action": Actions.SERVER_UPDATE_FILE
                     })
@@ -44,7 +44,7 @@ def compareFiles(client: list[TreeNode], server: list[TreeNode]) -> list:
         if not trovato:
             # Il client ha un file che nel server non c'è
             update_files.append({
-                "name": cl_file._name,  # TODO: Probabilemente non ci serve il nome
+                "name": cl_file.get_name(),  # TODO: Probabilemente non ci serve il nome
                 "node": cl_file,
                 "action": Actions.CLIENT_NEW_FILE
             })
@@ -52,12 +52,12 @@ def compareFiles(client: list[TreeNode], server: list[TreeNode]) -> list:
     for sr_file in server:
         trovato = False
         for cl_file in client:
-            if sr_file._name == cl_file._name:
+            if sr_file.get_name() == cl_file.get_name():
                 trovato = True
         if not trovato:
             # Il server ha un file che nel client non c'è
             update_files.append({
-                "name": sr_file._name,  # TODO: Probabilemente non ci serve il nome
+                "name": sr_file.get_name(),  # TODO: Probabilemente non ci serve il nome
                 "node": sr_file,
                 "action": Actions.SERVER_NEW_FILE
             })
@@ -79,13 +79,13 @@ def compareFolders(client: TreeNode, server: TreeNode) -> list:
     for cl_folder in client_folders:
         trovato = False
         for sr_folder in server_folders:
-            if cl_folder._name == sr_folder._name:
+            if cl_folder.get_name() == sr_folder.get_name():
                 trovato = True
                 update_files.extend(compareFolders(cl_folder, sr_folder))
         if not trovato:
             # Il client ha un cartella che nel server non c'è
             update_files.append({
-                "name": cl_folder._name,  # TODO: Probabilemente non ci serve il nome
+                "name": cl_folder.get_name(),  # TODO: Probabilemente non ci serve il nome
                 "node": cl_folder,
                 "action": Actions.CLIENT_NEW_FOLDER
             })
@@ -93,12 +93,12 @@ def compareFolders(client: TreeNode, server: TreeNode) -> list:
     for sr_folder in server_folders:
         trovato = False
         for cl_folder in client_folders:
-            if sr_folder._name == cl_folder._name:
+            if sr_folder.get_name() == cl_folder.get_name():
                 trovato = True
         if not trovato:
             # Il server ha una cartella che nel client non c'è
             update_files.append({
-                "name": sr_folder._name,  # TODO: Probabilemente non ci serve il nome
+                "name": sr_folder.get_name(),  # TODO: Probabilemente non ci serve il nome
                 "node": sr_folder,
                 "action": Actions.SERVER_NEW_FOLDER
             })
