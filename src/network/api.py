@@ -58,7 +58,7 @@ class API:
         return self._user_id
 
     def get_all_files(self, node_id: str = "LOCAL_ROOT") -> list:
-        """Restituisce il nome dei file con l'ultima modifica"""
+        """ELIMINA"""
         query, params = Query.get_all_files(node_id)
         response = self.client.execute(gql(query), variable_values=params)
         result: list = []
@@ -80,9 +80,13 @@ class API:
 
     def get_content_from_node(self, node_id: str = "LOCAL_ROOT") -> str:
         query, params = Query.get_all_files(node_id)
-        response = self.client.execute(gql(query), variable_values=params)
+        return self.client.execute(gql(query), variable_values=params)
 
-        return response
+    def create_folder(self, folder_name: str, parent_folder_id: str = "LOCAL_ROOT") -> str:
+        """Ritorna l'id della cartella appena creata"""
+        query, params = Query.create_folder(parent_folder_id, folder_name)
+        response = self.client.execute(gql(query), variable_values=params)
+        return response["createFolder"]["id"]
 
     def upload_to_server(self, file_path: str) -> None:
         """Richiede il file_path"""
@@ -118,9 +122,7 @@ class API:
                              file_id: str,
                              created_at: int,
                              updated_at: int) -> None:
-        """ Scarica il file dal server e lo salva nel path,
-            filename con l'estensione e path
-        """
+        """ ELIMINA"""
         headers = {
             "cookie": self._cookie
         }

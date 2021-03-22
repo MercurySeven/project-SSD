@@ -9,11 +9,15 @@ class TreeNode:
         self._payload = payload
         self._children: list[TreeNode] = []
 
+        self._parent: TreeNode = None
+
     def add_node(self, node: TreeNode) -> None:
         if not self.is_directory():
             raise ValueError("TreeNode was declared as File, it's not a folder")
 
+        node._parent = self
         self._children.append(node)
+
         # TODO: Da capire se tenere questa linea
         # self.get_updated_at() = max(self.get_updated_at(), node.get_updated_at())
 
