@@ -20,26 +20,23 @@ class Directory:
     def update_list_of_content(self) -> None:
         if not self.path or not os.path.isdir(self.path):
             return
-        restore_path = os.getcwd()
         with os.scandir(self.path) as dir_entries:
-            os.chdir(self.path)  # punto critico dell'app!
             for entry in dir_entries:
-                created_at = os.stat(entry.name).st_ctime
-                updated_at = os.stat(entry.name).st_mtime
-                if os.path.isfile(entry.name):
+                entry_path = os.path.join(self.path, entry.name)
+                created_at = os.stat(entry_path).st_ctime
+                updated_at = os.stat(entry_path).st_mtime
+                if os.path.isfile(entry_path):
                     file = File(entry.name,
                                 self.__convert_to_date(created_at),
                                 self.__convert_to_date(updated_at),
                                 self.define_type(entry.name),
-                                str(os.stat(entry.name).st_size),
+                                str(os.stat(entry_path).st_size),
                                 "stato file")
                     self.files.update({file.get_name(): file})
                 else:
-                    path = os.path.join(str(os.path), entry.name)
                     self.dirs.update({
-                        str(entry.name): Directory(entry.name, path)
+                        str(entry.name): Directory(entry.name, entry_path)
                     })
-        os.chdir(restore_path)
 
     def __convert_to_date(self, date: float) -> str:
         return datetime.fromtimestamp(date).strftime("%Y-%m-%d %H:%M:%S")
