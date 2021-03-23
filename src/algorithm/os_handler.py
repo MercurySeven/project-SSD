@@ -23,6 +23,4 @@ def upload_folder(node: TreeNode, parent_folder_id: str = "LOCAL_ROOT") -> None:
         if not _node.is_directory():
             api.upload_node_to_server(_node, parent_folder_id)
         else:
-            # Crea cartella da network, poi con l'id chiamo ricorsione
-            folder_id = api.create_folder(_node.get_name(), parent_folder_id)
-            upload_folder(_node, folder_id)
+            upload_folder(_node, parent_folder_id)
