@@ -1,10 +1,11 @@
 from PySide6.QtCore import (QSettings, QUrl, Slot, Qt)
 from PySide6.QtGui import (QDesktopServices)
 from PySide6.QtWidgets import (QVBoxLayout, QHBoxLayout, QWidget, QScrollArea, QPushButton, QLabel)
-from src.view.layouts.flowlayout import FlowLayout
-from src.view.widgets.filewidget import FileWidget
+
 from src.model.file_model import FileModel
+from src.view.layouts.flowlayout import FlowLayout
 from src.view.widgets.directory_widget import Direcory_Widget
+from src.view.widgets.filewidget import FileWidget
 
 
 class FileView(QWidget):
@@ -79,3 +80,7 @@ class FileView(QWidget):
         """metodo chiamato dal notify del modello quando questo si aggiorna"""
         list_of_files, list_of_dirs = self._model.get_data()
         self.update_content(list_of_files, list_of_dirs)
+
+    @Slot()
+    def Sl_W_event(self):
+        pass

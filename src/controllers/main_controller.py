@@ -87,6 +87,9 @@ class MainController(QObject):
         # Ripristino il riavvio di watchdog, quando cambio path
         self.model.settings_model.Sg_model_changed.connect(self.Sl_path_updated)
 
+        # connect segnali watchdog
+        self.watcher.signal_event.connect(self.view.main_widget.files_widget.Sl_W_event)
+
         # Connect per cambiare le viste
         self.view.main_widget.Sg_switch_to_files.connect(self.Sl_switch_to_files)
         self.view.main_widget.Sg_switch_to_settings.connect(self.Sl_switch_to_settings)
