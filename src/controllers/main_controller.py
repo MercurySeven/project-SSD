@@ -6,7 +6,6 @@ from PySide6.QtCore import (QObject, Slot, QSettings)
 from PySide6.QtWidgets import (QApplication, QFileDialog)
 
 from src.model.main_model import MainModel
-from src.model.network_model import NetworkModel
 from src.model.watcher import Watcher
 from src.network.metadata import MetaData
 from src.view.login_screen import LoginScreen
@@ -45,15 +44,15 @@ class MainController(QObject):
                 self.env_settings.sync()
                 print("Nuova directory: " + self.env_settings.value("sync_path"))
 
-        self.network_model = NetworkModel()
-        self.login_screen = LoginScreen(self.network_model)
-        # self.login_screen.show()
         self.model = MainModel()
+        self.login_screen = LoginScreen(self.model.network_model)
+        # self.login_screen.show()
+
         # Connetto login vista ai due slot del controller
         self.login_screen.Sg_login_success.connect(self.Sl_logged_in)
         self.login_screen.loginButton.clicked.connect(self.Sl_login)
 
-        self.network_model.Sg_model_changed.connect(self.login_screen.Sl_model_changed)
+        self.model.network_model.Sg_model_changed.connect(self.login_screen.Sl_model_changed)
 
         self.view = None
         self.sync_controller = None
@@ -133,7 +132,7 @@ class MainController(QObject):
     def Sl_login(self):
         pwd = self.login_screen.pswField.text()
         user = self.login_screen.userField.text()
-        self.network_model.login(user, pwd)
+        self.model.network_model.login(user, pwd)
 
     @Slot()
     def Sl_logged_in(self):
