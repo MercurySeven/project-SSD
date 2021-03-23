@@ -35,12 +35,14 @@ def compareFiles(client: TreeNode, server: TreeNode) -> list:
                     update_files.append({
                         "name": cl_file.get_name(),  # TODO: Probabilemente non ci serve il nome
                         "node": cl_file,
+                        "id": server._payload.id,
                         "action": Actions.CLIENT_UPDATE_FILE
                     })
                 elif sr_file.get_updated_at() > cl_file.get_updated_at():
                     update_files.append({
                         "name": cl_file.get_name(),  # TODO: Probabilemente non ci serve il nome
                         "node": sr_file,
+                        "path": client._payload.path,
                         "action": Actions.SERVER_UPDATE_FILE
                     })
                 trovato = True

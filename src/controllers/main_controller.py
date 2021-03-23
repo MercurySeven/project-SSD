@@ -106,10 +106,16 @@ class MainController(QObject):
             elif action == Actions.CLIENT_NEW_FILE:
                 path = r["id"]
                 os_handler.upload_file(node, path)
+            elif action == Actions.CLIENT_UPDATE_FILE:
+                path = r["id"]
+                os_handler.upload_file(node, path)
             elif action == Actions.SERVER_NEW_FOLDER:
                 path = r["path"]
                 os_handler.download_folder(node, path)
             elif action == Actions.SERVER_NEW_FILE:
+                path = r["path"]
+                os_handler.download_file(node, path)
+            elif action == Actions.SERVER_UPDATE_FILE:
                 path = r["path"]
                 os_handler.download_file(node, path)
 
