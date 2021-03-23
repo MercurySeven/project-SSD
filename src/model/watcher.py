@@ -1,70 +1,9 @@
 import logging
 import os
 
-from PySide6.QtCore import (QSettings, QObject, Signal, Slot)
+from PySide6.QtCore import (QSettings, QObject, Signal)
 from watchdog.events import PatternMatchingEventHandler
 from watchdog.observers import Observer
-
-
-class MyHandler(PatternMatchingEventHandler, QObject):
-    Sg_event = Signal()
-    """
-    Class used to handle all the events caught by the observer
-    """
-
-    def __init__(self):
-        """
-        This constructor is used to setup which file needs to be ignored when
-        caught by the observer
-        """
-        super(
-            MyHandler,
-            self).__init__(
-            ignore_patterns=[
-                "*/log.mer",
-                "*/config.ini"])
-
-        # Debug < Info < Warning < Error so setting debug will get everything
-        # I need to create a new logger cuz davide's logger is root log
-        self.logger = logging.getLogger("watchdog")
-
-        self.logger.setLevel(logging.INFO)
-
-        formatter = logging.Formatter(
-            '%(asctime)s:%(levelname)s:%(pathname)s:%(process)d:%(message)s')
-
-        file_handler = logging.FileHandler('log.mer')
-
-        file_handler.setFormatter(formatter)
-
-        self.logger.addHandler(file_handler)
-
-    """def on_modified(self, event):
-        super(MyHandler, self).on_modified(event)
-        what = 'Directory' if event.is_directory else 'File'  # for future use
-        self.logger.info(f"{what}, modified, {event.src_path}")"""
-
-    def on_created(self, event):
-        super(MyHandler, self).on_created(event)
-        what = 'Directory' if event.is_directory else 'File'  # for future use
-        self.logger.info(f"{what}, created, {event.src_path}")
-        self.signal_watchdog()
-
-    def on_deleted(self, event):
-        super(MyHandler, self).on_deleted(event)
-        what = 'Directory' if event.is_directory else 'File'  # for future use
-        self.logger.info(f"{what}, deleted, {event.src_path}")
-        self.signal_watchdog()
-
-    def on_moved(self, event):
-        super(MyHandler, self).on_moved(event)
-        what = 'Directory' if event.is_directory else 'File'
-        self.logger.info(
-            f"{what}, moved, from: {event.src_path}, to: {event.dest_path}")
-        self.signal_watchdog()
-
-    def signal_watchdog(self):
-        self.Sg_event.emit()
 
 
 class Watcher(QObject):
@@ -91,8 +30,7 @@ class Watcher(QObject):
         self.path = lambda: env_settings.value("sync_path")
         self.is_running: bool = False
 
-        self.handler = MyHandler()
-        self.handler.Sg_event.connect(self.Sl_Watchdog_event)
+        self.handler = MyHandler(self)
 
     def run(self, watch):
         """
@@ -131,7 +69,7 @@ class Watcher(QObject):
 
         :return: Nothing
         """
-        event_handler = MyHandler()
+        event_handler = MyHandler(self)
         # Lo richiamo ogni volta perchè non posso far ripartire lo stesso
         # thread
         self.observer = Observer()
@@ -157,6 +95,66 @@ class Watcher(QObject):
     def status(self) -> bool:
         return self.is_running
 
-    @Slot()
-    def Sl_Watchdog_event(self):
-        self.signal_event.emit()
+
+class MyHandler(PatternMatchingEventHandler, QObject):
+    Sg_event = Signal()
+    """
+    Class used to handle all the events caught by the observer
+    """
+
+    def __init__(self, watchdog: Watcher):
+        """
+        This constructor is used to setup which file needs to be ignored when
+        caught by the observer
+        """
+        super(
+            MyHandler,
+            self).__init__(
+            ignore_patterns=[
+                "*/log.mer",
+                "*/config.ini"])
+
+        # Debug < Info < Warning < Error so setting debug will get everything
+        # I need to create a new logger cuz davide's logger is root log
+        self.logger = logging.getLogger("watchdog")
+
+        self.logger.setLevel(logging.INFO)
+
+        self.watchdog = watchdog
+
+        formatter = logging.Formatter(
+            '%(asctime)s:%(levelname)s:%(pathname)s:%(process)d:%(message)s')
+
+        file_handler = logging.FileHandler('log.mer')
+
+        file_handler.setFormatter(formatter)
+
+        self.logger.addHandler(file_handler)
+
+    """def on_modified(self, event):
+        super(MyHandler, self).on_modified(event)
+        what = 'Directory' if event.is_directory else 'File'  # for future use
+        self.logger.info(f"{what}, modified, {event.src_path}")"""
+
+    def on_created(self, event):
+        super(MyHandler, self).on_created(event)
+        what = 'Directory' if event.is_directory else 'File'  # for future use
+        self.logger.info(f"{what}, created, {event.src_path}")
+        self.signal_watchdog()
+
+    def on_deleted(self, event):
+        super(MyHandler, self).on_deleted(event)
+        what = 'Directory' if event.is_directory else 'File'  # for future use
+        self.logger.info(f"{what}, deleted, {event.src_path}")
+        self.signal_watchdog()
+
+    def on_moved(self, event):
+        super(MyHandler, self).on_moved(event)
+        what = 'Directory' if event.is_directory else 'File'
+        self.logger.info(
+            f"{what}, moved, from: {event.src_path}, to: {event.dest_path}")
+        self.signal_watchdog()
+
+    def signal_watchdog(self):
+        print("ti prego")
+        self.watchdog.signal_event.emit()

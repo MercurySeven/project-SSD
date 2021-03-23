@@ -80,7 +80,3 @@ class FileView(QWidget):
         """metodo chiamato dal notify del modello quando questo si aggiorna"""
         list_of_files, list_of_dirs = self._model.get_data()
         self.update_content(list_of_files, list_of_dirs)
-
-    @Slot()
-    def Sl_W_event(self):
-        pass
