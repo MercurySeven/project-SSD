@@ -57,6 +57,7 @@ class MainController(QObject):
         self.view = None
         self.sync_controller = None
         self.file_controller = None
+        self.directory_controller = None
         self.settings_controller = None
         self.notification_icon = None
         self.watcher = None
@@ -91,6 +92,9 @@ class MainController(QObject):
         self.view.main_widget.Sg_switch_to_files.connect(self.Sl_switch_to_files)
         self.view.main_widget.Sg_switch_to_settings.connect(self.Sl_switch_to_settings)
 
+        # Connect per caricare il contenuto della cartella selezionata
+        self.view.main_widget.files_widget.Sg_update_files_with_new_path.connect(
+            self.update_files_with_new_path)
         # Parte dell'algoritmo
         self.algorithm = MetaData(self.env_settings.value("sync_path"))
 
@@ -139,3 +143,7 @@ class MainController(QObject):
         self.login_screen.hide()
         self.login_screen.close()
         self.create_main_window()
+
+    @Slot(str)
+    def update_files_with_new_path(self, path):
+        print("efettuato double click in una directory")
