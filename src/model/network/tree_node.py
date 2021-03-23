@@ -35,7 +35,13 @@ class TreeNode:
         folder = " - Folder" if self.is_directory() else ""
         formatted_date = datetime.fromtimestamp(self.get_updated_at()).strftime("%d/%m/%Y %H:%M:%S")
         ret = " " * level + \
-            f"{self.get_name()}{folder} ({self.get_updated_at()} -> {formatted_date})\n"
+              f"{self.get_name()}{folder} ({self.get_updated_at()} -> {formatted_date})\n"
         for child in self._children:
             ret += child.__str__(level + 1)
         return ret
+
+    def get_children(self) -> list:
+        return self._children
+
+    def get_payload(self) -> Node:
+        return self._payload

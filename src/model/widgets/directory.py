@@ -2,6 +2,8 @@ import os
 
 from src.model.widgets.file import File
 from datetime import datetime
+from src.model.network import tree_builder as root
+from src.model.network.node import Type
 
 
 class Directory:
@@ -19,27 +21,25 @@ class Directory:
         self._files.update({file.get_name(): file})
 
     def update_list_of_content(self) -> None:
+        self._files.clear()
+        self._dirs.clear()
         if not self._path or not os.path.isdir(self._path):
             return
-        with os.scandir(self._path) as dir_entries:
-            self._files.clear()
-            self._dirs.clear()
-            for entry in dir_entries:
-                entry_path = os.path.join(self._path, entry.name)
-                created_at = os.stat(entry_path).st_ctime
-                updated_at = os.stat(entry_path).st_mtime
-                if os.path.isfile(entry_path):
-                    file = File(entry.name,
-                                self.__convert_to_date(created_at),
-                                self.__convert_to_date(updated_at),
-                                self.define_type(entry.name),
-                                str(os.stat(entry_path).st_size),
-                                "stato file")
-                    self._files.append(file)
-                else:
-                    self._dirs.append(
-                        Directory(entry.name, entry_path, "oggi")
-                    )
+        tree = root.get_tree_from_system(self._path, '')
+        content = tree.get_children()
+        for entry in content:
+            if entry.get_payload().type == Type.File:
+                file = File(entry.get_payload().name,
+                            self.__convert_to_date(entry.get_payload().created_at),
+                            self.__convert_to_date(entry.get_payload().updated_at),
+                            self.define_type(entry.get_payload().name),
+                            str(os.stat(entry.get_payload().path).st_size),
+                            "stato file")
+                self._files.append(file)
+            else:
+                self._dirs.append(
+                    Directory(entry.get_payload().name, entry.get_payload().path, "oggi")
+                )
 
     def __convert_to_date(self, date: float) -> str:
         return datetime.fromtimestamp(date).strftime("%Y-%m-%d %H:%M:%S")
