@@ -22,7 +22,7 @@ def upload_folder(node: TreeNode, parent_folder_id: str = "LOCAL_ROOT") -> None:
     parent_folder_id = api.create_folder(node.get_name(), parent_folder_id)
 
     for _node in node._children:
-        if not _node.is_directory():
-            api.upload_node_to_server(_node, parent_folder_id)
-        else:
+        if _node.is_directory():
             upload_folder(_node, parent_folder_id)
+        else:
+            api.upload_node_to_server(_node, parent_folder_id)
