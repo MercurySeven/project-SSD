@@ -86,40 +86,39 @@ class MainController(QObject):
         algo_v2.start()
 
     def algoritmo_thread_v2(self):
-        path = self.env_settings.value("sync_path")
-        client_tree = tree_builder.get_tree_from_system(path)
-        remote_tree = tree_builder.get_tree_from_node_id()
-        print("*"*32)
-        print(client_tree)
-        print("*"*32)
-        print(remote_tree)
+        while True:
+            path = self.env_settings.value("sync_path")
+            client_tree = tree_builder.get_tree_from_system(path)
+            remote_tree = tree_builder.get_tree_from_node_id()
+            print("*"*32)
+            print(client_tree)
+            print("*"*32)
+            print(remote_tree)
 
-        # print(remote_tree._children[3]._children[0]._parent._parent.get_name())
-        # print("*"*32)
-        result = tree_comparator.compareFolders(client_tree, remote_tree)
-        for r in result:
-            action: Actions = r["action"]
-            node: TreeNode = r["node"]
-            if action == Actions.CLIENT_NEW_FOLDER:
-                id_parent = r["id"]
-                os_handler.upload_folder(node, id_parent)
-            elif action == Actions.CLIENT_NEW_FILE:
-                path = r["id"]
-                os_handler.upload_file(node, path)
-            elif action == Actions.CLIENT_UPDATE_FILE:
-                path = r["id"]
-                os_handler.upload_file(node, path)
-            elif action == Actions.SERVER_NEW_FOLDER:
-                path = r["path"]
-                os_handler.download_folder(node, path)
-            elif action == Actions.SERVER_NEW_FILE:
-                path = r["path"]
-                os_handler.download_file(node, path)
-            elif action == Actions.SERVER_UPDATE_FILE:
-                path = r["path"]
-                os_handler.download_file(node, path)
-
-        print(result)
+            result = tree_comparator.compareFolders(client_tree, remote_tree)
+            for r in result:
+                action: Actions = r["action"]
+                node: TreeNode = r["node"]
+                if action == Actions.CLIENT_NEW_FOLDER:
+                    id_parent = r["id"]
+                    os_handler.upload_folder(node, id_parent)
+                elif action == Actions.CLIENT_NEW_FILE:
+                    path = r["id"]
+                    os_handler.upload_file(node, path)
+                elif action == Actions.CLIENT_UPDATE_FILE:
+                    path = r["id"]
+                    os_handler.upload_file(node, path)
+                elif action == Actions.SERVER_NEW_FOLDER:
+                    path = r["path"]
+                    os_handler.download_folder(node, path)
+                elif action == Actions.SERVER_NEW_FILE:
+                    path = r["path"]
+                    os_handler.download_file(node, path)
+                elif action == Actions.SERVER_UPDATE_FILE:
+                    path = r["path"]
+                    os_handler.download_file(node, path)
+            print(result)
+            sleep(15)
 
     def background(self):
         while True:
