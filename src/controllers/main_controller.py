@@ -80,11 +80,11 @@ class MainController(QObject):
         # sync.start() Fermo il vecchio algo
 
         # SEZIONE TEST ALGORTIMO V2
-        algo_v2 = Thread(target=self.algoritomo_thread_v2, daemon=True)
+        algo_v2 = Thread(target=self.algoritmo_thread_v2, daemon=True)
         algo_v2.setName("ALGORITMO V2")
         algo_v2.start()
 
-    def algoritomo_thread_v2(self):
+    def algoritmo_thread_v2(self):
         path = self.env_settings.value("sync_path")
         client_tree = tree_builder.get_tree_from_system(path)
         remote_tree = tree_builder.get_tree_from_node_id()

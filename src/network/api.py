@@ -151,12 +151,12 @@ class API:
         response = requests.get(url, headers=headers)
 
         if response.status_code == requests.codes.ok:
-            self._logger.info(f"Download del file {payload.name}, completato con successo")
             path = os.path.join(path, payload.name)
             with open(path, "wb") as fh:
                 fh.write(response.content)
             # Cambiare la data di creazione sembra non funzionare
             os.utime(path, (payload.created_at, payload.updated_at))
+            self._logger.info(f"Download del file {payload.name}, completato con successo")
         else:
             self._logger.info(f"Download del file {payload.name}, fallito")
 
