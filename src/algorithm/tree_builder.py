@@ -38,15 +38,6 @@ def get_tree_from_system(path: str,
 
 def _create_node_from_dict(dict: str) -> TreeNode:
     """Costruisce un TreeNode a partire dal dict"""
-    """
-        # Esempio
-        "id": "7183b314-a79a-461b-83d7-7526d279e4ac",
-        "name": "File sincronizzato.txt",
-        "created_at": 1615406876000,
-        "updated_at": 1615495212000,
-        "type": "File",
-        "size": 50
-    """
     id = dict["id"]
     name = dict["name"]
     type = Type.File if dict["type"] == "File" else Type.Folder

@@ -13,7 +13,7 @@ from src.model.main_model import MainModel
 from src.model.watcher import Watcher
 from src.network.metadata import MetaData
 from src.view.main_view import MainWindow
-from src.algorithm import tree_builder, tree_comparator, os_handler
+from src.algorithm import tree_builder, tree_comparator, transfer_handler
 from src.algorithm.tree_comparator import Actions
 from src.algorithm.tree_node import TreeNode
 
@@ -92,32 +92,32 @@ class MainController(QObject):
             remote_tree = tree_builder.get_tree_from_node_id()
             print("*"*32)
             print(client_tree)
-            print("*"*32)
             print(remote_tree)
 
             result = tree_comparator.compareFolders(client_tree, remote_tree)
             for r in result:
                 action: Actions = r["action"]
                 node: TreeNode = r["node"]
+                print(action.name + " " + node.get_name())
                 if action == Actions.CLIENT_NEW_FOLDER:
                     id_parent = r["id"]
-                    os_handler.upload_folder(node, id_parent)
+                    transfer_handler.upload_folder(node, id_parent)
                 elif action == Actions.CLIENT_NEW_FILE:
                     path = r["id"]
-                    os_handler.upload_file(node, path)
+                    transfer_handler.upload_file(node, path)
                 elif action == Actions.CLIENT_UPDATE_FILE:
                     path = r["id"]
-                    os_handler.upload_file(node, path)
+                    transfer_handler.upload_file(node, path)
                 elif action == Actions.SERVER_NEW_FOLDER:
                     path = r["path"]
-                    os_handler.download_folder(node, path)
+                    transfer_handler.download_folder(node, path)
                 elif action == Actions.SERVER_NEW_FILE:
                     path = r["path"]
-                    os_handler.download_file(node, path)
+                    transfer_handler.download_file(node, path)
                 elif action == Actions.SERVER_UPDATE_FILE:
                     path = r["path"]
-                    os_handler.download_file(node, path)
-            print(result)
+                    transfer_handler.download_file(node, path)
+            print("*"*32)
             sleep(15)
 
     def background(self):
