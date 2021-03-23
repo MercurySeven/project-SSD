@@ -15,6 +15,7 @@ from src.network.metadata import MetaData
 from src.view.main_view import MainWindow
 from src.algorithm import tree_builder, tree_comparator, os_handler
 from src.algorithm.tree_comparator import Actions
+from src.algorithm.tree_node import TreeNode
 
 
 class MainController(QObject):
@@ -97,15 +98,21 @@ class MainController(QObject):
         # print("*"*32)
         result = tree_comparator.compareFolders(client_tree, remote_tree)
         for r in result:
-            action = r["action"]
+            action: Actions = r["action"]
+            node: TreeNode = r["node"]
             if action == Actions.CLIENT_NEW_FOLDER:
-                node = r["node"]
                 id_parent = r["id"]
                 os_handler.upload_folder(node, id_parent)
+            elif action == Actions.CLIENT_NEW_FILE:
+                path = r["id"]
+                os_handler.upload_file(node, path)
             elif action == Actions.SERVER_NEW_FOLDER:
-                node = r["node"]
                 path = r["path"]
                 os_handler.download_folder(node, path)
+            elif action == Actions.SERVER_NEW_FILE:
+                path = r["path"]
+                os_handler.download_file(node, path)
+
         print(result)
 
     def background(self):

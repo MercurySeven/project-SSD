@@ -14,7 +14,7 @@ def download_folder(node: TreeNode, path: str) -> None:
         if _node.is_directory():
             download_folder(_node, path_folder)
         else:
-            api.download_node_from_server(_node, path_folder)
+            download_file(_node, path_folder)
 
 
 def upload_folder(node: TreeNode, parent_folder_id: str = "LOCAL_ROOT") -> None:
@@ -25,4 +25,12 @@ def upload_folder(node: TreeNode, parent_folder_id: str = "LOCAL_ROOT") -> None:
         if _node.is_directory():
             upload_folder(_node, parent_folder_id)
         else:
-            api.upload_node_to_server(_node, parent_folder_id)
+            upload_file(_node, parent_folder_id)
+
+
+def download_file(node: TreeNode, path_folder: str) -> None:
+    api.download_node_from_server(node, path_folder)
+
+
+def upload_file(node: TreeNode, parent_folder_id: str) -> None:
+    api.upload_node_to_server(node, parent_folder_id)

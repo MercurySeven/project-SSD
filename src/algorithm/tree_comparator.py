@@ -20,12 +20,16 @@ def get_only_folders(children: list[TreeNode]) -> list[TreeNode]:
     return [node for node in children if node.is_directory()]
 
 
-def compareFiles(client: list[TreeNode], server: list[TreeNode]) -> list:
+def compareFiles(client: TreeNode, server: TreeNode) -> list:
+
+    client_files = get_only_files(client._children)
+    server_files = get_only_files(server._children)
+
     update_files: list = []
 
-    for cl_file in client:
+    for cl_file in client_files:
         trovato = False
-        for sr_file in server:
+        for sr_file in server_files:
             if cl_file.get_name() == sr_file.get_name():
                 if cl_file.get_updated_at() > sr_file.get_updated_at():
                     update_files.append({
@@ -46,12 +50,13 @@ def compareFiles(client: list[TreeNode], server: list[TreeNode]) -> list:
             update_files.append({
                 "name": cl_file.get_name(),  # TODO: Probabilemente non ci serve il nome
                 "node": cl_file,
+                "id": server._payload.id,
                 "action": Actions.CLIENT_NEW_FILE
             })
 
-    for sr_file in server:
+    for sr_file in server_files:
         trovato = False
-        for cl_file in client:
+        for cl_file in client_files:
             if sr_file.get_name() == cl_file.get_name():
                 trovato = True
         if not trovato:
@@ -59,6 +64,7 @@ def compareFiles(client: list[TreeNode], server: list[TreeNode]) -> list:
             update_files.append({
                 "name": sr_file.get_name(),  # TODO: Probabilemente non ci serve il nome
                 "node": sr_file,
+                "path": client._payload.path,
                 "action": Actions.SERVER_NEW_FILE
             })
 
@@ -69,9 +75,7 @@ def compareFolders(client: TreeNode, server: TreeNode) -> list:
     update_files: list = []
 
     # Controllo prima SOLO i file
-    client_files = get_only_files(client._children)
-    server_files = get_only_files(server._children)
-    update_files.extend(compareFiles(client_files, server_files))
+    update_files.extend(compareFiles(client, server))
 
     client_folders = get_only_folders(client._children)
     server_folders = get_only_folders(server._children)
