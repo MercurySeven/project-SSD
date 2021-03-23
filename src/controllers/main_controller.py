@@ -97,14 +97,16 @@ class MainController(QObject):
         # print("*"*32)
         result = tree_comparator.compareFolders(client_tree, remote_tree)
         for r in result:
-            if r["action"] == Actions.CLIENT_NEW_FOLDER:
-                print(r["node"])
+            action = r["action"]
+            if action == Actions.CLIENT_NEW_FOLDER:
                 node = r["node"]
                 id_parent = r["id"]
                 os_handler.upload_folder(node, id_parent)
+            elif action == Actions.SERVER_NEW_FOLDER:
+                node = r["node"]
+                path = r["path"]
+                os_handler.download_folder(node, path)
         print(result)
-        # os_handler.download_folder(remote_tree, path)
-        # os_handler.upload_folder(client_tree)
 
     def background(self):
         while True:
