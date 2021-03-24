@@ -29,7 +29,3 @@ def get_tree_from_system(path: str,
     if prev_node is not None:
         prev_node.add_node(parent_node)
     return parent_node
-
-# def search_node_from_path(tree: TreeNode, path: str) -> TreeNode:
-    # for
-# def _search_recursive_from_path

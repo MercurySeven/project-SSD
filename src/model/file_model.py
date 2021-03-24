@@ -1,9 +1,10 @@
+import os
 from typing import Tuple
 
 from PySide6.QtCore import (QSettings, Signal, Slot, QObject)
 
-from src.model.widgets.directory import Directory
 from src.model.network import tree_builder as root
+from src.model.widgets.directory import Directory
 
 
 class FileModel(QObject):
@@ -30,15 +31,17 @@ class FileModel(QObject):
     def get_data(self) -> Tuple[dict, dict]:
         list_of_files = self.base_dir.files
         list_of_dirs = self.base_dir.dirs
-        if(self._current_node._payload.path != self.base_dir.get_path()):
-            self._current_dir = Directory("..", self._current_parent._payload.path, "adesso", self._current_parent)
+        if (self._current_node._payload.path != self.base_dir.get_path()):
+            self._current_dir = Directory(
+                "..", self._current_parent._payload.path, "adesso", self._current_parent)
             list_of_dirs.insert(0, self._current_dir)
         return list_of_files, list_of_dirs
 
     def set_current_node(self, path):
+        # print(self.search_node_from_path(path+'/diocan').get_payload().name)
         self._current_parent = self._current_node
-        if(self._current_node._payload.path != self.base_dir.get_path()):
-            if(self._current_node._parent.get_payload().path == path):
+        if (self._current_node._payload.path != self.base_dir.get_path()):
+            if (self._current_node._parent.get_payload().path == path):
                 self._current_node = self._current_node._parent
             else:
                 self._current_node = self._current_node.get_child_from_path(path)
@@ -47,3 +50,26 @@ class FileModel(QObject):
         self._current_parent = self._current_node._parent
         self.base_dir._node = self._current_node
         self.Sl_update_model()
+
+    def search_node_from_path(self, path: str):
+        relative_path = path
+        relative_path = relative_path[relative_path.find(self.base_dir.get_name()):]
+        folders = relative_path.split('/')
+        folders = folders[1:]
+        if os.path.isdir(self.settings.value("sync_path")) is not True:
+            return None
+        prev_node = self.base_dir.node
+        for f in folders:
+            folder_found = self._search_through_children(f)
+            if folder_found is not None:
+                prev_node = folder_found
+            else:
+                return prev_node
+        return prev_node
+
+    def _search_through_children(self, name):
+        children = self.tree.get_children()
+        for i in children:
+            if i.get_payload().name == name:
+                return i
+        return None

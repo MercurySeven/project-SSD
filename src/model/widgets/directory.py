@@ -72,3 +72,7 @@ class Directory:
     @property
     def files(self):
         return self._files
+
+    @property
+    def node(self):
+        return self._node
