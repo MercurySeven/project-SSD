@@ -146,4 +146,4 @@ class MainController(QObject):
 
     @Slot(str)
     def update_files_with_new_path(self, path):
-        print("efettuato double click in una directory")
+        self.model.file_model.set_current_node(path)

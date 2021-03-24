@@ -2,19 +2,19 @@ import os
 
 from src.model.widgets.file import File
 from datetime import datetime
-from src.model.network import tree_builder as root
 from src.model.network.node import Type
 
 
 class Directory:
 
-    def __init__(self, name, path, creation_date):
+    def __init__(self, name, path, creation_date, tree):
         self._name = name
         self._path = path
         self._files = []
         self._dirs = []
         self._creation_date = creation_date
         self._last_modified_date = creation_date
+        self._node = tree
         self.update_list_of_content()
 
     def add_file(self, file: File) -> None:
@@ -25,8 +25,7 @@ class Directory:
         self._dirs.clear()
         if not self._path or not os.path.isdir(self._path):
             return
-        tree = root.get_tree_from_system(self._path, '')
-        content = tree.get_children()
+        content = self._node.get_children()
         for entry in content:
             if entry.get_payload().type == Type.File:
                 file = File(entry.get_payload().name,
@@ -38,7 +37,7 @@ class Directory:
                 self._files.append(file)
             else:
                 self._dirs.append(
-                    Directory(entry.get_payload().name, entry.get_payload().path, "oggi")
+                    Directory(entry.get_payload().name, entry.get_payload().path, "oggi", entry)
                 )
 
     def __convert_to_date(self, date: float) -> str:

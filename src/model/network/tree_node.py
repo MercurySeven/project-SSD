@@ -45,3 +45,8 @@ class TreeNode:
 
     def get_payload(self) -> Node:
         return self._payload
+
+    def get_child_from_path(self, path: str) -> TreeNode:
+        for i in self._children:
+            if i._payload.path == path:
+                return i
