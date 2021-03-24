@@ -1,7 +1,6 @@
 import os
 import logging
 import requests
-import math
 from .query_model import Query
 from .cookie_session import CookieSession
 from src.algorithm.tree_node import TreeNode
@@ -57,27 +56,6 @@ class API:
             self._user_id = self.get_info_from_email()["id"]
         return self._user_id
 
-    def get_all_files(self, node_id: str = "LOCAL_ROOT") -> list:
-        """ELIMINA"""
-        query, params = Query.get_all_files(node_id)
-        response = self.client.execute(gql(query), variable_values=params)
-        result: list = []
-        for files in response["getNode"]["children"]:
-            # Tenere questa linea fino a quando non caricheremo
-            # anche le cartelle
-            if files["type"] == "File":
-                # Bisogna dividere la data per 1000,
-                # Zextras la restituisce in millisecondi
-                result.append({
-                    "id": files["id"],
-                    "name": files["name"],
-                    "updated_at": files["updated_at"] / 1000,
-                    "created_at": files["created_at"] / 1000,
-                    "size": files["size"]
-                })
-        self._logger.info(f"File presenti nel server: {len(result)} files")
-        return result
-
     def get_content_from_node(self, node_id: str = "LOCAL_ROOT") -> str:
         query, params = Query.get_all_files(node_id)
         return self.client.execute(gql(query), variable_values=params)
@@ -88,61 +66,10 @@ class API:
         response = self.client.execute(gql(query), variable_values=params)
         return response["createFolder"]["id"]
 
-    def upload_to_server(self, file_path: str) -> None:
-        """Richiede il file_path"""
-        headers = {
-            "cookie": self._cookie
-        }
-
-        file_name = os.path.basename(file_path)
-        updated_at = math.trunc(os.stat(file_path).st_mtime)
-        created_at = math.trunc(os.stat(file_path).st_ctime)
-        # TODO:
-        # - Da capire come gestire le cartelle
-        multipart_form = {
-            "command": "upload",
-            "name": file_name,
-            "content": open(file_path, "rb"),
-            "parent": self.get_user_id() + "/LOCAL_ROOT",
-            "updated-at": updated_at,
-            "created-at": created_at
-        }
-
-        response = requests.post(self._url_files, headers=headers, files=multipart_form)
-
-        if response.status_code == requests.codes.ok:
-            self._logger.info(f"Upload del file {file_name}, completato con successo")
-        else:
-            self._logger.info(f"Upload del file {file_name}, fallito")
-        return response.status_code == requests.codes.ok
-
-    def download_from_server(self,
-                             file_path: str,
-                             file_name: str,
-                             file_id: str,
-                             created_at: int,
-                             updated_at: int) -> None:
-        """ ELIMINA"""
-        headers = {
-            "cookie": self._cookie
-        }
-        url = f"{self._url_files}{self.get_user_id()}/{file_id}"
-        response = requests.get(url, headers=headers)
-
-        if response.status_code == requests.codes.ok:
-            self._logger.info(f"Download del file {file_name}, completato con successo")
-            path = os.path.join(file_path, file_name)
-            with open(path, "wb") as fh:
-                fh.write(response.content)
-            # Cambiare la data di creazione sembra non funzionare
-            os.utime(path, (created_at, updated_at))
-        else:
-            self._logger.info(f"Download del file {file_name}, fallito")
-
     def download_node_from_server(self,
                                   node: TreeNode,
                                   path: str) -> None:
-        """ Il TreeNode viene scaricato e salvato nel path"""
+        """Il TreeNode viene scaricato e salvato nel path"""
         headers = {
             "cookie": self._cookie
         }

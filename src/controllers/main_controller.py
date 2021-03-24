@@ -1,5 +1,3 @@
-from threading import Thread
-from time import sleep
 from os import path
 
 from PySide6.QtCore import (QObject, Slot, QSettings)
@@ -11,11 +9,8 @@ from .settings_controller import SettingsController
 from .widgets.sync_controller import SyncController
 from src.model.main_model import MainModel
 from src.model.watcher import Watcher
-from src.network.metadata import MetaData
 from src.view.main_view import MainWindow
-from src.algorithm import tree_builder, tree_comparator, transfer_handler
-from src.algorithm.tree_comparator import Actions
-from src.algorithm.tree_node import TreeNode
+from src.algorithm.decision_engine import DecisionEngine
 
 
 class MainController(QObject):
@@ -46,6 +41,11 @@ class MainController(QObject):
                 print("Nuova directory: " + self.env_settings.value("sync_path"))
 
         self.model = MainModel()
+
+        # ALGORTIMO V2
+        self.algo_v2 = DecisionEngine(self.model.sync_model.get_state())
+        self.algo_v2.start()
+
         self.view = MainWindow(self.model)
         self.view.show()
 
@@ -67,80 +67,24 @@ class MainController(QObject):
         self.model.sync_model.Sg_model_changed.connect(self.Sl_sync_model_changed)
 
         # Ripristino il riavvio di watchdog, quando cambio path
-        self.model.settings_model.Sg_model_changed.connect(self.Sl_path_updated)
+        self.model.settings_model.Sg_model_path_changed.connect(self.Sl_path_updated)
 
         # Connect per cambiare le viste
         self.view.main_widget.Sg_switch_to_files.connect(self.Sl_switch_to_files)
         self.view.main_widget.Sg_switch_to_settings.connect(self.Sl_switch_to_settings)
 
-        # Parte dell'algoritmo
-        self.algorithm = MetaData(self.env_settings.value("sync_path"))
-
-        sync = Thread(target=self.background, daemon=True)
-        sync.setName("algorithm's thread")
-        # sync.start() Fermo il vecchio algo
-
-        # SEZIONE TEST ALGORTIMO V2
-        algo_v2 = Thread(target=self.algoritmo_thread_v2, daemon=True)
-        algo_v2.setName("ALGORITMO V2")
-        algo_v2.start()
-
-    def algoritmo_thread_v2(self):
-        while True:
-            path = self.env_settings.value("sync_path")
-            client_tree = tree_builder.get_tree_from_system(path)
-            remote_tree = tree_builder.get_tree_from_node_id()
-            print("*"*32)
-            print(client_tree)
-            print(remote_tree)
-
-            result = tree_comparator.compareFolders(client_tree, remote_tree)
-            for r in result:
-                action: Actions = r["action"]
-                node: TreeNode = r["node"]
-                print(action.name + " " + node.get_name())
-                if action == Actions.CLIENT_NEW_FOLDER:
-                    id_parent = r["id"]
-                    transfer_handler.upload_folder(node, id_parent)
-                elif action == Actions.CLIENT_NEW_FILE:
-                    path = r["id"]
-                    transfer_handler.upload_file(node, path)
-                elif action == Actions.CLIENT_UPDATE_FILE:
-                    path = r["id"]
-                    transfer_handler.upload_file(node, path)
-                elif action == Actions.SERVER_NEW_FOLDER:
-                    path = r["path"]
-                    transfer_handler.download_folder(node, path)
-                elif action == Actions.SERVER_NEW_FILE:
-                    path = r["path"]
-                    transfer_handler.download_file(node, path)
-                elif action == Actions.SERVER_UPDATE_FILE:
-                    path = r["path"]
-                    transfer_handler.download_file(node, path)
-            print("*"*32)
-            sleep(15)
-
-    def background(self):
-        while True:
-            # sync do_stuff()
-            if self.watcher.status():
-                self.algorithm.apply_changes()
-            sleep(5)
-
     @Slot()
     def Sl_path_updated(self):
-        new_path = self.model.settings_model.get_path()
-        if self.algorithm.directory != new_path:
-            self.env_settings.sync()
-            self.algorithm.set_directory(new_path)
-            self.watcher.reboot()
-            if self.watcher.is_running:
-                self.notification_icon.send_message("Watcher riavviato")
+        self.env_settings.sync()
+        self.watcher.reboot()
+        if self.watcher.is_running:
+            self.notification_icon.send_message("Watcher riavviato")
 
     @Slot()
     def Sl_sync_model_changed(self):
         state = self.model.sync_model.get_state()
         self.watcher.run(state)
+        self.algo_v2.running = state
 
     @Slot()
     def Sl_switch_to_files(self):
