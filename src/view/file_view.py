@@ -1,9 +1,11 @@
 from PySide6.QtCore import (QSettings, QUrl, Slot, Qt)
 from PySide6.QtGui import (QDesktopServices)
 from PySide6.QtWidgets import (QVBoxLayout, QHBoxLayout, QWidget, QScrollArea, QPushButton, QLabel)
-from src.view.layouts.flowlayout import FlowLayout
-from src.view.widgets.filewidget import FileWidget
+
 from src.model.file_model import FileModel
+from src.view.layouts.flowlayout import FlowLayout
+from src.view.widgets.directory_widget import Direcory_Widget
+from src.view.widgets.filewidget import FileWidget
 
 
 class FileView(QWidget):
@@ -50,8 +52,8 @@ class FileView(QWidget):
         layout.addWidget(self.scrollArea)
         self.setLayout(layout)
 
-        self.list_of_file_widget = {}
-        self.list_of_dirs_widget = {}
+        self.list_of_file_widget = []
+        self.list_of_dirs_widget = []
         self.Sl_model_changed()
 
     @Slot()
@@ -59,23 +61,19 @@ class FileView(QWidget):
         path = QUrl.fromUserInput(self.env_settings.value("sync_path"))
         QDesktopServices.openUrl(path)
 
-    def update_content(self, list_of_files: dict, list_of_dirs: dict) -> None:
-        new_list_files = \
-            {k: list_of_files[k] for k in set(list_of_files) - set(self.list_of_file_widget)}
-        # new_list_dirs = {
-        # k: list_of_dirs[k] for k in set(list_of_dirs) - set(self.list_of_dirs_widget)
-        # }
-        for k in new_list_files:
-            self.list_of_file_widget.update({
-                new_list_files[k].get_name(): FileWidget(new_list_files[k])
-            })
-        for key in self.list_of_file_widget:
-            widget = self.list_of_file_widget[key]
-            self.fileLayout.addWidget(widget)
-            widget.setParent(self.fileWindow)
-        # TODO creazione widget per directory e completamento di questo ciclo
-        # for k in new_list_dirs:
-        #    self.list_of_dirs_widget.update({k.get_name(): })
+    def update_content(self, list_of_files: list, list_of_dirs: list) -> None:
+        for i in reversed(range(self.fileLayout.count())):
+            self.fileLayout.itemAt(i).widget().setParent(None)
+        self.list_of_file_widget.clear()
+        self.list_of_dirs_widget.clear()
+        for i in list_of_dirs:
+            dir = Direcory_Widget(i)
+            self.list_of_dirs_widget.append(dir)
+            self.fileLayout.addWidget(dir)
+        for i in list_of_files:
+            file = FileWidget(i)
+            self.list_of_file_widget.append(file)
+            self.fileLayout.addWidget(file)
 
     @Slot()
     def Sl_model_changed(self) -> None:

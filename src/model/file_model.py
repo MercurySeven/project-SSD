@@ -11,8 +11,8 @@ class FileModel(QObject):
     def __init__(self):
         super(FileModel, self).__init__()
         self.settings = QSettings()
-        self.base_dir = Directory("root_dir", self.settings.value("sync_path"))
-
+        self.base_dir = Directory(str(self.settings.value("sync_path")).split(
+            '/')[-1], self.settings.value("sync_path"), "adesso")
     # per ora ritorna solamente il contenuto del primo livello della directory
     # TODO ampliare la ricerca di una cartella e di un file
 
@@ -22,6 +22,6 @@ class FileModel(QObject):
         self.Sg_model_changed.emit()
 
     def get_data(self) -> Tuple[dict, dict]:
-        list_of_files = self.base_dir.files
-        list_of_dirs = self.base_dir.dirs
+        list_of_files = self.base_dir._files
+        list_of_dirs = self.base_dir._dirs
         return list_of_files, list_of_dirs

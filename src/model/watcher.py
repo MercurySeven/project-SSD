@@ -1,18 +1,20 @@
+import logging
 import os
 
-from watchdog.observers import Observer
+from PySide6.QtCore import (QSettings, QObject, Signal)
 from watchdog.events import PatternMatchingEventHandler
-from PySide6.QtCore import (QSettings)
-import logging
+from watchdog.observers import Observer
 
 
-class Watcher:
+class Watcher(QObject):
+    signal_event = Signal()
     """the Watcher class is used to activate or deactivate the watchdog thread,
     this is usually done automatically with signals or manually using
     the reboot method or run method
     """
 
     def __init__(self):
+        super(Watcher, self).__init__()
         """
         Constructor for Watcher class, used to setup some public
         variables(path) and hidden
@@ -27,6 +29,8 @@ class Watcher:
 
         self.path = lambda: env_settings.value("sync_path")
         self.is_running: bool = False
+
+        self.handler = MyHandler(self)
 
     def run(self, watch):
         """
@@ -65,7 +69,7 @@ class Watcher:
 
         :return: Nothing
         """
-        event_handler = MyHandler()
+        event_handler = MyHandler(self)
         # Lo richiamo ogni volta perchè non posso far ripartire lo stesso
         # thread
         self.observer = Observer()
@@ -92,12 +96,13 @@ class Watcher:
         return self.is_running
 
 
-class MyHandler(PatternMatchingEventHandler):
+class MyHandler(PatternMatchingEventHandler, QObject):
+    Sg_event = Signal()
     """
     Class used to handle all the events caught by the observer
     """
 
-    def __init__(self):
+    def __init__(self, watchdog: Watcher):
         """
         This constructor is used to setup which file needs to be ignored when
         caught by the observer
@@ -115,6 +120,8 @@ class MyHandler(PatternMatchingEventHandler):
 
         self.logger.setLevel(logging.INFO)
 
+        self.watchdog = watchdog
+
         formatter = logging.Formatter(
             '%(asctime)s:%(levelname)s:%(pathname)s:%(process)d:%(message)s')
 
@@ -124,23 +131,29 @@ class MyHandler(PatternMatchingEventHandler):
 
         self.logger.addHandler(file_handler)
 
-    def on_modified(self, event):
+    """def on_modified(self, event):
         super(MyHandler, self).on_modified(event)
         what = 'Directory' if event.is_directory else 'File'  # for future use
-        self.logger.info(f"{what}, modified, {event.src_path}")
+        self.logger.info(f"{what}, modified, {event.src_path}")"""
 
     def on_created(self, event):
         super(MyHandler, self).on_created(event)
         what = 'Directory' if event.is_directory else 'File'  # for future use
         self.logger.info(f"{what}, created, {event.src_path}")
+        self.signal_watchdog()
 
     def on_deleted(self, event):
         super(MyHandler, self).on_deleted(event)
         what = 'Directory' if event.is_directory else 'File'  # for future use
         self.logger.info(f"{what}, deleted, {event.src_path}")
+        self.signal_watchdog()
 
     def on_moved(self, event):
         super(MyHandler, self).on_moved(event)
         what = 'Directory' if event.is_directory else 'File'
         self.logger.info(
             f"{what}, moved, from: {event.src_path}, to: {event.dest_path}")
+        self.signal_watchdog()
+
+    def signal_watchdog(self):
+        self.watchdog.signal_event.emit()

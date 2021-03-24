@@ -53,3 +53,20 @@ class Query:
         }
 
         return (query, params)
+
+    @staticmethod
+    def create_folder(parent_folder_id: str, folder_name: str) -> tuple[str, dict[str, str]]:
+        query = """
+        mutation CreateFolder ($parent_id: String!, $name: String!) {
+            createFolder(parent_id: $parent_id, name: $name) {
+                id
+            }
+        }
+        """
+
+        params = {
+            "parent_id": parent_folder_id,
+            "name": folder_name
+        }
+
+        return (query, params)
