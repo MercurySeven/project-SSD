@@ -6,33 +6,68 @@ from .query_model import Query
 from .cookie_session import CookieSession
 from gql import gql, Client
 from gql.transport.requests import RequestsHTTPTransport
+from .api_exceptions import (LoginError, NetworkError, ServerError, NetworkErrs, ServerErrs)
+
+from requests.utils import dict_from_cookiejar
+from requests import Session
+
 
 url_base = "https://mail-eu-south.testarea.zextras.com/"
 url_graphql = url_base + "zx/drive/graphql/v1/"
 url_files = url_base + "service/extension/drive/"
 
-email = ""  # settings.get_username()
-password = ""  # settings.get_password()
+email = ""
+password = ""
 user_id = ""
-cookie = None
+cookie: dict = None
 client = None
-logger = logging.getLogger("server")
-session = None
+logger = logging.getLogger("API")
 
 
+def ExceptionsHandler(func):
+
+    def inner(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except NetworkErrs as e:
+            raise NetworkError(f"{func.__name__}: {str(e)}")
+        except ServerErrs as e:
+            raise ServerError(f"{func.__name__}: {str(e)}")
+    return inner
+
+
+def cookie_str() -> str:
+    global cookie
+    if cookie:
+        return "; ".join([f"{str(x)}={str(y)}" for x, y in cookie.items()])
+    return ""
+
+
+@ExceptionsHandler
 def login(_email: str, _pwd: str):
     global cookie
     global client
     global session
-    session = CookieSession(_email, _pwd)
+
+    
+
+
+
+    session = Session()
 
     if not session.is_logged():
-        raise ValueError("Email o password non valide")
+        raise LoginError("Email o password non valide")
     cookie = session.get_auth_token()
+
+
+@ExceptionsHandler
+def init_client():
+
+    global client
 
     _headers = {
         "Content-Type": "application/json",
-        "cookie": cookie
+        "cookie": cookie_str()
     }
 
     _transport = RequestsHTTPTransport(
@@ -44,6 +79,7 @@ def login(_email: str, _pwd: str):
     client = Client(transport=_transport, fetch_schema_from_transport=True)
 
 
+@ExceptionsHandler
 def logout() -> bool:
     global cookie
     global client
@@ -53,11 +89,21 @@ def logout() -> bool:
     session = None
     return True
 
-
+@ExceptionsHandler
 def is_logged():
+
+    if client:
+        try:
+            get
+
+
+
+
+
     return session.is_logged() if session is not None else False
 
 
+@ExceptionsHandler
 def set_username_and_pwd(_email: str, _pwd: str) -> None:
     global email
     global password
@@ -65,6 +111,7 @@ def set_username_and_pwd(_email: str, _pwd: str) -> None:
     password = _pwd
 
 
+@ExceptionsHandler
 def get_info_from_email() -> dict[str, str]:
     """Ritorna l'id e il nome dell'account"""
     query, params = Query.get_info_from_email(email)
@@ -72,6 +119,7 @@ def get_info_from_email() -> dict[str, str]:
     return response["getUserByEmail"]
 
 
+@ExceptionsHandler
 def get_user_id() -> str:
     """Metodo che recupera l'id se non scaricato in precedenza"""
     global user_id
@@ -80,6 +128,7 @@ def get_user_id() -> str:
     return user_id
 
 
+@ExceptionsHandler
 def get_all_files(node_id: str = "LOCAL_ROOT") -> list:
     """Restituisce il nome dei file con l'ultima modifica"""
     query, params = Query.get_all_files(node_id)
@@ -102,6 +151,7 @@ def get_all_files(node_id: str = "LOCAL_ROOT") -> list:
     return result
 
 
+@ExceptionsHandler
 def upload_to_server(file_path: str) -> None:
     """Richiede il file_path"""
     headers = {
@@ -131,6 +181,7 @@ def upload_to_server(file_path: str) -> None:
     return response.status_code == requests.codes.ok
 
 
+@ExceptionsHandler
 def download_from_server(
         file_path: str,
         file_name: str,

@@ -5,8 +5,21 @@ from src.network import api
 from src.network.cookie_session import BadResponse
 
 
+class NetworkErrorsHandler:
+    pass
+
+
 class NetworkModel(QObject):
     Sg_model_changed = Signal()
+
+    # error signals
+    Sg_login_failed = Signal()
+    Sg_connection_failed = Signal()
+    Sg_server_failed = Signal()
+
+    # retry in ( seconds )
+    # this signals are sent every second if a problem occurred
+    Sg_login_retry = Signal(int)
 
     def __init__(self):
         super(NetworkModel, self).__init__(None)

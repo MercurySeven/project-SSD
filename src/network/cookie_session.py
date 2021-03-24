@@ -58,6 +58,7 @@ class CookieSession:
             "login_csrf": self.__csrf(),
             "username": self._username,
             "password": self._password,
+            "zrememberme": 1,
             "client": "preferred"
         }
 
@@ -72,10 +73,7 @@ class CookieSession:
             # non servirà impostarli ad ogni chiamata
             self.__set_custom_headers()
             return True
-        raise ConnectionError("Errore nella connessione con i server Zextras")
 
     def get_auth_token(self) -> str:
         cookies = dict_from_cookiejar(self._session.cookies)
-        if "ZM_AUTH_TOKEN" in cookies.keys():
-            return "ZM_AUTH_TOKEN=" + cookies["ZM_AUTH_TOKEN"]
-        return ""
+        return "; ".join([str(x)+"="+str(y) for x,y in cookies.items()]) #str
