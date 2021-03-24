@@ -156,5 +156,4 @@ class MyHandler(PatternMatchingEventHandler, QObject):
         self.signal_watchdog()
 
     def signal_watchdog(self):
-        print("ti prego")
         self.watchdog.signal_event.emit()

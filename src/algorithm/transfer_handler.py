@@ -1,4 +1,4 @@
-from .tree_node import TreeNode
+from src.model.network.tree_node import TreeNode
 import os
 import src.network.api as api
 

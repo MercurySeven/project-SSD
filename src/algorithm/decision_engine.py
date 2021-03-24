@@ -6,7 +6,7 @@ from PySide6.QtCore import QSettings
 
 from . import tree_builder, tree_comparator, transfer_handler
 from .tree_comparator import Actions
-from .tree_node import TreeNode
+from src.model.network.tree_node import TreeNode
 
 
 class DecisionEngine(Thread):
@@ -37,10 +37,10 @@ class DecisionEngine(Thread):
         path = self.env_settings.value("sync_path")
         client_tree = tree_builder.get_tree_from_system(path)
         remote_tree = tree_builder.get_tree_from_node_id()
-        # self.logger.info("CLIENT")
-        # self.logger.info("\n" + str(client_tree))
-        # self.logger.info("SERVER")
-        # self.logger.info("\n" + str(remote_tree))
+        # print("CLIENT")
+        # print("\n" + str(client_tree))
+        # print("SERVER")
+        # print("\n" + str(remote_tree))
 
         result = tree_comparator.compareFolders(client_tree, remote_tree)
         if len(result) == 0:

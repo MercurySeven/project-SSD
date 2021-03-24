@@ -1,6 +1,6 @@
 import os
 import math
-from .tree_node import TreeNode
+from src.model.network.tree_node import TreeNode
 from src.model.network.node import Node, Type
 import src.network.api as api
 
