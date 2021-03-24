@@ -1,9 +1,9 @@
 import os
 import logging
 import requests
-import math
 from .query_model import Query
 from .cookie_session import CookieSession
+from src.algorithm.tree_node import TreeNode
 from gql import gql, Client
 from gql.transport.requests import RequestsHTTPTransport
 from PySide6.QtCore import (QSettings)
@@ -42,6 +42,7 @@ class API:
 
         self.client = Client(transport=_transport, fetch_schema_from_transport=True)
         self._logger = logging.getLogger("server")
+        self._logger.info("COOKIE DI AUTH: " + self._cookie)
 
     def get_info_from_email(self) -> dict[str, str]:
         """Ritorna l'id e il nome dell'account"""
@@ -55,43 +56,53 @@ class API:
             self._user_id = self.get_info_from_email()["id"]
         return self._user_id
 
-    def get_all_files(self, node_id: str = "LOCAL_ROOT") -> list:
-        """Restituisce il nome dei file con l'ultima modifica"""
+    def get_content_from_node(self, node_id: str = "LOCAL_ROOT") -> str:
         query, params = Query.get_all_files(node_id)
-        response = self.client.execute(gql(query), variable_values=params)
-        result: list = []
-        for files in response["getNode"]["children"]:
-            # Tenere questa linea fino a quando non caricheremo
-            # anche le cartelle
-            if files["type"] == "File":
-                # Bisogna dividere la data per 1000,
-                # Zextras la restituisce in millisecondi
-                result.append({
-                    "id": files["id"],
-                    "name": files["name"],
-                    "updated_at": files["updated_at"] / 1000,
-                    "created_at": files["created_at"] / 1000,
-                    "size": files["size"]
-                })
-        self._logger.info(f"File presenti nel server: {len(result)} files")
-        return result
+        return self.client.execute(gql(query), variable_values=params)
 
-    def upload_to_server(self, file_path: str) -> None:
-        """Richiede il file_path"""
+    def create_folder(self, folder_name: str, parent_folder_id: str = "LOCAL_ROOT") -> str:
+        """Ritorna l'id della cartella appena creata"""
+        query, params = Query.create_folder(parent_folder_id, folder_name)
+        response = self.client.execute(gql(query), variable_values=params)
+        return response["createFolder"]["id"]
+
+    def download_node_from_server(self,
+                                  node: TreeNode,
+                                  path: str) -> None:
+        """Il TreeNode viene scaricato e salvato nel path"""
+        headers = {
+            "cookie": self._cookie
+        }
+        payload = node._payload
+        url = f"{self._url_files}{self.get_user_id()}/{payload.id}"
+        response = requests.get(url, headers=headers)
+
+        if response.status_code == requests.codes.ok:
+            path = os.path.join(path, payload.name)
+            with open(path, "wb") as fh:
+                fh.write(response.content)
+            # Cambiare la data di creazione sembra non funzionare
+            os.utime(path, (payload.created_at, payload.updated_at))
+            self._logger.info(f"Download del file {payload.name}, completato con successo")
+        else:
+            self._logger.info(f"Download del file {payload.name}, fallito")
+
+    def upload_node_to_server(self, node: TreeNode, parent_id: str = "LOCAL_ROOT") -> None:
+        """Carica un nodo, all'interno del parent passato"""
         headers = {
             "cookie": self._cookie
         }
 
-        file_name = os.path.basename(file_path)
-        updated_at = math.trunc(os.stat(file_path).st_mtime)
-        created_at = math.trunc(os.stat(file_path).st_ctime)
-        # TODO:
-        # - Da capire come gestire le cartelle
+        name = node.get_name()
+        content = open(node._payload.path, "rb")
+        updated_at = node.get_updated_at()
+        created_at = node._payload.created_at
+
         multipart_form = {
             "command": "upload",
-            "name": file_name,
-            "content": open(file_path, "rb"),
-            "parent": self.get_user_id() + "/LOCAL_ROOT",
+            "name": name,
+            "content": content,
+            "parent": self.get_user_id() + "/" + parent_id,
             "updated-at": updated_at,
             "created-at": created_at
         }
@@ -99,32 +110,7 @@ class API:
         response = requests.post(self._url_files, headers=headers, files=multipart_form)
 
         if response.status_code == requests.codes.ok:
-            self._logger.info(f"Upload del file {file_name}, completato con successo")
+            self._logger.info(f"Upload del file {name}, completato con successo")
         else:
-            self._logger.info(f"Upload del file {file_name}, fallito")
+            self._logger.info(f"Upload del file {name}, fallito")
         return response.status_code == requests.codes.ok
-
-    def download_from_server(self,
-                             file_path: str,
-                             file_name: str,
-                             file_id: str,
-                             created_at: int,
-                             updated_at: int) -> None:
-        """ Scarica il file dal server e lo salva nel path,
-            filename con l'estensione e path
-        """
-        headers = {
-            "cookie": self._cookie
-        }
-        url = f"{self._url_files}{self.get_user_id()}/{file_id}"
-        response = requests.get(url, headers=headers)
-
-        if response.status_code == requests.codes.ok:
-            self._logger.info(f"Download del file {file_name}, completato con successo")
-            path = os.path.join(file_path, file_name)
-            with open(path, "wb") as fh:
-                fh.write(response.content)
-            # Cambiare la data di creazione sembra non funzionare
-            os.utime(path, (created_at, updated_at))
-        else:
-            self._logger.info(f"Download del file {file_name}, fallito")
