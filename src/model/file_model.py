@@ -13,15 +13,20 @@ class FileModel(QObject):
         self.settings = QSettings()
         self.base_dir = Directory(str(self.settings.value("sync_path")).split(
             '/')[-1], self.settings.value("sync_path"), "adesso")
+        self._current_node = self.base_dir
+
     # per ora ritorna solamente il contenuto del primo livello della directory
     # TODO ampliare la ricerca di una cartella e di un file
 
     @Slot()
     def Sl_update_model(self) -> None:
-        self.base_dir.update_list_of_content()
+        self._current_node.update_list_of_content()
         self.Sg_model_changed.emit()
 
     def get_data(self) -> Tuple[dict, dict]:
-        list_of_files = self.base_dir._files
-        list_of_dirs = self.base_dir._dirs
+        list_of_files = self.base_dir.files
+        list_of_dirs = self.base_dir.dirs
         return list_of_files, list_of_dirs
+
+    def set_current_node(self, path):
+        pass

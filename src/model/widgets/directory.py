@@ -65,3 +65,11 @@ class Directory:
 
     def set_name(self, name) -> None:
         self._name = name
+
+    @property
+    def dirs(self):
+        return self._dirs
+
+    @property
+    def files(self):
+        return self._files
