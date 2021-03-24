@@ -34,12 +34,6 @@ def create_standard_settings() -> None:
         "username": "user",
         "password": "pwd"
     }
-
-    config["Zextras"] = {
-        "url_base": "https://mail-eu-south.testarea.zextras.com/",
-        "url_graphql": "zx/drive/graphql/v1/",
-        "url_files": "service/extension/drive/"
-    }
     __write_on_file()
 
 
