@@ -77,7 +77,7 @@ class MainController(QObject):
 
         self.notification_icon = NotificationController(self.app, self.view)
 
-        # ALGORTIMO V2
+        # ALGORITMO V2
         self.algo_v2 = DecisionEngine(self.model.sync_model.get_state())
         self.algo_v2.start()
 
