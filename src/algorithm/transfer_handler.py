@@ -1,9 +1,6 @@
 from .tree_node import TreeNode
-from network.api import API
-from src import settings
 import os
-
-api = API(settings.get_username(), settings.get_password())
+import src.network.api as api
 
 
 def download_folder(node: TreeNode, path: str) -> None:

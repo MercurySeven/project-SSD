@@ -2,10 +2,7 @@ import os
 import math
 from .tree_node import TreeNode
 from src.model.network.node import Node, Type
-from src.network.api import API
-from src import settings
-
-api = API(settings.get_username(), settings.get_password())
+import src.network.api as api
 
 
 def _build_tree_node(path: str, name: str) -> TreeNode:
