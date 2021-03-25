@@ -29,6 +29,7 @@ def login(_email: str, _pwd: str):
     if not session.is_logged():
         raise ValueError("Email o password non valide")
     cookie = session.get_auth_token()
+    print(cookie)
 
     _headers = {
         "Content-Type": "application/json",
@@ -90,6 +91,12 @@ def create_folder(folder_name: str, parent_folder_id: str = "LOCAL_ROOT") -> str
     query, params = Query.create_folder(parent_folder_id, folder_name)
     response = client.execute(gql(query), variable_values=params)
     return response["createFolder"]["id"]
+
+
+def delete_node(node_id: str) -> None:
+    """Rimuove il nodo dato l'id"""
+    query, params = Query.delete_node(node_id)
+    client.execute(gql(query), variable_values=params)
 
 
 def download_node_from_server(node: TreeNode, path: str) -> None:

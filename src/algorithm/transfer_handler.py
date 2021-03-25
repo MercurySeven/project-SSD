@@ -31,3 +31,7 @@ def download_file(node: TreeNode, path_folder: str) -> None:
 
 def upload_file(node: TreeNode, parent_folder_id: str) -> None:
     api.upload_node_to_server(node, parent_folder_id)
+
+
+def delete_node(node_id: str) -> None:
+    api.delete_node(node_id)

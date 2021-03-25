@@ -70,3 +70,19 @@ class Query:
         }
 
         return (query, params)
+
+    @staticmethod
+    def delete_node(node_id: str) -> tuple[str, dict[str, str]]:
+        query = """
+        mutation DeleteNodes($node_id: ID!) {
+            deleteNodes(nodes: {
+                node_id: $node_id
+            })
+        }
+        """
+
+        params = {
+            "node_id": node_id
+        }
+
+        return (query, params)
