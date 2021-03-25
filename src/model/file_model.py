@@ -38,19 +38,21 @@ class FileModel(QObject):
         return list_of_files, list_of_dirs
 
     def set_current_node(self, path):
-        self._current_parent = self._current_node
-        if (self._current_node._payload.path != self.base_dir.get_path()):
-            if (self._current_node._parent.get_payload().path == path):
-                self._current_node = self._current_node._parent
-            else:
-                self._current_node = self._current_node.get_child_from_path(path)
-        else:
-            self._current_node = self._current_node.get_child_from_path(path)
-        # if self._current_node is None
-        #  self._current_node = self.search_node_from_path(path)
-        self._current_parent = self._current_node._parent
-        self.base_dir._node = self._current_node
-        self.Sl_update_model()
+
+        # self._current_parent = self._current_node
+        # if (self._current_node._payload.path != self.base_dir.get_path()):
+        #     if (self._current_node._parent.get_payload().path == path):
+        #  self._current_node = self._current_node._parent
+        #    else:
+        #       self._current_node = self._current_node.get_child_from_path(path)
+        # else:
+        #   self._current_node = self._current_node.get_child_from_path(path)
+        # if self._current_node is None:
+        #   self._current_node = self.search_node_from_path(path)
+        # self._current_parent = self._current_node._parent
+        # self.base_dir._node = self._current_node
+        # self.Sl_update_model()
+        pass
 
     def search_node_from_path(self, path: str):
         relative_path = path

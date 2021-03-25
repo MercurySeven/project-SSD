@@ -82,6 +82,7 @@ class MainController(QObject):
 
         # Attivo il watchdog nella root definita dall'utente
         self.watcher = Watcher()
+        self.watcher.run(True)
         # Controllo se l'algoritmo era acceso l'ultima volta
         self.Sl_sync_model_changed()
 
@@ -96,22 +97,7 @@ class MainController(QObject):
         # Connect per cambiare le viste
         self.view.main_widget.Sg_switch_to_files.connect(self.Sl_switch_to_files)
         self.view.main_widget.Sg_switch_to_settings.connect(self.Sl_switch_to_settings)
-        # Connect per caricare il contenuto della cartella selezionata
-        self.view.main_widget.files_widget.Sg_update_files_with_new_path.connect(
-            self.update_files_with_new_path)
-        # Parte dell'algoritmo
-        # self.algorithm = MetaData(self.env_settings.value("sync_path"))
 
-        # sync = Thread(target=self.background, daemon=True)
-        # sync.setName("algrithm's thread")
-        # sync.start()
-
-    '''def background(self):
-        while True:
-            # sync do_stuff()
-            if self.watcher.status():
-                self.algorithm.apply_changes()
-            sleep(5)'''
     @Slot()
     def Sl_path_updated(self):
         self.env_settings.sync()
@@ -122,7 +108,6 @@ class MainController(QObject):
     @Slot()
     def Sl_sync_model_changed(self):
         state = self.model.sync_model.get_state()
-        self.watcher.run(state)
         self.algo_v2.set_running(state)
 
     @Slot()
@@ -144,7 +129,3 @@ class MainController(QObject):
         self.login_screen.hide()
         self.login_screen.close()
         self.create_main_window()
-
-    @Slot(str)
-    def update_files_with_new_path(self, path):
-        self.model.file_model.set_current_node(path)

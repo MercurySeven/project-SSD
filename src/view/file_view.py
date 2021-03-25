@@ -83,5 +83,5 @@ class FileView(QWidget):
         self.update_content(list_of_files, list_of_dirs)
 
     @Slot(str)
-    def update_files_with_new_path(self, path):
+    def update_files_with_new_path(self, path: str):
         self.Sg_update_files_with_new_path.emit(path)

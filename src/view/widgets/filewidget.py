@@ -36,21 +36,6 @@ class FileWidget(QToolButton):
         self.setText(self.name)
         # self.setToolTip("Ultima modifica: " + self.last_modified_date + "\nSize: " + self.size)
 
-        '''self.contextWindow = QWidget()
-        self.contextWindow.nameLabel = QLabel()
-        self.contextWindow.nameLabel.setText(self.name)
-        self.contextWindow.typeLabel = QLabel()
-        self.contextWindow.typeLabel.setText(self.type)
-        contextLayout = QVBoxLayout()
-        contextLayout.addWidget(self.contextWindow.nameLabel)
-        contextLayout.addWidget(self.contextWindow.typeLabel)
-        self.contextWindow.setLayout(contextLayout)
-
-        self.setLayout(QVBoxLayout())
-
-        self.layout().addWidget(self.contextWindow)'''
-        # add fields to structure
-
     def check_double_click(self):
         if self.timer.isActive():
             time = self.timer.remainingTime()
@@ -66,7 +51,7 @@ class FileWidget(QToolButton):
     def on_double_click(self):
         sync_path = "" if self.env_settings.value("sync_path") is None else \
             self.env_settings.value("sync_path")
-            
+
         path = os.path.join(sync_path, self.name)
         file_path = QUrl.fromUserInput(path)
         QDesktopServices.openUrl(file_path)

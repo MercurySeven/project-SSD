@@ -43,7 +43,7 @@ class SettingsModel(QObject):
         settings.update_quota_disco(new_quota)
         self.Sg_model_changed.emit()
 
-    def is_logged():
+    def is_logged(self):
         if(True):
             return True
 
