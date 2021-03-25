@@ -30,10 +30,11 @@ class DecisionEngine(Thread):
                 path = self.env_settings.value("sync_path")
                 snap_tree = tree_builder.read_dump_client_filesystem(path)
                 client_tree = tree_builder.get_tree_from_system(path)
+                if snap_tree is not None:
+                    ccs.compare_snap_client(snap_tree, client_tree)
 
-                ccs.compare_snap_client(snap_tree, client_tree)
                 remote_tree = tree_builder.get_tree_from_node_id()
-                self.compute_decision(client_tree, remote_tree)
+                self.compute_decision(client_tree, remote_tree, snap_tree is not None)
                 self.logger.info("Eseguito DUMP dell'albero locale")
                 tree_builder.dump_client_filesystem(path)
                 sleep(max(5, self.refresh))
@@ -43,7 +44,10 @@ class DecisionEngine(Thread):
     def set_running(self, running: bool) -> None:
         self.running = running
 
-    def compute_decision(self, client_tree: TreeNode, remote_tree: TreeNode) -> None:
+    def compute_decision(self,
+                         client_tree: TreeNode,
+                         remote_tree: TreeNode,
+                         snapshot: bool) -> None:
         # print("CLIENT")
         # print("\n" + str(client_tree))
         # print("SERVER")
@@ -58,11 +62,21 @@ class DecisionEngine(Thread):
             name_node = node.get_name()
             self.logger.info(action.name + " " + node.get_name())
             if action == Actions.CLIENT_NEW_FOLDER:
-                shutil.rmtree(node._payload.path)
-                self.logger.info(f"Eliminata cartella non presente nel server: {name_node}")
+                if snapshot:
+                    shutil.rmtree(node._payload.path)
+                    self.logger.info(f"Eliminata cartella non presente nel server: {name_node}")
+                else:
+                    id_parent = r["id"]
+                    transfer_handler.upload_folder(node, id_parent)
+                    self.logger.info(f"Nuova cartella da caricare nel server: {name_node}")
             elif action == Actions.CLIENT_NEW_FILE:
-                os.remove(node._payload.path)
-                self.logger.info(f"Eliminato file non presente nel server: {name_node}")
+                if snapshot:
+                    os.remove(node._payload.path)
+                    self.logger.info(f"Eliminato file non presente nel server: {name_node}")
+                else:
+                    path = r["id"]
+                    transfer_handler.upload_file(node, path)
+                    self.logger.info(f"Nuovo file da caricare nel server: {name_node}")
             elif action == Actions.CLIENT_UPDATE_FILE:
                 path = r["id"]
                 transfer_handler.upload_file(node, path)
