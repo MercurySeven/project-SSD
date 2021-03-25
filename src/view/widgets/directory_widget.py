@@ -25,8 +25,6 @@ class DirectoryWidget(QToolButton):
         self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
 
         self.name = dir.get_name()
-        self.creation_date = dir.get_creation_date()
-        self.last_modified_date = dir.get_last_modified_date()
         self.path = dir.get_path()
         self.setText(self.name)
 
