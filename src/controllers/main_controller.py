@@ -91,21 +91,22 @@ class MainController(QObject):
         self.model.settings_model.Sg_model_path_changed.connect(self.Sl_path_updated)
 
         # connect segnali watchdog
-        self.watcher.signal_event.connect(self.view.main_widget.files_widget.Sl_model_changed)
+        self.watcher.signal_event.connect(self.model.file_model.Sl_update_model)
 
         # Connect per cambiare le viste
         self.view.main_widget.Sg_switch_to_files.connect(self.Sl_switch_to_files)
         self.view.main_widget.Sg_switch_to_settings.connect(self.Sl_switch_to_settings)
-        '''  # Connect per caricare il contenuto della cartella selezionata
+        # Connect per caricare il contenuto della cartella selezionata
         self.view.main_widget.files_widget.Sg_update_files_with_new_path.connect(
             self.update_files_with_new_path)
         # Parte dell'algoritmo
-        self.algorithm = MetaData(self.env_settings.value("sync_path"))
+        # self.algorithm = MetaData(self.env_settings.value("sync_path"))
 
-        sync = Thread(target=self.background, daemon=True)
-        sync.setName("algrithm's thread")
-        sync.start()
-   def background(self):
+        # sync = Thread(target=self.background, daemon=True)
+        # sync.setName("algrithm's thread")
+        # sync.start()
+
+    '''def background(self):
         while True:
             # sync do_stuff()
             if self.watcher.status():

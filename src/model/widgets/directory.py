@@ -1,24 +1,21 @@
 import os
 
-from src.model.widgets.file import File
-from datetime import datetime
 from src.model.network.node import Type
+from src.model.network.tree_node import TreeNode
+from src.model.widgets.file import File
 
 
 class Directory:
 
-    def __init__(self, name, path, creation_date, tree):
-        self._name = name
-        self._path = path
+    def __init__(self, tree: TreeNode, override_name: str = None):
+        self._name = tree.get_name() if override_name is None else override_name
+        self._path = tree.get_payload().path
         self._files = []
         self._dirs = []
-        self._creation_date = creation_date
-        self._last_modified_date = creation_date
+        self._creation_date = tree.get_payload().created_at
+        self._last_modified_date = tree.get_updated_at()
         self._node = tree
         self.update_list_of_content()
-
-    def add_file(self, file: File) -> None:
-        self._files.update({file.get_name(): file})
 
     def update_list_of_content(self) -> None:
         self._files.clear()
@@ -28,24 +25,9 @@ class Directory:
         content = self._node.get_children()
         for entry in content:
             if entry.get_payload().type == Type.File:
-                file = File(entry.get_payload().name,
-                            self.__convert_to_date(entry.get_payload().created_at),
-                            self.__convert_to_date(entry.get_payload().updated_at),
-                            self.define_type(entry.get_payload().name),
-                            str(os.stat(entry.get_payload().path).st_size),
-                            "stato file")
-                self._files.append(file)
+                self._files.append(File(entry))
             else:
-                self._dirs.append(
-                    Directory(entry.get_payload().name, entry.get_payload().path, "oggi", entry)
-                )
-
-    def __convert_to_date(self, date: float) -> str:
-        return datetime.fromtimestamp(date).strftime("%Y-%m-%d %H:%M:%S")
-
-    def define_type(self, file_type: str) -> str:
-        pos = file_type.rfind('.')
-        return file_type[(pos + 1):]
+                self._dirs.append(Directory(entry))
 
     def get_name(self) -> str:
         return self._name

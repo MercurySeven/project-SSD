@@ -97,7 +97,6 @@ class Watcher(QObject):
 
 
 class MyHandler(PatternMatchingEventHandler, QObject):
-    Sg_event = Signal()
     """
     Class used to handle all the events caught by the observer
     """

@@ -1,17 +1,16 @@
+from src.model.network.tree_node import TreeNode
+import os
+from .settings_model import SettingsModel
+
+
 class File:
-    def __init__(self,
-                 name: str,
-                 creation_date: str,
-                 last_modified_date: str,
-                 file_type: str,
-                 size: str,
-                 status: str):
-        self._name = name
-        self._creation_date = creation_date
-        self._last_modified_date = last_modified_date
-        self._file_type = file_type
-        self._size = self._right_size(size)
-        self._status = status
+    def __init__(self, node: TreeNode):
+        self._name = node.get_name()
+        self._creation_date = node.get_payload().created_at
+        self._last_modified_date = node.get_updated_at()
+        self._file_type = node.get_payload().type
+        self._size = SettingsModel.convert_size(os.stat(node.get_payload().path).st_size)
+        self._status = 'status'
 
     def get_name(self) -> str:
         return self._name
@@ -48,13 +47,3 @@ class File:
 
     def set_status(self, status: str) -> None:
         self._status = status
-
-    def _right_size(self, size: str) -> str:
-        if 3 < len(size) < 7:
-            return size[:-3] + " KB"
-        if 6 < len(size) < 9:
-            return size[: -6] + " MB"
-        if len(size) > 8:
-            return size[: -8] + " GB"
-        else:
-            return size + " Byte"
