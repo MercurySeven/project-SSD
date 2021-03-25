@@ -26,6 +26,8 @@ class DecisionEngine(Thread):
         while True:
             if self.running:
                 self.compute_decision()
+                self.logger.info("Eseguito DUMP dell'albero locale")
+                tree_builder.dump_client_filesystem(self.env_settings.value("sync_path"))
                 sleep(max(5, self.refresh))
             else:
                 sleep(5)
