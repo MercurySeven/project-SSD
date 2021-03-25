@@ -96,8 +96,7 @@ def create_folder(folder_name: str, parent_folder_id: str = "LOCAL_ROOT") -> str
 def delete_node(node_id: str) -> None:
     """Rimuove il nodo dato l'id"""
     query, params = Query.delete_node(node_id)
-    response = client.execute(gql(query), variable_values=params)
-    print(response)
+    client.execute(gql(query), variable_values=params)
 
 
 def download_node_from_server(node: TreeNode, path: str) -> None:

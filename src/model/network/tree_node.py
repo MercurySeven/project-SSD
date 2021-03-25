@@ -18,9 +18,6 @@ class TreeNode:
         node._parent = self
         self._children.append(node)
 
-        # TODO: Da capire se tenere questa linea
-        # self.get_updated_at() = max(self.get_updated_at(), node.get_updated_at())
-
     def is_directory(self) -> bool:
         return self._payload.type == Type.Folder
 

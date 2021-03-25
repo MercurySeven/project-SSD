@@ -29,20 +29,6 @@ class NetworkModel(QObject):
     def get_user_id(self) -> str:
         return api.get_user_id()
 
-    def get_all_files(self, node_id: str = "LOCAL_ROOT") -> list:
-        return api.get_all_files(node_id)
-
-    def upload_to_server(self, file_path: str) -> None:
-        return api.upload_to_server(file_path)
-
-    def download_from_server(self, file_path: str,
-                             file_name: str,
-                             file_id: str,
-                             created_at: int,
-                             updated_at: int
-                             ) -> None:
-        api.download_from_server(file_path, file_name, file_id, created_at, updated_at)
-
     def is_logged(self) -> bool:
         return api.is_logged()
 
