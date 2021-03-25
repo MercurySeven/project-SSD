@@ -9,6 +9,7 @@ import os
 class SettingsModel(QObject):
 
     Sg_model_changed = Signal()
+    Sg_model_path_changed = Signal()
 
     def __init__(self):
         super(SettingsModel, self).__init__(None)
@@ -28,6 +29,7 @@ class SettingsModel(QObject):
         self.env_settings.setValue("sync_path", new_path)
         self.env_settings.sync()
         self.Sg_model_changed.emit()
+        self.Sg_model_path_changed.emit()
 
     def get_quota_disco_raw(self) -> int:
         """Ritorna il valore grezzo"""

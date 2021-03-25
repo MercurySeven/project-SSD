@@ -1,19 +1,15 @@
 from os import path
-from threading import Thread
-from time import sleep
-
 from PySide6.QtCore import (QObject, Slot, QSettings)
 from PySide6.QtWidgets import (QApplication, QFileDialog)
-
 from src.model.main_model import MainModel
 from src.model.watcher import Watcher
-from src.network.metadata import MetaData
 from src.view.login_screen import LoginScreen
 from src.view.main_view import MainWindow
 from .file_controller import FileController
 from .notification_controller import NotificationController
 from .settings_controller import SettingsController
 from .widgets.sync_controller import SyncController
+from src.algorithm.decision_engine import DecisionEngine
 
 
 class MainController(QObject):
@@ -45,8 +41,9 @@ class MainController(QObject):
                 print("Nuova directory: " + self.env_settings.value("sync_path"))
 
         self.model = MainModel()
+
         self.login_screen = LoginScreen(self.model.network_model)
-        # self.login_screen.show()
+        self.login_screen.show()
 
         # Connetto login vista ai due slot del controller
         self.login_screen.Sg_login_success.connect(self.Sl_logged_in)
@@ -61,8 +58,9 @@ class MainController(QObject):
         self.settings_controller = None
         self.notification_icon = None
         self.watcher = None
-        self.algorithm = None
-        self.create_main_window()
+        self.algo_v2 = None
+        # TODO: Temporaneo
+        self.Sl_login()
 
     def create_main_window(self):
         self.view = MainWindow(self.model)
@@ -78,6 +76,10 @@ class MainController(QObject):
 
         self.notification_icon = NotificationController(self.app, self.view)
 
+        # ALGORITMO V2
+        self.algo_v2 = DecisionEngine(self.model.sync_model.get_state())
+        self.algo_v2.start()
+
         # Attivo il watchdog nella root definita dall'utente
         self.watcher = Watcher()
         # Controllo se l'algoritmo era acceso l'ultima volta
@@ -86,43 +88,41 @@ class MainController(QObject):
         self.model.sync_model.Sg_model_changed.connect(self.Sl_sync_model_changed)
 
         # Ripristino il riavvio di watchdog, quando cambio path
-        self.model.settings_model.Sg_model_changed.connect(self.Sl_path_updated)
+        self.model.settings_model.Sg_model_path_changed.connect(self.Sl_path_updated)
+
+        # connect segnali watchdog
+        self.watcher.signal_event.connect(self.view.main_widget.files_widget.Sl_model_changed)
 
         # Connect per cambiare le viste
         self.view.main_widget.Sg_switch_to_files.connect(self.Sl_switch_to_files)
         self.view.main_widget.Sg_switch_to_settings.connect(self.Sl_switch_to_settings)
-
-        # Connect per caricare il contenuto della cartella selezionata
+        '''  # Connect per caricare il contenuto della cartella selezionata
         self.view.main_widget.files_widget.Sg_update_files_with_new_path.connect(
             self.update_files_with_new_path)
         # Parte dell'algoritmo
         self.algorithm = MetaData(self.env_settings.value("sync_path"))
 
         sync = Thread(target=self.background, daemon=True)
-        sync.setName("algorithm's thread")
+        sync.setName("algrithm's thread")
         sync.start()
-
-    def background(self):
+   def background(self):
         while True:
             # sync do_stuff()
             if self.watcher.status():
                 self.algorithm.apply_changes()
-            sleep(5)
-
+            sleep(5)'''
     @Slot()
     def Sl_path_updated(self):
-        new_path = self.model.settings_model.get_path()
-        if self.algorithm.directory != new_path:
-            self.env_settings.sync()
-            self.algorithm.set_directory(new_path)
-            self.watcher.reboot()
-            if self.watcher.is_running:
-                self.notification_icon.send_message("Watcher riavviato")
+        self.env_settings.sync()
+        self.watcher.reboot()
+        if self.watcher.is_running:
+            self.notification_icon.send_message("Watcher riavviato")
 
     @Slot()
     def Sl_sync_model_changed(self):
         state = self.model.sync_model.get_state()
         self.watcher.run(state)
+        self.algo_v2.set_running(state)
 
     @Slot()
     def Sl_switch_to_files(self):
