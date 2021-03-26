@@ -32,6 +32,7 @@ class FileWidget(QToolButton):
         self.type = file.get_type()
         self.size = file.get_size()
         self.status = file.get_status()
+        self.path = file.get_path()
 
         self.setText(self.name)
         # self.setToolTip("Ultima modifica: " + self.last_modified_date + "\nSize: " + self.size)
@@ -49,9 +50,5 @@ class FileWidget(QToolButton):
             self.timer.start(250)
 
     def on_double_click(self):
-        sync_path = "" if self.env_settings.value("sync_path") is None else \
-            self.env_settings.value("sync_path")
-
-        path = os.path.join(sync_path, self.name)
-        file_path = QUrl.fromUserInput(path)
+        file_path = QUrl.fromUserInput(self.path)
         QDesktopServices.openUrl(file_path)

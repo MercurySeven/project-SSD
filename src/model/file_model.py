@@ -24,7 +24,7 @@ class FileModel(QObject):
     def Sl_update_model(self) -> None:
         self.tree = tree_builder.get_tree_from_system(self.settings.value("sync_path"))  # ricreo tree dalla root
         self.current_folder._node = self.search_node_from_path(self.current_folder._node._payload.path)  # cerco il nodo attuale nel nuovo tree
-        self.current_folder.update_list_of_content() # aggiorno lista carelle e file
+        self.current_folder.update_list_of_content()  # aggiorno lista carelle e file
         self.Sg_model_changed.emit()
 
     def get_data(self) -> Tuple[dict, dict]:

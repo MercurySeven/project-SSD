@@ -15,5 +15,4 @@ class FileController:
 
     @Slot(str)
     def update_files_with_new_path(self, path: str):
-        print(path)
         self._model.set_current_node(path)

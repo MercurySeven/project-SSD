@@ -11,6 +11,7 @@ class File:
         self._file_type = node.get_payload().type
         self._size = SettingsModel.convert_size(os.stat(node.get_payload().path).st_size)
         self._status = 'status'
+        self._path = node.get_payload().path
 
     def get_name(self) -> str:
         return self._name
@@ -29,6 +30,9 @@ class File:
 
     def get_status(self) -> str:
         return self._status
+
+    def get_path(self) -> str:
+        return self._path
 
     def set_name(self, name: str) -> None:
         self._name = name
