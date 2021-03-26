@@ -8,14 +8,14 @@ from gql.transport.exceptions import TransportError, TransportQueryError
 
 
 class APIException(Exception):
-    """eccezzione generica del modulo API."""
+    """eccezione generica del modulo API."""
 
     def __init__(self, message: str = ""):
         super(APIException, self).__init__(message)
 
 
 class LoginError(APIException):
-    """eccezzione lanciata in caso di credenziali errate"""
+    """eccezione lanciata in caso di credenziali errate"""
 
     def __init__(self, message: str = "Credenziali non valide"):
         super(LoginError, self).__init__(message)
@@ -23,10 +23,10 @@ class LoginError(APIException):
 
 class NetworkError(APIException):
     """
-    eccezzione anciata in caso di problermi dovuti alla rete:
+    eccezione anciata in caso di problermi dovuti alla rete:
     connessione assente o server irraggiungibile
 
-    le possibili eccezzioni sono raggruppate in: NetworkErrs"""
+    le possibili eccezioni sono raggruppate in: NetworkErrs"""
 
     def __init__(self, message: str = ""):
         super(NetworkError, self).__init__(message)
@@ -34,10 +34,10 @@ class NetworkError(APIException):
 
 class ServerError(APIException):
     """
-    eccezzione lanciata in caso di errori dovuti alle risposte del server
+    eccezione lanciata in caso di errori dovuti alle risposte del server
     oppure se questo risulta irraggiungibile
 
-    le possibili eccezzioni sono raggruppate in: ServerErrs"""
+    le possibili eccezioni sono raggruppate in: ServerErrs"""
 
     def __init__(self, message: str = ""):
         super(ConnectionError, self).__init__(message)

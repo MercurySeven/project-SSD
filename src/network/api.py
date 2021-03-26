@@ -14,7 +14,7 @@ from requests import Session
 
 Exceptions
 ----------
-il modulo puo lanciare le seguenti eccezzioni:
+il modulo puo lanciare le seguenti eccezioni:
 
 LoginError: in caso di credenziali non valide
 
@@ -67,7 +67,7 @@ def check_status_code(response):
         raise LoginError()
 
     # alza un'ecezzione di tipo HTTPError solo in caso di codici di errore
-    # l'eccezzione è intercettata dal gruppo ServerErrs
+    # l'eccezione è intercettata dal gruppo ServerErrs
     response.raise_for_status()
 
 
@@ -272,7 +272,7 @@ def download_node_from_server(node: TreeNode, path: str) -> None:
         logger.info(f"Download del file {payload.name}, completato con successo")
     else:
         logger.info(f"Download del file {payload.name}, fallito")
-        # alzo le eccezzioni del caso
+        # alzo le eccezioni del caso
         check_status_code(response)
 
 
@@ -302,5 +302,5 @@ def upload_node_to_server(node: TreeNode, parent_id: str = "LOCAL_ROOT"):
         logger.info(f"Upload del file {name}, completato con successo")
     else:
         logger.info(f"Upload del file {name}, fallito")
-        # alzo le eccezzioni del caso
+        # alzo le eccezioni del caso
         check_status_code(response)
