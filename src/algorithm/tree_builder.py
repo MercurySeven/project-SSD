@@ -11,6 +11,8 @@ from typing import Optional
 FILE_DUMP_NAME = "client_dump.mer"
 FOLDER_NAME = ".zextrasdrive"
 
+black_list = [FOLDER_NAME, ".DS_Store"]
+
 
 def _build_tree_node(path: str, name: str) -> TreeNode:
     """Costruisce un TreeNode a partire dal path"""
@@ -29,7 +31,7 @@ def get_tree_from_system(path: str,
     """Funzione ricorsiva per costruire l'albero dato un path"""
     parent_node = _build_tree_node(path, root_name)
     for name in os.listdir(path):
-        if name != FOLDER_NAME:
+        if name not in black_list:
             abs_path = os.path.join(path, name)
             if os.path.isdir(abs_path):
                 get_tree_from_system(abs_path, name, parent_node)
