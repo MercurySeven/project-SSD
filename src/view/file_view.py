@@ -7,7 +7,7 @@ from src.model.widgets.directory import Directory
 from src.model.widgets.file import File
 from src.view.layouts.flowlayout import FlowLayout
 from src.view.widgets.directory_widget import DirectoryWidget
-from src.view.widgets.filewidget import FileWidget
+from src.view.widgets.file_widget import FileWidget
 
 
 class FileView(QWidget):

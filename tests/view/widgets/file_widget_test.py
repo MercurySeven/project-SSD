@@ -4,7 +4,7 @@ import time
 
 from src.algorithm.tree_builder import _build_tree_node
 from src.model.widgets.file import File
-from src.view.widgets.filewidget import FileWidget
+from src.view.widgets.file_widget import FileWidget
 from unittest.mock import patch
 
 
