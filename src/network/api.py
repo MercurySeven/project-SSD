@@ -248,6 +248,12 @@ def create_folder(folder_name: str, parent_folder_id: str = "LOCAL_ROOT") -> str
     return response["createFolder"]["id"]
 
 
+def delete_node(node_id: str) -> None:
+    """Rimuove il nodo dato l'id"""
+    query, params = Query.delete_node(node_id)
+    client.execute(gql(query), variable_values=params)
+
+
 def download_node_from_server(node: TreeNode, path: str) -> None:
     """Il TreeNode viene scaricato e salvato nel path"""
     headers = {
