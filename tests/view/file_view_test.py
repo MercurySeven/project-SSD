@@ -1,6 +1,9 @@
 import os
 import unittest
 from unittest.mock import patch
+
+from PySide6.QtCore import QSettings
+
 from src import settings
 from src.controllers.file_controller import FileController
 from src.model.file_model import FileModel
@@ -10,6 +13,8 @@ from src.view.file_view import FileView
 class FileViewTest(unittest.TestCase):
 
     def setUp(self) -> None:
+        self.env_settings = QSettings()
+        self.env_settings.setValue("sync_path", "tests")
         settings.file_name = "tests/config.ini"
         settings.create_standard_settings()
         self.file_model = FileModel()
