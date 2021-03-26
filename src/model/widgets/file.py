@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 from src.model.network.tree_node import TreeNode
-from .settings_model import SettingsModel
+from src.model.settings_model import SettingsModel
 
 
 class File:

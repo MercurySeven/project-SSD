@@ -1,6 +1,6 @@
 import unittest
 import os
-from src.model.widgets.settings_model import SettingsModel
+from src.model.settings_model import SettingsModel
 from src.network.policy import Policy
 from src import settings
 

@@ -6,7 +6,7 @@ from unittest.mock import patch
 from PySide6.QtWidgets import QApplication
 
 from src import settings
-from src.model.widgets.settings_model import SettingsModel
+from src.model.settings_model import SettingsModel
 from src.controllers.settings_controller import SettingsController
 from src.view.settings_view import SettingsView
 
