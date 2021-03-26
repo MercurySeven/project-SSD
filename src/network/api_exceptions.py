@@ -1,4 +1,9 @@
-from requests.exceptions import RequestException
+from requests.exceptions import (HTTPError, ConnectionError,
+                                 Timeout, URLRequired, TooManyRedirects,
+                                 MissingSchema, InvalidSchema, InvalidURL,
+                                 InvalidHeader, ChunkedEncodingError, ContentDecodingError,
+                                 StreamConsumedError, RetryError, UnrewindableBodyError)
+
 from gql.transport.exceptions import TransportError, TransportQueryError
 
 
@@ -12,35 +17,50 @@ class APIException(Exception):
 class LoginError(APIException):
     """eccezzione lanciata in caso di credenziali errate"""
 
-    def __init__(self, message: str = ""):
+    def __init__(self, message: str = "Credenziali non valide"):
         super(LoginError, self).__init__(message)
 
 
 class NetworkError(APIException):
-    """eccezzione anciata in caso di problermi dovuti alla rete:
+    """
+    eccezzione anciata in caso di problermi dovuti alla rete:
     connessione assente o server irraggiungibile
 
-    raggruppati in NetworkErrs"""
+    le possibili eccezzioni sono raggruppate in: NetworkErrs"""
 
     def __init__(self, message: str = ""):
         super(NetworkError, self).__init__(message)
 
 
 class ServerError(APIException):
-    """eccezzione lanciata in caso di errori dovuti alle risposte del server
-    raggruppati in ServerErrs"""
+    """
+    eccezzione lanciata in caso di errori dovuti alle risposte del server
+    oppure se questo risulta irraggiungibile
+
+    le possibili eccezzioni sono raggruppate in: ServerErrs"""
 
     def __init__(self, message: str = ""):
         super(ConnectionError, self).__init__(message)
 
 
-# TODO migliorare la granularità delle eccezzioni, cosi è troppo generale
-
 NetworkErrs = (
-    RequestException
+    ConnectionError,
+    Timeout
 )
 
 ServerErrs = (
+    HTTPError,
+    URLRequired,
+    TooManyRedirects,
+    MissingSchema,
+    InvalidSchema,
+    InvalidURL,
+    InvalidHeader,
+    ChunkedEncodingError,
+    ContentDecodingError,
+    StreamConsumedError,
+    RetryError,
+    UnrewindableBodyError,
     TransportError,
     TransportQueryError
 )

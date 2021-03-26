@@ -1,12 +1,8 @@
 from PySide6.QtCore import (QObject, Signal)
-
 from src import settings
 from src.network import api
+from src.network.api_exceptions import (LoginError, NetworkError, ServerError)
 from src.network.cookie_session import BadResponse
-
-
-class NetworkErrorsHandler:
-    pass
 
 
 class NetworkModel(QObject):
