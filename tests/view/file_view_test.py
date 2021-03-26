@@ -15,7 +15,7 @@ class FileViewTest(unittest.TestCase):
     def setUp(self) -> None:
         self.env_settings = QSettings()
         self.env_settings.setValue("sync_path", "tests")
-        settings.file_name = "tests/config.ini"
+        settings.file_name = os.path.join("tests", "config.ini")
         settings.create_standard_settings()
         self.file_model = FileModel()
         self.file_view_test = FileView(self.file_model)
