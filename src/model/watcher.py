@@ -28,9 +28,16 @@ class Watcher(QObject):
         env_settings = QSettings()
 
         self.path = lambda: env_settings.value("sync_path")
-        self.is_running: bool = False
 
-        self.handler = MyHandler(self)
+        # Debug < Info < Warning < Error so setting debug will get everything
+        # I need to create a new logger cuz davide's logger is root log
+        self.logger = logging.getLogger("watchdog")
+        self.logger.setLevel(logging.INFO)
+        formatter = logging.Formatter(
+            '%(asctime)s:%(levelname)s:%(pathname)s:%(process)d:%(message)s')
+        file_handler = logging.FileHandler('log.mer')
+        file_handler.setFormatter(formatter)
+        self.logger.addHandler(file_handler)
 
     def run(self, watch):
         """
@@ -41,39 +48,25 @@ class Watcher(QObject):
         :return: True if the requested action was done and False
             if ignored (ex turning off when already off)
         """
-        print("called watchdog")
-        if not watch:
-            if not self.is_running:
-                print("Watchdog già disattivato")
-                return False
-            else:
-                self.observer.unschedule_all()
-                self.observer.stop()
-                print("disattiva watchdog thread")  # debug
-                self.is_running = False
-                return True
+
+        if watch:
+            self.logger.info("attiva thread watchdog")  # debug
+            path = "" if self.path() is None else self.path()
+            self.logger.info("Controllo cartella: " + path)
+            return self.background()
         else:
-            if self.is_running:
-                print("Watchdog già attivato")
-                return False
-            else:
-                print("attiva thread watchdog")  # debug
-                path = "" if self.path() is None else self.path()
-                print("Controllo cartella: " + path)
-                self.is_running = True
-                return self.background()
+            self.observer.unschedule_all()
+            self.observer.stop()
+            self.logger.info("disattiva watchdog thread")  # debug
+            return True
 
     def background(self):
-        """
-        method used to initiate observer and start it
-
-        :return: Nothing
-        """
-        event_handler = MyHandler(self)
+        """method used to initiate observer and start it"""
+        event_handler = MyHandler(self, self.logger)
         # Lo richiamo ogni volta perchè non posso far ripartire lo stesso
         # thread
         self.observer = Observer()
-        self.observer.setName("watchdog's thread")
+        self.observer.setName("Watchdog's thread")
         if self.path() is not None and os.path.isdir(self.path()):
             self.observer.schedule(event_handler, self.path(), recursive=True)
             self.observer.start()
@@ -82,15 +75,9 @@ class Watcher(QObject):
             return False
 
     def reboot(self):
-        """
-        Method used to reboot the observer, turns it off and then on again
-
-        :return: Nothing
-        """
-        was_running = self.is_running
+        """Method used to reboot the observer, turns it off and then on again"""
         self.run(False)
-        if was_running:
-            self.run(True)
+        self.run(True)
 
     def status(self) -> bool:
         return self.is_running
@@ -101,34 +88,16 @@ class MyHandler(PatternMatchingEventHandler, QObject):
     Class used to handle all the events caught by the observer
     """
 
-    def __init__(self, watchdog: Watcher):
+    def __init__(self, watchdog: Watcher, logger):
         """
         This constructor is used to setup which file needs to be ignored when
         caught by the observer
         """
-        super(
-            MyHandler,
-            self).__init__(
-            ignore_patterns=[
-                "*/log.mer",
-                "*/config.ini"])
-
-        # Debug < Info < Warning < Error so setting debug will get everything
-        # I need to create a new logger cuz davide's logger is root log
-        self.logger = logging.getLogger("watchdog")
-
-        self.logger.setLevel(logging.INFO)
-
+        super(MyHandler, self).__init__(ignore_patterns=[
+            "*/log.mer",
+            "*/config.ini"])
         self.watchdog = watchdog
-
-        formatter = logging.Formatter(
-            '%(asctime)s:%(levelname)s:%(pathname)s:%(process)d:%(message)s')
-
-        file_handler = logging.FileHandler('log.mer')
-
-        file_handler.setFormatter(formatter)
-
-        self.logger.addHandler(file_handler)
+        self.logger = logger
 
     """def on_modified(self, event):
         super(MyHandler, self).on_modified(event)

@@ -102,8 +102,7 @@ class MainController(QObject):
     def Sl_path_updated(self):
         self.env_settings.sync()
         self.watcher.reboot()
-        if self.watcher.is_running:
-            self.notification_icon.send_message("Watcher riavviato")
+        self.notification_icon.send_message("Watcher riavviato")
 
     @Slot()
     def Sl_sync_model_changed(self):
