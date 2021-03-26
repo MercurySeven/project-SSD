@@ -4,7 +4,6 @@ from typing import Tuple
 from PySide6.QtCore import (QSettings, Signal, Slot, QObject)
 
 from src.algorithm import tree_builder
-from src.model.network.tree_node import TreeNode
 from src.model.widgets.directory import Directory
 
 
@@ -22,8 +21,10 @@ class FileModel(QObject):
 
     @Slot()
     def Sl_update_model(self) -> None:
-        self.tree = tree_builder.get_tree_from_system(self.settings.value("sync_path"))  # ricreo tree dalla root
-        self.current_folder._node = self.search_node_from_path(self.current_folder._node._payload.path)  # cerco il nodo attuale nel nuovo tree
+        self.tree = tree_builder.get_tree_from_system(
+            self.settings.value("sync_path"))  # ricreo tree dalla root
+        self.current_folder._node = self.search_node_from_path(
+            self.current_folder._node._payload.path)  # cerco il nodo attuale nel nuovo tree
         self.current_folder.update_list_of_content()  # aggiorno lista carelle e file
         self.Sg_model_changed.emit()
 
@@ -44,7 +45,8 @@ class FileModel(QObject):
         if(child):
             self.current_folder._node = child  # imposto figlio come node folder
         else:
-            self.current_folder._node = self.search_node_from_path(path)  # imposto genitore come node folder
+            self.current_folder._node = self.search_node_from_path(
+                path)  # imposto genitore come node folder
         self.Sl_update_model()
 
     def search_node_from_path(self, path: str):
