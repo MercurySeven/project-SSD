@@ -14,17 +14,17 @@ class FileModel(QObject):
         super(FileModel, self).__init__()
         self.settings = QSettings()
         self.tree = tree_builder.get_tree_from_system(self.settings.value("sync_path"))
-        self.current_folder = Directory(self.tree, self.tree._payload.name)
+        self.current_folder = Directory(self.tree, self.tree.get_name())
         self.previous_folder = None
     # per ora ritorna solamente il contenuto del primo livello della directory
     # TODO ampliare la ricerca di una cartella e di un file
 
     @Slot()
     def Sl_update_model(self) -> None:
-        self.tree = tree_builder.get_tree_from_system(
-            self.settings.value("sync_path"))  # ricreo tree dalla root
+        # ricreo tree dalla root
+        self.tree = tree_builder.get_tree_from_system(self.settings.value("sync_path"))
         self.current_folder._node = self.search_node_from_path(
-            self.current_folder._node._payload.path)  # cerco il nodo attuale nel nuovo tree
+            self.current_folder._node.get_payload().path)  # cerco il nodo attuale nel nuovo tree
         self.current_folder.update_list_of_content()  # aggiorno lista carelle e file
         self.Sg_model_changed.emit()
 
@@ -39,14 +39,14 @@ class FileModel(QObject):
         return list_of_files, list_of_dirs
 
     def set_current_node(self, path):
-
         name = path.split('/')[-1]  # ottengo nome folder desiderato
         child = self._search_through_children(name, self.current_folder._node)  # cerco figlio
         if(child):
-            self.current_folder._node = child  # imposto figlio come node folder
+            # imposto figlio come node folder
+            self.current_folder._node = child
         else:
-            self.current_folder._node = self.search_node_from_path(
-                path)  # imposto genitore come node folder
+            # imposto genitore come node folder
+            self.current_folder._node = self.search_node_from_path(path)
         self.Sl_update_model()
 
     def search_node_from_path(self, path: str):
@@ -55,7 +55,7 @@ class FileModel(QObject):
         relative_path = relative_path[relative_path.find(folder_name):]
         folders = relative_path.split(os.path.sep)
         curr_node = self.tree
-        if self.tree._payload.name == "ROOT":
+        if self.tree.get_payload().name == "ROOT":
             folders = folders[1:]
             for f in folders:
                 folder_found = self._search_through_children(f, curr_node)
