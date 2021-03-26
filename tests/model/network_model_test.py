@@ -1,6 +1,8 @@
 import unittest
 from unittest.mock import patch
 
+from PySide6.QtCore import QSettings
+
 from src import settings
 from src.model.network_model import NetworkModel
 from src.network.cookie_session import BadResponse
@@ -10,6 +12,8 @@ class NetworkModelTest(unittest.TestCase):
 
     def setUp(self):
         """Metodo che viene chiamato prima di ogni metodo"""
+        self.env_settings = QSettings()
+        self.env_settings.setValue("sync_path", "tests")
         settings.file_name = "tests/config.ini"
         settings.check_file()
         self.model_test = NetworkModel()

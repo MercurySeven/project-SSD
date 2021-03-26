@@ -1,5 +1,8 @@
 import unittest
 import os
+
+from PySide6.QtCore import QSettings
+
 from src.model.settings_model import SettingsModel
 from src.network.policy import Policy
 from src import settings
@@ -10,6 +13,8 @@ class TestSettings(unittest.TestCase):
     def setUp(self):
         """Metodo che viene chiamato prima di ogni metodo"""
         self.sett_model = SettingsModel()
+        self.env_settings = QSettings()
+        self.env_settings.setValue("sync_path", "tests")
         settings.file_name = "tests/config.ini"
         settings.check_file()
 

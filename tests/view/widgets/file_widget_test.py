@@ -2,6 +2,8 @@ import os
 import unittest
 import time
 
+from PySide6.QtCore import QSettings
+
 from src.algorithm.tree_builder import _build_tree_node
 from src.model.widgets.file import File
 from src.view.widgets.file_widget import FileWidget
@@ -11,6 +13,8 @@ from unittest.mock import patch
 class FileWidgetTest(unittest.TestCase):
 
     def setUp(self) -> None:
+        self.env_settings = QSettings()
+        self.env_settings.setValue("sync_path", "tests")
         self.file_name = os.path.join("tests", "prova.txt")
         with open(self.file_name, "w"):
             pass

@@ -3,6 +3,7 @@ import sys
 import unittest
 from unittest.mock import patch
 
+from PySide6.QtCore import QSettings
 from PySide6.QtWidgets import QApplication
 
 from src import settings
@@ -18,6 +19,8 @@ class SettingsViewTest(unittest.TestCase):
 
     def setUp(self) -> None:
         """ Create the GUI """
+        self.env_settings = QSettings()
+        self.env_settings.setValue("sync_path", "tests")
 
         settings.file_name = "tests/config.ini"
         settings.create_standard_settings()
@@ -120,9 +123,9 @@ class SettingsViewTest(unittest.TestCase):
         value = self.settings_model.get_size()
         new_max_quota = self.settings_model.get_quota_disco()
         new_max_quota_raw = self.settings_model.get_quota_disco_raw()
+        # self.assertEqual(self.quota_test.diskProgress.value(), value)
         self.assertEqual(self.quota_test.diskQuota.text(), f"{value} su {new_max_quota}")
         self.assertEqual(self.quota_test.dedicatedSpace.text(), str(new_max_quota_raw))
-        self.assertEqual(self.quota_test.diskProgress.value(), value)
 
 
 if __name__ == "__main__":
