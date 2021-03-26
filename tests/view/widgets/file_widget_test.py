@@ -1,3 +1,4 @@
+import os
 import unittest
 import time
 
@@ -10,7 +11,7 @@ from unittest.mock import patch
 class FileWidgetTest(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.file_name = "tests/prova.txt"
+        self.file_name = os.path.join("tests", "prova.txt")
         with open(self.file_name, "w"):
             pass
         self.tree = _build_tree_node(self.file_name, "prova")
