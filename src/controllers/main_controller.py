@@ -54,11 +54,10 @@ class MainController(QObject):
         self.view = None
         self.sync_controller = None
         self.file_controller = None
-        self.directory_controller = None
         self.settings_controller = None
         self.notification_icon = None
         self.watcher = None
-        self.algo_v2 = None
+        self.algoritmo = None
         # TODO: Temporaneo
         self.Sl_login()
 
@@ -76,9 +75,9 @@ class MainController(QObject):
 
         self.notification_icon = NotificationController(self.app, self.view)
 
-        # ALGORITMO V2
-        self.algo_v2 = DecisionEngine(self.model.sync_model.get_state())
-        self.algo_v2.start()
+        # ALGORITMO
+        self.algoritmo = DecisionEngine(self.model.sync_model.get_state())
+        self.algoritmo.start()
 
         # Attivo il watchdog nella root definita dall'utente
         self.watcher = Watcher()
@@ -107,7 +106,7 @@ class MainController(QObject):
     @Slot()
     def Sl_sync_model_changed(self):
         state = self.model.sync_model.get_state()
-        self.algo_v2.set_running(state)
+        self.algoritmo.set_running(state)
 
     @Slot()
     def Sl_switch_to_files(self):
