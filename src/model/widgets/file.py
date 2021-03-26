@@ -1,13 +1,14 @@
-from src.model.network.tree_node import TreeNode
 import os
+from datetime import datetime
+from src.model.network.tree_node import TreeNode
 from .settings_model import SettingsModel
 
 
 class File:
     def __init__(self, node: TreeNode):
         self._name = node.get_name()
-        self._creation_date = node.get_payload().created_at
-        self._last_modified_date = node.get_updated_at()
+        self._creation_date = self._convert_int_to_date(node.get_payload().created_at)
+        self._last_modified_date = self._convert_int_to_date(node.get_updated_at())
         self._file_type = node.get_payload().type
         self._size = SettingsModel.convert_size(os.stat(node.get_payload().path).st_size)
         self._status = 'status'
@@ -26,7 +27,7 @@ class File:
         return self._file_type
 
     def get_size(self) -> str:
-        return str(self._size)
+        return self._size
 
     def get_status(self) -> str:
         return self._status
@@ -34,20 +35,6 @@ class File:
     def get_path(self) -> str:
         return self._path
 
-    def set_name(self, name: str) -> None:
-        self._name = name
-
-    def set_creation_date(self, creation_date: str) -> None:
-        self._creation_date = creation_date
-
-    def set_last_modified_date(self, last_modified_date: str) -> None:
-        self._last_modified_date = last_modified_date
-
-    def set_type(self, _file_type: str) -> None:
-        self._file_type = _file_type
-
-    def set_size(self, size: int) -> None:
-        self._size = self._right_size(size)
-
-    def set_status(self, status: str) -> None:
-        self._status = status
+    @staticmethod
+    def _convert_int_to_date(time: int) -> str:
+        return datetime.fromtimestamp(time).strftime("%H:%M:%S %d/%m/%Y")

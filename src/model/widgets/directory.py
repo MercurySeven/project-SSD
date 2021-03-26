@@ -32,15 +32,3 @@ class Directory:
 
     def get_path(self) -> str:
         return self._path
-
-    @property
-    def dirs(self):
-        return self._dirs
-
-    @property
-    def files(self):
-        return self._files
-
-    @property
-    def node(self):
-        return self._node

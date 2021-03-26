@@ -34,7 +34,8 @@ class FileWidget(QToolButton):
         self.path = file.get_path()
 
         self.setText(self.name)
-        # self.setToolTip("Ultima modifica: " + self.last_modified_date + "\nSize: " + self.size)
+        self.setToolTip(
+            f"Nome: {self.name}\nUltima modifica: {self.last_modified_date}\nSize: {self.size}")
 
     def check_double_click(self):
         if self.timer.isActive():
