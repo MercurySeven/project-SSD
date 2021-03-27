@@ -34,13 +34,13 @@ def _compareFiles(client: TreeNode, server: TreeNode) -> list:
                 if cl_file.get_updated_at() > sr_file.get_updated_at():
                     update_files.append({
                         "node": cl_file,
-                        "id": server._payload.id,
+                        "id": server.get_payload().id,
                         "action": Actions.CLIENT_UPDATE_FILE
                     })
                 elif sr_file.get_updated_at() > cl_file.get_updated_at():
                     update_files.append({
                         "node": sr_file,
-                        "path": client._payload.path,
+                        "path": client.get_payload().path,
                         "action": Actions.SERVER_UPDATE_FILE
                     })
                 trovato = True
@@ -49,7 +49,7 @@ def _compareFiles(client: TreeNode, server: TreeNode) -> list:
             # Il client ha un file che nel server non c'è
             update_files.append({
                 "node": cl_file,
-                "id": server._payload.id,
+                "id": server.get_payload().id,
                 "action": Actions.CLIENT_NEW_FILE
             })
 
@@ -62,7 +62,7 @@ def _compareFiles(client: TreeNode, server: TreeNode) -> list:
             # Il server ha un file che nel client non c'è
             update_files.append({
                 "node": sr_file,
-                "path": client._payload.path,
+                "path": client.get_payload().path,
                 "action": Actions.SERVER_NEW_FILE
             })
 
@@ -88,7 +88,7 @@ def compareFolders(client: TreeNode, server: TreeNode) -> list:
             # Il client ha un cartella che nel server non c'è
             update_files.append({
                 "node": cl_folder,
-                "id": server._payload.id,
+                "id": server.get_payload().id,
                 "action": Actions.CLIENT_NEW_FOLDER
             })
 
@@ -101,7 +101,7 @@ def compareFolders(client: TreeNode, server: TreeNode) -> list:
             # Il server ha una cartella che nel client non c'è
             update_files.append({
                 "node": sr_folder,
-                "path": client._payload.path,
+                "path": client.get_payload().path,
                 "action": Actions.SERVER_NEW_FOLDER
             })
     return update_files

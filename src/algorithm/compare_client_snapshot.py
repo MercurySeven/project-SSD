@@ -23,12 +23,12 @@ def compare_snap_client(snapshot: TreeNode, client: TreeNode) -> None:
 
         if action == Actions.CLIENT_NEW_FOLDER:
             # Elimina nel server la cartella
-            node_id = get_id_from_path(node._payload.path)
+            node_id = get_id_from_path(node.get_payload().path)
             transfer_handler.delete_node(node_id)
             logger.info(f"Eliminata nel server la cartella: {name_node}")
         elif action == Actions.CLIENT_NEW_FILE:
             # Elimina nel server il client
-            node_id = get_id_from_path(node._payload.path)
+            node_id = get_id_from_path(node.get_payload().path)
             transfer_handler.delete_node(node_id)
             logger.info(f"Eliminato nel server il file: {name_node}")
         elif action == Actions.SERVER_NEW_FOLDER:
@@ -46,8 +46,9 @@ def compare_snap_client(snapshot: TreeNode, client: TreeNode) -> None:
             # TODO: Per la policy manuale, prendo la data dello snapshot del file, la confronto
             # con la data del server, se quella del server è diversa significa che ho avuto un
             # upload nel mentre ero offline.
-            # path = r["path"]
-            # transfer_handler.download_file(node, path)
+            # parent_id = get_id_from_path(r["path"])
+            # transfer_handler.upload_file(node, parent_id)
+            # logger.info(f"File aggiornato rispetto lo snapshot, carico nel server: {name_node}")
 
 
 def get_id_from_path(path: str) -> str:
@@ -58,8 +59,8 @@ def get_id_from_path(path: str) -> str:
 
     current_node = tree_builder.get_tree_from_node_id()
     for name in node_name:
-        for node in current_node._children:
+        for node in current_node.get_children():
             if node.get_name() == name:
                 current_node = node
                 break
-    return current_node._payload.id
+    return current_node.get_payload().id

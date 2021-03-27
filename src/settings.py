@@ -69,7 +69,7 @@ def get_quota_disco() -> int:
         result = int(value)
         return result
     except ValueError:
-        logger.warning("Il valore di quota disco non è int")
+        logger.warning("Il valore di quota disco non e' int")
         update_quota_disco("1024")
         return 1024
 
@@ -89,7 +89,7 @@ def get_policy() -> int:
     try:
         return int(get_config("General", "policy"))
     except ValueError:
-        logger.warning("Il valore di policy non è int")
+        logger.warning("Il valore di policy non e' int")
         update_policy(1)
         return 1
 

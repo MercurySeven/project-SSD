@@ -2,7 +2,7 @@ from PySide6.QtCore import (Qt, Signal, Slot)
 from PySide6.QtGui import (QIntValidator)
 from PySide6.QtWidgets import (QWidget, QProgressBar, QLabel, QVBoxLayout, QLineEdit)
 
-from src.model.widgets.settings_model import SettingsModel
+from src.model.settings_model import SettingsModel
 
 
 class SetQuotaDiskView(QWidget):

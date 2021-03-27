@@ -1,14 +1,17 @@
-from PySide6.QtCore import (QSettings, QUrl, Slot, Qt)
+from PySide6.QtCore import (QSettings, QUrl, Slot, Qt, Signal)
 from PySide6.QtGui import (QDesktopServices)
 from PySide6.QtWidgets import (QVBoxLayout, QHBoxLayout, QWidget, QScrollArea, QPushButton, QLabel)
 
 from src.model.file_model import FileModel
+from src.model.widgets.directory import Directory
+from src.model.widgets.file import File
 from src.view.layouts.flowlayout import FlowLayout
-from src.view.widgets.directory_widget import Direcory_Widget
-from src.view.widgets.filewidget import FileWidget
+from src.view.widgets.directory_widget import DirectoryWidget
+from src.view.widgets.file_widget import FileWidget
 
 
 class FileView(QWidget):
+    Sg_update_files_with_new_path = Signal(str)
 
     def __init__(self, model: FileModel, parent=None):
         super(FileView, self).__init__(parent)
@@ -52,8 +55,6 @@ class FileView(QWidget):
         layout.addWidget(self.scrollArea)
         self.setLayout(layout)
 
-        self.list_of_file_widget = []
-        self.list_of_dirs_widget = []
         self.Sl_model_changed()
 
     @Slot()
@@ -61,22 +62,20 @@ class FileView(QWidget):
         path = QUrl.fromUserInput(self.env_settings.value("sync_path"))
         QDesktopServices.openUrl(path)
 
-    def update_content(self, list_of_files: list, list_of_dirs: list) -> None:
+    def update_content(self, list_of_files: list[File], list_of_dirs: list[Directory]) -> None:
         for i in reversed(range(self.fileLayout.count())):
             self.fileLayout.itemAt(i).widget().setParent(None)
-        self.list_of_file_widget.clear()
-        self.list_of_dirs_widget.clear()
         for i in list_of_dirs:
-            dir = Direcory_Widget(i)
-            self.list_of_dirs_widget.append(dir)
-            self.fileLayout.addWidget(dir)
+            self.fileLayout.addWidget(DirectoryWidget(i, self))
         for i in list_of_files:
-            file = FileWidget(i)
-            self.list_of_file_widget.append(file)
-            self.fileLayout.addWidget(file)
+            self.fileLayout.addWidget(FileWidget(i))
 
     @Slot()
     def Sl_model_changed(self) -> None:
         """metodo chiamato dal notify del modello quando questo si aggiorna"""
         list_of_files, list_of_dirs = self._model.get_data()
         self.update_content(list_of_files, list_of_dirs)
+
+    @Slot(str)
+    def update_files_with_new_path(self, path: str):
+        self.Sg_update_files_with_new_path.emit(path)

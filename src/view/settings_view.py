@@ -1,7 +1,7 @@
 from PySide6.QtCore import (Qt)
 from PySide6.QtWidgets import (QLabel, QVBoxLayout, QWidget)
 
-from src.model.widgets.settings_model import SettingsModel
+from src.model.settings_model import SettingsModel
 from src.view.widgets.settings.set_path_view import SetPathView
 from src.view.widgets.settings.set_policy_view import SetPolicyView
 from src.view.widgets.settings.set_quota_disk_view import SetQuotaDiskView

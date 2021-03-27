@@ -1,7 +1,8 @@
 import os
+import pathlib
 import unittest
 
-from PySide6.QtCore import QSize
+from PySide6.QtCore import QSize, QSettings
 
 from src import settings
 from src.model.widgets.sync_model import SyncModel
@@ -14,6 +15,8 @@ class SyncWidgetTest(unittest.TestCase):
 
     def setUp(self):
         """Metodo che viene chiamato prima di ogni metodo"""
+        self.env_settings = QSettings()
+        self.env_settings.setValue("sync_path", str(pathlib.Path().absolute()) + "/tests")
         settings.file_name = "tests/config.ini"
         settings.create_standard_settings()
         self.sync_model = SyncModel()

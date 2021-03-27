@@ -3,7 +3,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import (Signal, Slot)
 
 from src.network.policy import Policy
-from src.model.widgets.settings_model import SettingsModel
+from src.model.settings_model import SettingsModel
 
 
 class SetPolicyView(QWidget):

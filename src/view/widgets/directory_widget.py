@@ -5,19 +5,16 @@ from PySide6.QtCore import (Qt, QSize, QTimer, Signal, QSettings, QUrl)
 from src.model.widgets.directory import Directory
 
 
-class Direcory_Widget(QToolButton):
-    Sg_double_clicked = Signal()
-    Sg_load_current_content = Signal()
+class DirectoryWidget(QToolButton):
+    Sg_double_clicked = Signal(str)
 
-    def __init__(self, dir: Directory):
-        super(Direcory_Widget, self).__init__()
-
+    def __init__(self, dir: Directory, parent=None):
+        super(DirectoryWidget, self).__init__()
+        self.parent = parent
         self.env_settings = QSettings()
         self.timer = QTimer()
         self.timer.setSingleShot(True)
         self.clicked.connect(self.check_double_click)
-
-        self.Sg_double_clicked.connect(self.on_double_click)
 
         self.setAccessibleName('Directory')
 
@@ -28,18 +25,18 @@ class Direcory_Widget(QToolButton):
         self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
 
         self.name = dir.get_name()
-        self.creation_date = dir.get_creation_date()
-        self.last_modified_date = dir.get_last_modified_date()
-
+        self.path = dir.get_path()
         self.setText(self.name)
+
+        self.Sg_double_clicked.connect(self.parent.update_files_with_new_path)
         # add fields to structure
 
     def check_double_click(self):
         if self.timer.isActive():
             time = self.timer.remainingTime()
             if time > 0:
-                self.Sg_double_clicked.emit()
-            self.timer.stop()
+                self.Sg_double_clicked.emit(self.path)
+                self.timer.stop()
             if time <= 0:
                 self.timer.start(250)
 

@@ -104,7 +104,7 @@ def download_node_from_server(node: TreeNode, path: str) -> None:
     headers = {
         "cookie": cookie
     }
-    payload = node._payload
+    payload = node.get_payload()
     url = f"{url_files}{get_user_id()}/{payload.id}"
     response = requests.get(url, headers=headers)
 
@@ -126,9 +126,9 @@ def upload_node_to_server(node: TreeNode, parent_id: str = "LOCAL_ROOT") -> None
     }
 
     name = node.get_name()
-    content = open(node._payload.path, "rb")
+    content = open(node.get_payload().path, "rb")
     updated_at = node.get_updated_at()
-    created_at = node._payload.created_at
+    created_at = node.get_payload().created_at
 
     multipart_form = {
         "command": "upload",

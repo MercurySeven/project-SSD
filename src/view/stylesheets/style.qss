@@ -197,6 +197,23 @@ QWidget[accessibleName='Stacked'] QToolButton[accessibleName='File']:hover {
     background-color: #353535;
 }
 
+QWidget[accessibleName='Stacked'] QToolButton[accessibleName='Directory'] {
+    border-radius: 6px;
+    min-width: 100px;
+    max-width: 100px;
+    min-height: 100px;
+    max-height: 100px;
+    width: 100%;
+    text-align:bottom;
+    background-color: #2A2A2A;
+    font: 14px
+}
+
+QWidget[accessibleName='Stacked'] QToolButton[accessibleName='Directory']:hover {
+    background-color: #353535;
+}
+
+
 QWidget[accessibleName='FileScroll'] QScrollBar {
     width: 6px;
     border-radius: 6px;

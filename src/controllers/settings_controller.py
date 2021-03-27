@@ -1,5 +1,5 @@
 from src.view.settings_view import SettingsView
-from src.model.widgets.settings_model import SettingsModel
+from src.model.settings_model import SettingsModel
 from PySide6.QtCore import (Slot)
 from src.network.policy import Policy
 

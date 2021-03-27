@@ -1,5 +1,5 @@
 from __future__ import annotations
-from .node import (Node, Type)
+from src.model.network.node import (Node, Type)
 from datetime import datetime
 
 
@@ -27,12 +27,18 @@ class TreeNode:
     def get_updated_at(self) -> int:
         return self._payload.updated_at
 
+    def get_children(self) -> list:
+        return self._children
+
+    def get_payload(self) -> Node:
+        return self._payload
+
     def __str__(self, level: int = 0):
         """Metodo per stampare tutto l'albero"""
         folder = " - Folder" if self.is_directory() else ""
         formatted_date = datetime.fromtimestamp(self.get_updated_at()).strftime("%d/%m/%Y %H:%M:%S")
         ret = " " * level + \
             f"{self.get_name()}{folder} ({self.get_updated_at()} -> {formatted_date})\n"
-        for child in self._children:
+        for child in self.get_children():
             ret += child.__str__(level + 1)
         return ret
