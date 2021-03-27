@@ -50,14 +50,14 @@ class Watcher(QObject):
         """
 
         if watch:
-            self.logger.info("attiva thread watchdog")  # debug
+            self.logger.info("Attivato watchdog")
             path = "" if self.path() is None else self.path()
             self.logger.info("Controllo cartella: " + path)
             return self.background()
         else:
             self.observer.unschedule_all()
             self.observer.stop()
-            self.logger.info("disattiva watchdog thread")  # debug
+            self.logger.info("Disattivato watchdog")
             return True
 
     def background(self):

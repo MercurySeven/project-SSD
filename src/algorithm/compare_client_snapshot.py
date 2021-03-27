@@ -46,8 +46,9 @@ def compare_snap_client(snapshot: TreeNode, client: TreeNode) -> None:
             # TODO: Per la policy manuale, prendo la data dello snapshot del file, la confronto
             # con la data del server, se quella del server è diversa significa che ho avuto un
             # upload nel mentre ero offline.
-            # path = r["path"]
-            # transfer_handler.download_file(node, path)
+            # parent_id = get_id_from_path(r["path"])
+            # transfer_handler.upload_file(node, parent_id)
+            # logger.info(f"File aggiornato rispetto lo snapshot, carico nel server: {name_node}")
 
 
 def get_id_from_path(path: str) -> str:
