@@ -1,13 +1,15 @@
-from PySide6.QtCore import (QObject, Signal, QSettings)
-from typing import Optional
-from src.network.policy import Policy
-from src import settings
 import math
 import os
+from typing import Optional
+
+import psutil
+from PySide6.QtCore import (QObject, Signal, QSettings)
+
+from src import settings
+from src.network.policy import Policy
 
 
 class SettingsModel(QObject):
-
     Sg_model_changed = Signal()
     Sg_model_path_changed = Signal()
 
@@ -40,8 +42,13 @@ class SettingsModel(QObject):
         return self.convert_size(settings.get_quota_disco())
 
     def set_quota_disco(self, new_quota: str) -> None:
-        settings.update_quota_disco(new_quota)
-        self.Sg_model_changed.emit()
+        # trasforma new_quota scritto in mb in byte (non funziona)
+        # quota = (int(new_quota) * 1024) ** 2
+        mem = psutil.disk_usage('/')
+        if int(new_quota) >= int(self.get_size()) \
+                and (int(new_quota) <= mem.free):
+            settings.update_quota_disco(new_quota)
+            self.Sg_model_changed.emit()
 
     def is_logged():
         if(True):
