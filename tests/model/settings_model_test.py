@@ -2,7 +2,7 @@ import pathlib
 import unittest
 import os
 
-from PySide6.QtCore import QSettings
+from PySide6.QtCore import QSettings, QCoreApplication
 
 from src.model.settings_model import SettingsModel
 from src.network.policy import Policy
@@ -14,6 +14,8 @@ class TestSettings(unittest.TestCase):
     def setUp(self):
         """Metodo che viene chiamato prima di ogni metodo"""
         self.env_settings = QSettings()
+        QCoreApplication.setOrganizationName("MercurySeven")
+        QCoreApplication.setApplicationName("SSD")
         self.sett_model = SettingsModel()
         self.path = str(pathlib.Path().absolute()) + "/tests"
         self.path = r'%s' % self.path

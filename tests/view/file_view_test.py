@@ -3,7 +3,7 @@ import pathlib
 import unittest
 from unittest.mock import patch
 
-from PySide6.QtCore import QSettings
+from PySide6.QtCore import QSettings, QCoreApplication
 
 from src import settings
 from src.controllers.file_controller import FileController
@@ -15,6 +15,8 @@ class FileViewTest(unittest.TestCase):
 
     def setUp(self) -> None:
         self.env_settings = QSettings()
+        QCoreApplication.setOrganizationName("MercurySeven")
+        QCoreApplication.setApplicationName("SSD")
         self.path = str(pathlib.Path().absolute()) + "/tests"
         self.path = r'%s' % self.path
         pathlib.Path(self.path).mkdir(parents=True, exist_ok=True)
