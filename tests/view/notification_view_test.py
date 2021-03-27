@@ -1,3 +1,4 @@
+import pathlib
 import unittest
 from unittest.mock import patch
 
@@ -10,7 +11,8 @@ class NotificationViewTest(unittest.TestCase):
 
     def setUp(self) -> None:
         self.env_settings = QSettings()
-        self.env_settings.setValue("sync_path", "tests")
+        pathlib.Path(str(pathlib.Path().absolute()) + "/tests").mkdir(parents=True, exist_ok=True)
+        self.env_settings.setValue("sync_path", str(pathlib.Path().absolute()) + "/tests")
         self.notify_test = NotificationView()
 
     def test_defaults(self):

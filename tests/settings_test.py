@@ -1,3 +1,4 @@
+import pathlib
 import unittest
 import os
 
@@ -11,7 +12,8 @@ class TestSettings(unittest.TestCase):
     def setUp(self):
         """Metodo che viene chiamato prima di ogni metodo"""
         self.env_settings = QSettings()
-        self.env_settings.setValue("sync_path", "tests")
+        pathlib.Path(str(pathlib.Path().absolute()) + "/tests").mkdir(parents=True, exist_ok=True)
+        self.env_settings.setValue("sync_path", str(pathlib.Path().absolute()) + "/tests")
         settings.file_name = "tests/config.ini"
         settings.create_standard_settings()
 

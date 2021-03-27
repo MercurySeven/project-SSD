@@ -1,3 +1,4 @@
+import pathlib
 import unittest
 
 from PySide6.QtCore import QMargins, QSettings
@@ -10,7 +11,8 @@ class FlowLayoutTest(unittest.TestCase):
 
     def setUp(self) -> None:
         self.env_settings = QSettings()
-        self.env_settings.setValue("sync_path", "tests")
+        pathlib.Path(str(pathlib.Path().absolute()) + "/tests").mkdir(parents=True, exist_ok=True)
+        self.env_settings.setValue("sync_path", str(pathlib.Path().absolute()) + "/tests")
         self.layout_test = FlowLayout()
         self.file1 = File("nome", "creation date", "last mod date", "txt", "100", "status")
         self.file2 = File("nome", "creation date", "last mod date", "txt", "100", "status")

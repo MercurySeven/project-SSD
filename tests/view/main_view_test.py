@@ -1,4 +1,5 @@
 import os
+import pathlib
 import unittest
 
 from PySide6.QtCore import QSettings
@@ -12,7 +13,8 @@ class MainWindowTest(unittest.TestCase):
 
     def setUp(self) -> None:
         self.env_settings = QSettings()
-        self.env_settings.setValue("sync_path", "tests")
+        pathlib.Path(str(pathlib.Path().absolute()) + "/tests").mkdir(parents=True, exist_ok=True)
+        self.env_settings.setValue("sync_path", str(pathlib.Path().absolute()) + "/tests")
         settings.file_name = "tests/config.ini"
         settings.create_standard_settings()
         self.main_model = MainModel()

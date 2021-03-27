@@ -1,4 +1,5 @@
 import os
+import pathlib
 import unittest
 import time
 
@@ -14,7 +15,7 @@ class FileWidgetTest(unittest.TestCase):
 
     def setUp(self) -> None:
         self.env_settings = QSettings()
-        self.env_settings.setValue("sync_path", "tests")
+        self.env_settings.setValue("sync_path", str(pathlib.Path().absolute()) + "/tests")
         self.file_name = os.path.join("tests", "prova.txt")
         with open(self.file_name, "w"):
             pass
