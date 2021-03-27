@@ -6,10 +6,10 @@ class DiffModel():
 
         self.is_text_file = True
         try:
-            with open(file_left_path, "r") as fh:
+            with open(file_left_path, "r", encoding="utf-8") as fh:
                 self.file_left = fh.read()
 
-            with open(file_right_path, "r") as fh:
+            with open(file_right_path, "r", encoding="utf-8") as fh:
                 self.file_right = fh.read()
         except UnicodeDecodeError:
             self.is_text_file = False
