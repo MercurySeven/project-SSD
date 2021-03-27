@@ -16,8 +16,6 @@ class FileModel(QObject):
         self.tree = tree_builder.get_tree_from_system(self.settings.value("sync_path"))
         self.current_folder = Directory(self.tree, self.tree.get_name())
         self.previous_folder = None
-    # per ora ritorna solamente il contenuto del primo livello della directory
-    # TODO ampliare la ricerca di una cartella e di un file
 
     @Slot()
     def Sl_update_model(self) -> None:
