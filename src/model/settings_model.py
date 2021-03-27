@@ -47,7 +47,7 @@ class SettingsModel(QObject):
         mem = psutil.disk_usage('/')
         if int(new_quota) >= int(self.get_size()) \
                 and (int(new_quota) <= mem.free):
-            settings.update_quota_disco(new_quota)
+            settings.update_quota_disco(str(new_quota))
             self.Sg_model_changed.emit()
 
     def is_logged(self):

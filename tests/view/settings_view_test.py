@@ -126,12 +126,9 @@ class SettingsViewTest(unittest.TestCase):
         """ Test changing the quota"""
         self.quota_test.dedicatedSpace.setText("2222")
         self.quota_test.emit_changes()
-        value = self.settings_model.get_size()
+        value = self.settings_model.convert_size(self.settings_model.get_size())
         new_max_quota = self.settings_model.get_quota_disco()
-        new_max_quota_raw = self.settings_model.get_quota_disco_raw()
-        # self.assertEqual(self.quota_test.diskProgress.value(), value)
         self.assertEqual(self.quota_test.diskQuota.text(), f"{value} su {new_max_quota}")
-        self.assertEqual(self.quota_test.dedicatedSpace.text(), str(new_max_quota_raw))
 
 
 if __name__ == "__main__":

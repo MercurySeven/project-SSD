@@ -64,14 +64,14 @@ class TestSettings(unittest.TestCase):
     def test_set_quota_disco(self) -> None:
         value = self.sett_model.get_quota_disco_raw()
         self.assertEqual(1024, value)
-
-        self.sett_model.set_quota_disco("2048")
+        new_value = self.sett_model.get_size()+1
+        self.sett_model.set_quota_disco(new_value)
 
         value = self.sett_model.get_quota_disco_raw()
-        self.assertEqual(2048, value)
+        self.assertEqual(new_value, value)
 
         value = self.sett_model.get_quota_disco()
-        self.assertEqual("2.0 KB", value)
+        self.assertEqual(self.sett_model.convert_size(new_value), value)
 
 
 if __name__ == "__main__":
