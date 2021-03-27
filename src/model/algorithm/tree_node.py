@@ -1,5 +1,5 @@
 from __future__ import annotations
-from src.model.network.node import (Node, Type)
+from src.model.algorithm.node import (Node, Type)
 from datetime import datetime
 
 

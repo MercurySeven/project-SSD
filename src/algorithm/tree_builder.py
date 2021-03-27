@@ -4,8 +4,8 @@ import pickle
 import sys
 import ctypes
 import src.network.api as api
-from src.model.network.tree_node import TreeNode
-from src.model.network.node import Node, Type
+from src.model.algorithm.tree_node import TreeNode
+from src.model.algorithm.node import Node, Type
 from typing import Optional
 
 FILE_DUMP_NAME = "client_dump.mer"
@@ -86,9 +86,12 @@ def read_dump_client_filesystem(path: str) -> Optional[TreeNode]:
     hidden_folder_path = _create_hidden_folder(path)
     file_path = os.path.join(hidden_folder_path, FILE_DUMP_NAME)
     if os.path.isfile(file_path):
-        with open(file_path, 'rb') as f:
-            data: TreeNode = pickle.load(f)
-        return data
+        try:
+            with open(file_path, 'rb') as f:
+                data: TreeNode = pickle.load(f)
+            return data
+        except Exception:
+            return None
     else:
         return None
 

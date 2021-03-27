@@ -1,6 +1,6 @@
-from src.model.network.tree_node import TreeNode
 import os
 import src.network.api as api
+from src.model.algorithm.tree_node import TreeNode
 
 
 def download_folder(node: TreeNode, path: str) -> None:

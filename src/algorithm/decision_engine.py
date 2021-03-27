@@ -8,7 +8,7 @@ from PySide6.QtCore import QSettings
 
 from . import tree_builder, tree_comparator, transfer_handler, compare_client_snapshot as ccs
 from .tree_comparator import Actions
-from src.model.network.tree_node import TreeNode
+from src.model.algorithm.tree_node import TreeNode
 
 
 class DecisionEngine(Thread):

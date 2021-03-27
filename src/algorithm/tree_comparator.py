@@ -1,4 +1,4 @@
-from src.model.network.tree_node import TreeNode
+from src.model.algorithm.tree_node import TreeNode
 from enum import Enum
 
 

@@ -1,7 +1,7 @@
 import os
 
-from src.model.network.node import Type
-from src.model.network.tree_node import TreeNode
+from src.model.algorithm.node import Type
+from src.model.algorithm.tree_node import TreeNode
 from src.model.widgets.file import File
 
 

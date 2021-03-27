@@ -3,6 +3,7 @@ from PySide6.QtCore import (QObject, Signal)
 from src import settings
 from src.network import api
 from src.network.cookie_session import BadResponse
+from src.model.algorithm.tree_node import TreeNode
 
 
 class NetworkModel(QObject):
@@ -49,3 +50,12 @@ class NetworkModel(QObject):
             self.message = ""
             return True
         return False
+
+    def download_file(node: TreeNode, path_folder: str) -> None:
+        api.download_node_from_server(node, path_folder)
+
+    def upload_file(node: TreeNode, parent_folder_id: str) -> None:
+        api.upload_node_to_server(node, parent_folder_id)
+
+    def delete_node(node_id: str) -> None:
+        api.delete_node(node_id)

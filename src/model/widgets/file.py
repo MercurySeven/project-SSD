@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from src.model.network.tree_node import TreeNode
+from src.model.algorithm.tree_node import TreeNode
 from src.model.settings_model import SettingsModel
 
 
