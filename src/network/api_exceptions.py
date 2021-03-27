@@ -10,9 +10,6 @@ from gql.transport.exceptions import TransportError, TransportQueryError
 class APIException(Exception):
     """eccezione generica del modulo API."""
 
-    def __init__(self, message: str = ""):
-        super(APIException, self).__init__(message)
-
 
 class LoginError(APIException):
     """eccezione lanciata in caso di credenziali errate"""
@@ -23,7 +20,7 @@ class LoginError(APIException):
 
 class NetworkError(APIException):
     """
-    eccezione anciata in caso di problermi dovuti alla rete:
+    eccezione lanciata in caso di problermi dovuti alla rete:
     connessione assente o server irraggiungibile
 
     le possibili eccezioni sono raggruppate in: NetworkErrs"""
@@ -40,7 +37,7 @@ class ServerError(APIException):
     le possibili eccezioni sono raggruppate in: ServerErrs"""
 
     def __init__(self, message: str = ""):
-        super(ConnectionError, self).__init__(message)
+        super(ServerError, self).__init__(message)
 
 
 NetworkErrs = (

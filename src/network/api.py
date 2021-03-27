@@ -18,7 +18,7 @@ il modulo puo lanciare le seguenti eccezioni:
 
 LoginError: in caso di credenziali non valide
 
-NetworkError: in caso di errori dovuti alla connessione (internet down, DNS failure, ecc) 
+NetworkError: in caso di errori dovuti alla connessione (internet down, DNS failure, ecc)
 
 ServerError: in caso di risposte errate da parte del server o del protocollo http in generale
 
@@ -38,19 +38,19 @@ logger = logging.getLogger("API")
 
 
 def ExceptionsHandler(func):
-    global logger
+    logger = logging.getLogger("API.ExceptionsHandler")
 
     def inner(*args, **kwargs):
         try:
             return func(*args, **kwargs)
 
         except NetworkErrs as e:
-            logger.error(f"ExceptionsHandler found {str(e)}")
-            logger.error("ExceptionsHandler: raise NetworkError")
+            logger.error(f"found {str(e)}")
+            logger.error("raise NetworkError")
             raise NetworkError(f"{func.__name__}: {str(e)}")
         except ServerErrs as e:
-            logger.error(f"ExceptionsHandler found {str(e)}")
-            logger.error("ExceptionsHandler: raise ServerError")
+            logger.error(f"found {str(e)}")
+            logger.error("raise ServerError")
             raise ServerError()
 
     return inner
@@ -81,19 +81,20 @@ def cookie2str(cookie: dict) -> str:
 def is_logged(_cookie: str = "") -> bool:
     global logger
     global cookie
+    global url_base
     logger.debug("checking login status...")
 
     def OK():
         logger.debug("logged")
         return True
-    
+
     def KO():
         logger.debug("not logged")
         return False
 
     c = _cookie if _cookie else cookie
-    r = requests.get(url_base, headers={"cookie":c})
-    KO() if "LoginScreen" in r.text else OK()
+    r = requests.get(url_base, headers={"cookie": c})
+    return KO() if "LoginScreen" in r.text else OK()
 
 
 @ExceptionsHandler
@@ -155,8 +156,6 @@ def login(_email: str = "", _pwd: str = "") -> bool:
         password = _pwd
         cookie = new_cookie
 
-        logger.debug(f"NEW COOKIE {cookie}")
-
         init_client()
         return True
     else:
@@ -195,14 +194,6 @@ def logout() -> bool:
     client = None
     logger.debug("logout")
     return True
-
-
-@ExceptionsHandler
-def set_username_and_pwd(_email: str, _pwd: str) -> None:
-    global email
-    global password
-    email = _email
-    password = _pwd
 
 
 @ExceptionsHandler
