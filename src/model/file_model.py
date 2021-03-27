@@ -13,7 +13,9 @@ class FileModel(QObject):
     def __init__(self):
         super(FileModel, self).__init__()
         self.settings = QSettings()
-        self.tree = tree_builder.get_tree_from_system(self.settings.value("sync_path"))
+        self.path = self.settings.value("sync_path")
+        print(r'%s' % self.path)
+        self.tree = tree_builder.get_tree_from_system(self.path)
         self.current_folder = Directory(self.tree, self.tree.get_name())
         self.previous_folder = None
 

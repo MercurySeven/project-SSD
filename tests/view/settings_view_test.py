@@ -2,7 +2,6 @@ import os
 import sys
 import unittest
 from unittest.mock import patch
-from pathlib import Path
 import pathlib
 
 from PySide6.QtCore import QSettings
@@ -22,8 +21,10 @@ class SettingsViewTest(unittest.TestCase):
     def setUp(self) -> None:
         """ Create the GUI """
         self.env_settings = QSettings()
-        Path(str(pathlib.Path().absolute()) + "/tests").mkdir(parents=True, exist_ok=True)
-        self.env_settings.setValue("sync_path", str(pathlib.Path().absolute()) + "/tests")
+        self.path = str(pathlib.Path().absolute()) + "/tests"
+        self.path = r'%s' % self.path
+        pathlib.Path(self.path).mkdir(parents=True, exist_ok=True)
+        self.env_settings.setValue("sync_path", self.path)
 
         settings.file_name = "tests/config.ini"
         settings.create_standard_settings()
