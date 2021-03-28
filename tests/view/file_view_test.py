@@ -24,6 +24,8 @@ class FileViewTest(unittest.TestCase):
         pathlib.Path(self.path).mkdir(parents=True, exist_ok=True)
         settings.file_name = os.path.join(self.path, "config.ini")
 
+        print("AAAAAAAAAAAAAAAAAAAAAAAAa" + self.path)
+
         self.env_settings.setValue("sync_path", self.path)
         settings.create_standard_settings()
 
