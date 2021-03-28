@@ -17,7 +17,6 @@ class FileModel(QObject):
         QCoreApplication.setApplicationName("SSD")
         self.path = self.settings.value("sync_path")
         self.path = r'%s' % self.path
-        print("CCCCCCCCCCCCCCCCCCCC" + self.path)
         self.tree = tree_builder.get_tree_from_system(self.path)
         self.current_folder = Directory(self.tree, self.tree.get_name())
         self.previous_folder = None
