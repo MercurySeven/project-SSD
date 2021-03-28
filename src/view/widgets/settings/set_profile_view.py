@@ -47,5 +47,5 @@ class SetProfileVeiw(QWidget):
 
     @Slot()
     def Sl_model_changed(self):
-        if(self._model.is_logged):
+        if self._model.is_logged:
             self.userName.setText(self._model.get_username())
