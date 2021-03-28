@@ -78,6 +78,7 @@ class TestTreeNode(unittest.TestCase):
                " Test2 (1024 -> 01/01/1970 01:17:04)\n"
                " Test Folder2 - Folder (1025 -> 01/01/1970 01:17:05)\n"
                "  Test3 (1026 -> 01/01/1970 01:17:06)\n")
+        self.assertEqual.__self__.maxDiff = None
         self.assertEqual(res, str(self.tree_node))
 
 
