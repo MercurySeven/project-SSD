@@ -2,6 +2,8 @@ import os
 import pathlib
 import unittest
 
+from PySide6.QtCore import QCoreApplication, QSettings
+
 from src import settings
 from src.model.main_model import MainModel
 from src.view.main_view import MainWindow, MainWidget
@@ -10,9 +12,15 @@ from src.view.main_view import MainWindow, MainWidget
 class MainWindowTest(unittest.TestCase):
 
     def setUp(self) -> None:
+        self.env_settings = QSettings()
+        QCoreApplication.setOrganizationName("MercurySeven")
+        QCoreApplication.setApplicationName("SSD")
+        self.restore_path = self.env_settings.value("sync_path")
+
         self.path = os.path.join(str(pathlib.Path().absolute()), "tests")
         self.path = r'%s' % self.path
         pathlib.Path(self.path).mkdir(parents=True, exist_ok=True)
+        self.env_settings.setValue("sync_path", self.path)
         settings.file_name = os.path.join(self.path, "config.ini")
         settings.create_standard_settings()
 
@@ -24,6 +32,7 @@ class MainWindowTest(unittest.TestCase):
     def tearDown(self) -> None:
         """Metodo che viene chiamato dopo ogni metodo"""
         os.remove(settings.file_name)
+        self.env_settings.setValue("sync_path", self.restore_path)
 
     def test_defaults(self):
         self.assertEqual(self.main_widget_test.container_menu.accessibleName(),
