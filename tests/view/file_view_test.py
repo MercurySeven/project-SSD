@@ -18,6 +18,7 @@ class FileViewTest(unittest.TestCase):
         QCoreApplication.setOrganizationName("MercurySeven")
         QCoreApplication.setApplicationName("SSD")
         self.restore_path = self.env_settings.value("sync_path")
+        self.env_settings.setValue("sync_path", self.path)
 
         self.path = os.path.join(str(pathlib.Path().absolute()), "tests")
         self.path = r'%s' % self.path
