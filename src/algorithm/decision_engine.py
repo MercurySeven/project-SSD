@@ -60,7 +60,6 @@ class DecisionEngine(Thread):
             action: Actions = r["action"]
             node: TreeNode = r["node"]
             name_node = node.get_name()
-            self.logger.info(action.name + " " + node.get_name())
             if action == Actions.CLIENT_NEW_FOLDER:
                 if snapshot:
                     shutil.rmtree(node._payload.path)

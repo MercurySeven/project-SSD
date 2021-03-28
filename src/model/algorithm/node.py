@@ -22,4 +22,4 @@ class Node:
         self.type: Type = type
         self.created_at: int = created_at
         self.updated_at: int = updated_at
-        self.path = path
+        self.path: str = path
