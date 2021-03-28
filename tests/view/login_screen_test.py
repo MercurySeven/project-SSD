@@ -15,12 +15,14 @@ class LoginScreenTest(unittest.TestCase):
         QCoreApplication.setOrganizationName("MercurySeven")
         QCoreApplication.setApplicationName("SSD")
         self.restore_path = self.env_settings.value("sync_path")
-        self.env_settings.setValue("sync_path", self.path)
 
         self.path = os.path.join(str(pathlib.Path().absolute()), "tests")
         self.path = r'%s' % self.path
         pathlib.Path(self.path).mkdir(parents=True, exist_ok=True)
         settings.file_name = os.path.join(self.path, "config.ini")
+
+        self.env_settings.setValue("sync_path", self.path)
+
         settings.create_standard_settings()
         self.model = MainModel()
         self.login_test = LoginScreen(self.model.network_model)
