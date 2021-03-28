@@ -2,8 +2,6 @@ import pathlib
 import unittest
 import os
 
-from PySide6.QtCore import QSettings, QCoreApplication
-
 import src.settings as settings
 
 
@@ -11,14 +9,10 @@ class TestSettings(unittest.TestCase):
 
     def setUp(self):
         """Metodo che viene chiamato prima di ogni metodo"""
-        self.env_settings = QSettings()
-        QCoreApplication.setOrganizationName("MercurySeven")
-        QCoreApplication.setApplicationName("SSD")
-        self.path = str(pathlib.Path().absolute()) + "/tests"
+        self.path = os.path.join(str(pathlib.Path().absolute()), "tests")
         self.path = r'%s' % self.path
         pathlib.Path(self.path).mkdir(parents=True, exist_ok=True)
-        self.env_settings.setValue("sync_path", self.path)
-        settings.file_name = "tests/config.ini"
+        settings.file_name = os.path.join(self.path, "config.ini")
         settings.create_standard_settings()
 
     def tearDown(self):

@@ -1,8 +1,5 @@
-import pathlib
 import unittest
 from unittest.mock import patch
-
-from PySide6.QtCore import QSettings, QCoreApplication
 
 from src.view.notification_view import NotificationView
 
@@ -10,13 +7,6 @@ from src.view.notification_view import NotificationView
 class NotificationViewTest(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.env_settings = QSettings()
-        QCoreApplication.setOrganizationName("MercurySeven")
-        QCoreApplication.setApplicationName("SSD")
-        self.path = str(pathlib.Path().absolute()) + "/tests"
-        self.path = r'%s' % self.path
-        pathlib.Path(self.path).mkdir(parents=True, exist_ok=True)
-        self.env_settings.setValue("sync_path", self.path)
         self.notify_test = NotificationView()
 
     def test_defaults(self):
