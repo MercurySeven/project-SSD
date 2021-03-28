@@ -7,7 +7,7 @@ from PySide6.QtCore import QCoreApplication, QSettings
 
 from src import settings
 from src.controllers.file_controller import FileController
-from src.model.file_model import FileModel
+from src.model.main_model import MainModel
 from src.view.file_view import FileView
 
 
@@ -22,15 +22,14 @@ class FileViewTest(unittest.TestCase):
         self.path = os.path.join(str(pathlib.Path().absolute()), "tests")
         self.path = r'%s' % self.path
         pathlib.Path(self.path).mkdir(parents=True, exist_ok=True)
+        settings.file_name = os.path.join(self.path, "config.ini")
 
         self.env_settings.setValue("sync_path", self.path)
-
-        settings.file_name = os.path.join(self.path, "config.ini")
         settings.create_standard_settings()
 
-        self.file_model = FileModel()
-        self.file_view_test = FileView(self.file_model)
-        self.file_controller = FileController(self.file_model, self.file_view_test)
+        self.main_model = MainModel()
+        self.file_view_test = FileView(self.main_model.file_model)
+        self.file_controller = FileController(self.main_model.file_model, self.file_view_test)
 
     def tearDown(self) -> None:
         os.remove(settings.file_name)
