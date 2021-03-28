@@ -1,32 +1,23 @@
-import pathlib
 import unittest
-import os
-
-from PySide6.QtCore import QSettings, QCoreApplication
 
 from src.model.settings_model import SettingsModel
 from src.network.policy import Policy
-from src import settings
+from tests import default_code
 
 
 class TestSettings(unittest.TestCase):
 
     def setUp(self):
         """Metodo che viene chiamato prima di ogni metodo"""
-        self.env_settings = QSettings()
-        QCoreApplication.setOrganizationName("MercurySeven")
-        QCoreApplication.setApplicationName("SSD")
+        tmp = default_code.setUp()
+        self.restore_path = tmp[0]
+        self.env_settings = tmp[1]
+
         self.sett_model = SettingsModel()
-        self.path = str(pathlib.Path().absolute()) + "/tests"
-        self.path = r'%s' % self.path
-        pathlib.Path(self.path).mkdir(parents=True, exist_ok=True)
-        self.env_settings.setValue("sync_path", self.path)
-        settings.file_name = "tests/config.ini"
-        settings.check_file()
 
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""
-        os.remove(settings.file_name)
+        default_code.tearDown(self.env_settings, self.restore_path)
 
     def test_get_policy(self) -> None:
         result = self.sett_model.get_policy()

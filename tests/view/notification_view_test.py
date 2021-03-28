@@ -1,23 +1,20 @@
-import pathlib
 import unittest
 from unittest.mock import patch
 
-from PySide6.QtCore import QSettings, QCoreApplication
-
 from src.view.notification_view import NotificationView
+from tests import default_code
 
 
 class NotificationViewTest(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.env_settings = QSettings()
-        QCoreApplication.setOrganizationName("MercurySeven")
-        QCoreApplication.setApplicationName("SSD")
-        self.path = str(pathlib.Path().absolute()) + "/tests"
-        self.path = r'%s' % self.path
-        pathlib.Path(self.path).mkdir(parents=True, exist_ok=True)
-        self.env_settings.setValue("sync_path", self.path)
+        tmp = default_code.setUp()
+        self.restore_path = tmp[0]
+        self.env_settings = tmp[1]
         self.notify_test = NotificationView()
+
+    def tearDown(self) -> None:
+        default_code.tearDown(self.env_settings, self.restore_path)
 
     def test_defaults(self):
         """ Test notification view test default values"""

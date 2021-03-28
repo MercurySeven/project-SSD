@@ -3,7 +3,7 @@ import pathlib
 import unittest
 import time
 
-from PySide6.QtCore import QSettings
+from PySide6.QtCore import QSettings, QCoreApplication
 
 from src.algorithm.tree_builder import _build_tree_node
 from src.model.widgets.file import File
@@ -15,13 +15,24 @@ class FileWidgetTest(unittest.TestCase):
 
     def setUp(self) -> None:
         self.env_settings = QSettings()
-        self.env_settings.setValue("sync_path", str(pathlib.Path().absolute()) + "/tests")
-        self.file_name = os.path.join("tests", "prova.txt")
+        QCoreApplication.setOrganizationName("MercurySeven")
+        QCoreApplication.setApplicationName("SSD")
+        self.restore_path = self.env_settings.value("sync_path")
+        self.path = os.path.join(str(pathlib.Path().absolute()), "tests")
+        self.path = r'%s' % self.path
+        pathlib.Path(self.path).mkdir(parents=True, exist_ok=True)
+        self.env_settings.setValue("sync_path", self.path)
+        self.file_name = os.path.join(self.path, "prova.txt")
         with open(self.file_name, "w"):
             pass
         self.tree = _build_tree_node(self.file_name, "prova")
         self.file = File(self.tree)
         self.file_view_test = FileWidget(self.file)
+
+    def tearDown(self):
+        """Metodo che viene chiamato dopo ogni metodo"""
+        os.remove(os.path.join(self.path, "prova.txt"))
+        self.env_settings.setValue("sync_path", self.restore_path)
 
     def test_defaults(self):
         """ Test file_widget default values"""

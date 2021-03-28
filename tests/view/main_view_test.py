@@ -1,26 +1,16 @@
-import os
-import pathlib
 import unittest
-
-from PySide6.QtCore import QSettings, QCoreApplication
-
-from src import settings
 from src.model.main_model import MainModel
 from src.view.main_view import MainWindow, MainWidget
+from tests import default_code
 
 
 class MainWindowTest(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.env_settings = QSettings()
-        QCoreApplication.setOrganizationName("MercurySeven")
-        QCoreApplication.setApplicationName("SSD")
-        self.path = str(pathlib.Path().absolute()) + "/tests"
-        self.path = r'%s' % self.path
-        pathlib.Path(self.path).mkdir(parents=True, exist_ok=True)
-        self.env_settings.setValue("sync_path", self.path)
-        settings.file_name = "tests/config.ini"
-        settings.create_standard_settings()
+
+        tmp = default_code.setUp()
+        self.restore_path = tmp[0]
+        self.env_settings = tmp[1]
         self.main_model = MainModel()
         self.main_window = MainWindow(self.main_model)
         self.main_widget_test = self.main_window.main_widget
@@ -28,7 +18,7 @@ class MainWindowTest(unittest.TestCase):
 
     def tearDown(self) -> None:
         """Metodo che viene chiamato dopo ogni metodo"""
-        os.remove(settings.file_name)
+        default_code.tearDown(self.env_settings, self.restore_path)
 
     def test_defaults(self):
         self.assertEqual(self.main_widget_test.container_menu.accessibleName(),
