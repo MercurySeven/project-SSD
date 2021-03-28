@@ -1,27 +1,22 @@
-import os
-import pathlib
 import unittest
 from unittest.mock import patch
-
-from src import settings
 from src.model.network_model import NetworkModel
 from src.network.cookie_session import BadResponse
+from tests import default_code
 
 
 class NetworkModelTest(unittest.TestCase):
 
     def setUp(self):
         """Metodo che viene chiamato prima di ogni metodo"""
-        self.path = os.path.join(str(pathlib.Path().absolute()), "tests")
-        self.path = r'%s' % self.path
-        pathlib.Path(self.path).mkdir(parents=True, exist_ok=True)
-        settings.file_name = os.path.join(self.path, "config.ini")
-        settings.check_file()
+        tmp = default_code.setUp()
+        self.restore_path = tmp[0]
+        self.env_settings = tmp[1]
         self.model_test = NetworkModel()
 
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""
-        os.remove(settings.file_name)
+        default_code.tearDown(self.env_settings, self.restore_path)
 
     @patch('src.network.cookie_session.CookieSession._login', return_value=False)
     def test_login_value_exception(self, mocked_function):
