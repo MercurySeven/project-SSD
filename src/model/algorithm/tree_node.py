@@ -1,6 +1,6 @@
 from __future__ import annotations
 from src.model.algorithm.node import (Node, Type)
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 class TreeNode:
@@ -36,7 +36,8 @@ class TreeNode:
     def __str__(self, level: int = 0):
         """Metodo per stampare tutto l'albero"""
         folder = " - Folder" if self.is_directory() else ""
-        formatted_date = datetime.fromtimestamp(self.get_updated_at()).strftime("%d/%m/%Y %H:%M:%S")
+        formatted_date = datetime.fromtimestamp(
+            self.get_updated_at(), timezone.utc).strftime("%d/%m/%Y %H:%M:%S")
         ret = " " * level + \
             f"{self.get_name()}{folder} ({self.get_updated_at()} -> {formatted_date})\n"
         for child in self.get_children():
