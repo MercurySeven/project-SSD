@@ -27,6 +27,8 @@ class FileViewTest(unittest.TestCase):
         print("AAAAAAAAAAAAAAAAAAAAAAAAa" + self.path)
 
         self.env_settings.setValue("sync_path", self.path)
+
+        print("BBBBBBBBBBBBBBBBBBBBBBB " + self.env_settings.value("sync_path"))
         settings.create_standard_settings()
 
         self.main_model = MainModel()
@@ -35,7 +37,7 @@ class FileViewTest(unittest.TestCase):
 
     def tearDown(self) -> None:
         os.remove(settings.file_name)
-        self.env_settings.setValue("sync_path", self.restore_path)
+        # self.env_settings.setValue("sync_path", self.restore_path)
 
     def test_defaults(self):
         """ Test file view test default values"""
