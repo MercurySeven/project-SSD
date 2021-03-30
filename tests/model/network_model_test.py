@@ -42,8 +42,8 @@ class NetworkModelTest(unittest.TestCase):
 
     @patch('src.network.api.login', return_value=False)
     def test_login_server_response_exception(self, mocked_function):
-        exception_string = "Bad response: test test test"
-        mocked_function.side_effect = ServerError("Server error")
+        exception_string = "Server error"
+        mocked_function.side_effect = ServerError(exception_string)
         self.model_test.login("test", "test")
         self.assertEqual(False, self.model_test.is_logged())
         self.assertEqual(exception_string, self.model_test.get_message())
