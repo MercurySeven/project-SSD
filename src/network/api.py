@@ -2,7 +2,7 @@ import os
 import logging
 import requests
 from .query_model import Query
-from src.model.network.tree_node import TreeNode
+from src.model.algorithm.tree_node import TreeNode
 from gql import gql, Client
 from gql.transport.requests import RequestsHTTPTransport
 from .api_exceptions import (LoginError, NetworkError, ServerError, NetworkErrs, ServerErrs)
