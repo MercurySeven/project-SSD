@@ -19,10 +19,7 @@ if __name__ == "__main__":
 
     # initialize logging format
     _format = "%(asctime)s:%(levelname)s:%(filename)s:%(name)s:%(message)s"
-    logging.basicConfig(filename="SSD.log",
-                        level=logging.DEBUG,
-                        format=_format,
-                        datefmt='%m/%d/%Y %H:%M:%S ')
+    logging.basicConfig(level=logging.INFO, format=_format)
     # rimuove i log spammosi di rete
     logging.getLogger("gql.transport.aiohttp").setLevel(logging.WARNING)
     logging.getLogger("gql.transport.requests").setLevel(logging.WARNING)
