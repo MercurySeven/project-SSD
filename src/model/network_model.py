@@ -114,9 +114,6 @@ class NetworkModel(QObject):
     def is_logged(self) -> bool:
         return api.is_logged()
 
-    def get_message(self) -> str:
-        return self.message
-
     def get_credentials(self) -> [str, str]:
         return [self.get_username(), self.get_password()]
 
@@ -150,3 +147,13 @@ class NetworkModel(QObject):
     @RetryLogin
     def delete_node(self, node_id: str) -> None:
         api.delete_node(node_id)
+
+    @APIExceptionsHandler
+    @RetryLogin
+    def get_content_from_node(self, node_id: str = "LOCAL_ROOT") -> str:
+        return api.get_content_from_node(node_id)
+
+    @APIExceptionsHandler
+    @RetryLogin
+    def create_folder(self, folder_name: str, parent_folder_id: str = "LOCAL_ROOT") -> str:
+        return api.create_folder(folder_name, parent_folder_id)

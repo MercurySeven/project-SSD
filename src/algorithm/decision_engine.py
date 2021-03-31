@@ -9,10 +9,11 @@ from PySide6.QtCore import QSettings
 from . import tree_builder, tree_comparator, transfer_handler, compare_client_snapshot as ccs
 from .tree_comparator import Actions
 from src.model.algorithm.tree_node import TreeNode
+from src.model.network_model import NetworkModel
 
 
 class DecisionEngine(Thread):
-    def __init__(self, running: bool):
+    def __init__(self, running: bool, model: NetworkModel):
         Thread.__init__(self)
         self.setName("Algoritmo V3")
         self.setDaemon(True)
@@ -20,6 +21,10 @@ class DecisionEngine(Thread):
         # TODO: Il refresh minimo sarà ogni 60 secondi
         self.refresh: int = 15
         self.running = running
+
+        # set istanza di NetworkModel nei moduli per poter gestire i segnali di errore
+        transfer_handler.set_model(model)
+        tree_builder.set_model(model)
 
         self.logger = logging.getLogger("decision_engine")
 

@@ -238,13 +238,13 @@ def create_folder(folder_name: str, parent_folder_id: str = "LOCAL_ROOT") -> str
     response = client.execute(gql(query), variable_values=params)
     return response["createFolder"]["id"]
 
-
+@ExceptionsHandler
 def delete_node(node_id: str) -> None:
     """Rimuove il nodo dato l'id"""
     query, params = Query.delete_node(node_id)
     client.execute(gql(query), variable_values=params)
 
-
+@ExceptionsHandler
 def download_node_from_server(node: TreeNode, path: str) -> None:
     """Il TreeNode viene scaricato e salvato nel path"""
     headers = {
@@ -266,7 +266,7 @@ def download_node_from_server(node: TreeNode, path: str) -> None:
         # alzo le eccezioni del caso
         check_status_code(response)
 
-
+@ExceptionsHandler
 def upload_node_to_server(node: TreeNode, parent_id: str = "LOCAL_ROOT"):
     """Carica un nodo, all'interno del parent passato"""
     headers = {

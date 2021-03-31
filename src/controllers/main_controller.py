@@ -76,7 +76,7 @@ class MainController(QObject):
         self.notification_icon = NotificationController(self.app, self.view)
 
         # ALGORITMO
-        self.algoritmo = DecisionEngine(self.model.sync_model.get_state())
+        self.algoritmo = DecisionEngine(self.model.sync_model.get_state(), self.model.network_model)
         self.algoritmo.start()
 
         # Attivo il watchdog nella root definita dall'utente

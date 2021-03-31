@@ -1,6 +1,14 @@
 import os
-import src.network.api as api
 from src.model.algorithm.tree_node import TreeNode
+from src.model.network_model import NetworkModel
+
+
+networkmodel: NetworkModel = None
+
+
+def set_model(model: NetworkModel):
+    global networkmodel
+    networkmodel = model
 
 
 def download_folder(node: TreeNode, path: str) -> None:
@@ -16,7 +24,9 @@ def download_folder(node: TreeNode, path: str) -> None:
 
 def upload_folder(node: TreeNode, parent_folder_id: str = "LOCAL_ROOT") -> None:
     """Il nodo rappresenta la cartella che non esiste nel server"""
-    parent_folder_id = api.create_folder(node.get_name(), parent_folder_id)
+    global networkmodel
+
+    parent_folder_id = networkmodel.create_folder(node.get_name(), parent_folder_id)
 
     for _node in node.get_children():
         if _node.is_directory():
@@ -26,12 +36,15 @@ def upload_folder(node: TreeNode, parent_folder_id: str = "LOCAL_ROOT") -> None:
 
 
 def download_file(node: TreeNode, path_folder: str) -> None:
-    api.download_node_from_server(node, path_folder)
+    global networkmodel
+    networkmodel.download_file(node, path_folder)
 
 
 def upload_file(node: TreeNode, parent_folder_id: str) -> None:
-    api.upload_node_to_server(node, parent_folder_id)
+    networkmodel
+    networkmodel.upload_file(node, parent_folder_id)
 
 
 def delete_node(node_id: str) -> None:
-    api.delete_node(node_id)
+    networkmodel
+    networkmodel.delete_node(node_id)

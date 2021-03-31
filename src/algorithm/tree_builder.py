@@ -3,15 +3,22 @@ import math
 import pickle
 import sys
 import ctypes
-import src.network.api as api
 from src.model.algorithm.tree_node import TreeNode
 from src.model.algorithm.node import Node, Type
 from typing import Optional
+from src.model.network_model import NetworkModel
+
 
 FILE_DUMP_NAME = "client_dump.mer"
 FOLDER_NAME = ".zextrasdrive"
 
 black_list = [FOLDER_NAME, ".DS_Store"]
+networkmodel: NetworkModel = None
+
+
+def set_model(model: NetworkModel):
+    global networkmodel
+    networkmodel = model
 
 
 def _build_tree_node(path: str, name: str) -> TreeNode:
@@ -55,7 +62,8 @@ def _create_node_from_dict(dict: str) -> TreeNode:
 
 def get_tree_from_node_id(node_id: str = "LOCAL_ROOT") -> TreeNode:
     """Funzione ricorsiva per costruire l'albero remodo dato un node_id"""
-    json = api.get_content_from_node(node_id)
+    global networkmodel
+    json = networkmodel.get_content_from_node(node_id)
     folder = _create_node_from_dict(json["getNode"])
     for _file in json["getNode"]["children"]:
         new_node = _create_node_from_dict(_file)
