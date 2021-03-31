@@ -6,7 +6,7 @@ import psutil
 from PySide6.QtCore import (QObject, Signal, QSettings)
 
 from src import settings
-from src.network.policy import Policy
+from src.algorithm.policy import Policy
 
 
 class SettingsModel(QObject):

@@ -1,7 +1,7 @@
 import unittest
 
 from src.model.settings_model import SettingsModel
-from src.network.policy import Policy
+from src.algorithm.policy import Policy
 from tests import default_code
 
 

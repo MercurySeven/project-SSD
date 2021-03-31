@@ -1,7 +1,7 @@
 from src.view.settings_view import SettingsView
 from src.model.settings_model import SettingsModel
 from PySide6.QtCore import (Slot)
-from src.network.policy import Policy
+from src.algorithm.policy import Policy
 
 
 class SettingsController:
