@@ -39,7 +39,7 @@ def APIExceptionsHandler(func):
     logger = logging.getLogger("NetworkModel.APIExceptionsHandler")
 
     @wraps(func)
-    def handle(self, *args, **kwargs):
+    def APIExceptionHandle(self, *args, **kwargs):
         try:
 
             return func(self, *args, **kwargs)
@@ -60,11 +60,11 @@ def APIExceptionsHandler(func):
                 logger.error("Signal Sg_connection_failed emitted")
                 self.Sg_server_failed.emit()
 
-    return handle
+    return APIExceptionHandle
 
 
 class NetworkModel(QObject):
-    logger = logging.getLogger("NETWORK_MODEL")
+    logger = logging.getLogger("NetworkModel")
 
     Sg_model_changed = Signal()
     Sg_logout = Signal()
