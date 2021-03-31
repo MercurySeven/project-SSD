@@ -30,7 +30,6 @@ class NetworkModelTest(unittest.TestCase):
         # self.assertRaises(ValueError, self.model_test.login("test", "test"))
         self.model_test.login("test", "test")
         self.assertEqual(False, self.model_test.is_logged())
-        self.assertEqual(exception_string, self.model_test.get_message())
 
     @patch('src.network.api.login', return_value=False)
     def test_login_response_exception(self, mocked_function):
@@ -38,7 +37,6 @@ class NetworkModelTest(unittest.TestCase):
         mocked_function.side_effect = LoginError(exception_string)
         self.model_test.login("test", "test")
         self.assertEqual(False, self.model_test.is_logged())
-        self.assertEqual(exception_string, self.model_test.get_message())
 
     @patch('src.network.api.login', return_value=False)
     def test_login_server_response_exception(self, mocked_function):
@@ -46,7 +44,6 @@ class NetworkModelTest(unittest.TestCase):
         mocked_function.side_effect = ServerError(exception_string)
         self.model_test.login("test", "test")
         self.assertEqual(False, self.model_test.is_logged())
-        self.assertEqual(exception_string, self.model_test.get_message())
 
     @patch('src.network.api.login', return_value=True)
     @patch('src.network.api.is_logged', return_value=True)
