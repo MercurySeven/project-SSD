@@ -6,7 +6,7 @@ import shutil
 
 from PySide6.QtCore import QSettings
 
-from . import tree_builder, tree_comparator, transfer_handler, compare_client_snapshot as ccs
+from . import tree_builder, tree_comparator, os_handler, compare_client_snapshot as ccs
 from .tree_comparator import Actions
 from src.model.algorithm.tree_node import TreeNode
 from src.model.network_model import NetworkModel
@@ -23,7 +23,7 @@ class DecisionEngine(Thread):
         self.running = running
 
         # set istanza di NetworkModel nei moduli per poter gestire i segnali di errore
-        transfer_handler.set_model(model)
+        os_handler.set_model(model)
         tree_builder.set_model(model)
 
         self.logger = logging.getLogger("decision_engine")
@@ -71,7 +71,7 @@ class DecisionEngine(Thread):
                     self.logger.info(f"Eliminata cartella non presente nel server: {name_node}")
                 else:
                     id_parent = r["id"]
-                    transfer_handler.upload_folder(node, id_parent)
+                    os_handler.upload_folder(node, id_parent)
                     self.logger.info(f"Nuova cartella da caricare nel server: {name_node}")
             elif action == Actions.CLIENT_NEW_FILE:
                 if snapshot:
@@ -79,21 +79,21 @@ class DecisionEngine(Thread):
                     self.logger.info(f"Eliminato file non presente nel server: {name_node}")
                 else:
                     path = r["id"]
-                    transfer_handler.upload_file(node, path)
+                    os_handler.upload_file(node, path)
                     self.logger.info(f"Nuovo file da caricare nel server: {name_node}")
             elif action == Actions.CLIENT_UPDATE_FILE:
                 path = r["id"]
-                transfer_handler.upload_file(node, path)
+                os_handler.upload_file(node, path)
                 self.logger.info(action.name + " " + name_node)
             elif action == Actions.SERVER_NEW_FOLDER:
                 path = r["path"]
-                transfer_handler.download_folder(node, path)
+                os_handler.download_folder(node, path)
                 self.logger.info(action.name + " " + name_node)
             elif action == Actions.SERVER_NEW_FILE:
                 path = r["path"]
-                transfer_handler.download_file(node, path)
+                os_handler.download_file(node, path)
                 self.logger.info(action.name + " " + name_node)
             elif action == Actions.SERVER_UPDATE_FILE:
                 path = r["path"]
-                transfer_handler.download_file(node, path)
+                os_handler.download_file(node, path)
                 self.logger.info(action.name + " " + name_node)

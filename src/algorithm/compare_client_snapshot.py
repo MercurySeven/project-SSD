@@ -2,7 +2,7 @@ import os
 import logging
 from PySide6.QtCore import QSettings
 
-from . import tree_builder, tree_comparator, transfer_handler
+from . import tree_builder, tree_comparator, os_handler
 from .tree_comparator import Actions
 from src.model.algorithm.tree_node import TreeNode
 
@@ -24,22 +24,22 @@ def compare_snap_client(snapshot: TreeNode, client: TreeNode) -> None:
         if action == Actions.CLIENT_NEW_FOLDER:
             # Elimina nel server la cartella
             node_id = get_id_from_path(node.get_payload().path)
-            transfer_handler.delete_node(node_id)
+            os_handler.delete_node(node_id)
             logger.info(f"Eliminata nel server la cartella: {name_node}")
         elif action == Actions.CLIENT_NEW_FILE:
             # Elimina nel server il client
             node_id = get_id_from_path(node.get_payload().path)
-            transfer_handler.delete_node(node_id)
+            os_handler.delete_node(node_id)
             logger.info(f"Eliminato nel server il file: {name_node}")
         elif action == Actions.SERVER_NEW_FOLDER:
             # Il client ha una nuova cartella che deve essere caricata nel server
             parent_id = get_id_from_path(r["path"])
-            transfer_handler.upload_folder(node, parent_id)
+            os_handler.upload_folder(node, parent_id)
             logger.info(f"Nuova cartella da caricare nel server: {name_node}")
         elif action == Actions.SERVER_NEW_FILE:
             # Il client ha un nuovo file che deve essere caricato nel server
             parent_id = get_id_from_path(r["path"])
-            transfer_handler.upload_file(node, parent_id)
+            os_handler.upload_file(node, parent_id)
             logger.info(f"Nuovo file da caricare nel server: {name_node}")
         # elif action == Actions.SERVER_UPDATE_FILE:
             # Il client ha un file aggiornato rispetto allo snapshot
@@ -47,7 +47,7 @@ def compare_snap_client(snapshot: TreeNode, client: TreeNode) -> None:
             # con la data del server, se quella del server è diversa significa che ho avuto un
             # upload nel mentre ero offline.
             # parent_id = get_id_from_path(r["path"])
-            # transfer_handler.upload_file(node, parent_id)
+            # os_handler.upload_file(node, parent_id)
             # logger.info(f"File aggiornato rispetto lo snapshot, carico nel server: {name_node}")
 
 
