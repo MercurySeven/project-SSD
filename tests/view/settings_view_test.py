@@ -22,9 +22,9 @@ class SettingsViewTest(unittest.TestCase):
         self.main_model = MainModel()
         self.settings_view = SettingsView(self.main_model.settings_model)
 
-        self.path_test = self.settings_view.set_path_view
-        self.policy_test = self.settings_view.set_policy_view
-        self.quota_test = self.settings_view.set_quota_disk_view
+        self.path_test = self.settings_view.set_path_widget
+        self.policy_test = self.settings_view.set_policy_widget
+        self.quota_test = self.settings_view.set_quota_disk_widget
 
         self.path_test.debug = True
 

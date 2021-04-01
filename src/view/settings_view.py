@@ -18,17 +18,17 @@ class SettingsView(QWidget):
         self.title.setAccessibleName("Title")
 
         # Impostazioni Path
-        self.set_path_view = SetPathWidget(model)
+        self.set_path_widget = SetPathWidget(model)
         # Impostazioni Policy
-        self.set_policy_view = SetPolicyWidget(model)
+        self.set_policy_widget = SetPolicyWidget(model)
         # Impostazioni quota disco
-        self.set_quota_disk_view = SetQuotaDiskWidget(model)
+        self.set_quota_disk_widget = SetQuotaDiskWidget(model)
 
         # layout
         layout = QVBoxLayout()
         layout.addWidget(self.title)
-        layout.addWidget(self.set_path_view)
-        layout.addWidget(self.set_policy_view)
-        layout.addWidget(self.set_quota_disk_view)
+        layout.addWidget(self.set_path_widget)
+        layout.addWidget(self.set_policy_widget)
+        layout.addWidget(self.set_quota_disk_widget)
         layout.addStretch()
         self.setLayout(layout)
