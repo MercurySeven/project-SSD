@@ -16,7 +16,7 @@ black_list = [FOLDER_NAME, ".DS_Store"]
 networkmodel: NetworkModel = None
 
 
-def set_model(model: NetworkModel):
+def set_model(model: NetworkModel) -> None:
     global networkmodel
     networkmodel = model
 
