@@ -5,12 +5,12 @@ from PySide6.QtWidgets import (QWidget, QProgressBar, QLabel, QVBoxLayout, QLine
 from src.model.settings_model import SettingsModel
 
 
-class SetQuotaDiskView(QWidget):
+class SetQuotaDiskWidget(QWidget):
 
     Sg_view_changed = Signal()
 
     def __init__(self, model: SettingsModel, parent=None):
-        super(SetQuotaDiskView, self).__init__(parent)
+        super(SetQuotaDiskWidget, self).__init__(parent)
 
         self._model = model
 

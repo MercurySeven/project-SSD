@@ -4,7 +4,7 @@ from PySide6.QtWidgets import (QLabel, QVBoxLayout, QWidget)
 from src.model.settings_model import SettingsModel
 from src.view.widgets.settings.set_path_widget import SetPathWidget
 from src.view.widgets.settings.set_policy_view import SetPolicyView
-from src.view.widgets.settings.set_quota_disk_view import SetQuotaDiskView
+from src.view.widgets.settings.set_quota_disk_widget import SetQuotaDiskWidget
 
 
 class SettingsView(QWidget):
@@ -22,7 +22,7 @@ class SettingsView(QWidget):
         # Impostazioni Policy
         self.set_policy_view = SetPolicyView(model)
         # Impostazioni quota disco
-        self.set_quota_disk_view = SetQuotaDiskView(model)
+        self.set_quota_disk_view = SetQuotaDiskWidget(model)
 
         # layout
         layout = QVBoxLayout()
