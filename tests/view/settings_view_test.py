@@ -64,7 +64,7 @@ class SettingsViewTest(unittest.TestCase):
     # patch is used to "make and empty shell" of the method passed so we can just check if
     # the methods gets called or not
 
-    @patch("src.view.widgets.settings.set_path_view.SetPathView.Sl_show_file_dialog")
+    @patch("src.view.widgets.settings.set_path_widget.SetPathWidget.Sl_show_file_dialog")
     def test_popup_file_dialog(self, mock_dialog):
         """ Test if popup dialog for choosing files get called once"""
         self.path_test.change_path_button.click()
