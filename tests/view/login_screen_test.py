@@ -17,5 +17,5 @@ class LoginScreenTest(unittest.TestCase):
         default_code.tearDown(self.env_settings, self.restore_path)
 
     def test_default(self):
-        self.assertEqual(self.login_test.userField.text(), self.login_test.model.get_username())
-        self.assertEqual(self.login_test.pswField.text(), self.login_test.model.get_password())
+        self.assertEqual(self.login_test.get_user(), self.login_test.model.get_username())
+        self.assertEqual(self.login_test.get_psw(), self.login_test.model.get_password())
