@@ -72,8 +72,9 @@ def check_status_code(response):
 
 
 def cookie2str(cookie: dict) -> str:
-    if cookie:
-        return "; ".join([f"{str(x)}={str(y)}" for x, y in cookie.items()])
+    for key, value in cookie.items():
+        if key == "ZM_AUTH_TOKEN":
+            return "ZM_AUTH_TOKEN=" + value
     return ""
 
 
@@ -155,6 +156,7 @@ def login(_email: str = "", _pwd: str = "") -> bool:
         email = _email
         password = _pwd
         cookie = new_cookie
+        print(cookie)
 
         init_client()
         return True

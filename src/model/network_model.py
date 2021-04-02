@@ -80,23 +80,22 @@ class NetworkModel(QObject):
         self.env_settings = QSettings()
 
     @APIExceptionsHandler
-    def login(self, _user: str = "", _passwd: str = "") -> None:
+    def login(self, user: str = "", password: str = "") -> None:
 
-        NetworkModel.logger.debug("try to login...")
+        NetworkModel.logger.info("try to login...")
 
-        user = _user if _user else self.env_settings.value("Credentials/user")
-        password = _passwd if _passwd else self.env_settings.value("Credentials/password")
+        user = user if user else self.env_settings.value("Credentials/user")
+        password = password if password else self.env_settings.value("Credentials/password")
 
         api.login(user, password)
-        NetworkModel.logger.debug("login successful")
+        NetworkModel.logger.info("login successful")
 
         # save to Qsettings
-        NetworkModel.logger.debug("saving credentials")
+        NetworkModel.logger.info("saving credentials")
         self.env_settings.setValue("Credentials/user", user)
         self.env_settings.setValue("Credentials/password", password)
         self.env_settings.sync()
 
-        NetworkModel.logger.error("Signal Sg_model_changed emitted")
         self.Sg_model_changed.emit()
 
     @APIExceptionsHandler
