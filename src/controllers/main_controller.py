@@ -47,7 +47,7 @@ class MainController(QObject):
 
         # Connetto login vista ai due slot del controller
         self.login_screen.Sg_login_success.connect(self.Sl_logged_in)
-        self.login_screen.loginButton.clicked.connect(self.Sl_login)
+        self.login_screen.login_button.clicked.connect(self.Sl_login)
 
         self.model.network_model.Sg_model_changed.connect(self.login_screen.Sl_model_changed)
 
@@ -58,7 +58,7 @@ class MainController(QObject):
         self.notification_icon = None
         self.watcher = None
         self.algoritmo = None
-        # TODO: Temporaneo
+        # Forziamo il controllo delle credenziali già salvate
         self.Sl_login()
 
     def create_main_window(self):
@@ -76,7 +76,7 @@ class MainController(QObject):
         self.notification_icon = NotificationController(self.app, self.view)
 
         # ALGORITMO
-        self.algoritmo = DecisionEngine(self.model.sync_model.get_state(), self.model.network_model)
+        self.algoritmo = DecisionEngine(self.model.network_model)
         self.algoritmo.start()
 
         # Attivo il watchdog nella root definita dall'utente
@@ -118,8 +118,8 @@ class MainController(QObject):
 
     @Slot()
     def Sl_login(self):
-        pwd = self.login_screen.pswField.text()
-        user = self.login_screen.userField.text()
+        user = self.login_screen.get_user()
+        pwd = self.login_screen.get_psw()
         self.model.network_model.login(user, pwd)
 
     @Slot()

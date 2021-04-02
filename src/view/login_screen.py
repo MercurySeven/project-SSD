@@ -11,50 +11,48 @@ class LoginScreen(QDialog):
 
     def __init__(self, model: NetworkModel, parent=None):
         super(LoginScreen, self).__init__(parent)
+
         # gestione modello
+        self.model = model
 
         # inizializzazione layout
         self.layout = QVBoxLayout()
-        self.model = model
 
         # label e field
+        self.login_title = QLabel(self)
+        self.login_title.setText("Effettua l'accesso")
+        self.login_title.setAccessibleName('LoginTitle')
 
-        self.loginTitle = QLabel(self)
-        self.loginTitle.setText("Effettua l'accesso")
-        self.loginTitle.setAccessibleName('LoginTitle')
+        self.login_label = QLabel(self)
+        self.login_label.setText('Username')
+        self.login_label.setAccessibleName('LoginLabel')
 
-        self.loginLabel = QLabel(self)
-        self.loginLabel.setText('Username')
-        self.loginLabel.setAccessibleName('LoginLabel')
+        self.user_field = QLineEdit(self)
 
-        self.userField = QLineEdit(self)
-        self.get_config_username()
+        self.psw_label = QLabel(self)
+        self.psw_label.setText('Password')
+        self.psw_label.setAccessibleName('LoginLabel')
 
-        self.pswLabel = QLabel(self)
-        self.pswLabel.setText('Password')
-        self.pswLabel.setAccessibleName('LoginLabel')
+        self.psw_field = QLineEdit(self)
+        self.psw_field.setEchoMode(QLineEdit.Password)
 
-        self.pswField = QLineEdit(self)
-        self.pswField.setEchoMode(QLineEdit.Password)
-        self.get_config_password()
+        self.user_field.setText(self.model.get_username())
+        self.psw_field.setText(self.model.get_password())
 
         # pulsante invio form
-
-        self.loginButton = QPushButton(self)
-        self.loginButton.setText('Login')
+        self.login_button = QPushButton(self)
+        self.login_button.setText('Login')
 
         # gestione layout
-
         self.layout.setAlignment(Qt.AlignCenter)
-        self.layout.addWidget(self.loginTitle)
-        self.layout.addWidget(self.loginLabel)
-        self.layout.addWidget(self.userField)
-        self.layout.addWidget(self.pswLabel)
-        self.layout.addWidget(self.pswField)
-        self.layout.addWidget(self.loginButton)
+        self.layout.addWidget(self.login_title)
+        self.layout.addWidget(self.login_label)
+        self.layout.addWidget(self.user_field)
+        self.layout.addWidget(self.psw_label)
+        self.layout.addWidget(self.psw_field)
+        self.layout.addWidget(self.login_button)
 
         self.setLayout(self.layout)
-
         setQss("style.qss", self)
 
     @Slot()
@@ -63,8 +61,8 @@ class LoginScreen(QDialog):
         if is_logged:
             self.Sg_login_success.emit()
 
-    def get_config_username(self):
-        self.userField.setText(self.model.get_username())
+    def get_user(self) -> str:
+        return self.user_field.text()
 
-    def get_config_password(self):
-        self.pswField.setText(self.model.get_password())
+    def get_psw(self) -> str:
+        return self.psw_field.text()

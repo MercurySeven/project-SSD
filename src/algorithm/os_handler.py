@@ -19,7 +19,7 @@ def download_folder(node: TreeNode, path: str) -> None:
         if _node.is_directory():
             download_folder(_node, path_folder)
         else:
-            networkmodel.download_file(_node, path_folder)
+            download_file(_node, path_folder)
 
 
 def upload_folder(node: TreeNode, parent_folder_id: str = "LOCAL_ROOT") -> None:
@@ -30,7 +30,15 @@ def upload_folder(node: TreeNode, parent_folder_id: str = "LOCAL_ROOT") -> None:
         if _node.is_directory():
             upload_folder(_node, parent_folder_id)
         else:
-            networkmodel.upload_file(_node, parent_folder_id)
+            upload_file(_node, parent_folder_id)
+
+
+def download_file(node: TreeNode, path_folder: str) -> None:
+    networkmodel.download_file(node, path_folder)
+
+
+def upload_file(node: TreeNode, parent_folder_id: str) -> None:
+    networkmodel.upload_file(node, parent_folder_id)
 
 
 def delete_node(node_id: str) -> None:

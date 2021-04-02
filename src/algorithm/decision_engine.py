@@ -13,8 +13,9 @@ from src.model.network_model import NetworkModel
 
 
 class DecisionEngine(Thread):
-    def __init__(self, running: bool, model: NetworkModel):
+    def __init__(self, model: NetworkModel, running: bool = False):
         Thread.__init__(self)
+
         self.setName("Algoritmo V3")
         self.setDaemon(True)
         self.env_settings = QSettings()
