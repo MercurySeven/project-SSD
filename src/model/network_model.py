@@ -4,6 +4,12 @@ from src.network.api_exceptions import (APIException, LoginError, NetworkError, 
 from src.model.algorithm.tree_node import TreeNode
 from functools import wraps
 import logging
+from enum import Enum
+
+
+class Status(Enum):
+    Error = "last func ended with error"
+    Ok = "last func ended normally"
 
 
 def RetryLogin(func):
@@ -42,11 +48,16 @@ def APIExceptionsHandler(func):
     def APIExceptionHandle(self, *args, **kwargs):
         try:
 
-            return func(self, *args, **kwargs)
+            ret = func(self, *args, **kwargs)
+            self.status = Status.Ok
+            return ret
 
         except APIException as e:
             logger.error(f"{func.__name__} failed")
             logger.error(f"with error {str(e)}")
+
+            # update status
+            self.status = Status.Error
 
             if type(e) is LoginError:
                 logger.error("Signal Sg_login_failed emitted")
@@ -66,6 +77,8 @@ def APIExceptionsHandler(func):
 class NetworkModel(QObject):
     logger = logging.getLogger("NetworkModel")
 
+    status: Status = Status.Ok
+
     Sg_model_changed = Signal()
     Sg_logout = Signal()
 
@@ -78,6 +91,10 @@ class NetworkModel(QObject):
         super(NetworkModel, self).__init__(None)
 
         self.env_settings = QSettings()
+
+    def raise_for_status(self):
+        if self.status == Status.Error:
+            raise APIException()
 
     @APIExceptionsHandler
     def login(self, user: str = "", password: str = "") -> None:
