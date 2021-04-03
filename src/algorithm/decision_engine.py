@@ -10,6 +10,7 @@ from . import tree_builder, tree_comparator, os_handler, compare_client_snapshot
 from .tree_comparator import Actions
 from src.model.algorithm.tree_node import TreeNode
 from src.model.network_model import NetworkModel
+from src.network.api_exceptions import APIException
 
 
 class DecisionEngine(Thread):
@@ -36,13 +37,20 @@ class DecisionEngine(Thread):
                 path = self.env_settings.value("sync_path")
                 snap_tree = tree_builder.read_dump_client_filesystem(path)
                 client_tree = tree_builder.get_tree_from_system(path)
-                if snap_tree is not None:
-                    ccs.compare_snap_client(snap_tree, client_tree)
 
-                remote_tree = tree_builder.get_tree_from_node_id()
-                self.compute_decision(client_tree, remote_tree, snap_tree is not None)
-                self.logger.info("Eseguito DUMP dell'albero locale")
-                tree_builder.dump_client_filesystem(path)
+                check_connection = True
+                try:
+                    if snap_tree is not None:
+                        ccs.compare_snap_client(snap_tree, client_tree)
+                except APIException:
+                    check_connection = False
+
+                # Se non ho connessione mi fermo e non creo nemmeno un nuovo snapshot
+                if check_connection:
+                    remote_tree = tree_builder.get_tree_from_node_id()
+                    self.compute_decision(client_tree, remote_tree, snap_tree is not None)
+                    self.logger.info("Eseguito snapshot dell'albero locale")
+                    tree_builder.dump_client_filesystem(path)
                 sleep(max(5, self.refresh))
             else:
                 sleep(5)
