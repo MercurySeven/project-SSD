@@ -25,7 +25,6 @@ def download_folder(node: TreeNode, path: str) -> None:
 def upload_folder(node: TreeNode, parent_folder_id: str = "LOCAL_ROOT") -> None:
     """Il nodo rappresenta la cartella che non esiste nel server"""
     parent_folder_id = networkmodel.create_folder(node.get_name(), parent_folder_id)
-    networkmodel.raise_for_status()
 
     for _node in node.get_children():
         if _node.is_directory():
@@ -36,15 +35,12 @@ def upload_folder(node: TreeNode, parent_folder_id: str = "LOCAL_ROOT") -> None:
 
 def download_file(node: TreeNode, path_folder: str) -> None:
     networkmodel.download_file(node, path_folder)
-    networkmodel.raise_for_status()
 
 
 def upload_file(node: TreeNode, parent_folder_id: str) -> None:
     networkmodel.upload_file(node, parent_folder_id)
-    networkmodel.raise_for_status()
 
 
 def delete_node(node_id: str) -> None:
     """Elimina un nodo in base al suo id"""
     networkmodel.delete_node(node_id)
-    networkmodel.raise_for_status()

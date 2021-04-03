@@ -153,23 +153,30 @@ class NetworkModel(QObject):
     @RetryLogin
     def download_file(self, node: TreeNode, path_folder: str) -> None:
         api.download_node_from_server(node, path_folder)
+        self.raise_for_status()
 
     @APIExceptionsHandler
     @RetryLogin
     def upload_file(self, node: TreeNode, parent_folder_id: str) -> None:
         api.upload_node_to_server(node, parent_folder_id)
+        self.raise_for_status()
 
     @APIExceptionsHandler
     @RetryLogin
     def delete_node(self, node_id: str) -> None:
         api.delete_node(node_id)
+        self.raise_for_status()
 
     @APIExceptionsHandler
     @RetryLogin
     def get_content_from_node(self, node_id: str = "LOCAL_ROOT") -> str:
-        return api.get_content_from_node(node_id)
+        result = api.get_content_from_node(node_id)
+        self.raise_for_status()
+        return result
 
     @APIExceptionsHandler
     @RetryLogin
     def create_folder(self, folder_name: str, parent_folder_id: str = "LOCAL_ROOT") -> str:
-        return api.create_folder(folder_name, parent_folder_id)
+        result = api.create_folder(folder_name, parent_folder_id)
+        self.raise_for_status()
+        return result

@@ -63,7 +63,6 @@ def _create_node_from_dict(dict: str) -> TreeNode:
 def get_tree_from_node_id(node_id: str = "LOCAL_ROOT") -> TreeNode:
     """Funzione ricorsiva per costruire l'albero remodo dato un node_id"""
     json = networkmodel.get_content_from_node(node_id)
-    networkmodel.raise_for_status()
     folder = _create_node_from_dict(json["getNode"])
     for _file in json["getNode"]["children"]:
         new_node = _create_node_from_dict(_file)
