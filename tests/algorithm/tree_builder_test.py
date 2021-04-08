@@ -1,6 +1,7 @@
 import os
 import pathlib
 import unittest
+from unittest.mock import patch
 
 from src.algorithm import tree_builder
 from src.model.algorithm.node import Type, Node
@@ -91,6 +92,17 @@ class TreeBuilderTest(unittest.TestCase):
         tree_tester = tree_builder.get_tree_from_system(self.path)
         self._test_tree_node(tree, tree_tester)
 
+    def test_read_nothing(self):
+        tree = tree_builder.read_dump_client_filesystem(self.path)
+        self.assertEqual(tree, None)
+
+    @patch('pickle.load', return_value=False)
+    def test_read_with_exception(self, mocked_function):
+        mocked_function.side_effect = Exception("test")
+        tree_builder.dump_client_filesystem(self.path)
+        tree = tree_builder.read_dump_client_filesystem(self.path)
+        self.assertEqual(tree, None)
+
     def test_create_hidden_folder_twice(self):
         hidden_folder = tree_builder._create_hidden_folder(self.path)
         pathing = os.path.join(self.path, tree_builder.FOLDER_NAME)
@@ -101,8 +113,6 @@ class TreeBuilderTest(unittest.TestCase):
         self.assertEqual(hidden_folder, pathing)
         self.assertEqual(os.path.exists(pathing), True)
         self.assertEqual(os.path.isdir(pathing), True)
-
-        self._remove_dump()
 
     def _remove_dump(self):
         pathing = os.path.join(self.path, tree_builder.FOLDER_NAME)
