@@ -15,9 +15,6 @@ def setUp() -> [str, QSettings]:
     path = os.path.join(str(pathlib.Path().absolute()), "tests")
     path = r'%s' % path
     pathlib.Path(path).mkdir(parents=True, exist_ok=True)
-    path = os.path.join(path, "tree")
-    path = r'%s' % path
-    pathlib.Path(path).mkdir(parents=True, exist_ok=True)
     env_settings.setValue("sync_path", path)
     settings.file_name = os.path.join(path, "config.ini")
     settings.check_file()
