@@ -10,6 +10,41 @@ from src.model.network_model import NetworkModel
 from tests import default_code
 
 
+def _get_default_dict() -> dict:
+    _id = "id"
+    _name = "name"
+    _type = "File"
+    _created = 2000
+    _updated = 2000
+    thisdict = {
+        "id": _id,
+        "name": _name,
+        "type": _type,
+        "created_at": _created,
+        "updated_at": _updated
+    }
+    return thisdict
+
+
+def _get_tree_dict() -> dict:
+    _id = "id"
+    _name = "name"
+    _type = "Folder"
+    _created = 2000
+    _updated = 2000
+    thisdict = {
+        "getNode": {
+            "id": _id,
+            "name": _name,
+            "type": _type,
+            "created_at": _created,
+            "updated_at": _updated,
+            "children": [_get_default_dict()]
+        }
+    }
+    return thisdict
+
+
 class TreeBuilderTest(unittest.TestCase):
     def setUp(self):
         """Metodo che viene chiamato prima di ogni metodo"""
@@ -44,7 +79,7 @@ class TreeBuilderTest(unittest.TestCase):
         updated = int(os.stat(self.path).st_mtime)
         created = int(os.stat(self.path).st_ctime)
         test_node = TreeNode(Node("CLIENT_NODE", node_name,
-                             Type.Folder, created, updated, self.path))
+                                  Type.Folder, created, updated, self.path))
         self._test_tree_node(self.tree, test_node)
 
     def test_get_tree_from_system(self):
@@ -63,24 +98,15 @@ class TreeBuilderTest(unittest.TestCase):
             created = int(os.stat(file_path).st_ctime)
             updated = int(os.stat(file_path).st_mtime)
             test_node = TreeNode(Node("CLIENT_NODE", content, Type.File,
-                                 created, updated, file_path))
+                                      created, updated, file_path))
             self._test_tree_node(node, test_node)
 
     def test_create_node_from_dict(self):
-        _id = "id"
-        _name = "name"
-        _type = "File"
-        _created = 2000
-        _updated = 2000
-        test_node = TreeNode(Node(_id, _name, Type.File, _created / 1000, _updated / 1000))
-        thisdict = {
-            "id": _id,
-            "name": _name,
-            "type": _type,
-            "created_at": _created,
-            "updated_at": _updated
-        }
-        node_to_test = tree_builder._create_node_from_dict(thisdict)
+        _dict = _get_default_dict()
+        test_node = TreeNode(Node(_dict["id"], _dict["name"],
+                                  Type.File, _dict["created_at"] / 1000,
+                                  _dict["updated_at"] / 1000))
+        node_to_test = tree_builder._create_node_from_dict(_dict)
         self._test_tree_node(node_to_test, test_node)
 
     def test_dump_and_read_client_filesystem(self):
@@ -103,6 +129,17 @@ class TreeBuilderTest(unittest.TestCase):
         tree = tree_builder.read_dump_client_filesystem(self.path)
         self.assertEqual(tree, None)
 
+    @patch('src.model.network_model.NetworkModel.get_content_from_node',
+           return_value=_get_tree_dict())
+    def test_get_tree_from_node_id(self, mocked_function):
+        _dict = _get_default_dict()
+        test_node = TreeNode(Node(_dict["id"], _dict["name"],
+                                  Type.Folder, _dict["created_at"] / 1000,
+                                  _dict["updated_at"] / 1000))
+        node_to_test = tree_builder.get_tree_from_node_id("test")
+        mocked_function.assert_called_once()
+        self._test_tree_node(node_to_test, test_node)
+
     def test_create_hidden_folder_twice(self):
         hidden_folder = tree_builder._create_hidden_folder(self.path)
         pathing = os.path.join(self.path, tree_builder.FOLDER_NAME)
@@ -114,7 +151,7 @@ class TreeBuilderTest(unittest.TestCase):
         self.assertEqual(os.path.exists(pathing), True)
         self.assertEqual(os.path.isdir(pathing), True)
 
-    def _remove_dump(self):
+    def _remove_dump(self) -> None:
         pathing = os.path.join(self.path, tree_builder.FOLDER_NAME)
         client_dump = os.path.join(pathing, "client_dump.mer")
         if os.path.exists(client_dump):
