@@ -2,8 +2,9 @@ import os
 import unittest
 
 from src.algorithm import tree_builder
-from src.algorithm.tree_builder import _build_tree_node
-from src.model.algorithm.node import Type
+from src.algorithm.tree_builder import _build_tree_node, get_tree_from_system
+from src.model.algorithm.node import Type, Node
+from src.model.algorithm.tree_node import TreeNode
 from src.model.network_model import NetworkModel
 from tests import default_code
 
@@ -28,11 +29,36 @@ class TreeBuilderTest(unittest.TestCase):
         default_code.tearDown(self.env_settings, self.restore_path)
 
     def test_build_tree_node(self):
-        self.tree = _build_tree_node(self.file_name, "prova")
-        self.assertEqual(self.tree.get_name(), "prova")
-        payload = self.tree.get_payload()
-        self.assertEqual(payload.path, self.file_name)
-        self.assertEqual(payload.id, "CLIENT_NODE")
-        self.assertEqual(payload.created_at, int(os.stat(self.file_name).st_ctime))
-        self.assertEqual(payload.updated_at, int(os.stat(self.file_name).st_mtime))
-        self.assertEqual(payload.type, Type.File)
+        node_name = "prova"
+        self.tree = _build_tree_node(self.path, node_name)
+        updated = int(os.stat(self.path).st_mtime)
+        created = int(os.stat(self.path).st_ctime)
+        test_node = Node("CLIENT_NODE", node_name, Type.Folder, created, updated, self.path)
+        self._test_node(self.tree, test_node)
+
+    def test_get_tree_from_system(self):
+        self.tree = get_tree_from_system(self.path)
+        updated = int(os.stat(self.path).st_mtime)
+        created = int(os.stat(self.path).st_ctime)
+        test_node = Node("CLIENT_NODE", "ROOT", Type.Folder, created, updated, self.path)
+        self._test_node(self.tree, test_node)
+        curr_dir_content = os.listdir(self.path)
+        tree_childs = self.tree.get_children()
+        tree_childs.reverse()
+
+        for content in curr_dir_content:
+            node = tree_childs.pop()
+            file_path = os.path.join(self.path, content)
+            created = int(os.stat(file_path).st_ctime)
+            updated = int(os.stat(file_path).st_mtime)
+            test_node = Node("CLIENT_NODE", content, Type.File, created, updated, file_path)
+            self._test_node(node, test_node)
+
+    def _test_node(self, node_to_test: TreeNode, test_node: TreeNode):
+        self.assertEqual(node_to_test.get_name(), test_node.name)
+        payload_to_test = node_to_test.get_payload()
+        self.assertEqual(payload_to_test.id, test_node.id)
+        self.assertEqual(payload_to_test.type, test_node.type)
+        self.assertEqual(payload_to_test.updated_at, test_node.updated_at)
+        self.assertEqual(payload_to_test.created_at, test_node.created_at)
+        self.assertEqual(payload_to_test.path, test_node.path)
