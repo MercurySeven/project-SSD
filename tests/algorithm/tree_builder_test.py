@@ -17,7 +17,6 @@ class TreeBuilderTest(unittest.TestCase):
         self.model_test = NetworkModel()
         tree_builder.set_model(self.model_test)
         self.path = self.env_settings.value("sync_path")
-        print(self.path + "AAAAAAAAAAAAA")
         self.file_name = os.path.join(self.path, "prova.txt")
         with open(self.file_name, "w"):
             pass

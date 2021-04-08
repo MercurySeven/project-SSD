@@ -7,9 +7,9 @@ from src import settings
 
 
 def setUp() -> [str, QSettings]:
-    env_settings = QSettings()
     QCoreApplication.setOrganizationName("MercurySeven")
     QCoreApplication.setApplicationName("SSD")
+    env_settings = QSettings()
     restore_path = env_settings.value("sync_path")
 
     path = os.path.join(str(pathlib.Path().absolute()), "tests")
