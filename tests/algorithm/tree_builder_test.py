@@ -34,6 +34,7 @@ class TreeBuilderTest(unittest.TestCase):
         """Metodo che viene chiamato dopo ogni metodo"""
         os.remove(os.path.join(self.path, "prova.txt"))
         default_code.tearDown(self.env_settings, self.restore_path)
+        self._remove_dump()
         os.rmdir(self.path)
 
     def test_build_tree_node(self):
@@ -85,15 +86,31 @@ class TreeBuilderTest(unittest.TestCase):
         tree_builder.dump_client_filesystem(self.path)
         tree = tree_builder.read_dump_client_filesystem(self.path)
 
-        pathing = os.path.join(self.path, ".zextrasdrive")
+        self._remove_dump()
+
+        tree_tester = tree_builder.get_tree_from_system(self.path)
+        self._test_tree_node(tree, tree_tester)
+
+    def test_create_hidden_folder_twice(self):
+        hidden_folder = tree_builder._create_hidden_folder(self.path)
+        pathing = os.path.join(self.path, tree_builder.FOLDER_NAME)
+        self.assertEqual(hidden_folder, pathing)
+        self.assertEqual(os.path.exists(pathing), True)
+        self.assertEqual(os.path.isdir(pathing), True)
+        hidden_folder = tree_builder._create_hidden_folder(self.path)
+        self.assertEqual(hidden_folder, pathing)
+        self.assertEqual(os.path.exists(pathing), True)
+        self.assertEqual(os.path.isdir(pathing), True)
+
+        self._remove_dump()
+
+    def _remove_dump(self):
+        pathing = os.path.join(self.path, tree_builder.FOLDER_NAME)
         client_dump = os.path.join(pathing, "client_dump.mer")
         if os.path.exists(client_dump):
             os.remove(client_dump)
         if os.path.exists(pathing):
             os.rmdir(pathing)
-
-        tree_tester = tree_builder.get_tree_from_system(self.path)
-        self._test_tree_node(tree, tree_tester)
 
     def _test_tree_node(self, node_to_test: TreeNode, test_node: TreeNode):
         self.assertEqual(node_to_test.get_name(), test_node.get_name())
