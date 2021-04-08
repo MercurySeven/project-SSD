@@ -3,6 +3,7 @@ import unittest
 
 from src.algorithm import tree_builder
 from src.algorithm.tree_builder import _build_tree_node, get_tree_from_system
+from src.algorithm.tree_builder import _create_node_from_dict
 from src.model.algorithm.node import Type, Node
 from src.model.algorithm.tree_node import TreeNode
 from src.model.network_model import NetworkModel
@@ -53,6 +54,23 @@ class TreeBuilderTest(unittest.TestCase):
             updated = int(os.stat(file_path).st_mtime)
             test_node = Node("CLIENT_NODE", content, Type.File, created, updated, file_path)
             self._test_node(node, test_node)
+
+    def test_create_node_from_dict(self):
+        _id = "id"
+        _name = "name"
+        _type = "File"
+        _created = 2000
+        _updated = 2000
+        test_node = Node(_id, _name, Type.File, _created / 1000, _updated / 1000)
+        thisdict = {
+            "id": _id,
+            "name": _name,
+            "type": _type,
+            "created_at": _created,
+            "updated_at": _updated
+        }
+        node_to_test = _create_node_from_dict(thisdict)
+        self._test_node(node_to_test, test_node)
 
     def _test_node(self, node_to_test: TreeNode, test_node: TreeNode):
         self.assertEqual(node_to_test.get_name(), test_node.name)
