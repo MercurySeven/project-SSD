@@ -1,7 +1,11 @@
 import unittest
 from unittest.mock import patch
 
+import requests.exceptions
+
 from src.network import api
+from src.network.api import ExceptionsHandler
+from src.network.api_exceptions import NetworkError, ServerError
 from tests import default_code
 
 
@@ -12,6 +16,14 @@ class ApiTest(unittest.TestCase):
 
         def set_text(self, _text):
             self.text = _text
+
+        @ExceptionsHandler
+        def function_network_exception(self):
+            raise requests.exceptions.ConnectionError("test")
+
+        @ExceptionsHandler
+        def function_server_exception(self):
+            raise requests.exceptions.HTTPError("test")
 
     def setUp(self) -> None:
         tmp = default_code.setUp()
@@ -39,3 +51,20 @@ class ApiTest(unittest.TestCase):
         logged = api.is_logged("test")
         mocked_function.assert_called_once()
         self.assertEqual(logged, True)
+
+    def test_exception_handler_network_error(self):
+        test_obj = ApiTest.RequestObj()
+        try:
+            test_obj.function_network_exception()
+        except Exception as e:
+            fun_name = "function_network_exception"
+            exc_message = "test"
+
+            self.assertEqual(str(e), str(NetworkError(f"{fun_name}: {exc_message}")))
+
+    def test_exception_handler_server_error(self):
+        test_obj = ApiTest.RequestObj()
+        try:
+            test_obj.function_server_exception()
+        except Exception as e:
+            self.assertEqual(str(e), str(ServerError()))
