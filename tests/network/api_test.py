@@ -6,6 +6,12 @@ from tests import default_code
 
 
 class ApiTest(unittest.TestCase):
+    class RequestObj:
+        def __init__(self, _text: str = "test"):
+            self.text = _text
+
+        def set_text(self, _text):
+            self.text = _text
 
     def setUp(self) -> None:
         tmp = default_code.setUp()
@@ -21,3 +27,15 @@ class ApiTest(unittest.TestCase):
         result = api.login("test", "test")
         mocked_function.assert_called_once()
         self.assertEqual(result, True)
+
+    @patch('requests.get', return_value=RequestObj("LoginScreen"))
+    def test_is_logged_false(self, mocked_function):
+        logged = api.is_logged("test")
+        mocked_function.assert_called_once()
+        self.assertEqual(logged, False)
+
+    @patch('requests.get', return_value=RequestObj())
+    def test_is_logged_true(self, mocked_function):
+        logged = api.is_logged("test")
+        mocked_function.assert_called_once()
+        self.assertEqual(logged, True)
