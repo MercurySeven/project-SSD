@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import patch
 
+import gql
 import requests.exceptions
 
 from src.network import api
@@ -68,3 +69,17 @@ class ApiTest(unittest.TestCase):
             test_obj.function_server_exception()
         except Exception as e:
             self.assertEqual(str(e), str(ServerError()))
+
+    def test_logout(self):
+        self.assertEqual(api.logout(), True)
+        self.assertEqual(api.cookie, None)
+        self.assertEqual(api.client, None)
+
+    @patch('gql.client.Client.__init__', return_value=None)
+    def test_init_client(self, mocked_function):
+        api.client = True
+        self.assertEqual(api.client, True)
+        api.init_client()
+        mocked_function.assert_called_once()
+        client = gql.client.Client()
+        self.assertEqual(vars(api.client), vars(client))
