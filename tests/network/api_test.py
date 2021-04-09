@@ -104,3 +104,36 @@ class ApiTest(unittest.TestCase):
         self.assertEqual(api.get_info_from_email(), "test")
         mocked_info.assert_called_once()
         mocked_response.assert_called_once()
+
+    @patch('src.network.api.get_info_from_email', return_value={"id": "test"})
+    def test_get_user_id(self, mocked_fun):
+        api.user_id = ""
+        self.assertEqual(api.get_user_id(), "test")
+        mocked_fun.assert_called_once()
+
+    @patch('src.network.query_model.Query.get_all_files',
+           return_value=[''' { hello }''', "b"])
+    @patch('gql.client.Client.execute', return_value={"getUserByEmail": "test"})
+    def test_get_content_from_node(self, mocked_info, mocked_response):
+        api.client = gql.client.Client()
+        self.assertEqual(api.get_content_from_node(), {"getUserByEmail": "test"})
+        mocked_info.assert_called_once()
+        mocked_response.assert_called_once()
+
+    @patch('src.network.query_model.Query.create_folder',
+           return_value=[''' { hello }''', "b"])
+    @patch('gql.client.Client.execute', return_value={"createFolder": {"id": "test"}})
+    def test_create_folder(self, mocked_info, mocked_response):
+        api.client = gql.client.Client()
+        api.create_folder("test")
+        mocked_info.assert_called_once()
+        mocked_response.assert_called_once()
+
+    @patch('src.network.query_model.Query.delete_node',
+           return_value=[''' { hello }''', "b"])
+    @patch('gql.client.Client.execute', return_value={"getUserByEmail": "test"})
+    def test_delete_node(self, mocked_info, mocked_response):
+        api.client = gql.client.Client()
+        api.delete_node("test")
+        mocked_info.assert_called_once()
+        mocked_response.assert_called_once()
