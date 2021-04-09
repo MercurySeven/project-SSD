@@ -83,3 +83,24 @@ class ApiTest(unittest.TestCase):
         mocked_function.assert_called_once()
         client = gql.client.Client()
         self.assertEqual(vars(api.client), vars(client))
+
+    @patch('src.network.query_model.Query.get_info_from_email',
+           return_value=[''' { hello }''', "b"])
+    @patch('gql.client.Client.execute', return_value=None)
+    def test_get_info_from_email_exception_response_null(self, mocked_info, mocked_response):
+        api.client = gql.client.Client()
+        try:
+            api.get_info_from_email()
+        except Exception as e:
+            self.assertEqual(str(e), str(ServerError("\'NoneType\' object is not subscriptable")))
+        finally:
+            mocked_info.assert_called_once()
+            mocked_response.assert_called_once()
+
+    @patch('src.network.query_model.Query.get_info_from_email',
+           return_value=[''' { hello }''', "b"])
+    @patch('gql.client.Client.execute', return_value={"getUserByEmail": "test"})
+    def test_get_info_from_email_success(self, mocked_info, mocked_response):
+        self.assertEqual(api.get_info_from_email(), "test")
+        mocked_info.assert_called_once()
+        mocked_response.assert_called_once()
