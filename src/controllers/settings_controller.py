@@ -29,7 +29,7 @@ class SettingsController:
 
     @Slot()
     def Sl_view_quota_disk_changed(self):
-        new_quota = self._view.set_quota_disk_widget.dedicatedSpace.text()
+        new_quota = self._view.set_quota_disk_widget.dedicated_space.text()
         if self._model.get_quota_disco_raw() != int(new_quota):
             self._model.set_quota_disco(new_quota)
 
