@@ -219,3 +219,42 @@ class ApiTest(unittest.TestCase):
             mocked_response.assert_called_once()
             mocked_get_id.assert_called_once()
             self.assertEqual(str(e), str(APIException()))
+
+    @patch('requests.post', return_value=RequestObj("test", Status.Ok))
+    @patch('src.network.api.get_user_id', return_value="test")
+    def test_upload_success(self, mocked_response, mocked_get_id):
+        # creo file da leggere, potrei mockare anche la call
+        # di lettura ma questo risulta piu facile ed indolore anche
+        # se molto brutto
+        full_path = os.path.join(self.path, self.file_name)
+        with open(full_path, "w"):
+            pass
+        updated = 200
+        created = 100
+        test_node = TreeNode(Node("CLIENT_NODE", self.file_name,
+                                  Type.Folder, created, updated,
+                                  full_path))
+        self.assertEqual(api.upload_node_to_server(test_node), None)
+        mocked_response.assert_called_once()
+        mocked_get_id.assert_called_once()
+
+    @patch('requests.post', return_value=RequestObj("test", Status.Ok))
+    @patch('src.network.api.get_user_id', return_value="test")
+    def test_upload_error(self, mocked_response, mocked_get_id):
+        # creo file da leggere, potrei mockare anche la call
+        # di lettura ma questo risulta piu facile ed indolore anche
+        # se molto brutto
+        full_path = os.path.join(self.path, self.file_name)
+        with open(full_path, "w"):
+            pass
+        updated = 200
+        created = 100
+        test_node = TreeNode(Node("CLIENT_NODE", self.file_name,
+                                  Type.Folder, created, updated,
+                                  full_path))
+        try:
+            api.upload_node_to_server(test_node)
+        except APIException as e:
+            mocked_response.assert_called_once()
+            mocked_get_id.assert_called_once()
+            self.assertEqual(str(e), str(APIException()))
