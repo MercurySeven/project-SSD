@@ -120,14 +120,14 @@ class TreeBuilderTest(unittest.TestCase):
 
     def test_read_nothing(self):
         tree = tree_builder.read_dump_client_filesystem(self.path)
-        self.assertEqual(tree, None)
+        self.assertIsNone(tree)
 
     @patch('pickle.load', return_value=False)
     def test_read_with_exception(self, mocked_function):
         mocked_function.side_effect = Exception("test")
         tree_builder.dump_client_filesystem(self.path)
         tree = tree_builder.read_dump_client_filesystem(self.path)
-        self.assertEqual(tree, None)
+        self.assertIsNone(tree)
 
     @patch('src.model.network_model.NetworkModel.get_content_from_node',
            return_value=_get_tree_dict())
