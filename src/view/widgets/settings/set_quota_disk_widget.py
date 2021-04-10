@@ -1,16 +1,16 @@
-from PySide6.QtWidgets import (QWidget, QProgressBar, QLabel, QVBoxLayout, QLineEdit)
 from PySide6.QtCore import (Qt, Signal, Slot)
 from PySide6.QtGui import (QIntValidator)
+from PySide6.QtWidgets import (QWidget, QProgressBar, QLabel, QVBoxLayout, QLineEdit)
 
-from src.model.widgets.settings_model import SettingsModel
+from src.model.settings_model import SettingsModel
 
 
-class SetQuotaDiskView(QWidget):
+class SetQuotaDiskWidget(QWidget):
 
     Sg_view_changed = Signal()
 
     def __init__(self, model: SettingsModel, parent=None):
-        super(SetQuotaDiskView, self).__init__(parent)
+        super(SetQuotaDiskWidget, self).__init__(parent)
 
         self._model = model
 
@@ -58,8 +58,8 @@ class SetQuotaDiskView(QWidget):
     def Sl_model_changed(self):
         new_max_quota = self._model.get_quota_disco()
         new_max_quota_raw = self._model.get_quota_disco_raw()
-        value = self._model.get_size()
+        value = self._model.convert_size(self._model.get_size())
         self.diskQuota.setText(f"{value} su {new_max_quota}")
         self.dedicatedSpace.setText(str(new_max_quota_raw))
         self.diskProgress.setRange(0, new_max_quota_raw)
-        self.diskProgress.setValue(value)
+        self.diskProgress.setValue(self._model.get_size())

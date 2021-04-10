@@ -2,115 +2,301 @@ import os
 import logging
 import requests
 from .query_model import Query
-from .cookie_session import CookieSession
-from src.algorithm.tree_node import TreeNode
+from src.model.algorithm.tree_node import TreeNode
 from gql import gql, Client
 from gql.transport.requests import RequestsHTTPTransport
-from PySide6.QtCore import (QSettings)
+from .api_exceptions import (LoginError, NetworkError, ServerError, NetworkErrs, ServerErrs)
+
+from requests.utils import dict_from_cookiejar
+from requests import Session
+
+"""
+
+Exceptions
+----------
+il modulo puo lanciare le seguenti eccezioni:
+
+LoginError: in caso di credenziali non valide
+
+NetworkError: in caso di errori dovuti alla connessione (internet down, DNS failure, ecc)
+
+ServerError: in caso di risposte errate da parte del server o del protocollo http in generale
+
+"""
 
 
-class API:
+url_base = "https://mail-eu-south.testarea.zextras.com/"
+url_graphql = url_base + "zx/drive/graphql/v1/"
+url_files = url_base + "service/extension/drive/"
 
-    # TODO: Da iniziare a scrive i test prima che diventi grande
+email = ""
+password = ""
+user_id = ""
+cookie: dict = None
+client = None
+logger = logging.getLogger("API")
 
-    def __init__(self, email: str, password: str):
-        url_base: str = "https://mail-eu-south.testarea.zextras.com/"
-        self._url_graphql: str = url_base + "zx/drive/graphql/v1/"
-        self._url_files: str = url_base + "service/extension/drive/"
 
-        self._email = email
-        self._user_id = ""
-        self._env_settings = QSettings()
+def ExceptionsHandler(func):
+    logger = logging.getLogger("API.ExceptionsHandler")
 
-        session = CookieSession(email, password)
+    def inner(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
 
-        if not session.is_logged():
-            raise ValueError("Email o password non valide")
+        except NetworkErrs as e:
+            logger.error(f"found {str(e)}")
+            logger.error("raise NetworkError")
+            raise NetworkError(f"{func.__name__}: {str(e)}")
+        except ServerErrs as e:
+            logger.error(f"found {str(e)}")
+            logger.error("raise ServerError")
+            raise ServerError()
 
-        self._cookie = session.get_auth_token()
+    return inner
 
-        _headers = {
-            "Content-Type": "application/json",
-            "cookie": self._cookie
-        }
 
-        _transport = RequestsHTTPTransport(
-            url=self._url_graphql,
-            headers=_headers,
-            use_json=True
-        )
+def check_status_code(response):
+    global logger
 
-        self.client = Client(transport=_transport, fetch_schema_from_transport=True)
-        self._logger = logging.getLogger("server")
-        self._logger.info("COOKIE DI AUTH: " + self._cookie)
+    logger.debug(f"handle response code...{response.status_code}")
 
-    def get_info_from_email(self) -> dict[str, str]:
-        """Ritorna l'id e il nome dell'account"""
-        query, params = Query.get_info_from_email(self._email)
-        response = self.client.execute(gql(query), variable_values=params)
-        return response["getUserByEmail"]
+    # 401 è chiaramente un problema di login
+    if response.status_code == 401:
+        logger.error("401 Unauthorized: raise LoginError")
+        raise LoginError()
 
-    def get_user_id(self) -> str:
-        """Metodo che recupera l'id se non scaricato in precedenza"""
-        if self._user_id == "":
-            self._user_id = self.get_info_from_email()["id"]
-        return self._user_id
+    # alza un'ecezzione di tipo HTTPError solo in caso di codici di errore
+    # l'eccezione è intercettata dal gruppo ServerErrs
+    response.raise_for_status()
 
-    def get_content_from_node(self, node_id: str = "LOCAL_ROOT") -> str:
-        query, params = Query.get_all_files(node_id)
-        return self.client.execute(gql(query), variable_values=params)
 
-    def create_folder(self, folder_name: str, parent_folder_id: str = "LOCAL_ROOT") -> str:
-        """Ritorna l'id della cartella appena creata"""
-        query, params = Query.create_folder(parent_folder_id, folder_name)
-        response = self.client.execute(gql(query), variable_values=params)
-        return response["createFolder"]["id"]
+def cookie2str(cookie: dict) -> str:
+    for key, value in cookie.items():
+        if key == "ZM_AUTH_TOKEN":
+            return "ZM_AUTH_TOKEN=" + value
+    return ""
 
-    def download_node_from_server(self,
-                                  node: TreeNode,
-                                  path: str) -> None:
-        """Il TreeNode viene scaricato e salvato nel path"""
-        headers = {
-            "cookie": self._cookie
-        }
-        payload = node._payload
-        url = f"{self._url_files}{self.get_user_id()}/{payload.id}"
-        response = requests.get(url, headers=headers)
 
-        if response.status_code == requests.codes.ok:
-            path = os.path.join(path, payload.name)
-            with open(path, "wb") as fh:
-                fh.write(response.content)
-            # Cambiare la data di creazione sembra non funzionare
-            os.utime(path, (payload.created_at, payload.updated_at))
-            self._logger.info(f"Download del file {payload.name}, completato con successo")
-        else:
-            self._logger.info(f"Download del file {payload.name}, fallito")
+@ExceptionsHandler
+def is_logged(_cookie: str = "") -> bool:
+    global logger
+    global cookie
+    global url_base
+    logger.debug("checking login status...")
 
-    def upload_node_to_server(self, node: TreeNode, parent_id: str = "LOCAL_ROOT") -> None:
-        """Carica un nodo, all'interno del parent passato"""
-        headers = {
-            "cookie": self._cookie
-        }
+    def OK():
+        logger.debug("logged")
+        return True
 
-        name = node.get_name()
-        content = open(node._payload.path, "rb")
-        updated_at = node.get_updated_at()
-        created_at = node._payload.created_at
+    def KO():
+        logger.debug("not logged")
+        return False
 
-        multipart_form = {
-            "command": "upload",
-            "name": name,
-            "content": content,
-            "parent": self.get_user_id() + "/" + parent_id,
-            "updated-at": updated_at,
-            "created-at": created_at
-        }
+    c = _cookie if _cookie else cookie
+    r = requests.get(url_base, headers={"cookie": c})
+    return KO() if "LoginScreen" in r.text else OK()
 
-        response = requests.post(self._url_files, headers=headers, files=multipart_form)
 
-        if response.status_code == requests.codes.ok:
-            self._logger.info(f"Upload del file {name}, completato con successo")
-        else:
-            self._logger.info(f"Upload del file {name}, fallito")
-        return response.status_code == requests.codes.ok
+@ExceptionsHandler
+def login(_email: str = "", _pwd: str = "") -> bool:
+    global url_base
+    global cookie
+    global email
+    global password
+    global logger
+    logger.debug("start login procedure...")
+
+    def csrf(session) -> str:
+        # estraggo il codice csrf dai cookie di sessione
+        try:
+            _cookies = dict_from_cookiejar(session.cookies)
+            csrf = _cookies['ZM_LOGIN_CSRF']
+            if csrf:
+                logger.debug("CSRF code found")
+                return csrf
+        except Exception:
+            logger.error("NO CSRF code found")
+            logger.error("raise ServerError")
+            raise ServerError("NO CSRF code found")
+
+    if is_logged():
+        return True
+
+    session = Session()
+
+    # questa chiamata setta i cookie di sessione che conterranno il codice csrf
+    logger.debug("getting CSRF code from zextras")
+    r = session.get(url_base)
+    check_status_code(r)
+
+    # dati estrapolati dalla chiamata post di login nel browser
+    # il codice csrf è generato dinamicamente
+    # da una chiamata get all'interfaccia web
+    login = {
+        "loginOp": "login",
+        "login_csrf": csrf(session),
+        "username": _email if _email else email,
+        "password": _pwd if _pwd else password,
+        "zrememberme": 1,
+        "client": "preferred"
+    }
+
+    logger.debug("sending login POST request")
+    r = session.post(url_base, data=login)
+    check_status_code(r)
+
+    new_cookie = cookie2str(dict_from_cookiejar(session.cookies))
+
+    # se è andata bene i nuovi cookie di sessione
+    # contengono il token di autenticazione
+    if is_logged(new_cookie):
+        # setto i nuovi parametri
+        logger.debug("setting new cookie and credentials")
+        email = _email
+        password = _pwd
+        cookie = new_cookie
+        print(cookie)
+
+        init_client()
+        return True
+    else:
+        # se arrivo qui non mi sono loggato
+        logger.error("raise LoginError")
+        raise LoginError()
+
+
+@ExceptionsHandler
+def init_client():
+    global client
+    global logger
+    logger.debug("setting client")
+
+    _headers = {
+        "Content-Type": "application/json",
+        "cookie": cookie
+    }
+
+    _transport = RequestsHTTPTransport(
+        url=url_graphql,
+        headers=_headers,
+        use_json=True
+    )
+
+    client = Client(transport=_transport, fetch_schema_from_transport=True)
+
+
+@ExceptionsHandler
+def logout() -> bool:
+    global cookie
+    global client
+    global logger
+
+    cookie = None
+    client = None
+    logger.debug("logout")
+    return True
+
+
+@ExceptionsHandler
+def get_info_from_email() -> dict[str, str]:
+    """Ritorna l'id e il nome dell'account"""
+    global email
+    global logger
+    logger.debug(f"getting info from email: {email}")
+
+    query, params = Query.get_info_from_email(email)
+    response = client.execute(gql(query), variable_values=params)
+
+    try:
+        info = response["getUserByEmail"]
+        logger.debug(f"info: {info}")
+        return info
+    except Exception as e:
+        logger.error(f"{str(e)}")
+        logger.error("raise ServerError")
+        raise ServerError(f"{str(e)}")
+
+
+@ExceptionsHandler
+def get_user_id() -> str:
+    """Metodo che recupera l'id se non scaricato in precedenza"""
+    global user_id
+    if user_id == "":
+        user_id = get_info_from_email()["id"]
+    return user_id
+
+
+@ExceptionsHandler
+def get_content_from_node(node_id: str = "LOCAL_ROOT") -> str:
+    query, params = Query.get_all_files(node_id)
+    return client.execute(gql(query), variable_values=params)
+
+
+@ExceptionsHandler
+def create_folder(folder_name: str, parent_folder_id: str = "LOCAL_ROOT") -> str:
+    """Ritorna l'id della cartella appena creata"""
+    query, params = Query.create_folder(parent_folder_id, folder_name)
+    response = client.execute(gql(query), variable_values=params)
+    return response["createFolder"]["id"]
+
+
+@ExceptionsHandler
+def delete_node(node_id: str) -> None:
+    """Rimuove il nodo dato l'id"""
+    query, params = Query.delete_node(node_id)
+    client.execute(gql(query), variable_values=params)
+
+
+@ExceptionsHandler
+def download_node_from_server(node: TreeNode, path: str) -> None:
+    """Il TreeNode viene scaricato e salvato nel path"""
+    headers = {
+        "cookie": cookie
+    }
+    payload = node.get_payload()
+    url = f"{url_files}{get_user_id()}/{payload.id}"
+    response = requests.get(url, headers=headers)
+
+    if response.ok:
+        path = os.path.join(path, payload.name)
+        with open(path, "wb") as fh:
+            fh.write(response.content)
+        # Cambiare la data di creazione sembra non funzionare
+        os.utime(path, (payload.created_at, payload.updated_at))
+        logger.info(f"Download del file {payload.name}, completato con successo")
+    else:
+        logger.info(f"Download del file {payload.name}, fallito")
+        # alzo le eccezioni del caso
+        check_status_code(response)
+
+
+@ExceptionsHandler
+def upload_node_to_server(node: TreeNode, parent_id: str = "LOCAL_ROOT"):
+    """Carica un nodo, all'interno del parent passato"""
+    headers = {
+        "cookie": cookie
+    }
+
+    name = node.get_name()
+    content = open(node.get_payload().path, "rb")
+    updated_at = node.get_updated_at()
+    created_at = node.get_payload().created_at
+
+    multipart_form = {
+        "command": "upload",
+        "name": name,
+        "content": content,
+        "parent": get_user_id() + "/" + parent_id,
+        "updated-at": updated_at,
+        "created-at": created_at
+    }
+
+    response = requests.post(url_files, headers=headers, files=multipart_form)
+
+    if response.ok:
+        logger.info(f"Upload del file {name}, completato con successo")
+    else:
+        logger.info(f"Upload del file {name}, fallito")
+        # alzo le eccezioni del caso
+        check_status_code(response)

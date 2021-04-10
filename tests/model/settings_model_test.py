@@ -1,21 +1,23 @@
 import unittest
-import os
-from src.model.widgets.settings_model import SettingsModel
-from src.network.policy import Policy
-from src import settings
+
+from src.model.settings_model import SettingsModel
+from src.algorithm.policy import Policy
+from tests import default_code
 
 
 class TestSettings(unittest.TestCase):
 
     def setUp(self):
         """Metodo che viene chiamato prima di ogni metodo"""
+        tmp = default_code.setUp()
+        self.restore_path = tmp[0]
+        self.env_settings = tmp[1]
+
         self.sett_model = SettingsModel()
-        settings.file_name = "tests/config.ini"
-        settings.check_file()
 
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""
-        os.remove(settings.file_name)
+        default_code.tearDown(self.env_settings, self.restore_path)
 
     def test_get_policy(self) -> None:
         result = self.sett_model.get_policy()
@@ -53,14 +55,14 @@ class TestSettings(unittest.TestCase):
     def test_set_quota_disco(self) -> None:
         value = self.sett_model.get_quota_disco_raw()
         self.assertEqual(1024, value)
-
-        self.sett_model.set_quota_disco("2048")
+        new_value = self.sett_model.get_size()+1
+        self.sett_model.set_quota_disco(new_value)
 
         value = self.sett_model.get_quota_disco_raw()
-        self.assertEqual(2048, value)
+        self.assertEqual(new_value, value)
 
         value = self.sett_model.get_quota_disco()
-        self.assertEqual("2.0 KB", value)
+        self.assertEqual(self.sett_model.convert_size(new_value), value)
 
 
 if __name__ == "__main__":

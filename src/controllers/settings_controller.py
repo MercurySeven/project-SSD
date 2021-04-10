@@ -1,7 +1,7 @@
 from src.view.settings_view import SettingsView
-from src.model.widgets.settings_model import SettingsModel
+from src.model.settings_model import SettingsModel
 from PySide6.QtCore import (Slot)
-from src.network.policy import Policy
+from src.algorithm.policy import Policy
 
 
 class SettingsController:
@@ -9,19 +9,19 @@ class SettingsController:
         self._model = model
         self._view = view
 
-        self._model.Sg_model_changed.connect(view.set_policy_view.Sl_model_changed)
-        self._view.set_policy_view.Sg_view_changed.connect(self.Sl_view_policy_changed)
+        self._model.Sg_model_changed.connect(view.set_policy_widget.Sl_model_changed)
+        self._view.set_policy_widget.Sg_view_changed.connect(self.Sl_view_policy_changed)
 
-        self._model.Sg_model_changed.connect(self._view.set_quota_disk_view.Sl_model_changed)
-        self._view.set_quota_disk_view.Sg_view_changed.connect(self.Sl_view_quota_disk_changed)
+        self._model.Sg_model_changed.connect(self._view.set_quota_disk_widget.Sl_model_changed)
+        self._view.set_quota_disk_widget.Sg_view_changed.connect(self.Sl_view_quota_disk_changed)
 
-        self._model.Sg_model_changed.connect(self._view.set_path_view.Sl_model_changed)
-        self._view.set_path_view.Sg_view_changed.connect(self.Sg_set_path_view_changed)
+        self._model.Sg_model_changed.connect(self._view.set_path_widget.Sl_model_changed)
+        self._view.set_path_widget.Sg_view_changed.connect(self.Sg_set_path_widget_changed)
 
     @Slot()
     def Sl_view_policy_changed(self):
-        client = self._view.set_policy_view.client.isChecked()
-        manual = self._view.set_policy_view.manual.isChecked()
+        client = self._view.set_policy_widget.client.isChecked()
+        manual = self._view.set_policy_widget.manual.isChecked()
         if client and not manual:
             self._model.set_policy(Policy.Client)
         elif manual and not client:
@@ -29,11 +29,11 @@ class SettingsController:
 
     @Slot()
     def Sl_view_quota_disk_changed(self):
-        new_quota = self._view.set_quota_disk_view.dedicatedSpace.text()
+        new_quota = self._view.set_quota_disk_widget.dedicatedSpace.text()
         if self._model.get_quota_disco_raw() != int(new_quota):
             self._model.set_quota_disco(new_quota)
 
     @Slot()
-    def Sg_set_path_view_changed(self, value: str):
+    def Sg_set_path_widget_changed(self, value: str):
         if len(value) > 0:
             self._model.set_path(value)

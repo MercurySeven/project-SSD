@@ -18,7 +18,7 @@ if __name__ == "__main__":
     app.setQuitOnLastWindowClosed(False)
 
     # initialize logging format
-    _format = "%(levelname)s:%(filename)s:%(asctime)s:%(message)s"
+    _format = "%(asctime)s:%(levelname)s:%(filename)s:%(name)s:%(message)s"
     logging.basicConfig(level=logging.INFO, format=_format)
     # rimuove i log spammosi di rete
     logging.getLogger("gql.transport.aiohttp").setLevel(logging.WARNING)

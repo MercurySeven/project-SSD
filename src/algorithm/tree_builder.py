@@ -1,11 +1,24 @@
 import os
 import math
-from .tree_node import TreeNode
-from src.model.network.node import Node, Type
-from src.network.api import API
-from src import settings
+import pickle
+import sys
+import ctypes
+from src.model.algorithm.tree_node import TreeNode
+from src.model.algorithm.node import Node, Type
+from typing import Optional
+from src.model.network_model import NetworkModel
 
-api = API(settings.get_username(), settings.get_password())
+
+FILE_DUMP_NAME = "client_dump.mer"
+FOLDER_NAME = ".zextrasdrive"
+
+black_list = [FOLDER_NAME, ".DS_Store"]
+networkmodel: NetworkModel = None
+
+
+def set_model(model: NetworkModel) -> None:
+    global networkmodel
+    networkmodel = model
 
 
 def _build_tree_node(path: str, name: str) -> TreeNode:
@@ -25,11 +38,12 @@ def get_tree_from_system(path: str,
     """Funzione ricorsiva per costruire l'albero dato un path"""
     parent_node = _build_tree_node(path, root_name)
     for name in os.listdir(path):
-        abs_path = os.path.join(path, name)
-        if os.path.isdir(abs_path):
-            get_tree_from_system(abs_path, name, parent_node)
-        else:
-            parent_node.add_node(_build_tree_node(abs_path, name))
+        if name not in black_list:
+            abs_path = os.path.join(path, name)
+            if os.path.isdir(abs_path):
+                get_tree_from_system(abs_path, name, parent_node)
+            else:
+                parent_node.add_node(_build_tree_node(abs_path, name))
 
     if prev_node is not None:
         prev_node.add_node(parent_node)
@@ -47,7 +61,8 @@ def _create_node_from_dict(dict: str) -> TreeNode:
 
 
 def get_tree_from_node_id(node_id: str = "LOCAL_ROOT") -> TreeNode:
-    json = api.get_content_from_node(node_id)
+    """Funzione ricorsiva per costruire l'albero remodo dato un node_id"""
+    json = networkmodel.get_content_from_node(node_id)
     folder = _create_node_from_dict(json["getNode"])
     for _file in json["getNode"]["children"]:
         new_node = _create_node_from_dict(_file)
@@ -60,3 +75,42 @@ def get_tree_from_node_id(node_id: str = "LOCAL_ROOT") -> TreeNode:
             folder.add_node(new_node)
 
     return folder
+
+
+def dump_client_filesystem(path: str) -> None:
+    """Crea lo snapshot dell'albero locale e lo salva nel path passato, all'interno di una
+        cartella nascosta"""
+    hidden_folder_path = _create_hidden_folder(path)
+    file_path = os.path.join(hidden_folder_path, FILE_DUMP_NAME)
+    client_tree = get_tree_from_system(path)
+    with open(file_path, 'wb') as f:
+        # Pickle the 'data' dictionary using the highest protocol available.
+        pickle.dump(client_tree, f, pickle.HIGHEST_PROTOCOL)
+
+
+def read_dump_client_filesystem(path: str) -> Optional[TreeNode]:
+    """Restituisce l'albero locale salvato nello snapshot"""
+    hidden_folder_path = _create_hidden_folder(path)
+    file_path = os.path.join(hidden_folder_path, FILE_DUMP_NAME)
+    if os.path.isfile(file_path):
+        try:
+            with open(file_path, 'rb') as f:
+                data: TreeNode = pickle.load(f)
+            return data
+        except Exception:
+            return None
+    else:
+        return None
+
+
+def _create_hidden_folder(path: str) -> str:
+    """Crea una cartella nascosta dove mettere i vari file"""
+    folder_path = os.path.join(path, FOLDER_NAME)
+    if not os.path.isdir(folder_path):
+        os.mkdir(folder_path)
+        if sys.platform == "win32":
+            try:
+                ctypes.windll.kernel32.SetFileAttributesW(folder_path, 2)  # Hide folder
+            except OSError as e:
+                print(e)
+    return folder_path

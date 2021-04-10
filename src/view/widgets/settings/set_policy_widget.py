@@ -2,16 +2,16 @@ from PySide6.QtWidgets import (
     QWidget, QLabel, QRadioButton, QVBoxLayout, QHBoxLayout)
 from PySide6.QtCore import (Signal, Slot)
 
-from src.network.policy import Policy
-from src.model.widgets.settings_model import SettingsModel
+from src.algorithm.policy import Policy
+from src.model.settings_model import SettingsModel
 
 
-class SetPolicyView(QWidget):
+class SetPolicyWidget(QWidget):
 
     Sg_view_changed = Signal()
 
     def __init__(self, model: SettingsModel, parent=None):
-        super(SetPolicyView, self).__init__(parent)
+        super(SetPolicyWidget, self).__init__(parent)
 
         self._model = model
 

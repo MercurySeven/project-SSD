@@ -1,49 +1,34 @@
-
 import os
 
+from src.model.algorithm.node import Type
+from src.model.algorithm.tree_node import TreeNode
 from src.model.widgets.file import File
-from datetime import datetime
 
 
 class Directory:
 
-    def __init__(self, name, path):
-        self.name = name
-        self.path = path
-        self.files = {}
-        self.dirs = {}
+    def __init__(self, tree: TreeNode, override_name: str = None):
+        self._name = tree.get_name() if override_name is None else override_name
+        self._path = tree.get_payload().path
+        self._files = []
+        self._dirs = []
+        self._node = tree
         self.update_list_of_content()
 
-    def add_file(self, file: File) -> None:
-        self.files.update({file.get_name(): file})
-
     def update_list_of_content(self) -> None:
-        if not self.path or not os.path.isdir(self.path):
+        self._files.clear()
+        self._dirs.clear()
+        if self._path is None or not os.path.isdir(self._path):
             return
-        restore_path = os.getcwd()
-        with os.scandir(self.path) as dir_entries:
-            os.chdir(self.path)  # punto critico dell'app!
-            for entry in dir_entries:
-                created_at = os.stat(entry.name).st_ctime
-                updated_at = os.stat(entry.name).st_mtime
-                if os.path.isfile(entry.name):
-                    file = File(entry.name,
-                                self.__convert_to_date(created_at),
-                                self.__convert_to_date(updated_at),
-                                self.define_type(entry.name),
-                                str(os.stat(entry.name).st_size),
-                                "stato file")
-                    self.files.update({file.get_name(): file})
-                else:
-                    path = os.path.join(str(os.path), entry.name)
-                    self.dirs.update({
-                        str(entry.name): Directory(entry.name, path)
-                    })
-        os.chdir(restore_path)
+        content = self._node.get_children()
+        for entry in content:
+            if entry.get_payload().type == Type.File:
+                self._files.append(File(entry))
+            else:
+                self._dirs.append(Directory(entry))
 
-    def __convert_to_date(self, date: float) -> str:
-        return datetime.fromtimestamp(date).strftime("%Y-%m-%d %H:%M:%S")
+    def get_name(self) -> str:
+        return self._name
 
-    def define_type(self, file_type: str) -> str:
-        pos = file_type.rfind('.')
-        return file_type[(pos + 1):]
+    def get_path(self) -> str:
+        return self._path

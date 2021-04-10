@@ -1,6 +1,6 @@
 from __future__ import annotations
-from src.model.network.node import (Node, Type)
-from datetime import datetime
+from src.model.algorithm.node import (Node, Type)
+from datetime import datetime, timezone
 
 
 class TreeNode:
@@ -18,9 +18,6 @@ class TreeNode:
         node._parent = self
         self._children.append(node)
 
-        # TODO: Da capire se tenere questa linea
-        # self.get_updated_at() = max(self.get_updated_at(), node.get_updated_at())
-
     def is_directory(self) -> bool:
         return self._payload.type == Type.Folder
 
@@ -30,12 +27,19 @@ class TreeNode:
     def get_updated_at(self) -> int:
         return self._payload.updated_at
 
+    def get_children(self) -> list:
+        return self._children
+
+    def get_payload(self) -> Node:
+        return self._payload
+
     def __str__(self, level: int = 0):
         """Metodo per stampare tutto l'albero"""
         folder = " - Folder" if self.is_directory() else ""
-        formatted_date = datetime.fromtimestamp(self.get_updated_at()).strftime("%d/%m/%Y %H:%M:%S")
+        formatted_date = datetime.fromtimestamp(
+            self.get_updated_at(), timezone.utc).strftime("%d/%m/%Y %H:%M:%S")
         ret = " " * level + \
             f"{self.get_name()}{folder} ({self.get_updated_at()} -> {formatted_date})\n"
-        for child in self._children:
+        for child in self.get_children():
             ret += child.__str__(level + 1)
         return ret

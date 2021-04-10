@@ -1,14 +1,14 @@
 from PySide6.QtWidgets import (
     QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QFileDialog)
 from PySide6.QtCore import (Slot, Signal)
-from src.model.widgets.settings_model import SettingsModel
+from src.model.settings_model import SettingsModel
 
 
-class SetPathView(QWidget):
+class SetPathWidget(QWidget):
     Sg_view_changed = Signal(str)
 
     def __init__(self, model: SettingsModel, parent=None):
-        super(SetPathView, self).__init__(parent)
+        super(SetPathWidget, self).__init__(parent)
 
         self._model = model
         self.debug = False

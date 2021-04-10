@@ -1,4 +1,3 @@
-import os
 from PySide6.QtWidgets import (QToolButton)
 from PySide6.QtGui import (QIcon, QDesktopServices)
 from PySide6.QtCore import (Qt, QSize, QTimer, Signal, QSettings, QUrl)
@@ -6,7 +5,6 @@ from src.model.widgets.file import File
 
 
 class FileWidget(QToolButton):
-
     doubleClicked = Signal()
 
     def __init__(self, file: File):
@@ -15,9 +13,9 @@ class FileWidget(QToolButton):
         self.env_settings = QSettings()
         self.timer = QTimer()
         self.timer.setSingleShot(True)
-        self.clicked.connect(self.checkDoubleClick)
+        self.clicked.connect(self.check_double_click)
 
-        self.doubleClicked.connect(self.onDoubleclick)
+        self.doubleClicked.connect(self.on_double_click)
 
         self.setAccessibleName('File')
 
@@ -33,36 +31,24 @@ class FileWidget(QToolButton):
         self.type = file.get_type()
         self.size = file.get_size()
         self.status = file.get_status()
+        self.path = file.get_path()
 
         self.setText(self.name)
-        self.setToolTip("Ultima modifica: " + self.last_modified_date + "\nSize: " + self.size)
+        self.setToolTip(
+            f"Nome: {self.name}\nUltima modifica: {self.last_modified_date}\nSize: {self.size}")
 
-        '''self.contextWindow = QWidget()
-        self.contextWindow.nameLabel = QLabel()
-        self.contextWindow.nameLabel.setText(self.name)
-        self.contextWindow.typeLabel = QLabel()
-        self.contextWindow.typeLabel.setText(self.type)
-        contextLayout = QVBoxLayout()
-        contextLayout.addWidget(self.contextWindow.nameLabel)
-        contextLayout.addWidget(self.contextWindow.typeLabel)
-        self.contextWindow.setLayout(contextLayout)
-
-        self.setLayout(QVBoxLayout())
-
-        self.layout().addWidget(self.contextWindow)'''
-        # add fields to structure
-
-    def checkDoubleClick(self):
+    def check_double_click(self):
         if self.timer.isActive():
-            self.doubleClicked.emit()
+            time = self.timer.remainingTime()
+            if time > 0:
+                self.doubleClicked.emit()
             self.timer.stop()
+            if time <= 0:
+                self.timer.start(250)
 
         if self.timer.isActive() is False:
             self.timer.start(250)
 
-    def onDoubleclick(self):
-        sync_path = "" if self.env_settings.value("sync_path") is None else\
-            self.env_settings.value("sync_path")
-        path = os.path.join(sync_path, self.name)
-        file_path = QUrl.fromUserInput(path)
+    def on_double_click(self):
+        file_path = QUrl.fromUserInput(self.path)
         QDesktopServices.openUrl(file_path)

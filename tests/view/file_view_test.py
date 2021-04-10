@@ -1,24 +1,24 @@
-import os
 import unittest
 from unittest.mock import patch
-from src import settings
 from src.controllers.file_controller import FileController
-from src.model.file_model import FileModel
+from src.model.main_model import MainModel
 from src.view.file_view import FileView
+from tests import default_code
 
 
 class FileViewTest(unittest.TestCase):
 
     def setUp(self) -> None:
-        settings.file_name = "tests/config.ini"
-        settings.create_standard_settings()
-        self.file_model = FileModel()
-        self.file_view_test = FileView(self.file_model)
-        self.file_controller = FileController(self.file_model, self.file_view_test)
+        tmp = default_code.setUp()
+        self.restore_path = tmp[0]
+        self.env_settings = tmp[1]
+
+        self.main_model = MainModel()
+        self.file_view_test = FileView(self.main_model.file_model)
+        self.file_controller = FileController(self.main_model.file_model, self.file_view_test)
 
     def tearDown(self) -> None:
-        """Metodo che viene chiamato dopo ogni metodo"""
-        os.remove(settings.file_name)
+        default_code.tearDown(self.env_settings, self.restore_path)
 
     def test_defaults(self):
         """ Test file view test default values"""

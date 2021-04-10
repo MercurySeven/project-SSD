@@ -1,19 +1,21 @@
+
 import unittest
-import os
 
 import src.settings as settings
+from tests import default_code
 
 
 class TestSettings(unittest.TestCase):
 
     def setUp(self):
         """Metodo che viene chiamato prima di ogni metodo"""
-        settings.file_name = "tests/config.ini"
-        settings.create_standard_settings()
+        tmp = default_code.setUp()
+        self.restore_path = tmp[0]
+        self.env_settings = tmp[1]
 
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""
-        os.remove(settings.file_name)
+        default_code.tearDown(self.env_settings, self.restore_path)
 
     def test_get_quota_disco(self) -> None:
         quota_disco = settings.get_quota_disco()

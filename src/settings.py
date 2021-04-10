@@ -3,7 +3,6 @@ import os.path
 import logging
 from typing import Optional
 
-
 file_name = "config.ini"
 
 
@@ -30,11 +29,6 @@ def create_standard_settings() -> None:
         "is_sync": "off"
     }
 
-    # TODO: Da rimuovere
-    config["Login"] = {
-        "username": "user",
-        "password": "pwd"
-    }
     __write_on_file()
 
 
@@ -70,19 +64,9 @@ def get_quota_disco() -> int:
         result = int(value)
         return result
     except ValueError:
-        logger.warning("Il valore di quota disco non è int")
+        logger.warning("Il valore di quota disco non e' int")
         update_quota_disco("1024")
         return 1024
-
-
-def get_username() -> str:
-    """Non usare questo metodo"""
-    return get_config("Login", "username")
-
-
-def get_password() -> str:
-    """Non usare questo metodo"""
-    return get_config("Login", "password")
 
 
 def get_policy() -> int:
@@ -90,7 +74,7 @@ def get_policy() -> int:
     try:
         return int(get_config("General", "policy"))
     except ValueError:
-        logger.warning("Il valore di policy non è int")
+        logger.warning("Il valore di policy non e' int")
         update_policy(1)
         return 1
 
