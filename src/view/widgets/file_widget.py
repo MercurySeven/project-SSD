@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import (QToolButton)
 from PySide6.QtGui import (QIcon, QDesktopServices)
-from PySide6.QtCore import (Qt, QSize, QTimer, Signal, Slot, QSettings, QUrl)
+from PySide6.QtCore import (Qt, QSize, QTimer, Signal, Slot, QUrl)
 from src.model.widgets.file import File
 
 
@@ -10,7 +10,6 @@ class FileWidget(QToolButton):
     def __init__(self, file: File):
         super(FileWidget, self).__init__()
 
-        self.env_settings = QSettings()
         self.timer = QTimer()
         self.timer.setSingleShot(True)
         self.clicked.connect(self.check_double_click)
@@ -19,9 +18,7 @@ class FileWidget(QToolButton):
 
         self.setAccessibleName('File')
 
-        file_icon = QIcon('./icons/copy.png')
-
-        self.setIcon(file_icon)
+        self.setIcon(QIcon('./icons/copy.png'))
         self.setIconSize(QSize(45, 45))
         self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
 
