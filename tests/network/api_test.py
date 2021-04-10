@@ -261,3 +261,41 @@ class ApiTest(unittest.TestCase):
         result = api.login("test", "test")
         mocked_function.assert_called_once()
         self.assertEqual(result, True)
+
+    @patch('requests.sessions.Session.get', return_value=RequestObj())
+    @patch('requests.sessions.Session.post', return_value=RequestObj())
+    @patch('src.network.api.dict_from_cookiejar', return_value={"ZM_LOGIN_CSRF": "value"})
+    @patch('src.network.api.is_logged', return_value=False)
+    def test_login_fail_login_exc(self, mock_1, mock_2, mock_3, mock_4):
+        try:
+            api.login("test", "test")
+        except LoginError as e:
+            # is_logged viene chiamata due volte durante l'autenticazione
+            # una all'inizio per controllare se sei già loggato
+            # ed una alla fine per controllare se è andato a buon fine
+            self.assertEqual(mock_1.call_count, 2)
+            # con la patch di cookiejar invece dobbiamo puntare a
+            # api poichè cookiejar viene importato dentro e quindi
+            # è come un metodo interno
+            self.assertEqual(mock_2.call_count, 2)
+            mock_3.assert_called_once()
+            mock_4.assert_called_once()
+            self.assertEqual(str(e), str(LoginError("Credenziali non valide")))
+
+    @patch('requests.sessions.Session.get', return_value=RequestObj())
+    @patch('src.network.api.dict_from_cookiejar', return_value={"aaaa": "value"})
+    @patch('src.network.api.is_logged', return_value=False)
+    def test_login_fail_server_exc(self, mock_1, mock_2, mock_3):
+        try:
+            api.login("test", "test")
+        except ServerError as e:
+            # is_logged viene chiamata due volte durante l'autenticazione
+            # una all'inizio per controllare se sei già loggato
+            # ed una alla fine per controllare se è andato a buon fine
+            mock_1.assert_called_once()
+            # con la patch di cookiejar invece dobbiamo puntare a
+            # api poichè cookiejar viene importato dentro e quindi
+            # è come un metodo interno
+            mock_2.assert_called_once()
+            mock_3.assert_called_once()
+            self.assertEqual(str(e), str(ServerError("NO CSRF code found")))
