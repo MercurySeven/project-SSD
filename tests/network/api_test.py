@@ -1,9 +1,13 @@
+import os
+import pathlib
 import unittest
 from unittest.mock import patch
 
 import gql
 import requests.exceptions
 
+from src.model.algorithm.node import Node, Type
+from src.model.algorithm.tree_node import TreeNode
 from src.model.network_model import Status
 from src.network import api
 from src.network.api import ExceptionsHandler
@@ -16,6 +20,8 @@ class ApiTest(unittest.TestCase):
         def __init__(self, _text: str = "test", _status: Status = Status.Ok):
             self.text = _text
             self.status_code = _status
+            self.ok = _status if _status == Status.Ok else None
+            self.content = b"test"
 
         def set_text(self, _text):
             self.text = _text
@@ -37,9 +43,21 @@ class ApiTest(unittest.TestCase):
         self.restore_path = tmp[0]
         self.env_settings = tmp[1]
 
+        self.file_name = "test.txt"
+
+        self.original_path = self.env_settings.value("sync_path")
+
+        self.path = os.path.join(self.original_path, "tree")
+        self.path = r'%s' % self.path
+        pathlib.Path(self.path).mkdir(parents=True, exist_ok=True)
+
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""
         default_code.tearDown(self.env_settings, self.restore_path)
+        to_remove = os.path.join(self.path, self.file_name)
+        if os.path.exists(to_remove):
+            os.remove(to_remove)
+        os.rmdir(self.path)
 
     @patch('src.network.api.is_logged', return_value=True)
     def test_login_already_logged_in(self, mocked_function):
@@ -172,4 +190,32 @@ class ApiTest(unittest.TestCase):
         try:
             api.check_status_code(test_obj)
         except APIException as e:
+            self.assertEqual(str(e), str(APIException()))
+
+    @patch('requests.get', return_value=RequestObj())
+    @patch('src.network.api.get_user_id', return_value="test")
+    def test_download_node_from_server_ok(self, mocked_response, mocked_get_id):
+        updated = 200
+        created = 100
+        test_node = TreeNode(Node("CLIENT_NODE", self.file_name,
+                                  Type.Folder, created, updated, self.path))
+        self.assertEqual(api.download_node_from_server(test_node, self.path), None)
+        mocked_response.assert_called_once()
+        mocked_get_id.assert_called_once()
+        file_path = os.path.join(self.path, self.file_name)
+        self.assertEqual(os.path.exists(file_path), True)
+        self.assertEqual(os.path.getmtime(file_path), updated)
+
+    @patch('requests.get', return_value=RequestObj("test", Status.Error))
+    @patch('src.network.api.get_user_id', return_value="test")
+    def test_download_node_from_server_error(self, mocked_response, mocked_get_id):
+        updated = 200
+        created = 100
+        test_node = TreeNode(Node("CLIENT_NODE", self.file_name,
+                                  Type.Folder, created, updated, self.path))
+        try:
+            api.download_node_from_server(test_node, self.path)
+        except APIException as e:
+            mocked_response.assert_called_once()
+            mocked_get_id.assert_called_once()
             self.assertEqual(str(e), str(APIException()))
