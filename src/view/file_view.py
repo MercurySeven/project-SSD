@@ -3,8 +3,6 @@ from PySide6.QtGui import (QDesktopServices)
 from PySide6.QtWidgets import (QVBoxLayout, QHBoxLayout, QWidget, QScrollArea, QPushButton, QLabel)
 
 from src.model.file_model import FileModel
-from src.model.widgets.directory import Directory
-from src.model.widgets.file import File
 from src.view.layouts.flowlayout import FlowLayout
 from src.view.widgets.directory_widget import DirectoryWidget
 from src.view.widgets.file_widget import FileWidget
@@ -62,19 +60,16 @@ class FileView(QWidget):
         path = QUrl.fromUserInput(self.env_settings.value("sync_path"))
         QDesktopServices.openUrl(path)
 
-    def update_content(self, list_of_files: list[File], list_of_dirs: list[Directory]) -> None:
+    @Slot()
+    def Sl_model_changed(self) -> None:
+        list_of_files, list_of_dirs = self._model.get_data()
+
         for i in reversed(range(self.fileLayout.count())):
             self.fileLayout.itemAt(i).widget().setParent(None)
         for i in list_of_dirs:
             self.fileLayout.addWidget(DirectoryWidget(i, self))
         for i in list_of_files:
             self.fileLayout.addWidget(FileWidget(i))
-
-    @Slot()
-    def Sl_model_changed(self) -> None:
-        """metodo chiamato dal notify del modello quando questo si aggiorna"""
-        list_of_files, list_of_dirs = self._model.get_data()
-        self.update_content(list_of_files, list_of_dirs)
 
     @Slot(str)
     def Sl_update_files_with_new_path(self, path: str) -> None:
