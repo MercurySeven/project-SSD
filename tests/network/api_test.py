@@ -4,16 +4,18 @@ from unittest.mock import patch
 import gql
 import requests.exceptions
 
+from src.model.network_model import Status
 from src.network import api
 from src.network.api import ExceptionsHandler
-from src.network.api_exceptions import NetworkError, ServerError
+from src.network.api_exceptions import NetworkError, ServerError, APIException, LoginError
 from tests import default_code
 
 
 class ApiTest(unittest.TestCase):
     class RequestObj:
-        def __init__(self, _text: str = "test"):
+        def __init__(self, _text: str = "test", _status: Status = Status.Ok):
             self.text = _text
+            self.status_code = _status
 
         def set_text(self, _text):
             self.text = _text
@@ -25,6 +27,10 @@ class ApiTest(unittest.TestCase):
         @ExceptionsHandler
         def function_server_exception(self):
             raise requests.exceptions.HTTPError("test")
+
+        def raise_for_status(self):
+            if self.status_code == Status.Error:
+                raise APIException()
 
     def setUp(self) -> None:
         tmp = default_code.setUp()
@@ -137,3 +143,33 @@ class ApiTest(unittest.TestCase):
         api.delete_node("test")
         mocked_info.assert_called_once()
         mocked_response.assert_called_once()
+
+    def test_cookie2str_success(self):
+        key = "ZM_AUTH_TOKEN"
+        value = "mamma"
+        result = api.cookie2str({key: value})
+        self.assertEqual(result, key + "=" + value)
+
+    def test_cookie2str_failure(self):
+        key = "test"
+        value = "mamma"
+        result = api.cookie2str({key: value})
+        self.assertEqual(result, "")
+
+    def test_check_status_code_ok(self):
+        test_obj = ApiTest.RequestObj()
+        self.assertEqual(api.check_status_code(test_obj), None)
+
+    def test_check_status_code_401(self):
+        test_obj = ApiTest.RequestObj("test", 401)
+        try:
+            api.check_status_code(test_obj)
+        except LoginError as e:
+            self.assertEqual(str(e), str(LoginError()))
+
+    def test_check_status_code_Error(self):
+        test_obj = ApiTest.RequestObj("test", Status.Error)
+        try:
+            api.check_status_code(test_obj)
+        except APIException as e:
+            self.assertEqual(str(e), str(APIException()))
