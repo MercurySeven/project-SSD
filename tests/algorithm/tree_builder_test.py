@@ -144,12 +144,12 @@ class TreeBuilderTest(unittest.TestCase):
         hidden_folder = tree_builder._create_hidden_folder(self.path)
         pathing = os.path.join(self.path, tree_builder.FOLDER_NAME)
         self.assertEqual(hidden_folder, pathing)
-        self.assertEqual(os.path.exists(pathing), True)
-        self.assertEqual(os.path.isdir(pathing), True)
+        self.assertTrue(os.path.exists(pathing))
+        self.assertTrue(os.path.isdir(pathing))
         hidden_folder = tree_builder._create_hidden_folder(self.path)
         self.assertEqual(hidden_folder, pathing)
-        self.assertEqual(os.path.exists(pathing), True)
-        self.assertEqual(os.path.isdir(pathing), True)
+        self.assertTrue(os.path.exists(pathing))
+        self.assertTrue(os.path.isdir(pathing))
 
     def _remove_dump(self) -> None:
         pathing = os.path.join(self.path, tree_builder.FOLDER_NAME)

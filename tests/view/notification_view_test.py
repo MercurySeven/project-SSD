@@ -18,7 +18,7 @@ class NotificationViewTest(unittest.TestCase):
 
     def test_defaults(self):
         """ Test notification view test default values"""
-        self.assertEqual(self.notify_test.isVisible(), True)
+        self.assertTrue(self.notify_test.isVisible())
         self.assertEqual(self.notify_test.toolTip(), "Zextras Drive Desktop")
         self.assertEqual(self.notify_test.show_option.text(), "Mostra")
         self.assertEqual(self.notify_test.show_option.toolTip(), "Mostra")

@@ -32,7 +32,7 @@ class SyncWidgetTest(unittest.TestCase):
         self.assertEqual(self.test_sync.running_label.accessibleName(), "Subtitle")
 
         self.assertEqual(self.test_sync.syncButton.iconSize(), QSize(50, 50))
-        self.assertEqual(self.test_sync.syncButton.isCheckable(), True)
+        self.assertTrue(self.test_sync.syncButton.isCheckable())
         self.assertEqual(self.test_sync.syncButton.accessibleName(), "HighlightButton")
 
         self.assertEqual(self.test_sync.menu_label.text(), "• • •")

@@ -66,13 +66,13 @@ class ApiTest(unittest.TestCase):
     def test_is_logged_false(self, mocked_function):
         logged = api.is_logged("test")
         mocked_function.assert_called_once()
-        self.assertEqual(logged, False)
+        self.assertFalse(logged)
 
     @patch('requests.get', return_value=RequestObj())
     def test_is_logged_true(self, mocked_function):
         logged = api.is_logged("test")
         mocked_function.assert_called_once()
-        self.assertEqual(logged, True)
+        self.assertTrue(logged)
 
     def test_exception_handler_network_error(self):
         test_obj = ApiTest.RequestObj()
@@ -92,14 +92,14 @@ class ApiTest(unittest.TestCase):
             self.assertEqual(str(e), str(ServerError()))
 
     def test_logout(self):
-        self.assertEqual(api.logout(), True)
-        self.assertEqual(api.cookie, None)
-        self.assertEqual(api.client, None)
+        self.assertTrue(api.logout())
+        self.assertIsNone(api.cookie)
+        self.assertIsNone(api.client)
 
     @patch('gql.client.Client.__init__', return_value=None)
     def test_init_client(self, mocked_function):
         api.client = True
-        self.assertEqual(api.client, True)
+        self.assertTrue(api.client)
         api.init_client()
         mocked_function.assert_called_once()
         client = gql.client.Client()
@@ -173,7 +173,7 @@ class ApiTest(unittest.TestCase):
 
     def test_check_status_code_ok(self):
         test_obj = ApiTest.RequestObj()
-        self.assertEqual(api.check_status_code(test_obj), None)
+        self.assertIsNone(api.check_status_code(test_obj))
 
     def test_check_status_code_401(self):
         test_obj = ApiTest.RequestObj("test", 401)
@@ -196,11 +196,11 @@ class ApiTest(unittest.TestCase):
         created = 100
         test_node = TreeNode(Node("CLIENT_NODE", self.file_name,
                                   Type.Folder, created, updated, self.path))
-        self.assertEqual(api.download_node_from_server(test_node, self.path), None)
+        self.assertIsNone(api.download_node_from_server(test_node, self.path))
         mocked_response.assert_called_once()
         mocked_get_id.assert_called_once()
         file_path = os.path.join(self.path, self.file_name)
-        self.assertEqual(os.path.exists(file_path), True)
+        self.assertTrue(os.path.exists(file_path))
         self.assertEqual(os.path.getmtime(file_path), updated)
 
     @patch('requests.get', return_value=RequestObj("test", Status.Error))
@@ -231,7 +231,7 @@ class ApiTest(unittest.TestCase):
         test_node = TreeNode(Node("CLIENT_NODE", self.file_name,
                                   Type.Folder, created, updated,
                                   full_path))
-        self.assertEqual(api.upload_node_to_server(test_node), None)
+        self.assertIsNone(api.upload_node_to_server(test_node))
         mocked_response.assert_called_once()
         mocked_get_id.assert_called_once()
 
@@ -260,7 +260,7 @@ class ApiTest(unittest.TestCase):
     def test_login_already_logged_in(self, mocked_function):
         result = api.login("test", "test")
         mocked_function.assert_called_once()
-        self.assertEqual(result, True)
+        self.assertTrue(result)
 
     @patch('requests.sessions.Session.get', return_value=RequestObj())
     @patch('requests.sessions.Session.post', return_value=RequestObj())

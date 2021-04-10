@@ -50,4 +50,4 @@ class NetworkModelTest(unittest.TestCase):
     def test_login_success(self, mocked_is_logged_in, mocked_login):
         self.model_test.login("test", "test")
         mocked_login.assert_called_once()
-        self.assertEqual(True, self.model_test.is_logged())
+        self.assertTrue(self.model_test.is_logged())
