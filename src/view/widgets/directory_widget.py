@@ -28,7 +28,7 @@ class DirectoryWidget(QToolButton):
         self.path = dir.get_path()
         self.setText(self.name)
 
-        self.Sg_double_clicked.connect(self.parent.update_files_with_new_path)
+        self.Sg_double_clicked.connect(self.parent.Sl_update_files_with_new_path)
         # add fields to structure
 
     def check_double_click(self):

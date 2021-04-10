@@ -58,7 +58,7 @@ class FileView(QWidget):
         self.Sl_model_changed()
 
     @Slot()
-    def Sl_show_path_button_clicked(self):
+    def Sl_show_path_button_clicked(self) -> None:
         path = QUrl.fromUserInput(self.env_settings.value("sync_path"))
         QDesktopServices.openUrl(path)
 
@@ -77,5 +77,5 @@ class FileView(QWidget):
         self.update_content(list_of_files, list_of_dirs)
 
     @Slot(str)
-    def update_files_with_new_path(self, path: str):
+    def Sl_update_files_with_new_path(self, path: str) -> None:
         self.Sg_update_files_with_new_path.emit(path)

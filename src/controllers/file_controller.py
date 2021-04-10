@@ -11,8 +11,8 @@ class FileController:
         self._view.refresh_button.clicked.connect(self._model.Sl_update_model)
         self._view.show_path_button.clicked.connect(self._view.Sl_show_path_button_clicked)
         # Connect per caricare il contenuto della cartella selezionata
-        self._view.Sg_update_files_with_new_path.connect(self.update_files_with_new_path)
+        self._view.Sg_update_files_with_new_path.connect(self.Sl_update_files_with_new_path)
 
     @Slot(str)
-    def update_files_with_new_path(self, path: str):
+    def Sl_update_files_with_new_path(self, path: str) -> None:
         self._model.set_current_node(path)
