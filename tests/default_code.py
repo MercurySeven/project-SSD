@@ -23,5 +23,9 @@ def setUp() -> [str, QSettings]:
 
 
 def tearDown(env_settings: QSettings, restore_path) -> None:
-    os.remove(settings.file_name)
+    if os.path.exists(settings.file_name):
+        try:
+            os.remove(settings.file_name)
+        except Exception as e:
+            print(e)
     env_settings.setValue("sync_path", restore_path)
