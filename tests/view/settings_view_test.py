@@ -46,8 +46,8 @@ class SettingsViewTest(unittest.TestCase):
         self.assertEqual(self.path_test.change_path_button.text(), "Cambia")
 
         """ Test the policy widget in the default state """
-        self.assertEqual(self.policy_test.client.isChecked(), True)
-        self.assertEqual(self.policy_test.manual.isChecked(), False)
+        self.assertTrue(self.policy_test.client.isChecked())
+        self.assertFalse(self.policy_test.manual.isChecked())
         self.assertEqual(self.policy_test._titolo.text(),
                          "Seleziona la politica di gestione dei conflitti")
         self.assertEqual(self.policy_test._titolo.accessibleName(), 'Subtitle')
@@ -58,8 +58,8 @@ class SettingsViewTest(unittest.TestCase):
         self.assertEqual(self.quota_test.accessibleName(), "InfoBox")
         self.assertEqual(self.quota_test.title.text(), "Quota disco")
         self.assertEqual(self.quota_test.title.accessibleName(), "Subtitle")
-        self.assertEqual(self.quota_test.progressLabel.text(), "Spazio occupato")
-        self.assertEqual(self.quota_test.progressLabel.accessibleName(), "Subtitle")
+        self.assertEqual(self.quota_test.progress_label.text(), "Spazio occupato")
+        self.assertEqual(self.quota_test.progress_label.accessibleName(), "Subtitle")
 
     # patch is used to "make and empty shell" of the method passed so we can just check if
     # the methods gets called or not
@@ -84,42 +84,42 @@ class SettingsViewTest(unittest.TestCase):
     def test_update_client(self):
         """ Test the state after setting client radio button true """
         self.policy_test.client.click()
-        self.assertEqual(self.policy_test.client.isChecked(), True)
-        self.assertEqual(self.policy_test.manual.isChecked(), False)
+        self.assertTrue(self.policy_test.client.isChecked())
+        self.assertFalse(self.policy_test.manual.isChecked())
 
     def test_update_manual(self):
         """ Test the state after setting manual radio button true """
         # QTest.mouseClick(self.policy_test._manual, Qt.LeftButton)
         self.policy_test.manual.click()
-        self.assertEqual(self.policy_test.client.isChecked(), False)
-        self.assertEqual(self.policy_test.manual.isChecked(), True)
+        self.assertFalse(self.policy_test.client.isChecked())
+        self.assertTrue(self.policy_test.manual.isChecked())
 
     def test_client_to_manual(self):
         """ Set client to true then manual to true """
         self.policy_test.client.click()
-        self.assertEqual(self.policy_test.client.isChecked(), True)
-        self.assertEqual(self.policy_test.manual.isChecked(), False)
+        self.assertTrue(self.policy_test.client.isChecked())
+        self.assertFalse(self.policy_test.manual.isChecked())
         self.policy_test.manual.click()
-        self.assertEqual(self.policy_test.client.isChecked(), False)
-        self.assertEqual(self.policy_test.manual.isChecked(), True)
+        self.assertFalse(self.policy_test.client.isChecked())
+        self.assertTrue(self.policy_test.manual.isChecked())
 
     def test_manual_to_client(self):
         """ Set manual to true then client to true """
         self.policy_test.manual.click()
-        self.assertEqual(self.policy_test.client.isChecked(), False)
-        self.assertEqual(self.policy_test.manual.isChecked(), True)
+        self.assertFalse(self.policy_test.client.isChecked())
+        self.assertTrue(self.policy_test.manual.isChecked())
         self.policy_test.client.click()
-        self.assertEqual(self.policy_test.client.isChecked(), True)
-        self.assertEqual(self.policy_test.manual.isChecked(), False)
+        self.assertTrue(self.policy_test.client.isChecked())
+        self.assertFalse(self.policy_test.manual.isChecked())
 
     def test_quota_change(self):
         """ Test changing the quota"""
-        self.quota_test.dedicatedSpace.setText("2222")
-        self.quota_test.emit_changes()
+        self.quota_test.dedicated_space.setText("2222")
+        self.quota_test.Sl_dedicated_space_changed()
         value = self.main_model.settings_model.convert_size(
             self.main_model.settings_model.get_size())
         new_max_quota = self.main_model.settings_model.get_quota_disco()
-        self.assertEqual(self.quota_test.diskQuota.text(), f"{value} su {new_max_quota}")
+        self.assertEqual(self.quota_test.disk_quota.text(), f"{value} su {new_max_quota}")
 
 
 if __name__ == "__main__":
