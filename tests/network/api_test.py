@@ -58,9 +58,9 @@ class ApiTest(unittest.TestCase):
         if os.path.exists(to_remove):
             try:
                 os.remove(to_remove)
+                os.rmdir(self.path)
             except PermissionError as e:
                 print(e)
-        os.rmdir(self.path)
 
     @patch('requests.get', return_value=RequestObj("LoginScreen"))
     def test_is_logged_false(self, mocked_function):
