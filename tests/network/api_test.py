@@ -56,14 +56,11 @@ class ApiTest(unittest.TestCase):
         default_code.tearDown(self.env_settings, self.restore_path)
         to_remove = os.path.join(self.path, self.file_name)
         if os.path.exists(to_remove):
-            os.remove(to_remove)
+            try:
+                os.remove(to_remove)
+            except PermissionError as e:
+                print(e)
         os.rmdir(self.path)
-
-    @patch('src.network.api.is_logged', return_value=True)
-    def test_login_already_logged_in(self, mocked_function):
-        result = api.login("test", "test")
-        mocked_function.assert_called_once()
-        self.assertEqual(result, True)
 
     @patch('requests.get', return_value=RequestObj("LoginScreen"))
     def test_is_logged_false(self, mocked_function):
@@ -258,3 +255,9 @@ class ApiTest(unittest.TestCase):
             mocked_response.assert_called_once()
             mocked_get_id.assert_called_once()
             self.assertEqual(str(e), str(APIException()))
+
+    @patch('src.network.api.is_logged', return_value=True)
+    def test_login_already_logged_in(self, mocked_function):
+        result = api.login("test", "test")
+        mocked_function.assert_called_once()
+        self.assertEqual(result, True)
