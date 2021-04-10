@@ -32,14 +32,17 @@ class OsHandlerTest(unittest.TestCase):
         file_to_remove = os.path.join(folder_to_remove, self.file_name)
         optional_folder = os.path.join(folder_to_remove, self.folder_name)
         default_code.tearDown(self.env_settings, self.restore_path)
-        if os.path.exists(file_to_remove):
-            os.remove(file_to_remove)
-        if os.path.exists(optional_folder):
-            os.rmdir(optional_folder)
-        if os.path.exists(folder_to_remove):
-            os.rmdir(folder_to_remove)
-        if os.path.exists(self.path):
-            os.rmdir(self.path)
+        try:
+            if os.path.exists(file_to_remove):
+                os.remove(file_to_remove)
+            if os.path.exists(optional_folder):
+                os.rmdir(optional_folder)
+            if os.path.exists(folder_to_remove):
+                os.rmdir(folder_to_remove)
+            if os.path.exists(self.path):
+                os.rmdir(self.path)
+        except Exception as e:
+            print(e)
 
     def test_set_model(self):
         os_handler.set_model(None)
