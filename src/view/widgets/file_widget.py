@@ -5,7 +5,7 @@ from src.model.widgets.file import File
 
 
 class FileWidget(QToolButton):
-    doubleClicked = Signal()
+    Sg_double_clicked = Signal()
 
     def __init__(self, file: File):
         super(FileWidget, self).__init__()
@@ -14,7 +14,7 @@ class FileWidget(QToolButton):
         self.timer.setSingleShot(True)
         self.clicked.connect(self.check_double_click)
 
-        self.doubleClicked.connect(self.Sl_on_double_click)
+        self.Sg_double_clicked.connect(self.Sl_on_double_click)
 
         self.setAccessibleName('File')
 
@@ -38,7 +38,7 @@ class FileWidget(QToolButton):
         if self.timer.isActive():
             time = self.timer.remainingTime()
             if time > 0:
-                self.doubleClicked.emit()
+                self.Sg_double_clicked.emit()
             self.timer.stop()
             if time <= 0:
                 self.timer.start(250)
