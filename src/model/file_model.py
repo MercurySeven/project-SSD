@@ -1,7 +1,7 @@
 import os
 from typing import Tuple, Optional
 
-from PySide6.QtCore import (QSettings, Signal, Slot, QObject, QCoreApplication)
+from PySide6.QtCore import (QSettings, Signal, Slot, QObject)
 
 from src.algorithm import tree_builder
 from src.model.algorithm.tree_node import TreeNode
@@ -15,11 +15,7 @@ class FileModel(QObject):
     def __init__(self):
         super(FileModel, self).__init__()
         self.settings = QSettings()
-        QCoreApplication.setOrganizationName("MercurySeven")
-        QCoreApplication.setApplicationName("SSD")
-        self.path = self.settings.value("sync_path")
-        self.path = r'%s' % self.path
-        self.tree = tree_builder.get_tree_from_system(self.path)
+        self.tree = tree_builder.get_tree_from_system(self.settings.value("sync_path"))
         self.current_folder = Directory(self.tree, self.tree.get_name())
         self.previous_folder = None
 
