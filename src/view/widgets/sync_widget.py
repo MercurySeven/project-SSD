@@ -24,12 +24,11 @@ class SyncWidget(QWidget):
         self.running_label.setText("Disattivata")
         self.running_label.setAccessibleName("Subtitle")
 
-        self.syncButton = QPushButton(self)
-        sync_icon = QIcon('./icons/reload.png')
-        self.syncButton.setIcon(sync_icon)
-        self.syncButton.setIconSize(QSize(50, 50))
-        self.syncButton.setCheckable(True)
-        self.syncButton.setAccessibleName('HighlightButton')
+        self.sync_button = QPushButton(self)
+        self.sync_button.setIcon(QIcon('./icons/reload.png'))
+        self.sync_button.setIconSize(QSize(50, 50))
+        self.sync_button.setCheckable(True)
+        self.sync_button.setAccessibleName('HighlightButton')
 
         self.menu_label = QLabel(self)
         self.menu_label.setAlignment(Qt.AlignCenter)
@@ -40,11 +39,11 @@ class SyncWidget(QWidget):
         self.layout.setAlignment(Qt.AlignCenter)
         self.layout.addWidget(self.watch_label)
         self.layout.addWidget(self.running_label)
-        self.layout.addWidget(self.syncButton)
+        self.layout.addWidget(self.sync_button)
         self.layout.addWidget(self.menu_label)
         self.setLayout(self.layout)
 
-        self.syncButton.clicked.connect(self.Sl_button_clicked)
+        self.sync_button.clicked.connect(self.Sl_button_clicked)
         self.Sl_model_changed()
 
     @Slot()
@@ -53,7 +52,7 @@ class SyncWidget(QWidget):
 
     @Slot()
     def Sl_model_changed(self):
-        self.syncButton.setChecked(self._model.get_state())
+        self.sync_button.setChecked(self._model.get_state())
         if self._model.get_state():
             self.running_label.setText("Attivata")
         else:

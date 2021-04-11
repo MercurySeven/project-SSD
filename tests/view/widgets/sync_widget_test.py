@@ -31,23 +31,23 @@ class SyncWidgetTest(unittest.TestCase):
         self.assertEqual(self.test_sync.running_label.text(), "Disattivata")
         self.assertEqual(self.test_sync.running_label.accessibleName(), "Subtitle")
 
-        self.assertEqual(self.test_sync.syncButton.iconSize(), QSize(50, 50))
-        self.assertTrue(self.test_sync.syncButton.isCheckable())
-        self.assertEqual(self.test_sync.syncButton.accessibleName(), "HighlightButton")
+        self.assertEqual(self.test_sync.sync_button.iconSize(), QSize(50, 50))
+        self.assertTrue(self.test_sync.sync_button.isCheckable())
+        self.assertEqual(self.test_sync.sync_button.accessibleName(), "HighlightButton")
 
         self.assertEqual(self.test_sync.menu_label.text(), "• • •")
 
     def test_turn_on_sync(self):
-        self.test_sync.syncButton.click()
-        self.assertEqual(self.test_sync.syncButton.isChecked(), self.test_sync._model.get_state())
+        self.test_sync.sync_button.click()
+        self.assertEqual(self.test_sync.sync_button.isChecked(), self.test_sync._model.get_state())
         self.assertEqual(self.test_sync.running_label.text(), "Attivata")
 
     def test_turn_off_sync(self):
-        self.test_sync.syncButton.click()
-        self.assertEqual(self.test_sync.syncButton.isChecked(), self.test_sync._model.get_state())
+        self.test_sync.sync_button.click()
+        self.assertEqual(self.test_sync.sync_button.isChecked(), self.test_sync._model.get_state())
         self.assertEqual(self.test_sync.running_label.text(), "Attivata")
-        self.test_sync.syncButton.click()
-        self.assertEqual(self.test_sync.syncButton.isChecked(), self.test_sync._model.get_state())
+        self.test_sync.sync_button.click()
+        self.assertEqual(self.test_sync.sync_button.isChecked(), self.test_sync._model.get_state())
         self.assertEqual(self.test_sync.running_label.text(), "Disattivata")
 
 
