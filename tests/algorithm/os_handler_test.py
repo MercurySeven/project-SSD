@@ -46,7 +46,7 @@ class OsHandlerTest(unittest.TestCase):
 
     def test_set_model(self):
         os_handler.set_model(None)
-        self.assertEqual(os_handler.networkmodel, None)
+        self.assertIsNone(os_handler.networkmodel)
         os_handler.set_model(self.main_model.network_model)
         self.assertEqual(os_handler.networkmodel, self.main_model.network_model)
 
