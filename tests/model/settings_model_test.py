@@ -55,8 +55,8 @@ class TestSettings(unittest.TestCase):
     def test_set_quota_disco(self) -> None:
         value = self.sett_model.get_quota_disco_raw()
         self.assertEqual(1024, value)
-        new_value = self.sett_model.get_size()+1
-        self.sett_model.set_quota_disco(new_value)
+        new_value = self.sett_model.get_size() + 1
+        self.sett_model.set_quota_disco(str(new_value))
 
         value = self.sett_model.get_quota_disco_raw()
         self.assertEqual(new_value, value)
