@@ -1,6 +1,6 @@
 from PySide6.QtCore import (QSettings, QUrl, Slot, Qt, Signal)
 from PySide6.QtGui import (QDesktopServices)
-from PySide6.QtWidgets import (QVBoxLayout, QHBoxLayout, QWidget, QScrollArea, QPushButton, QLabel)
+from PySide6.QtWidgets import (QVBoxLayout, QWidget, QScrollArea, QPushButton, QLabel)
 
 from src.model.file_model import FileModel
 from src.view.layouts.flowlayout import FlowLayout
@@ -32,15 +32,8 @@ class FileView(QWidget):
         self.fileLayout = FlowLayout()
         self.fileLayout.setContentsMargins(0, 0, 0, 0)
 
-        self.refresh_button = QPushButton(self)
-        self.refresh_button.setText("Refresh")
-
         self.show_path_button = QPushButton(self)
         self.show_path_button.setText("Apri file manager")
-
-        button_layout = QHBoxLayout()
-        button_layout.addWidget(self.refresh_button)
-        button_layout.addWidget(self.show_path_button)
 
         self.fileWindow.setParent(self.scrollArea)
         self.fileWindow.setLayout(self.fileLayout)
@@ -49,7 +42,7 @@ class FileView(QWidget):
 
         layout = QVBoxLayout()
         layout.addWidget(self.title)
-        layout.addLayout(button_layout)
+        layout.addWidget(self.show_path_button)
         layout.addWidget(self.scrollArea)
         self.setLayout(layout)
 
