@@ -1,13 +1,16 @@
 import os
 import pathlib
+import sys
 
 from PySide6.QtCore import QSettings, QCoreApplication
+from PySide6.QtWidgets import QApplication
 
 from src import settings
 from src.model.algorithm.node import Node, Type
 from src.model.algorithm.tree_node import TreeNode
 
 node_name = "CLIENT_NODE"
+app = QApplication(sys.argv)
 
 
 def setUp() -> [str, QSettings]:
