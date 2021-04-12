@@ -6,7 +6,7 @@ from unittest.mock import patch
 from src.algorithm import tree_builder
 from src.model.algorithm.node import Type, Node
 from src.model.algorithm.tree_node import TreeNode
-from src.model.network_model import NetworkModel
+from src.model.main_model import MainModel
 from tests import default_code
 from tests.default_code import _get_default_dict, _get_tree_dict
 
@@ -24,7 +24,8 @@ class TreeBuilderTest(unittest.TestCase):
         self.path = r'%s' % self.path
         pathlib.Path(self.path).mkdir(parents=True, exist_ok=True)
 
-        self.model_test = NetworkModel()
+        self.main_model = MainModel()
+        self.model_test = self.main_model.network_model
         tree_builder.set_model(self.model_test)
 
         self.file_name = os.path.join(self.path, "prova.txt")

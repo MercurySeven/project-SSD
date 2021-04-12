@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import patch
-from src.model.network_model import NetworkModel
+
+from src.model.main_model import MainModel
 from src.network.api import LoginError, NetworkError, ServerError
 from tests import default_code
 
@@ -12,7 +13,8 @@ class NetworkModelTest(unittest.TestCase):
         tmp = default_code.setUp()
         self.restore_path = tmp[0]
         self.env_settings = tmp[1]
-        self.model_test = NetworkModel()
+        self.main_model = MainModel()
+        self.model_test = self.main_model.network_model
 
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""
