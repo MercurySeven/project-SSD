@@ -3,36 +3,8 @@ from unittest.mock import patch
 
 from src.algorithm import compare_client_snapshot
 from src.algorithm.tree_comparator import Actions
-from src.model.algorithm.node import Node, Type
-from src.model.algorithm.tree_node import TreeNode
 from tests import default_code
-
-node_name = "CLIENT_NODE"
-
-
-def _get_test_node():
-    updated = 200
-    created = 100
-    return TreeNode(Node(node_name, "test",
-                         Type.Folder, created, updated, "test"))
-
-
-class ResultObj:
-    def __init__(self, action, _lun: int = 0):
-        self.result = {
-            "action": action,
-            "node": _get_test_node(),
-            "path": "test"
-        }
-        self.lun = _lun
-
-    # metodo usato per poter usare len(obj)
-    def __len__(self):
-        return self.lun
-
-    # metodo usato per poter iterare sull'oggetto
-    def __iter__(self):
-        yield self.result
+from tests.default_code import _get_test_node, node_name, ResultObj
 
 
 class CompareClientSnapshotTest(unittest.TestCase):

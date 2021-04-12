@@ -3,9 +3,11 @@ import unittest
 from unittest.mock import patch
 
 from src.algorithm.decision_engine import DecisionEngine
+from src.algorithm.tree_comparator import Actions
 from src.model.main_model import MainModel
 from src.network.api_exceptions import APIException
 from tests import default_code
+from tests.default_code import ResultObj, _get_test_node
 
 
 class DecisionEngineTest(unittest.TestCase):
@@ -90,3 +92,66 @@ class DecisionEngineTest(unittest.TestCase):
         time.sleep(0.5)
 
         self.assertEqual(mock_1.call_count, 0)
+
+    @patch('src.algorithm.tree_comparator.compareFolders',
+           return_value=ResultObj(Actions.CLIENT_NEW_FOLDER, 0))
+    @patch('src.algorithm.os_handler.upload_folder')
+    def test_compute_decision_new_client_folder_snap_false(self, mock_1, mock_2):
+        test_node = _get_test_node()
+        self.decision_engine.compute_decision(test_node, test_node, False)
+        mock_1.assert_called_once()
+        mock_2.assert_called_once()
+
+    @patch('src.algorithm.tree_comparator.compareFolders',
+           return_value=ResultObj(Actions.CLIENT_NEW_FOLDER, 1))
+    @patch('shutil.rmtree')
+    def test_compute_decision_new_client_folder_snap_true(self, mock_1, mock_2):
+        test_node = _get_test_node()
+        self.decision_engine.compute_decision(test_node, test_node, True)
+        mock_1.assert_called_once()
+        mock_2.assert_called_once()
+
+    @patch('src.algorithm.tree_comparator.compareFolders',
+           return_value=ResultObj(Actions.CLIENT_NEW_FILE, 1))
+    @patch('src.algorithm.os_handler.upload_file')
+    def test_compute_decision_new_client_file_snap_false(self, mock_1, mock_2):
+        test_node = _get_test_node()
+        self.decision_engine.compute_decision(test_node, test_node, False)
+        mock_1.assert_called_once()
+        mock_2.assert_called_once()
+
+    @patch('src.algorithm.tree_comparator.compareFolders',
+           return_value=ResultObj(Actions.CLIENT_NEW_FILE, 1))
+    @patch('os.remove')
+    def test_compute_decision_new_client_file_snap_True(self, mock_1, mock_2):
+        test_node = _get_test_node()
+        self.decision_engine.compute_decision(test_node, test_node, True)
+        mock_1.assert_called_once()
+        mock_2.assert_called_once()
+
+    @patch('src.algorithm.tree_comparator.compareFolders',
+           return_value=ResultObj(Actions.SERVER_NEW_FOLDER, 1))
+    @patch('src.algorithm.os_handler.download_folder')
+    def test_compute_decision_new_server_folder(self, mock_1, mock_2):
+        test_node = _get_test_node()
+        self.decision_engine.compute_decision(test_node, test_node, True)
+        mock_1.assert_called_once()
+        mock_2.assert_called_once()
+
+    @patch('src.algorithm.tree_comparator.compareFolders',
+           return_value=ResultObj(Actions.SERVER_NEW_FILE, 1))
+    @patch('src.algorithm.os_handler.download_file')
+    def test_compute_decision_new_server_file(self, mock_1, mock_2):
+        test_node = _get_test_node()
+        self.decision_engine.compute_decision(test_node, test_node, True)
+        mock_1.assert_called_once()
+        mock_2.assert_called_once()
+
+    @patch('src.algorithm.tree_comparator.compareFolders',
+           return_value=ResultObj(Actions.SERVER_UPDATE_FILE, 1))
+    @patch('src.algorithm.os_handler.download_file')
+    def test_compute_decision_new_server_update_file(self, mock_1, mock_2):
+        test_node = _get_test_node()
+        self.decision_engine.compute_decision(test_node, test_node, True)
+        mock_1.assert_called_once()
+        mock_2.assert_called_once()

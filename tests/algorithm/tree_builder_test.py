@@ -8,41 +8,7 @@ from src.model.algorithm.node import Type, Node
 from src.model.algorithm.tree_node import TreeNode
 from src.model.network_model import NetworkModel
 from tests import default_code
-
-
-def _get_default_dict() -> dict:
-    _id = "id"
-    _name = "name"
-    _type = "File"
-    _created = 2000
-    _updated = 2000
-    thisdict = {
-        "id": _id,
-        "name": _name,
-        "type": _type,
-        "created_at": _created,
-        "updated_at": _updated
-    }
-    return thisdict
-
-
-def _get_tree_dict() -> dict:
-    _id = "id"
-    _name = "name"
-    _type = "Folder"
-    _created = 2000
-    _updated = 2000
-    thisdict = {
-        "getNode": {
-            "id": _id,
-            "name": _name,
-            "type": _type,
-            "created_at": _created,
-            "updated_at": _updated,
-            "children": [_get_default_dict()]
-        }
-    }
-    return thisdict
+from tests.default_code import _get_default_dict, _get_tree_dict
 
 
 class TreeBuilderTest(unittest.TestCase):
