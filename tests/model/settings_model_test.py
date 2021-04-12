@@ -2,14 +2,14 @@ import unittest
 
 from src.model.main_model import MainModel
 from src.model.algorithm.policy import Policy
-from tests.default_code import setUp, tearDown
+from tests import default_code
 
 
 class TestSettings(unittest.TestCase):
 
     def setUp(self):
         """Metodo che viene chiamato prima di ogni metodo"""
-        tmp = setUp()
+        tmp = default_code.setUp()
         self.restore_path = tmp[0]
         self.env_settings = tmp[1]
         self.main_model = MainModel()
@@ -17,7 +17,7 @@ class TestSettings(unittest.TestCase):
 
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""
-        tearDown(self.env_settings, self.restore_path)
+        default_code.tearDown(self.env_settings, self.restore_path)
 
     def test_get_policy(self) -> None:
         result = self.sett_model.get_policy()

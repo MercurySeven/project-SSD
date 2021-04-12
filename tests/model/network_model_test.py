@@ -3,14 +3,14 @@ from unittest.mock import patch
 
 from src.model.main_model import MainModel
 from src.network.api_implementation import LoginError, NetworkError, ServerError
-from tests.default_code import setUp, tearDown
+from tests import default_code
 
 
 class NetworkModelTest(unittest.TestCase):
 
     def setUp(self):
         """Metodo che viene chiamato prima di ogni metodo"""
-        tmp = setUp()
+        tmp = default_code.setUp()
         self.restore_path = tmp[0]
         self.env_settings = tmp[1]
         self.main_model = MainModel()
@@ -18,7 +18,7 @@ class NetworkModelTest(unittest.TestCase):
 
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""
-        tearDown(self.env_settings, self.restore_path)
+        default_code.tearDown(self.env_settings, self.restore_path)
 
     @patch('src.network.api_implementation.ApiImplementation.login', return_value=False)
     def test_login_value_exception(self, mocked_function):
