@@ -50,7 +50,7 @@ class OsHandlerTest(unittest.TestCase):
         os_handler.set_model(self.main_model.network_model)
         self.assertEqual(os_handler.networkmodel, self.main_model.network_model)
 
-    @patch('src.model.network_model.NetworkModel.download_file', return_value=None)
+    @patch('src.model.network_model.NetworkModel.download_node', return_value=None)
     def test_download_folder_with_file(self, mocked_fun):
         updated = 200
         created = 100
@@ -75,7 +75,7 @@ class OsHandlerTest(unittest.TestCase):
         self.assertTrue(os.path.exists(folder_path))
         self.assertTrue(os.path.exists(inner_folder_path))
 
-    @patch('src.model.network_model.NetworkModel.upload_file', return_value=None)
+    @patch('src.model.network_model.NetworkModel.upload_node', return_value=None)
     @patch('src.model.network_model.NetworkModel.create_folder', return_value=None)
     def test_upload_folder_with_file(self, mocked_create, mocked_upload):
         updated = 200

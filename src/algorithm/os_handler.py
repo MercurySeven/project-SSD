@@ -34,11 +34,11 @@ def upload_folder(node: TreeNode, parent_folder_id: str = "LOCAL_ROOT") -> None:
 
 
 def download_file(node: TreeNode, path_folder: str) -> None:
-    networkmodel.download_file(node, path_folder)
+    networkmodel.download_node(node, path_folder)
 
 
 def upload_file(node: TreeNode, parent_folder_id: str) -> None:
-    networkmodel.upload_file(node, parent_folder_id)
+    networkmodel.upload_node(node, parent_folder_id)
 
 
 def delete_node(node_id: str) -> None:
