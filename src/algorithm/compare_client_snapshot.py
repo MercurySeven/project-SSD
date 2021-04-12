@@ -5,8 +5,6 @@ from PySide6.QtCore import QSettings
 from . import tree_builder, tree_comparator, os_handler
 from .tree_comparator import Actions
 from src.model.algorithm.tree_node import TreeNode
-from src.model.algorithm.policy import Policy
-from src import settings
 
 
 logger = logging.getLogger("decision_engine")
@@ -43,16 +41,14 @@ def compare_snap_client(snapshot: TreeNode, client: TreeNode) -> None:
             parent_id = get_id_from_path(r["path"])
             os_handler.upload_file(node, parent_id)
             logger.info(f"Nuovo file da caricare nel server: {name_node}")
-        elif action == Actions.SERVER_UPDATE_FILE:
+        # elif action == Actions.SERVER_UPDATE_FILE:
             # Il client ha un file aggiornato rispetto allo snapshot
             # TODO: Per la policy manuale, prendo la data dello snapshot del file, la confronto
             # con la data del server, se quella del server è diversa significa che ho avuto un
             # upload nel mentre ero offline.
-            current_policy = Policy(settings.get_policy())
-            if current_policy == Policy.Client:
-                parent_id = get_id_from_path(r["path"])
-                os_handler.upload_file(node, parent_id)
-                logger.info(f"File aggiornato rispetto lo snapshot, carico nel server: {name_node}")
+            # node_id = get_id_from_path(node.get_payload().path)
+            # node_metadata = os_handler.networkmodel.get_content_from_node(node_id)
+            # print(node_metadata)
 
 
 def get_id_from_path(path: str) -> str:
