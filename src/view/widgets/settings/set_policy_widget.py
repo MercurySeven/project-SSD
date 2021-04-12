@@ -2,7 +2,7 @@ from PySide6.QtWidgets import (
     QWidget, QLabel, QRadioButton, QVBoxLayout, QHBoxLayout)
 from PySide6.QtCore import (Signal, Slot)
 
-from src.algorithm.policy import Policy
+from src.model.algorithm.policy import Policy
 from src.model.settings_model import SettingsModel
 
 
