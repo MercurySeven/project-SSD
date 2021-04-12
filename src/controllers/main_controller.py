@@ -76,6 +76,7 @@ class MainController(QObject):
         self.notification_icon = NotificationController(self.app, self.view)
 
         # ALGORITMO
+        # TODO: Da spostare nel main model
         self.algoritmo = DecisionEngine(self.model.network_model)
         self.algoritmo.start()
 

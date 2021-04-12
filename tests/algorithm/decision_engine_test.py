@@ -22,7 +22,7 @@ class DecisionEngineTest(unittest.TestCase):
     def test_default(self):
         # Davide
         self.assertEqual(self.decision_engine.running, True)
-        self.assertEqual(self.decision_engine.getName(), "Algoritmo V3")
+        self.assertEqual("Algoritmo" in self.decision_engine.getName(), True)
         self.assertEqual(self.decision_engine.isDaemon(), True)
 
     def test_set_running(self):

@@ -30,33 +30,36 @@ class DecisionEngine(Thread):
 
         self.logger = logging.getLogger("decision_engine")
 
+    def set_running(self, running: bool) -> None:
+        self.running = running
+
     def run(self):
         # Override the run() function of Thread class
         while True:
             if self.running:
-                path = self.env_settings.value("sync_path")
-                snap_tree = tree_builder.read_dump_client_filesystem(path)
-                client_tree = tree_builder.get_tree_from_system(path)
-
-                check_connection = True
-                try:
-                    if snap_tree is not None:
-                        ccs.compare_snap_client(snap_tree, client_tree)
-                except APIException:
-                    check_connection = False
-
-                # Se non ho connessione mi fermo e non creo nemmeno un nuovo snapshot
-                if check_connection:
-                    remote_tree = tree_builder.get_tree_from_node_id()
-                    self.compute_decision(client_tree, remote_tree, snap_tree is not None)
-                    self.logger.info("Eseguito snapshot dell'albero locale")
-                    tree_builder.dump_client_filesystem(path)
+                self.check()
                 sleep(max(5, self.refresh))
             else:
                 sleep(5)
 
-    def set_running(self, running: bool) -> None:
-        self.running = running
+    def check(self) -> None:
+        path = self.env_settings.value("sync_path")
+        snap_tree = tree_builder.read_dump_client_filesystem(path)
+        client_tree = tree_builder.get_tree_from_system(path)
+
+        check_connection = True
+        try:
+            if snap_tree is not None:
+                ccs.compare_snap_client(snap_tree, client_tree)
+        except APIException:
+            check_connection = False
+
+        # Se non ho connessione mi fermo e non creo nemmeno un nuovo snapshot
+        if check_connection:
+            remote_tree = tree_builder.get_tree_from_node_id()
+            self.compute_decision(client_tree, remote_tree, snap_tree is not None)
+            self.logger.info("Eseguito snapshot dell'albero locale")
+            tree_builder.dump_client_filesystem(path)
 
     def compute_decision(self,
                          client_tree: TreeNode,
