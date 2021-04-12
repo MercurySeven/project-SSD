@@ -1,0 +1,56 @@
+import os
+from abc import ABC, abstractmethod
+
+from PySide6.QtCore import QSettings
+
+from src.algorithm import os_handler, tree_builder
+from src.algorithm.tree_comparator import Actions
+from src.model.algorithm.tree_node import TreeNode
+
+
+def common_code(r, logger):
+    action: Actions = r["action"]
+    node: TreeNode = r["node"]
+    name_node = node.get_name()
+
+    if action == Actions.CLIENT_NEW_FOLDER:
+        # Elimina nel server la cartella
+        node_id = get_id_from_path(node.get_payload().path)
+        os_handler.delete_node(node_id)
+        logger.info(f"Eliminata nel server la cartella: {name_node}")
+    elif action == Actions.CLIENT_NEW_FILE:
+        # Elimina nel server il client
+        node_id = get_id_from_path(node.get_payload().path)
+        os_handler.delete_node(node_id)
+        logger.info(f"Eliminato nel server il file: {name_node}")
+    elif action == Actions.SERVER_NEW_FOLDER:
+        # Il client ha una nuova cartella che deve essere caricata nel server
+        parent_id = get_id_from_path(r["path"])
+        os_handler.upload_folder(node, parent_id)
+        logger.info(f"Nuova cartella da caricare nel server: {name_node}")
+    elif action == Actions.SERVER_NEW_FILE:
+        # Il client ha un nuovo file che deve essere caricato nel server
+        parent_id = get_id_from_path(r["path"])
+        os_handler.upload_file(node, parent_id)
+        logger.info(f"Nuovo file da caricare nel server: {name_node}")
+
+
+def get_id_from_path(path: str) -> str:
+    env_settings = QSettings()
+    path_folder = env_settings.value("sync_path")
+    result = os.path.relpath(path, path_folder)
+    node_name = result.split(os.sep)
+
+    current_node = tree_builder.get_tree_from_node_id()
+    for name in node_name:
+        for node in current_node.get_children():
+            if node.get_name() == name:
+                current_node = node
+                break
+    return current_node.get_payload().id
+
+
+class Strategy(ABC):
+    @abstractmethod
+    def execute(self, logger, snapshot, client):
+        pass

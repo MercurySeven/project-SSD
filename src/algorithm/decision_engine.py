@@ -6,7 +6,8 @@ import shutil
 
 from PySide6.QtCore import QSettings
 
-from . import tree_builder, tree_comparator, os_handler, compare_client_snapshot as ccs
+from . import tree_builder, tree_comparator, os_handler
+from .Context import Context
 from .tree_comparator import Actions
 from src.model.algorithm.tree_node import TreeNode
 from src.model.network_model import NetworkModel
@@ -27,6 +28,8 @@ class DecisionEngine(Thread):
         # set istanza di NetworkModel nei moduli per poter gestire i segnali di errore
         os_handler.set_model(model)
         tree_builder.set_model(model)
+
+        self.context = Context()
 
         self.logger = logging.getLogger("decision_engine")
 
@@ -50,7 +53,7 @@ class DecisionEngine(Thread):
         check_connection = True
         try:
             if snap_tree is not None:
-                ccs.compare_snap_client(snap_tree, client_tree)
+                self.context.compare_snap_client(snap_tree, client_tree)
         except APIException:
             check_connection = False
 

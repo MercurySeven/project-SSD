@@ -4,16 +4,18 @@ from src import settings
 
 class SyncModel(QObject):
     __has_already_run_once = False  # used to instantiate only one
+    __model = None
 
     Sg_model_changed = Signal()
 
     __create_key = object()
 
     @classmethod
-    def create(cls):
+    def get_instance(cls):
         if not SyncModel.__has_already_run_once:
             SyncModel.__has_already_run_once = True
-            return SyncModel(cls.__create_key)
+            SyncModel.__model = SyncModel(cls.__create_key)
+        return SyncModel.__model
 
     def __init__(self, create_key):
         assert (create_key == SyncModel.__create_key), \

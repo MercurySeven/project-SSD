@@ -37,7 +37,7 @@ class DecisionEngineTest(unittest.TestCase):
 
     @patch('src.algorithm.tree_builder.read_dump_client_filesystem', return_value="test")
     @patch('src.algorithm.tree_builder.get_tree_from_system', return_value="test")
-    @patch('src.algorithm.compare_client_snapshot.compare_snap_client')
+    @patch('src.algorithm.Context.Context.compare_snap_client')
     @patch('src.algorithm.tree_builder.get_tree_from_node_id')
     @patch('src.algorithm.decision_engine.DecisionEngine.compute_decision')
     @patch('src.algorithm.tree_builder.dump_client_filesystem')
@@ -60,7 +60,7 @@ class DecisionEngineTest(unittest.TestCase):
 
     @patch('src.algorithm.tree_builder.read_dump_client_filesystem', return_value="test")
     @patch('src.algorithm.tree_builder.get_tree_from_system', return_value="test")
-    @patch('src.algorithm.compare_client_snapshot.compare_snap_client', side_effect=APIException())
+    @patch('src.algorithm.Context.Context.compare_snap_client', side_effect=APIException())
     @patch('src.algorithm.tree_builder.get_tree_from_node_id')
     @patch('src.algorithm.decision_engine.DecisionEngine.compute_decision')
     @patch('src.algorithm.tree_builder.dump_client_filesystem')

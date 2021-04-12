@@ -12,14 +12,16 @@ from src.model.widgets.file import File
 class FileModel(QObject):
     Sg_model_changed = Signal()
     __has_already_run_once = False  # used to instantiate only one
+    __model = None
 
     __create_key = object()
 
     @classmethod
-    def create(cls):
+    def get_instance(cls):
         if not FileModel.__has_already_run_once:
             FileModel.__has_already_run_once = True
-            return FileModel(cls.__create_key)
+            FileModel.__model = FileModel(cls.__create_key)
+        return FileModel.__model
 
     def __init__(self, create_key):
         assert (create_key == FileModel.__create_key), \

@@ -13,14 +13,16 @@ class SettingsModel(QObject):
     Sg_model_changed = Signal()
     Sg_model_path_changed = Signal()
     __has_already_run_once = False  # used to instantiate only one
+    __model = None
 
     __create_key = object()
 
     @classmethod
-    def create(cls):
+    def get_instance(cls):
         if not SettingsModel.__has_already_run_once:
             SettingsModel.__has_already_run_once = True
-            return SettingsModel(cls.__create_key)
+            SettingsModel.__model = SettingsModel(cls.__create_key)
+        return SettingsModel.__model
 
     def __init__(self, create_key):
         assert (create_key == SettingsModel.__create_key), \
