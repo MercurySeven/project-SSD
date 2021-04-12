@@ -1,7 +1,8 @@
 import unittest
 
 from PySide6.QtCore import QSize
-from src.model.widgets.sync_model import SyncModel
+
+from src.model.main_model import MainModel
 from src.view.widgets.sync_widget import SyncWidget
 from src.controllers.widgets.sync_controller import SyncController
 from tests import default_code
@@ -15,7 +16,8 @@ class SyncWidgetTest(unittest.TestCase):
         tmp = default_code.setUp()
         self.restore_path = tmp[0]
         self.env_settings = tmp[1]
-        self.sync_model = SyncModel()
+        self.main_model = MainModel()
+        self.sync_model = self.main_model.sync_model
         self.test_sync = SyncWidget(self.sync_model)
         self.controller = SyncController(self.sync_model, self.test_sync)
 

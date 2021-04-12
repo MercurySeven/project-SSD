@@ -11,8 +11,19 @@ from src.model.widgets.file import File
 
 class FileModel(QObject):
     Sg_model_changed = Signal()
+    __has_already_run_once = False  # used to instantiate only one
 
-    def __init__(self):
+    __create_key = object()
+
+    @classmethod
+    def create(cls):
+        if not FileModel.__has_already_run_once:
+            return FileModel(cls.__create_key)
+
+    def __init__(self, create_key):
+        assert (create_key == FileModel.__create_key), \
+            "FileModel objects must be created using NetworkModel.create"
+
         super(FileModel, self).__init__()
         self.settings = QSettings()
         self.tree = tree_builder.get_tree_from_system(self.settings.value("sync_path"))

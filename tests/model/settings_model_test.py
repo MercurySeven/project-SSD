@@ -1,6 +1,6 @@
 import unittest
 
-from src.model.settings_model import SettingsModel
+from src.model.main_model import MainModel
 from src.model.algorithm.policy import Policy
 from tests import default_code
 
@@ -12,8 +12,8 @@ class TestSettings(unittest.TestCase):
         tmp = default_code.setUp()
         self.restore_path = tmp[0]
         self.env_settings = tmp[1]
-
-        self.sett_model = SettingsModel()
+        self.main_model = MainModel()
+        self.sett_model = self.main_model.settings_model
 
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""

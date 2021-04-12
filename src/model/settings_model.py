@@ -12,8 +12,18 @@ from src.model.algorithm.policy import Policy
 class SettingsModel(QObject):
     Sg_model_changed = Signal()
     Sg_model_path_changed = Signal()
+    __has_already_run_once = False  # used to instantiate only one
 
-    def __init__(self):
+    __create_key = object()
+
+    @classmethod
+    def create(cls):
+        if not SettingsModel.__has_already_run_once:
+            return SettingsModel(cls.__create_key)
+
+    def __init__(self, create_key):
+        assert (create_key == SettingsModel.__create_key), \
+            "Network objects must be created using NetworkModel.create"
         super(SettingsModel, self).__init__(None)
         self.env_settings = QSettings()
 

@@ -1,4 +1,5 @@
 from PySide6.QtCore import (QObject, Signal, QSettings)
+
 from src.network import api
 from src.network.api_exceptions import (APIException, LoginError, NetworkError, ServerError)
 from src.model.algorithm.tree_node import TreeNode
@@ -76,6 +77,7 @@ def APIExceptionsHandler(func):
 
 class NetworkModel(QObject):
     logger = logging.getLogger("NetworkModel")
+    __has_already_run_once = False  # used to instantiate only one
 
     status: Status = Status.Ok
 
@@ -87,7 +89,17 @@ class NetworkModel(QObject):
     Sg_connection_failed = Signal()
     Sg_server_failed = Signal()
 
-    def __init__(self):
+    __create_key = object()
+
+    @classmethod
+    def create(cls):
+        if not NetworkModel.__has_already_run_once:
+            return NetworkModel(cls.__create_key)
+
+    def __init__(self, create_key):
+
+        assert (create_key == NetworkModel.__create_key), \
+            "Network objects must be created using NetworkModel.create"
         super(NetworkModel, self).__init__(None)
 
         self.env_settings = QSettings()

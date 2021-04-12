@@ -3,10 +3,20 @@ from src import settings
 
 
 class SyncModel(QObject):
+    __has_already_run_once = False  # used to instantiate only one
 
     Sg_model_changed = Signal()
 
-    def __init__(self):
+    __create_key = object()
+
+    @classmethod
+    def create(cls):
+        if not SyncModel.__has_already_run_once:
+            return SyncModel(cls.__create_key)
+
+    def __init__(self, create_key):
+        assert (create_key == SyncModel.__create_key), \
+            "SyncModel objects must be created using NetworkModel.create"
         super(SyncModel, self).__init__(None)
         self.state = settings.get_is_synch()
 
