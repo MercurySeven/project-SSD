@@ -18,6 +18,7 @@ class FileModel(QObject):
     @classmethod
     def create(cls):
         if not FileModel.__has_already_run_once:
+            FileModel.__has_already_run_once = True
             return FileModel(cls.__create_key)
 
     def __init__(self, create_key):

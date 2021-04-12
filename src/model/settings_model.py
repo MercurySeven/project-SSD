@@ -19,6 +19,7 @@ class SettingsModel(QObject):
     @classmethod
     def create(cls):
         if not SettingsModel.__has_already_run_once:
+            SettingsModel.__has_already_run_once = True
             return SettingsModel(cls.__create_key)
 
     def __init__(self, create_key):

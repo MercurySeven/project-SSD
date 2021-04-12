@@ -94,6 +94,7 @@ class NetworkModel(QObject):
     @classmethod
     def create(cls):
         if not NetworkModel.__has_already_run_once:
+            NetworkModel.__has_already_run_once = True
             return NetworkModel(cls.__create_key)
 
     def __init__(self, create_key):

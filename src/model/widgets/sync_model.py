@@ -12,6 +12,7 @@ class SyncModel(QObject):
     @classmethod
     def create(cls):
         if not SyncModel.__has_already_run_once:
+            SyncModel.__has_already_run_once = True
             return SyncModel(cls.__create_key)
 
     def __init__(self, create_key):

@@ -11,15 +11,15 @@ class MainModel:
     __network_model = None
 
     def __init__(self):
-        self.__file_model = self.__file_model if \
-            self.__file_model is not None else FileModel.create()
-        self.__settings_model = self.__settings_model if \
-            self.__settings_model is not None else SettingsModel.create()
-        self.__sync_model = self.__sync_model if \
-            self.__sync_model is not None else SyncModel.create()
-        self.__network_model = self.__network_model if \
-            self.__network_model is not None else NetworkModel.create()
-        self.file_model = self.__file_model
-        self.settings_model = self.__settings_model
-        self.sync_model = self.__sync_model
-        self.network_model = self.__network_model
+        MainModel.__file_model = MainModel.__file_model if \
+            MainModel.__file_model is not None else FileModel.create()
+        MainModel.__settings_model = MainModel.__settings_model if \
+            MainModel.__settings_model is not None else SettingsModel.create()
+        MainModel.__sync_model = MainModel.__sync_model if \
+            MainModel.__sync_model is not None else SyncModel.create()
+        MainModel.__network_model = MainModel.__network_model if \
+            MainModel.__network_model is not None else NetworkModel.create()
+        self.file_model = MainModel.__file_model
+        self.settings_model = MainModel.__settings_model
+        self.sync_model = MainModel.__sync_model
+        self.network_model = MainModel.__network_model
