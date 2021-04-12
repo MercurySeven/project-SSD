@@ -70,7 +70,7 @@ class CompareClientSnapshotTest(unittest.TestCase):
         mock_3.assert_called_once()
 
     @patch('src.algorithm.tree_comparator.compareFolders',
-           return_value=ResultObj(Actions.SERVER_NEW_FILE, 1))
+           return_value=ResultObj(Actions.SERVER_UPDATE_FILE, 1))
     @patch('src.algorithm.compare_client_snapshot.get_id_from_path')
     @patch('src.algorithm.os_handler.upload_file')
     def test_compare_snap_client_server_new_update_file(self, mock_1, mock_2, mock_3):
