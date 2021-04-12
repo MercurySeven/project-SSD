@@ -10,7 +10,10 @@ from src.model.algorithm.node import Node, Type
 from src.model.algorithm.tree_node import TreeNode
 
 node_name = "CLIENT_NODE"
-app = QApplication(sys.argv)
+try:
+    app = QApplication(sys.argv)
+except Exception as e:
+    print(e)
 
 
 def setUp() -> [str, QSettings]:
