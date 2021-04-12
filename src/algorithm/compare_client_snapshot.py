@@ -41,7 +41,8 @@ def compare_snap_client(snapshot: TreeNode, client: TreeNode) -> None:
             parent_id = get_id_from_path(r["path"])
             os_handler.upload_file(node, parent_id)
             logger.info(f"Nuovo file da caricare nel server: {name_node}")
-        # elif action == Actions.SERVER_UPDATE_FILE:
+        elif action == Actions.SERVER_UPDATE_FILE:
+            pass
             # Il client ha un file aggiornato rispetto allo snapshot
             # TODO: Per la policy manuale, prendo la data dello snapshot del file, la confronto
             # con la data del server, se quella del server è diversa significa che ho avuto un
