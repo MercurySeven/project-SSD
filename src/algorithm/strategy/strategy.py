@@ -1,14 +1,15 @@
 import os
 from abc import ABC, abstractmethod
-
 from PySide6.QtCore import QSettings
-
+from logging import Logger
 from src.algorithm import os_handler, tree_builder
 from src.algorithm.tree_comparator import Actions
 from src.model.algorithm.tree_node import TreeNode
 
 
-def common_code(r, logger):
+def common_code(r: dict, logger: Logger) -> None:
+    # CLIENT = SNAPSHOT
+    # SERVER = CLIENT
     action: Actions = r["action"]
     node: TreeNode = r["node"]
     name_node = node.get_name()
@@ -52,5 +53,5 @@ def get_id_from_path(path: str) -> str:
 
 class Strategy(ABC):
     @abstractmethod
-    def execute(self, logger, snapshot, client):
+    def execute(self, result_actions: list, logger: Logger) -> None:
         pass

@@ -7,9 +7,14 @@ import shutil
 from PySide6.QtCore import QSettings
 
 from . import tree_builder, tree_comparator, os_handler
-from .Context import Context
+from .compare_snap_client import CompareSnapClient
+from .strategy.client_strategy import ClientStrategy
+from .strategy.manual_strategy import ManualStrategy
+from .strategy.strategy import Strategy
 from .tree_comparator import Actions
+from src import settings
 from src.model.algorithm.tree_node import TreeNode
+from src.model.algorithm.policy import Policy
 from src.model.network_model import NetworkModel
 from src.network.api_exceptions import APIException
 
@@ -29,12 +34,21 @@ class DecisionEngine(Thread):
         os_handler.set_model(model)
         tree_builder.set_model(model)
 
-        self.context = Context()
+        self.compare_snap_client = CompareSnapClient()
+        self.client_strategy = ClientStrategy()
+        self.manual_strategy = ManualStrategy()
 
         self.logger = logging.getLogger("decision_engine")
 
     def set_running(self, running: bool) -> None:
         self.running = running
+
+    def get_strategy(self) -> Strategy:
+        policy = Policy(settings.get_policy())
+        if policy == Policy.Client:
+            return self.client_strategy
+        elif policy == Policy.Manual:
+            return self.manual_strategy
 
     def run(self):
         # Override the run() function of Thread class
@@ -53,7 +67,7 @@ class DecisionEngine(Thread):
         check_connection = True
         try:
             if snap_tree is not None:
-                self.context.compare_snap_client(snap_tree, client_tree)
+                self.compare_snap_client.check(snap_tree, client_tree, self.get_strategy())
         except APIException:
             check_connection = False
 
@@ -68,10 +82,6 @@ class DecisionEngine(Thread):
                          client_tree: TreeNode,
                          remote_tree: TreeNode,
                          snapshot: bool) -> None:
-        # print("CLIENT")
-        # print("\n" + str(client_tree))
-        # print("SERVER")
-        # print("\n" + str(remote_tree))
 
         result = tree_comparator.compareFolders(client_tree, remote_tree)
         if len(result) == 0:
