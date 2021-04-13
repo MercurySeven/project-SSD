@@ -3,7 +3,6 @@ from src import settings
 
 
 class SyncModel(QObject):
-    __has_already_run_once = False  # used to instantiate only one
     __model = None
 
     Sg_model_changed = Signal()
@@ -12,8 +11,7 @@ class SyncModel(QObject):
 
     @classmethod
     def get_instance(cls):
-        if not SyncModel.__has_already_run_once:
-            SyncModel.__has_already_run_once = True
+        if SyncModel.__model is None:
             SyncModel.__model = SyncModel(cls.__create_key)
         return SyncModel.__model
 

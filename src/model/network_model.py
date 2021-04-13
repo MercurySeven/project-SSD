@@ -84,7 +84,6 @@ class NetworkMeta(type(QObject), type(Api)):
 
 class NetworkModel(QObject, Api, metaclass=NetworkMeta):
     logger = logging.getLogger("NetworkModel")
-    __has_already_run_once = False  # used to instantiate only one
     __model = None
 
     status: Status = Status.Ok
@@ -101,8 +100,7 @@ class NetworkModel(QObject, Api, metaclass=NetworkMeta):
 
     @classmethod
     def get_instance(cls):
-        if not NetworkModel.__has_already_run_once:
-            NetworkModel.__has_already_run_once = True
+        if NetworkModel.__model is None:
             NetworkModel.__model = NetworkModel(cls.__create_key)
         return NetworkModel.__model
 
