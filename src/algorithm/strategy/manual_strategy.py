@@ -1,6 +1,6 @@
 import math
 from logging import Logger
-from .strategy import Strategy, common_code, get_id_from_path
+from .strategy import Strategy, common_strategy, get_id_from_path
 from src.algorithm import os_handler
 from src.algorithm.tree_comparator import Actions
 from src.model.algorithm.tree_node import TreeNode
@@ -10,13 +10,12 @@ class ManualStrategy(Strategy):
     def execute(self, result_actions: list, logger: Logger) -> None:
         # CLIENT = SNAPSHOT
         # SERVER = CLIENT
-        for r in result_actions:
-            action: Actions = r["action"]
-            node: TreeNode = r["node"]
+        for node_raw in result_actions:
+            action: Actions = node_raw["action"]
+            node: TreeNode = node_raw["node"]
             # name_node = node.get_name()
 
             if action == Actions.SERVER_UPDATE_FILE:
-                pass
                 # Il client ha un file aggiornato rispetto allo snapshot
                 # TODO: Per la policy manuale, prendo la data dello snapshot del file, la confronto
                 # con la data del server, se quella del server è diversa significa che ho avuto un
@@ -27,4 +26,4 @@ class ManualStrategy(Strategy):
                 node_last_update_server = math.trunc(last_update_raw / 1000)
                 print(node_last_update_server)
             else:
-                common_code(r, logger)
+                common_strategy(node_raw, logger)

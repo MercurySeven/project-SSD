@@ -1,8 +1,8 @@
 from logging import Logger
-from .strategy import Strategy, common_code
+from .strategy import Strategy, common_strategy
 
 
 class ClientStrategy(Strategy):
     def execute(self, result_actions: list, logger: Logger) -> None:
-        for action in result_actions:
-            common_code(action, logger)
+        for node_raw in result_actions:
+            common_strategy(node_raw, logger)

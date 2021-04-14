@@ -7,11 +7,11 @@ from src.algorithm.tree_comparator import Actions
 from src.model.algorithm.tree_node import TreeNode
 
 
-def common_code(r: dict, logger: Logger) -> None:
+def common_strategy(node_raw: dict, logger: Logger) -> None:
     # CLIENT = SNAPSHOT
     # SERVER = CLIENT
-    action: Actions = r["action"]
-    node: TreeNode = r["node"]
+    action: Actions = node_raw["action"]
+    node: TreeNode = node_raw["node"]
     name_node = node.get_name()
 
     if action == Actions.CLIENT_NEW_FOLDER:
@@ -26,12 +26,12 @@ def common_code(r: dict, logger: Logger) -> None:
         logger.info(f"Eliminato nel server il file: {name_node}")
     elif action == Actions.SERVER_NEW_FOLDER:
         # Il client ha una nuova cartella che deve essere caricata nel server
-        parent_id = get_id_from_path(r["path"])
+        parent_id = get_id_from_path(node_raw["path"])
         os_handler.upload_folder(node, parent_id)
         logger.info(f"Nuova cartella da caricare nel server: {name_node}")
     elif action == Actions.SERVER_NEW_FILE:
         # Il client ha un nuovo file che deve essere caricato nel server
-        parent_id = get_id_from_path(r["path"])
+        parent_id = get_id_from_path(node_raw["path"])
         os_handler.upload_file(node, parent_id)
         logger.info(f"Nuovo file da caricare nel server: {name_node}")
 
