@@ -2,10 +2,13 @@ import os
 import pathlib
 
 from PySide6.QtCore import QSettings, QCoreApplication
-
+import requests.exceptions
 from src import settings
 from src.model.algorithm.node import Node, Type
 from src.model.algorithm.tree_node import TreeNode
+from src.model.network_model import Status
+from src.network.api_exceptions import APIException
+from src.network.api_implementation import ExceptionsHandler
 
 node_name = "CLIENT_NODE"
 
@@ -101,3 +104,26 @@ class ResultObj:
 
     def quit(self):
         pass
+
+
+class RequestObj:
+    def __init__(self, _text: str = "test", _status: Status = Status.Ok):
+        self.text = _text
+        self.status_code = _status
+        self.ok = _status if _status == Status.Ok else None
+        self.content = b"test"
+
+    def set_text(self, _text):
+        self.text = _text
+
+    @ExceptionsHandler
+    def function_network_exception(self):
+        raise requests.exceptions.ConnectionError("test")
+
+    @ExceptionsHandler
+    def function_server_exception(self):
+        raise requests.exceptions.HTTPError("test")
+
+    def raise_for_status(self):
+        if self.status_code == Status.Error:
+            raise APIException()

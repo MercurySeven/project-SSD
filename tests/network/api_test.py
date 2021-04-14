@@ -4,39 +4,17 @@ import unittest
 from unittest.mock import patch
 
 import gql
-import requests.exceptions
 
 from src.model.algorithm.node import Node, Type
 from src.model.algorithm.tree_node import TreeNode
 from src.model.network_model import Status
-from src.network.api_implementation import ExceptionsHandler, ApiImplementation
+from src.network.api_implementation import ApiImplementation
 from src.network.api_exceptions import NetworkError, ServerError, APIException, LoginError
 from tests import default_code
+from tests.default_code import RequestObj
 
 
 class ApiTest(unittest.TestCase):
-    class RequestObj:
-        def __init__(self, _text: str = "test", _status: Status = Status.Ok):
-            self.text = _text
-            self.status_code = _status
-            self.ok = _status if _status == Status.Ok else None
-            self.content = b"test"
-
-        def set_text(self, _text):
-            self.text = _text
-
-        @ExceptionsHandler
-        def function_network_exception(self):
-            raise requests.exceptions.ConnectionError("test")
-
-        @ExceptionsHandler
-        def function_server_exception(self):
-            raise requests.exceptions.HTTPError("test")
-
-        def raise_for_status(self):
-            if self.status_code == Status.Error:
-                raise APIException()
-
     def setUp(self) -> None:
         tmp = default_code.setUp()
         self.restore_path = tmp[0]
@@ -77,7 +55,7 @@ class ApiTest(unittest.TestCase):
         self.assertTrue(logged)
 
     def test_exception_handler_network_error(self):
-        test_obj = ApiTest.RequestObj()
+        test_obj = RequestObj()
         try:
             test_obj.function_network_exception()
         except Exception as e:
@@ -87,7 +65,7 @@ class ApiTest(unittest.TestCase):
             self.assertEqual(str(e), str(NetworkError(f"{fun_name}: {exc_message}")))
 
     def test_exception_handler_server_error(self):
-        test_obj = ApiTest.RequestObj()
+        test_obj = RequestObj()
         try:
             test_obj.function_server_exception()
         except Exception as e:
@@ -176,18 +154,18 @@ class ApiTest(unittest.TestCase):
         self.assertEqual(result, "")
 
     def test_check_status_code_ok(self):
-        test_obj = ApiTest.RequestObj()
+        test_obj = RequestObj()
         self.assertIsNone(self.api.check_status_code(test_obj))
 
     def test_check_status_code_401(self):
-        test_obj = ApiTest.RequestObj("test", 401)
+        test_obj = RequestObj("test", 401)
         try:
             self.api.check_status_code(test_obj)
         except LoginError as e:
             self.assertEqual(str(e), str(LoginError()))
 
     def test_check_status_code_Error(self):
-        test_obj = ApiTest.RequestObj("test", Status.Error)
+        test_obj = RequestObj("test", Status.Error)
         try:
             self.api.check_status_code(test_obj)
         except APIException as e:
