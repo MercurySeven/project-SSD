@@ -1,2 +1,4 @@
 [run]
-omit = *controllers*
+omit =
+    *controllers*
+    */main.py
