@@ -15,6 +15,8 @@ def setUp() -> [str, QSettings]:
     QCoreApplication.setApplicationName("SSD")
     env_settings = QSettings()
     restore_path = env_settings.value("sync_path")
+    restore_credentials = [env_settings.value(
+        "Credentials/user"), env_settings.value("Credentials/password")]
 
     path = os.path.join(str(pathlib.Path().absolute()), "tests")
     path = r'%s' % path
@@ -23,16 +25,18 @@ def setUp() -> [str, QSettings]:
     settings.file_name = os.path.join(path, "config.ini")
     settings.check_file()
 
-    return [restore_path, env_settings]
+    return [restore_path, env_settings, restore_credentials]
 
 
-def tearDown(env_settings: QSettings, restore_path) -> None:
+def tearDown(env_settings: QSettings, restore_path: str, restore_credentials: [str, str]) -> None:
     if os.path.exists(settings.file_name):
         try:
             os.remove(settings.file_name)
         except Exception as e:
             print(e)
     env_settings.setValue("sync_path", restore_path)
+    env_settings.setValue("Credentials/user", restore_credentials[0])
+    env_settings.setValue("Credentials/password", restore_credentials[1])
 
 
 def _get_test_node():

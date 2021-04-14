@@ -12,13 +12,14 @@ class FileViewTest(unittest.TestCase):
         tmp = default_code.setUp()
         self.restore_path = tmp[0]
         self.env_settings = tmp[1]
+        self.restore_credentials = tmp[2]
 
         self.main_model = MainModel()
         self.file_view_test = FileView(self.main_model.file_model)
         self.file_controller = FileController(self.main_model.file_model, self.file_view_test)
 
     def tearDown(self) -> None:
-        default_code.tearDown(self.env_settings, self.restore_path)
+        default_code.tearDown(self.env_settings, self.restore_path, self.restore_credentials)
 
     def test_defaults(self):
         """ Test file view test default values"""

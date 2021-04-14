@@ -15,10 +15,11 @@ class CompareClientSnapshotTest(unittest.TestCase):
         tmp = default_code.setUp()
         self.restore_path = tmp[0]
         self.env_settings = tmp[1]
+        self.restore_credentials = tmp[2]
         self.context = CompareSnapClient()
 
     def tearDown(self) -> None:
-        default_code.tearDown(self.env_settings, self.restore_path)
+        default_code.tearDown(self.env_settings, self.restore_path, self.restore_credentials)
 
     @patch('src.algorithm.tree_comparator.compareFolders', return_value="")
     def test_compare_snap_client_equal_client_strategy(self, mocked_fun):

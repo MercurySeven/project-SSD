@@ -16,6 +16,7 @@ class SyncWidgetTest(unittest.TestCase):
         tmp = default_code.setUp()
         self.restore_path = tmp[0]
         self.env_settings = tmp[1]
+        self.restore_credentials = tmp[2]
         self.main_model = MainModel()
         self.sync_model = self.main_model.sync_model
         self.test_sync = SyncWidget(self.sync_model)
@@ -23,7 +24,7 @@ class SyncWidgetTest(unittest.TestCase):
 
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""
-        default_code.tearDown(self.env_settings, self.restore_path)
+        default_code.tearDown(self.env_settings, self.restore_path, self.restore_credentials)
 
     def test_defaults(self):
         """Test default synchronized widget"""

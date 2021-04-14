@@ -16,6 +16,7 @@ class OsHandlerTest(unittest.TestCase):
         tmp = default_code.setUp()
         self.restore_path = tmp[0]
         self.env_settings = tmp[1]
+        self.restore_credentials = tmp[2]
         self.main_model = MainModel()
         os_handler.set_model(self.main_model.network_model)
 
@@ -31,7 +32,7 @@ class OsHandlerTest(unittest.TestCase):
         folder_to_remove = os.path.join(self.path, self.folder_name)
         file_to_remove = os.path.join(folder_to_remove, self.file_name)
         optional_folder = os.path.join(folder_to_remove, self.folder_name)
-        default_code.tearDown(self.env_settings, self.restore_path)
+        default_code.tearDown(self.env_settings, self.restore_path, self.restore_credentials)
         try:
             if os.path.exists(file_to_remove):
                 os.remove(file_to_remove)

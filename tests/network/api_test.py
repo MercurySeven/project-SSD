@@ -41,6 +41,7 @@ class ApiTest(unittest.TestCase):
         tmp = default_code.setUp()
         self.restore_path = tmp[0]
         self.env_settings = tmp[1]
+        self.restore_credentials = tmp[2]
 
         self.file_name = "test.txt"
 
@@ -54,7 +55,7 @@ class ApiTest(unittest.TestCase):
 
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""
-        default_code.tearDown(self.env_settings, self.restore_path)
+        default_code.tearDown(self.env_settings, self.restore_path, self.restore_credentials)
         to_remove = os.path.join(self.path, self.file_name)
         if os.path.exists(to_remove):
             try:
