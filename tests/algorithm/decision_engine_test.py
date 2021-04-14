@@ -15,11 +15,12 @@ class DecisionEngineTest(unittest.TestCase):
         tmp = default_code.setUp()
         self.restore_path = tmp[0]
         self.env_settings = tmp[1]
+        self.restore_credentials = tmp[2]
         self.main_model = MainModel()
         self.decision_engine = DecisionEngine(self.main_model.network_model, True)
 
     def tearDown(self) -> None:
-        default_code.tearDown(self.env_settings, self.restore_path)
+        default_code.tearDown(self.env_settings, self.restore_path, self.restore_credentials)
 
     def test_default(self):
         # Davide
@@ -37,7 +38,7 @@ class DecisionEngineTest(unittest.TestCase):
 
     @patch('src.algorithm.tree_builder.read_dump_client_filesystem', return_value="test")
     @patch('src.algorithm.tree_builder.get_tree_from_system', return_value="test")
-    @patch('src.algorithm.compare_client_snapshot.compare_snap_client')
+    @patch('src.algorithm.compare_snap_client.CompareSnapClient.check')
     @patch('src.algorithm.tree_builder.get_tree_from_node_id')
     @patch('src.algorithm.decision_engine.DecisionEngine.compute_decision')
     @patch('src.algorithm.tree_builder.dump_client_filesystem')
@@ -60,7 +61,7 @@ class DecisionEngineTest(unittest.TestCase):
 
     @patch('src.algorithm.tree_builder.read_dump_client_filesystem', return_value="test")
     @patch('src.algorithm.tree_builder.get_tree_from_system', return_value="test")
-    @patch('src.algorithm.compare_client_snapshot.compare_snap_client', side_effect=APIException())
+    @patch('src.algorithm.compare_snap_client.CompareSnapClient.check', side_effect=APIException())
     @patch('src.algorithm.tree_builder.get_tree_from_node_id')
     @patch('src.algorithm.decision_engine.DecisionEngine.compute_decision')
     @patch('src.algorithm.tree_builder.dump_client_filesystem')

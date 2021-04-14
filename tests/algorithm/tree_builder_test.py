@@ -17,6 +17,7 @@ class TreeBuilderTest(unittest.TestCase):
         tmp = default_code.setUp()
         self.restore_path = tmp[0]
         self.env_settings = tmp[1]
+        self.restore_credentials = tmp[2]
 
         self.original_path = self.env_settings.value("sync_path")
 
@@ -36,7 +37,7 @@ class TreeBuilderTest(unittest.TestCase):
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""
         os.remove(os.path.join(self.path, "prova.txt"))
-        default_code.tearDown(self.env_settings, self.restore_path)
+        default_code.tearDown(self.env_settings, self.restore_path, self.restore_credentials)
         self._remove_dump()
         os.rmdir(self.path)
 

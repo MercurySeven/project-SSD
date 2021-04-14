@@ -1,7 +1,9 @@
 import sys
 import unittest
 from unittest.mock import patch
+
 from PySide6.QtWidgets import QApplication
+
 from src.model.main_model import MainModel
 from src.controllers.settings_controller import SettingsController
 from src.view.settings_view import SettingsView
@@ -18,6 +20,7 @@ class SettingsViewTest(unittest.TestCase):
         tmp = default_code.setUp()
         self.restore_path = tmp[0]
         self.env_settings = tmp[1]
+        self.restore_credentials = tmp[2]
 
         self.main_model = MainModel()
         self.settings_view = SettingsView(self.main_model.settings_model)
@@ -33,7 +36,7 @@ class SettingsViewTest(unittest.TestCase):
 
     def tearDown(self) -> None:
         """Metodo che viene chiamato dopo ogni metodo"""
-        default_code.tearDown(self.env_settings, self.restore_path)
+        default_code.tearDown(self.env_settings, self.restore_path, self.restore_credentials)
 
     def test_defaults(self):
         """ Test the path widget in the default state """
