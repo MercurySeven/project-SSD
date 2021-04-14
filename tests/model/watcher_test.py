@@ -90,7 +90,8 @@ class WatcherTest(unittest.TestCase):
         self.watcher_to_test.reboot()
         os.remove(self.file_test)
         time.sleep(0.5)
-        mock_1.assert_called_once()
+        counter = mock_1.call_count
+        self.assertEqual(counter > 0, True)
 
     @patch('src.model.watcher.MyHandler.signal_watchdog')
     def test_handler_moved(self, mock_1):
@@ -100,4 +101,5 @@ class WatcherTest(unittest.TestCase):
         self.watcher_to_test.reboot()
         os.rename(self.file_test, self.file_test + "aa")
         time.sleep(0.5)
-        mock_1.assert_called_once()
+        counter = mock_1.call_count
+        self.assertEqual(counter > 0, True)
