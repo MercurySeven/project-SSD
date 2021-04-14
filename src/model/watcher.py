@@ -79,9 +79,6 @@ class Watcher(QObject):
         self.run(False)
         self.run(True)
 
-    def status(self) -> bool:
-        return self.is_running
-
 
 class MyHandler(PatternMatchingEventHandler, QObject):
     """
