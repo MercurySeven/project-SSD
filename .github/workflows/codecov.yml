@@ -37,7 +37,7 @@ jobs:
       uses: codecov/codecov-action@v1
       with:
         files: ./coverage.xml
-        flags: unittests, uitests
+        flags: unittests
         env_vars: OS,PYTHON
         name: codecov-umbrella
         verbose: true
