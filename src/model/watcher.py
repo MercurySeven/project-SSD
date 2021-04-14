@@ -51,7 +51,8 @@ class Watcher(QObject):
 
         if watch:
             self.logger.info("Attivato watchdog")
-            path = "" if self.path() is None else self.path()
+            path = self.path()
+            path = "" if path is None else path
             self.logger.info("Controllo cartella: " + path)
             return self.background()
         else:
@@ -67,8 +68,9 @@ class Watcher(QObject):
         # thread
         self.observer = Observer()
         self.observer.setName("Watchdog's thread")
-        if self.path() is not None and os.path.isdir(self.path()):
-            self.observer.schedule(event_handler, self.path(), recursive=True)
+        path: str = self.path()
+        if path is not None and os.path.isdir(path):
+            self.observer.schedule(event_handler, path, recursive=True)
             self.observer.start()
             return True
         else:
