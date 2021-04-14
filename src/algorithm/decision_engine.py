@@ -35,20 +35,15 @@ class DecisionEngine(Thread):
         tree_builder.set_model(model)
 
         self.compare_snap_client = CompareSnapClient()
-        self.client_strategy = ClientStrategy()
-        self.manual_strategy = ManualStrategy()
+        self.strategy: dict[Policy, Strategy] = {
+            Policy.Client: ClientStrategy(),
+            Policy.Manual: ManualStrategy()
+        }
 
         self.logger = logging.getLogger("decision_engine")
 
     def set_running(self, running: bool) -> None:
         self.running = running
-
-    def get_strategy(self) -> Strategy:
-        policy = Policy(settings.get_policy())
-        if policy == Policy.Client:
-            return self.client_strategy
-        elif policy == Policy.Manual:
-            return self.manual_strategy
 
     def run(self):
         # Override the run() function of Thread class
@@ -67,7 +62,8 @@ class DecisionEngine(Thread):
         check_connection = True
         try:
             if snap_tree is not None:
-                self.compare_snap_client.check(snap_tree, client_tree, self.get_strategy())
+                policy = Policy(settings.get_policy())
+                self.compare_snap_client.check(snap_tree, client_tree, self.strategy[policy])
         except APIException:
             check_connection = False
 
