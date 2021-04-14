@@ -23,7 +23,7 @@ class WatcherTest(unittest.TestCase):
         self.env_settings.setValue("sync_path", string_to_test)
         self.assertEqual(self.watcher_to_test.path(), string_to_test)
 
-    @patch('src.model.watcher.Watcher.run')
+    @patch('src.model.watcher.Watcher.background')
     def test_run_on(self, mock_run):
         self.watcher_to_test.run(True)
         mock_run.assert_called_once()
