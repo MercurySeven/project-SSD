@@ -147,3 +147,6 @@ pip install flake8
 
 seguire questa guida per impostare mettendo come working directory una cartella con il main (quindi es venv->ciao->main.py)
 https://gist.github.com/tossmilestone/23139d870841a3d5cba2aea28da1a895
+
+## Pyinstaller
+Per generare l'eseguibile: `pyinstaller .\app_inst.spec --noconfirm`
