@@ -25,7 +25,7 @@ class SyncWidget(QWidget):
         self.running_label.setAccessibleName("Subtitle")
 
         self.sync_button = QPushButton(self)
-        self.sync_button.setIcon(QIcon('./icons/reload.png'))
+        self.sync_button.setIcon(QIcon('./assets/icons/reload.png'))
         self.sync_button.setIconSize(QSize(50, 50))
         self.sync_button.setCheckable(True)
         self.sync_button.setAccessibleName('HighlightButton')

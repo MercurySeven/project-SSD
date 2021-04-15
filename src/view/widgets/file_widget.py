@@ -18,7 +18,7 @@ class FileWidget(QToolButton):
 
         self.setAccessibleName('File')
 
-        self.setIcon(QIcon('./icons/copy.png'))
+        self.setIcon(QIcon('./assets/icons/copy.png'))
         self.setIconSize(QSize(45, 45))
         self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
 

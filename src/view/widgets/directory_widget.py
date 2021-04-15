@@ -16,7 +16,7 @@ class DirectoryWidget(QToolButton):
 
         self.setAccessibleName('Directory')
 
-        self.setIcon(QIcon('./icons/folder.svg'))
+        self.setIcon(QIcon('./assets/icons/folder.png'))
         self.setIconSize(QSize(45, 45))
         self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
 

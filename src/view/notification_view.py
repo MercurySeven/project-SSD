@@ -6,7 +6,7 @@ class NotificationView(QSystemTrayIcon):
 
     def __init__(self, parent=None):
         """Custom SystemTrayIcon, richiede in input il path dell'icona"""
-        QSystemTrayIcon.__init__(self, QIcon("./icons/logo.png"), parent)
+        QSystemTrayIcon.__init__(self, QIcon("./assets/icons/logo.png"), parent)
         self.setVisible(True)
         self.setToolTip("Zextras Drive Desktop")
 

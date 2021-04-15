@@ -1,4 +1,3 @@
-import os
 from PySide6 import QtCore
 
 '''
@@ -10,8 +9,6 @@ importare con
 
 def setQss(path, self):
     self.setAttribute(QtCore.Qt.WA_StyledBackground, True)
-    THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
-    my_file = os.path.join(THIS_FOLDER, path)
-    with open(my_file, "r") as fh:
+    with open(path, "r") as fh:
         self.setStyleSheet(fh.read())
         fh.close()
