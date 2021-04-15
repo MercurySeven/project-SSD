@@ -80,7 +80,8 @@ class WatcherTest(unittest.TestCase):
         with open(self.file_test, "w"):
             pass
         time.sleep(0.5)
-        mock_1.assert_called_once()
+        counter = mock_1.call_count
+        self.assertEqual(counter > 0, True)
 
     @patch('src.model.watcher.MyHandler.signal_watchdog')
     def test_handler_delete(self, mock_1):
