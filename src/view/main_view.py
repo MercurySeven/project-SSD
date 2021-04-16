@@ -20,7 +20,7 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
 
         self.setWindowTitle("SSD: Zextras Drive Desktop")
-        self.setWindowIcon(QIcon("./icons/logo.png"))
+        self.setWindowIcon(QIcon("./assets/icons/logo.png"))
 
         # widgets
         self.main_widget = MainWidget(model, self)
@@ -31,7 +31,7 @@ class MainWindow(QMainWindow):
         # style
         self.resize(1200, 800)
 
-        setQss("style.qss", self)
+        setQss("./assets/style.qss", self)
 
 
 class MainWidget(QWidget):
@@ -60,12 +60,12 @@ class MainWidget(QWidget):
         self.sync_widget = SyncWidget(self._model.sync_model)
 
         self.files_button = QPushButton(self)
-        self.files_button.setIcon(QIcon("./icons/copy.png"))
+        self.files_button.setIcon(QIcon("./assets/icons/copy.png"))
         self.files_button.setIconSize(QSize(30, 30))
         self.files_button.setCheckable(True)
 
         self.settings_button = QPushButton(self)
-        self.settings_button.setIcon(QIcon("./icons/settings.png"))
+        self.settings_button.setIcon(QIcon("./assets/icons/settings.png"))
         self.settings_button.setIconSize(QSize(30, 30))
         self.settings_button.setCheckable(True)
 

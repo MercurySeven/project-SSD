@@ -6,14 +6,25 @@ import psutil
 from PySide6.QtCore import (QObject, Signal, QSettings)
 
 from src import settings
-from src.algorithm.policy import Policy
+from src.model.algorithm.policy import Policy
 
 
 class SettingsModel(QObject):
     Sg_model_changed = Signal()
     Sg_model_path_changed = Signal()
+    __model = None
 
-    def __init__(self):
+    __create_key = object()
+
+    @classmethod
+    def get_instance(cls):
+        if SettingsModel.__model is None:
+            SettingsModel.__model = SettingsModel(cls.__create_key)
+        return SettingsModel.__model
+
+    def __init__(self, create_key):
+        assert (create_key == SettingsModel.__create_key), \
+            "Network objects must be created using NetworkModel.create"
         super(SettingsModel, self).__init__(None)
         self.env_settings = QSettings()
 
@@ -44,15 +55,11 @@ class SettingsModel(QObject):
     def set_quota_disco(self, new_quota: str) -> None:
         # trasforma new_quota scritto in mb in byte (non funziona)
         # quota = (int(new_quota) * 1024) ** 2
+        # TODO: Il controllo non dovremmo farlo nel controller?
         mem = psutil.disk_usage('/')
-        if int(new_quota) >= int(self.get_size()) \
-                and (int(new_quota) <= mem.free):
-            settings.update_quota_disco(str(new_quota))
+        if self.get_size() <= int(new_quota) <= mem.free:
+            settings.update_quota_disco(new_quota)
             self.Sg_model_changed.emit()
-
-    def is_logged(self):
-        if(True):
-            return True
 
     @staticmethod
     def convert_size(size_bytes: int) -> str:

@@ -53,7 +53,7 @@ class LoginScreen(QDialog):
         self.layout.addWidget(self.login_button)
 
         self.setLayout(self.layout)
-        setQss("style.qss", self)
+        setQss("./assets/style.qss", self)
 
     @Slot()
     def Sl_model_changed(self):

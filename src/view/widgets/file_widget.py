@@ -1,27 +1,24 @@
 from PySide6.QtWidgets import (QToolButton)
 from PySide6.QtGui import (QIcon, QDesktopServices)
-from PySide6.QtCore import (Qt, QSize, QTimer, Signal, QSettings, QUrl)
+from PySide6.QtCore import (Qt, QSize, QTimer, Signal, Slot, QUrl)
 from src.model.widgets.file import File
 
 
 class FileWidget(QToolButton):
-    doubleClicked = Signal()
+    Sg_double_clicked = Signal()
 
     def __init__(self, file: File):
         super(FileWidget, self).__init__()
 
-        self.env_settings = QSettings()
         self.timer = QTimer()
         self.timer.setSingleShot(True)
         self.clicked.connect(self.check_double_click)
 
-        self.doubleClicked.connect(self.on_double_click)
+        self.Sg_double_clicked.connect(self.Sl_on_double_click)
 
         self.setAccessibleName('File')
 
-        file_icon = QIcon('./icons/copy.png')
-
-        self.setIcon(file_icon)
+        self.setIcon(QIcon('./assets/icons/copy.png'))
         self.setIconSize(QSize(45, 45))
         self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
 
@@ -41,7 +38,7 @@ class FileWidget(QToolButton):
         if self.timer.isActive():
             time = self.timer.remainingTime()
             if time > 0:
-                self.doubleClicked.emit()
+                self.Sg_double_clicked.emit()
             self.timer.stop()
             if time <= 0:
                 self.timer.start(250)
@@ -49,6 +46,7 @@ class FileWidget(QToolButton):
         if self.timer.isActive() is False:
             self.timer.start(250)
 
-    def on_double_click(self):
+    @Slot()
+    def Sl_on_double_click(self):
         file_path = QUrl.fromUserInput(self.path)
         QDesktopServices.openUrl(file_path)

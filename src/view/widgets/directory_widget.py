@@ -1,7 +1,6 @@
-import os
 from PySide6.QtWidgets import (QToolButton)
-from PySide6.QtGui import (QIcon, QDesktopServices)
-from PySide6.QtCore import (Qt, QSize, QTimer, Signal, QSettings, QUrl)
+from PySide6.QtGui import (QIcon)
+from PySide6.QtCore import (Qt, QSize, QTimer, Signal, Slot)
 from src.model.widgets.directory import Directory
 
 
@@ -11,16 +10,13 @@ class DirectoryWidget(QToolButton):
     def __init__(self, dir: Directory, parent=None):
         super(DirectoryWidget, self).__init__()
         self.parent = parent
-        self.env_settings = QSettings()
         self.timer = QTimer()
         self.timer.setSingleShot(True)
-        self.clicked.connect(self.check_double_click)
+        self.clicked.connect(self.Sl_check_double_click)
 
         self.setAccessibleName('Directory')
 
-        file_icon = QIcon('./icons/folder.svg')
-
-        self.setIcon(file_icon)
+        self.setIcon(QIcon('./assets/icons/folder.png'))
         self.setIconSize(QSize(45, 45))
         self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
 
@@ -28,10 +24,12 @@ class DirectoryWidget(QToolButton):
         self.path = dir.get_path()
         self.setText(self.name)
 
-        self.Sg_double_clicked.connect(self.parent.update_files_with_new_path)
+        if self.parent is not None:
+            self.Sg_double_clicked.connect(self.parent.Sl_update_files_with_new_path)
         # add fields to structure
 
-    def check_double_click(self):
+    @Slot()
+    def Sl_check_double_click(self):
         if self.timer.isActive():
             time = self.timer.remainingTime()
             if time > 0:
@@ -42,10 +40,3 @@ class DirectoryWidget(QToolButton):
 
         if self.timer.isActive() is False:
             self.timer.start(250)
-
-    def on_double_click(self):
-        sync_path = "" if self.env_settings.value("sync_path") is None else \
-            self.env_settings.value("sync_path")
-        path = os.path.join(sync_path, self.name)
-        file_path = QUrl.fromUserInput(path)
-        QDesktopServices.openUrl(file_path)

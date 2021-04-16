@@ -9,12 +9,13 @@ class LoginScreenTest(unittest.TestCase):
         tmp = default_code.setUp()
         self.restore_path = tmp[0]
         self.env_settings = tmp[1]
+        self.restore_credentials = tmp[2]
 
         self.model = MainModel()
         self.login_test = LoginScreen(self.model.network_model)
 
     def tearDown(self) -> None:
-        default_code.tearDown(self.env_settings, self.restore_path)
+        default_code.tearDown(self.env_settings, self.restore_path, self.restore_credentials)
 
     def test_default(self):
         self.assertEqual(self.login_test.get_user(), self.login_test.model.get_username())

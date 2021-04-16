@@ -27,7 +27,7 @@ class TreeNode:
     def get_updated_at(self) -> int:
         return self._payload.updated_at
 
-    def get_children(self) -> list:
+    def get_children(self) -> list[TreeNode]:
         return self._children
 
     def get_payload(self) -> Node:

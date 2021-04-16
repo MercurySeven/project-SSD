@@ -1,7 +1,7 @@
 import unittest
 
-from src.model.settings_model import SettingsModel
-from src.algorithm.policy import Policy
+from src.model.main_model import MainModel
+from src.model.algorithm.policy import Policy
 from tests import default_code
 
 
@@ -12,12 +12,13 @@ class TestSettings(unittest.TestCase):
         tmp = default_code.setUp()
         self.restore_path = tmp[0]
         self.env_settings = tmp[1]
-
-        self.sett_model = SettingsModel()
+        self.restore_credentials = tmp[2]
+        self.main_model = MainModel()
+        self.sett_model = self.main_model.settings_model
 
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""
-        default_code.tearDown(self.env_settings, self.restore_path)
+        default_code.tearDown(self.env_settings, self.restore_path, self.restore_credentials)
 
     def test_get_policy(self) -> None:
         result = self.sett_model.get_policy()
@@ -55,8 +56,8 @@ class TestSettings(unittest.TestCase):
     def test_set_quota_disco(self) -> None:
         value = self.sett_model.get_quota_disco_raw()
         self.assertEqual(1024, value)
-        new_value = self.sett_model.get_size()+1
-        self.sett_model.set_quota_disco(new_value)
+        new_value = self.sett_model.get_size() + 1
+        self.sett_model.set_quota_disco(str(new_value))
 
         value = self.sett_model.get_quota_disco_raw()
         self.assertEqual(new_value, value)

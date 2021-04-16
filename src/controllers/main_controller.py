@@ -76,6 +76,7 @@ class MainController(QObject):
         self.notification_icon = NotificationController(self.app, self.view)
 
         # ALGORITMO
+        # TODO: Da spostare nel main model
         self.algoritmo = DecisionEngine(self.model.network_model)
         self.algoritmo.start()
 
@@ -90,7 +91,7 @@ class MainController(QObject):
         # Ripristino il riavvio di watchdog, quando cambio path
         self.model.settings_model.Sg_model_path_changed.connect(self.Sl_path_updated)
 
-        # connect segnali watchdog
+        # Connect segnali watchdog
         self.watcher.signal_event.connect(self.model.file_model.Sl_update_model)
 
         # Connect per cambiare le viste

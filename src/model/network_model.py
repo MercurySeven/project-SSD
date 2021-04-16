@@ -1,10 +1,14 @@
 from PySide6.QtCore import (QObject, Signal, QSettings)
-from src.network import api
+
+from src.network import api_implementation
+from src.network.api import Api
 from src.network.api_exceptions import (APIException, LoginError, NetworkError, ServerError)
 from src.model.algorithm.tree_node import TreeNode
 from functools import wraps
 import logging
 from enum import Enum
+
+from src.network.api_implementation import ApiImplementation
 
 
 class Status(Enum):
@@ -31,7 +35,7 @@ def RetryLogin(func):
             # e' possibile che sia scaduto il login provo a rifarlo
             # e ritento la chiamata
             logger.debug(f"retry {func.__name__} with new login")
-            api.login()
+            api_implementation.login()
             return func(self, *args, **kwargs)
 
     return handle
@@ -74,8 +78,13 @@ def APIExceptionsHandler(func):
     return APIExceptionHandle
 
 
-class NetworkModel(QObject):
+class NetworkMeta(type(QObject), type(Api)):
+    pass
+
+
+class NetworkModel(QObject, Api, metaclass=NetworkMeta):
     logger = logging.getLogger("NetworkModel")
+    __model = None
 
     status: Status = Status.Ok
 
@@ -87,9 +96,22 @@ class NetworkModel(QObject):
     Sg_connection_failed = Signal()
     Sg_server_failed = Signal()
 
-    def __init__(self):
-        super(NetworkModel, self).__init__(None)
+    __create_key = object()
 
+    @classmethod
+    def get_instance(cls):
+        if NetworkModel.__model is None:
+            NetworkModel.__model = NetworkModel(cls.__create_key)
+        return NetworkModel.__model
+
+    def __init__(self, create_key):
+
+        assert (create_key == NetworkModel.__create_key), \
+            "Network objects must be created using NetworkModel.create"
+        super(NetworkModel, self).__init__(None)
+        super(Api, self).__init__()
+
+        self.api_implementation = ApiImplementation()
         self.env_settings = QSettings()
 
     def raise_for_status(self):
@@ -104,7 +126,7 @@ class NetworkModel(QObject):
         user = user if user else self.env_settings.value("Credentials/user")
         password = password if password else self.env_settings.value("Credentials/password")
 
-        api.login(user, password)
+        self.api_implementation.login(user, password)
         NetworkModel.logger.info("login successful")
 
         # save to Qsettings
@@ -118,17 +140,17 @@ class NetworkModel(QObject):
     @APIExceptionsHandler
     @RetryLogin
     def get_info_from_email(self) -> dict[str, str]:
-        return api.get_info_from_email()
+        return self.api_implementation.get_info_from_email()
 
     @APIExceptionsHandler
     @RetryLogin
     def get_user_id(self) -> str:
-        return api.get_user_id()
+        return self.api_implementation.get_user_id()
 
     @APIExceptionsHandler
     @RetryLogin
     def is_logged(self) -> bool:
-        return api.is_logged()
+        return self.api_implementation.is_logged()
 
     def get_credentials(self) -> [str, str]:
         return [self.get_username(), self.get_password()]
@@ -144,34 +166,34 @@ class NetworkModel(QObject):
     @APIExceptionsHandler
     @RetryLogin
     def logout(self) -> bool:
-        if api.logout():
+        if self.api_implementation.logout():
             self.message = ""
             return True
         return False
 
     @RetryLogin
-    def download_file(self, node: TreeNode, path_folder: str) -> None:
-        api.download_node_from_server(node, path_folder)
+    def download_node(self, node: TreeNode, path_folder: str) -> None:
+        self.api_implementation.download_node(node, path_folder)
         self.raise_for_status()
 
     @RetryLogin
-    def upload_file(self, node: TreeNode, parent_folder_id: str) -> None:
-        api.upload_node_to_server(node, parent_folder_id)
+    def upload_node(self, node: TreeNode, parent_folder_id: str) -> None:
+        self.api_implementation.upload_node(node, parent_folder_id)
         self.raise_for_status()
 
     @RetryLogin
     def delete_node(self, node_id: str) -> None:
-        api.delete_node(node_id)
+        self.api_implementation.delete_node(node_id)
         self.raise_for_status()
 
     @RetryLogin
     def get_content_from_node(self, node_id: str = "LOCAL_ROOT") -> str:
-        result = api.get_content_from_node(node_id)
+        result = self.api_implementation.get_content_from_node(node_id)
         self.raise_for_status()
         return result
 
     @RetryLogin
     def create_folder(self, folder_name: str, parent_folder_id: str = "LOCAL_ROOT") -> str:
-        result = api.create_folder(folder_name, parent_folder_id)
+        result = self.api_implementation.create_folder(folder_name, parent_folder_id)
         self.raise_for_status()
         return result

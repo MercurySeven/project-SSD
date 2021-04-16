@@ -21,37 +21,37 @@ class SetQuotaDiskWidget(QWidget):
         self.title.setAccessibleName("Subtitle")
 
         # Barra riempimento disco
-        self.progressLabel = QLabel()
-        self.progressLabel.setText("Spazio occupato")
-        self.progressLabel.setAccessibleName("Subtitle")
+        self.progress_label = QLabel()
+        self.progress_label.setText("Spazio occupato")
+        self.progress_label.setAccessibleName("Subtitle")
 
-        self.diskProgress = QProgressBar()
-        self.diskProgress.setFormat("")
+        self.disk_progress = QProgressBar()
+        self.disk_progress.setFormat("")
 
-        self.diskQuota = QLabel()
+        self.disk_quota = QLabel()
 
         # Modifica spazio dedicato
         self.spaceLabel = QLabel("Spazio dedicato")
         self.spaceLabel.setAccessibleName("Subtitle")
 
-        self.dedicatedSpace = QLineEdit()
-        self.dedicatedSpace.setValidator(QIntValidator())
-        self.dedicatedSpace.returnPressed.connect(self.emit_changes)
+        self.dedicated_space = QLineEdit()
+        self.dedicated_space.setValidator(QIntValidator())
+        self.dedicated_space.returnPressed.connect(self.Sl_dedicated_space_changed)
 
         # layout
         disk_layout = QVBoxLayout()
         disk_layout.setAlignment(Qt.AlignLeft)
-        disk_layout.addWidget(self.progressLabel)
-        disk_layout.addWidget(self.diskProgress)
-        disk_layout.addWidget(self.diskQuota)
+        disk_layout.addWidget(self.progress_label)
+        disk_layout.addWidget(self.disk_progress)
+        disk_layout.addWidget(self.disk_quota)
         disk_layout.addWidget(self.spaceLabel)
-        disk_layout.addWidget(self.dedicatedSpace)
+        disk_layout.addWidget(self.dedicated_space)
 
         self.setLayout(disk_layout)
         self.Sl_model_changed()
 
     @Slot()
-    def emit_changes(self):
+    def Sl_dedicated_space_changed(self):
         self.Sg_view_changed.emit()
 
     @Slot()
@@ -59,7 +59,7 @@ class SetQuotaDiskWidget(QWidget):
         new_max_quota = self._model.get_quota_disco()
         new_max_quota_raw = self._model.get_quota_disco_raw()
         value = self._model.convert_size(self._model.get_size())
-        self.diskQuota.setText(f"{value} su {new_max_quota}")
-        self.dedicatedSpace.setText(str(new_max_quota_raw))
-        self.diskProgress.setRange(0, new_max_quota_raw)
-        self.diskProgress.setValue(self._model.get_size())
+        self.disk_quota.setText(f"{value} su {new_max_quota}")
+        self.dedicated_space.setText(str(new_max_quota_raw))
+        self.disk_progress.setRange(0, new_max_quota_raw)
+        self.disk_progress.setValue(self._model.get_size())

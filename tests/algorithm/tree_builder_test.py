@@ -6,43 +6,9 @@ from unittest.mock import patch
 from src.algorithm import tree_builder
 from src.model.algorithm.node import Type, Node
 from src.model.algorithm.tree_node import TreeNode
-from src.model.network_model import NetworkModel
+from src.model.main_model import MainModel
 from tests import default_code
-
-
-def _get_default_dict() -> dict:
-    _id = "id"
-    _name = "name"
-    _type = "File"
-    _created = 2000
-    _updated = 2000
-    thisdict = {
-        "id": _id,
-        "name": _name,
-        "type": _type,
-        "created_at": _created,
-        "updated_at": _updated
-    }
-    return thisdict
-
-
-def _get_tree_dict() -> dict:
-    _id = "id"
-    _name = "name"
-    _type = "Folder"
-    _created = 2000
-    _updated = 2000
-    thisdict = {
-        "getNode": {
-            "id": _id,
-            "name": _name,
-            "type": _type,
-            "created_at": _created,
-            "updated_at": _updated,
-            "children": [_get_default_dict()]
-        }
-    }
-    return thisdict
+from tests.default_code import _get_default_dict, _get_tree_dict
 
 
 class TreeBuilderTest(unittest.TestCase):
@@ -51,6 +17,7 @@ class TreeBuilderTest(unittest.TestCase):
         tmp = default_code.setUp()
         self.restore_path = tmp[0]
         self.env_settings = tmp[1]
+        self.restore_credentials = tmp[2]
 
         self.original_path = self.env_settings.value("sync_path")
 
@@ -58,7 +25,8 @@ class TreeBuilderTest(unittest.TestCase):
         self.path = r'%s' % self.path
         pathlib.Path(self.path).mkdir(parents=True, exist_ok=True)
 
-        self.model_test = NetworkModel()
+        self.main_model = MainModel()
+        self.model_test = self.main_model.network_model
         tree_builder.set_model(self.model_test)
 
         self.file_name = os.path.join(self.path, "prova.txt")
@@ -69,7 +37,7 @@ class TreeBuilderTest(unittest.TestCase):
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""
         os.remove(os.path.join(self.path, "prova.txt"))
-        default_code.tearDown(self.env_settings, self.restore_path)
+        default_code.tearDown(self.env_settings, self.restore_path, self.restore_credentials)
         self._remove_dump()
         os.rmdir(self.path)
 
@@ -120,14 +88,14 @@ class TreeBuilderTest(unittest.TestCase):
 
     def test_read_nothing(self):
         tree = tree_builder.read_dump_client_filesystem(self.path)
-        self.assertEqual(tree, None)
+        self.assertIsNone(tree)
 
     @patch('pickle.load', return_value=False)
     def test_read_with_exception(self, mocked_function):
         mocked_function.side_effect = Exception("test")
         tree_builder.dump_client_filesystem(self.path)
         tree = tree_builder.read_dump_client_filesystem(self.path)
-        self.assertEqual(tree, None)
+        self.assertIsNone(tree)
 
     @patch('src.model.network_model.NetworkModel.get_content_from_node',
            return_value=_get_tree_dict())
@@ -144,12 +112,12 @@ class TreeBuilderTest(unittest.TestCase):
         hidden_folder = tree_builder._create_hidden_folder(self.path)
         pathing = os.path.join(self.path, tree_builder.FOLDER_NAME)
         self.assertEqual(hidden_folder, pathing)
-        self.assertEqual(os.path.exists(pathing), True)
-        self.assertEqual(os.path.isdir(pathing), True)
+        self.assertTrue(os.path.exists(pathing))
+        self.assertTrue(os.path.isdir(pathing))
         hidden_folder = tree_builder._create_hidden_folder(self.path)
         self.assertEqual(hidden_folder, pathing)
-        self.assertEqual(os.path.exists(pathing), True)
-        self.assertEqual(os.path.isdir(pathing), True)
+        self.assertTrue(os.path.exists(pathing))
+        self.assertTrue(os.path.isdir(pathing))
 
     def _remove_dump(self) -> None:
         pathing = os.path.join(self.path, tree_builder.FOLDER_NAME)

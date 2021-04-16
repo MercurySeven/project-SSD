@@ -97,6 +97,12 @@ per fixare (da terminale esterno a pycharm)
 sudo apt install libopengl0
 ```
 
+# Installazione librerie aggiuntive
+Posizionati nella root directory nella quale è presente il file requirements.txt eseguire il seguente comando
+```
+pip install -r requirements.txt
+```
+
 # Installazione Plugin vari
 
 
@@ -117,7 +123,7 @@ Poi attivate reformat only changed code
 
 ## Autopep8
 
-Per installare autopep8 andate nel terminale ed eseguite 
+Se non avete ancora installato autopep8 con il comando indicato a (Installazione librerie aggiuntive) andate nel terminale ed eseguite 
 
 ```
 pip install autopep8
@@ -133,6 +139,7 @@ Al posto di output filter voi andrete su advanced options.
 Per poi runnare autopep8 dovrete per il momento fare tasto destro nel file-> external tools-> autopep8
 
 ## Flake8
+Se non avete ancora installato Flake8 con il comando indicato a (Installazione librerie aggiuntive) andate nel terminale ed eseguite
 
 ```
 pip install flake8
@@ -140,3 +147,6 @@ pip install flake8
 
 seguire questa guida per impostare mettendo come working directory una cartella con il main (quindi es venv->ciao->main.py)
 https://gist.github.com/tossmilestone/23139d870841a3d5cba2aea28da1a895
+
+## Pyinstaller
+Per generare l'eseguibile: `pyinstaller .\app_inst.spec --noconfirm`

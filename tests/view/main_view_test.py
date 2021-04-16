@@ -11,6 +11,8 @@ class MainWindowTest(unittest.TestCase):
         tmp = default_code.setUp()
         self.restore_path = tmp[0]
         self.env_settings = tmp[1]
+        self.restore_credentials = tmp[2]
+
         self.main_model = MainModel()
         self.main_window = MainWindow(self.main_model)
         self.main_widget_test = self.main_window.main_widget
@@ -18,7 +20,7 @@ class MainWindowTest(unittest.TestCase):
 
     def tearDown(self) -> None:
         """Metodo che viene chiamato dopo ogni metodo"""
-        default_code.tearDown(self.env_settings, self.restore_path)
+        default_code.tearDown(self.env_settings, self.restore_path, self.restore_credentials)
 
     def test_defaults(self):
         self.assertEqual(self.main_widget_test.container_menu.accessibleName(),

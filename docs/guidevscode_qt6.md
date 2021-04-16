@@ -33,3 +33,4 @@ Passi da seguire:
     }
 }
 ```
+7. Per generare l'eseguibile: `pyinstaller .\app_inst.spec --noconfirm`

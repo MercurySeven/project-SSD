@@ -14,4 +14,4 @@ class SyncController:
 
     @Slot()
     def Sg_view_changed(self):
-        self._model.set_state(self._view.syncButton.isChecked())
+        self._model.set_state(self._view.sync_button.isChecked())

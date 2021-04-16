@@ -11,14 +11,15 @@ class NotificationViewTest(unittest.TestCase):
         tmp = default_code.setUp()
         self.restore_path = tmp[0]
         self.env_settings = tmp[1]
+        self.restore_credentials = tmp[2]
         self.notify_test = NotificationView()
 
     def tearDown(self) -> None:
-        default_code.tearDown(self.env_settings, self.restore_path)
+        default_code.tearDown(self.env_settings, self.restore_path, self.restore_credentials)
 
     def test_defaults(self):
         """ Test notification view test default values"""
-        self.assertEqual(self.notify_test.isVisible(), True)
+        self.assertTrue(self.notify_test.isVisible())
         self.assertEqual(self.notify_test.toolTip(), "Zextras Drive Desktop")
         self.assertEqual(self.notify_test.show_option.text(), "Mostra")
         self.assertEqual(self.notify_test.show_option.toolTip(), "Mostra")

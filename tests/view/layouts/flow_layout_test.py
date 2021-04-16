@@ -42,4 +42,4 @@ class FlowLayoutTest(unittest.TestCase):
 
     def test_take_at_with_no_item(self):
         """ remove one item with array empty"""
-        self.assertEqual(self.layout_test.takeAt(10), None)
+        self.assertIsNone(self.layout_test.takeAt(10))

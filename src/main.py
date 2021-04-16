@@ -1,10 +1,18 @@
 import sys
 import logging
+import ctypes
 
 from PySide6.QtCore import (QCoreApplication)
 from PySide6.QtWidgets import (QApplication)
 
 from src.controllers.main_controller import MainController
+
+try:
+    # Include in try/except block if you're also targeting Mac/Linux
+    myappid = 'mercuryseven.ssd.zextrasdrivedesktop.1.0'
+    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+except ImportError:
+    pass
 
 if __name__ == "__main__":
 

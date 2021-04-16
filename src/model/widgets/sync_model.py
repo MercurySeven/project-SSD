@@ -3,10 +3,21 @@ from src import settings
 
 
 class SyncModel(QObject):
+    __model = None
 
     Sg_model_changed = Signal()
 
-    def __init__(self):
+    __create_key = object()
+
+    @classmethod
+    def get_instance(cls):
+        if SyncModel.__model is None:
+            SyncModel.__model = SyncModel(cls.__create_key)
+        return SyncModel.__model
+
+    def __init__(self, create_key):
+        assert (create_key == SyncModel.__create_key), \
+            "SyncModel objects must be created using NetworkModel.create"
         super(SyncModel, self).__init__(None)
         self.state = settings.get_is_synch()
 
