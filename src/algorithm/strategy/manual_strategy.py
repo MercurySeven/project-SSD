@@ -25,5 +25,7 @@ class ManualStrategy(Strategy):
                 last_update_raw = node_metadata["getNode"]["updated_at"]
                 node_last_update_server = math.trunc(last_update_raw / 1000)
                 print(node_last_update_server)
+                snap_last_update = node_raw["date_file_snap"]
+                print(snap_last_update)
             else:
                 common_strategy(node_raw, logger)
