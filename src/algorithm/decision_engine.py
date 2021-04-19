@@ -102,10 +102,6 @@ class DecisionEngine(Thread):
                     path = r["id"]
                     os_handler.upload_file(node, path)
                     self.logger.info(f"Nuovo file da caricare nel server: {name_node}")
-            elif action == Actions.CLIENT_UPDATE_FILE:
-                path = r["id"]
-                os_handler.upload_file(node, path)
-                self.logger.info(action.name + " " + name_node)
             elif action == Actions.SERVER_NEW_FOLDER:
                 path = r["path"]
                 os_handler.download_folder(node, path)
