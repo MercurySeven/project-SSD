@@ -1,6 +1,4 @@
 from PySide6.QtCore import (QObject, Signal, QSettings)
-
-from src.network import api_implementation
 from src.network.api import Api
 from src.network.api_exceptions import (APIException, LoginError, NetworkError, ServerError)
 from src.model.algorithm.tree_node import TreeNode
@@ -35,7 +33,8 @@ def RetryLogin(func):
             # e' possibile che sia scaduto il login provo a rifarlo
             # e ritento la chiamata
             logger.debug(f"retry {func.__name__} with new login")
-            api_implementation.login()
+            api_impl = ApiImplementation()
+            api_impl.login()
             return func(self, *args, **kwargs)
 
     return handle

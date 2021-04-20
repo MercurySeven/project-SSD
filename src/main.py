@@ -11,7 +11,7 @@ try:
     # Include in try/except block if you're also targeting Mac/Linux
     myappid = 'mercuryseven.ssd.zextrasdrivedesktop.1.0'
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
-except ImportError:
+except Exception:
     pass
 
 if __name__ == "__main__":
