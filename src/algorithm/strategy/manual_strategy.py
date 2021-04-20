@@ -28,7 +28,7 @@ class ManualStrategy(Strategy):
                 snap_last_update = node_raw["date_file_snap"]
                 print(snap_last_update)
                 if snap_last_update == node_last_update_server:
-                    node_id = super().try_get_id_from_path(node.get_payload().path)
+                    node_id = super().get_or_create_folder_id(node.get_payload().path)
                     os_handler.upload_file(node, node_id)
                     logger.info(action.name + " " + name_node)
 

@@ -56,7 +56,8 @@ class Strategy(ABC):
     def execute(self, result_actions: list, logger: Logger) -> None:
         pass
 
-    def try_get_id_from_path(self, path: str) -> str:
+    def get_or_create_folder_id(self, path: str) -> str:
+        """Ritorna l'id della cartella dove vuoi inserire il file, se non presente ne crea una"""
         env_settings = QSettings()
         path_folder = env_settings.value("sync_path")
         result = os.path.relpath(path, path_folder)

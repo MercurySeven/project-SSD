@@ -16,7 +16,7 @@ class ClientStrategy(Strategy):
 
             if action == Actions.SERVER_UPDATE_FILE:
                 # Il client ha un file aggiornato rispetto allo snapshot
-                node_id = super().try_get_id_from_path(node.get_payload().path)
+                node_id = super().get_or_create_folder_id(node.get_payload().path)
                 os_handler.upload_file(node, node_id)
                 logger.info(action.name + " " + name_node)
             else:
