@@ -18,6 +18,6 @@ class ClientStrategy(Strategy):
                 # Il client ha un file aggiornato rispetto allo snapshot
                 node_id = super().get_or_create_folder_id(node.get_payload().path)
                 os_handler.upload_file(node, node_id)
-                logger.info(action.name + " " + name_node)
+                logger.info("File aggiornato, effettuato l'upload " + name_node)
             else:
                 common_strategy(node_raw, logger)

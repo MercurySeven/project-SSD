@@ -17,20 +17,23 @@ class ManualStrategy(Strategy):
 
             if action == Actions.SERVER_UPDATE_FILE:
                 # Il client ha un file aggiornato rispetto allo snapshot
-                # TODO: Per la policy manuale, prendo la data dello snapshot del file, la confronto
+                # Per la policy manuale, prendo la data dello snapshot del file, la confronto
                 # con la data del server, se quella del server è diversa significa che ho avuto un
                 # upload nel mentre ero offline.
                 node_id = get_id_from_path(node.get_payload().path)
                 node_metadata = os_handler.networkmodel.get_content_from_node(node_id)
                 last_update_raw = node_metadata["getNode"]["updated_at"]
                 node_last_update_server = math.trunc(last_update_raw / 1000)
-                print(node_last_update_server)
-                snap_last_update = node_raw["date_file_snap"]
-                print(snap_last_update)
+                snap_last_update = node_raw["snap_last_update"]
                 if snap_last_update == node_last_update_server:
+                    """L'utente ha modificato il file aggiornato rispetto al server, non ci
+                    saranno perdite di informazioni"""
                     node_id = super().get_or_create_folder_id(node.get_payload().path)
                     os_handler.upload_file(node, node_id)
-                    logger.info(action.name + " " + name_node)
-
+                    logger.info("File aggiornato, effettuato l'upload " + name_node)
+                else:
+                    """Nel mentre l'utente modificava il file,nel server è avvenuto un caricamento.
+                    Chiedere all'utente come vuole procedere"""
+                    pass
             else:
                 common_strategy(node_raw, logger)

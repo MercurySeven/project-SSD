@@ -41,8 +41,8 @@ def _compareFiles(client: TreeNode, server: TreeNode) -> list:
                     update_files.append({
                         "node": sr_file,
                         "path": client.get_payload().path,
-                        "action": Actions.SERVER_UPDATE_FILE,
-                        "date_file_snap": cl_file.get_updated_at()
+                        "snap_last_update": cl_file.get_updated_at(),
+                        "action": Actions.SERVER_UPDATE_FILE
                     })
                 trovato = True
                 break
