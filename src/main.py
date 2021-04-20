@@ -7,14 +7,15 @@ from PySide6.QtWidgets import (QApplication)
 
 from src.controllers.main_controller import MainController
 
-try:
-    # Include in try/except block if you're also targeting Mac/Linux
-    myappid = 'mercuryseven.ssd.zextrasdrivedesktop.1.0'
-    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
-except Exception:
-    pass
-
 if __name__ == "__main__":
+
+    # Registro il processo per Windows, così da avere l'icona nella taskbar
+    if sys.platform == "win32":
+        try:
+            myappid = 'mercuryseven.ssd.zextrasdrivedesktop.1.0'
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+        except Exception as e:
+            print(e)
 
     # Bisogna fare questo per poter usare QSettings
     QCoreApplication.setOrganizationName("MercurySeven")
