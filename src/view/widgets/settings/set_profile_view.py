@@ -5,12 +5,12 @@ from PySide6.QtCore import (Signal, Slot)
 from src.model.network_model import NetworkModel
 
 
-class SetProfileVeiw(QWidget):
+class SetProfileView(QWidget):
 
-    Sg_view_changed = Signal()
+    Sg_profile_logout = Signal()
 
     def __init__(self, model: NetworkModel, parent=None):
-
+        super(SetProfileView, self).__init__(parent)
         self._model = model
 
         # Titolo
@@ -37,6 +37,8 @@ class SetProfileVeiw(QWidget):
         self.logoutButton = QPushButton()
         self.logoutButton.setText('Logout')
 
+        self.logoutButton.clicked.connect(self.Sl_logout)
+
         # Layout
 
         layout = QVBoxLayout()
@@ -45,7 +47,13 @@ class SetProfileVeiw(QWidget):
         layout.addLayout(sub_layout_user)
         layout.addWidget(self.logoutButton)
 
+        self.setLayout(layout)
+
     @Slot()
     def Sl_model_changed(self):
         if self._model.is_logged:
             self.userName.setText(self._model.get_username())
+
+    @Slot()
+    def Sl_logout(self):
+        self.Sg_profile_logout.emit()

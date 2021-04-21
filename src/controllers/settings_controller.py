@@ -1,12 +1,14 @@
 from src.view.settings_view import SettingsView
 from src.model.settings_model import SettingsModel
+from src.model.network_model import NetworkModel
 from PySide6.QtCore import (Slot)
 from src.model.algorithm.policy import Policy
 
 
 class SettingsController:
-    def __init__(self, model: SettingsModel, view: SettingsView):
+    def __init__(self, model: SettingsModel, net_model: NetworkModel, view: SettingsView):
         self._model = model
+        self._net_model = net_model
         self._view = view
 
         self._model.Sg_model_changed.connect(view.set_policy_widget.Sl_model_changed)
@@ -17,6 +19,9 @@ class SettingsController:
 
         self._model.Sg_model_changed.connect(self._view.set_path_widget.Sl_model_changed)
         self._view.set_path_widget.Sg_view_changed.connect(self.Sg_set_path_widget_changed)
+
+        self._net_model.Sg_model_changed.connect(self._view.set_profile_widget.Sl_model_changed)
+        self._view.set_profile_widget.Sg_profile_logout.connect(self.Sl_view_profile_logout)
 
     @Slot()
     def Sl_view_policy_changed(self):
@@ -32,6 +37,11 @@ class SettingsController:
         new_quota = self._view.set_quota_disk_widget.dedicated_space.text()
         if self._model.get_quota_disco_raw() != int(new_quota):
             self._model.set_quota_disco(new_quota)
+
+    @Slot()
+    def Sl_view_profile_logout(self):
+        self._net_model.logout()
+        print('logging out')
 
     @Slot()
     def Sg_set_path_widget_changed(self, value: str):
