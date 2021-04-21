@@ -70,7 +70,7 @@ class MainWidget(QWidget):
         self.settings_button.setCheckable(True)
 
         self.files_widget = FileView(self._model.file_model, self)
-        self.settings_view = SettingsView(self._model.settings_model, self)
+        self.settings_view = SettingsView(self._model, self)
 
         # stacked
         self.swidget = QStackedWidget()

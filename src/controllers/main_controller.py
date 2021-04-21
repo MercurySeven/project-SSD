@@ -71,8 +71,7 @@ class MainController(QObject):
         self.file_controller = FileController(
             self.model.file_model, self.view.main_widget.files_widget)
         self.settings_controller = SettingsController(
-            self.model.settings_model, self.model.network_model,
-            self.view.main_widget.settings_view)
+            self.model, self.view.main_widget.settings_view)
 
         self.notification_icon = NotificationController(self.app, self.view)
 

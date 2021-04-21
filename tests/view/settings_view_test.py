@@ -23,7 +23,7 @@ class SettingsViewTest(unittest.TestCase):
         self.restore_credentials = tmp[2]
 
         self.main_model = MainModel()
-        self.settings_view = SettingsView(self.main_model.settings_model)
+        self.settings_view = SettingsView(self.main_model)
 
         self.path_test = self.settings_view.set_path_widget
         self.policy_test = self.settings_view.set_policy_widget
@@ -31,8 +31,7 @@ class SettingsViewTest(unittest.TestCase):
 
         self.path_test.debug = True
 
-        self.set_policy_controller = SettingsController(
-            self.main_model.settings_model, self.settings_view)
+        self.set_policy_controller = SettingsController(self.main_model, self.settings_view)
 
     def tearDown(self) -> None:
         """Metodo che viene chiamato dopo ogni metodo"""
