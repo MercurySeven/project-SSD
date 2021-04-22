@@ -220,8 +220,11 @@ class ApiImplementation(Api):
     @ExceptionsHandler
     def delete_node(self, node_id: str) -> None:
         """Rimuove il nodo dato l'id"""
-        query, params = Query.delete_node(node_id)
-        self.client.execute(gql(query), variable_values=params)
+        if node_id != "LOCAL_ROOT":
+            query, params = Query.delete_node(node_id)
+            self.client.execute(gql(query), variable_values=params)
+        else:
+            print("NON PUOI CANCELLARE LOCAL_ROOT")
 
     @ExceptionsHandler
     def download_node(self, node: TreeNode, path: str) -> None:
