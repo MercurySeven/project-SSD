@@ -14,14 +14,13 @@ class SetProfileView(QWidget):
         self._model = model
 
         # Titolo
-        self._titolo = QLabel()
-        self._titolo.setText('Profilo')
+        self._titolo = QLabel('Profilo')
         self._titolo.setAccessibleName('Subtitle')
 
         self.username = QLabel()
 
         sub_layout_user = QHBoxLayout()
-        sub_layout_user.addWidget(QLabel('Username:'))
+        sub_layout_user.addWidget(QLabel('Account:'))
         sub_layout_user.addWidget(self.username)
         sub_layout_user.addStretch()
 
