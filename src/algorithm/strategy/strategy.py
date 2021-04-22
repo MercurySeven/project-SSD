@@ -76,4 +76,8 @@ class Strategy(ABC):
                 id_new_folder = os_handler.create_folder(name, current_node.get_payload().id)
                 current_node = tree_builder.get_tree_from_node_id(id_new_folder)
             index = index + 1
-        return current_node.get_payload().id
+
+        if index == len(node_name) - 1:
+            return current_node.get_payload().id
+        else:
+            return current_node._parent.get_payload().id
