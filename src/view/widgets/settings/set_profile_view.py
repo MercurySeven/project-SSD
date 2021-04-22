@@ -14,45 +14,34 @@ class SetProfileView(QWidget):
         self._model = model
 
         # Titolo
-
         self._titolo = QLabel()
         self._titolo.setText('Profilo')
         self._titolo.setAccessibleName('Subtitle')
 
-        # Label nome utente
+        self.username = QLabel()
 
         sub_layout_user = QHBoxLayout()
-
-        self.userLabel = QLabel()
-        self.userLabel.setText('Username:')
-
-        self.userName = QLabel()
-        self.userName.setText('user')
-
-        sub_layout_user.addWidget(self.userLabel)
-        sub_layout_user.addWidget(self.userName)
+        sub_layout_user.addWidget(QLabel('Username:'))
+        sub_layout_user.addWidget(self.username)
+        sub_layout_user.addStretch()
 
         # Pulsante logout
-
-        self.logoutButton = QPushButton()
-        self.logoutButton.setText('Logout')
-
-        self.logoutButton.clicked.connect(self.Sl_logout)
+        self.logout_button = QPushButton('Logout')
+        self.logout_button.clicked.connect(self.Sl_logout)
 
         # Layout
-
         layout = QVBoxLayout()
-
         layout.addWidget(self._titolo)
         layout.addLayout(sub_layout_user)
-        layout.addWidget(self.logoutButton)
+        layout.addWidget(self.logout_button)
 
         self.setLayout(layout)
+        self.Sl_model_changed()
 
     @Slot()
     def Sl_model_changed(self):
         if self._model.is_logged:
-            self.userName.setText(self._model.get_username())
+            self.username.setText(self._model.get_username())
 
     @Slot()
     def Sl_logout(self):
