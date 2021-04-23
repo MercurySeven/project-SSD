@@ -81,10 +81,3 @@ class Strategy(ABC):
             index = index + 1
 
         return current_node.get_payload().id
-        # if index == len(node_name) - 1:
-        #     return current_node.get_payload().id
-        # else:
-        #     if current_node._parent is None:
-        #         return current_node.get_payload().id
-        #     else:
-        #         return current_node._parent.get_payload().id
