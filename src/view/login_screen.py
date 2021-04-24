@@ -1,7 +1,7 @@
 from PySide6.QtCore import (Signal, Slot, Qt)
 from PySide6.QtWidgets import (QVBoxLayout, QLineEdit, QPushButton, QLabel, QDialog)
 
-from src.model.network_model import NetworkModel
+from src.network.api import Api
 from src.view.stylesheets.qssManager import setQss
 
 
@@ -9,7 +9,7 @@ class LoginScreen(QDialog):
 
     Sg_login_success = Signal()
 
-    def __init__(self, model: NetworkModel, parent=None):
+    def __init__(self, model: Api, parent=None):
         super(LoginScreen, self).__init__(parent)
 
         # gestione modello

@@ -3,11 +3,11 @@ from abc import ABC, abstractmethod
 
 class Api(ABC):
     @abstractmethod
-    def login(self):
+    def login(self, username: str, password: str):
         pass
 
     @abstractmethod
-    def is_logged(self):
+    def is_logged(self) -> bool:
         pass
 
     @abstractmethod

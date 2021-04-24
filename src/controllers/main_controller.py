@@ -3,7 +3,6 @@ from PySide6.QtCore import (QObject, Slot, QSettings)
 from PySide6.QtWidgets import (QApplication, QFileDialog)
 from src.model.main_model import MainModel
 from src.model.watcher import Watcher
-from src.view.login_screen import LoginScreen
 from src.view.main_view import MainWindow
 from .file_controller import FileController
 from .notification_controller import NotificationController
@@ -14,12 +13,30 @@ from src.algorithm.decision_engine import DecisionEngine
 
 class MainController(QObject):
 
-    def __init__(self, app: QApplication):
+    def __init__(self, app: QApplication, model: MainModel):
 
         # initialize settings
         self.env_settings = QSettings()
         self.app = app
+        self.model = model
+        self.view = None
+        self.sync_controller = None
+        self.file_controller = None
+        self.settings_controller = None
+        self.notification_icon = None
+        self.watcher = None
+        self.algoritmo = None
 
+    def stop(self):
+        self.view = None
+        self.sync_controller = None
+        self.file_controller = None
+        self.settings_controller = None
+        self.notification_icon = None
+        self.watcher = None
+        self.algoritmo = None
+
+    def start(self):
         # Controlliamo se l'utente ha già settato il PATH della cartella
         check_path = self.env_settings.value("sync_path")
         if not check_path or not path.isdir(check_path):
@@ -32,7 +49,7 @@ class MainController(QObject):
             # L'utente non ha selezionato la cartella
             if not dialog.exec_():
                 self.env_settings.setValue("sync_path", None)
-                app.quit()
+                self.app.quit()
 
             sync_path = dialog.selectedFiles()
             if len(sync_path) == 1:
@@ -40,28 +57,7 @@ class MainController(QObject):
                 self.env_settings.sync()
                 print("Nuova directory: " + self.env_settings.value("sync_path"))
 
-        self.model = MainModel()
-
-        self.login_screen = LoginScreen(self.model.network_model)
-        self.login_screen.show()
-
-        # Connetto login vista ai due slot del controller
-        self.login_screen.Sg_login_success.connect(self.Sl_logged_in)
-        self.login_screen.login_button.clicked.connect(self.Sl_login)
-
-        self.model.network_model.Sg_model_changed.connect(self.login_screen.Sl_model_changed)
-
-        self.view = None
-        self.sync_controller = None
-        self.file_controller = None
-        self.settings_controller = None
-        self.notification_icon = None
-        self.watcher = None
-        self.algoritmo = None
-        # Forziamo il controllo delle credenziali già salvate
-        self.Sl_login()
-
-    def create_main_window(self):
+        # Create main window
         self.view = MainWindow(self.model)
         self.view.show()
 
@@ -116,15 +112,3 @@ class MainController(QObject):
     @Slot()
     def Sl_switch_to_settings(self):
         self.view.main_widget.chage_current_view_to_settings()
-
-    @Slot()
-    def Sl_login(self):
-        user = self.login_screen.get_user()
-        pwd = self.login_screen.get_psw()
-        self.model.network_model.login(user, pwd)
-
-    @Slot()
-    def Sl_logged_in(self):
-        self.login_screen.hide()
-        self.login_screen.close()
-        self.create_main_window()

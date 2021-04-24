@@ -1,3 +1,5 @@
+import sys
+
 from src.view.settings_view import SettingsView
 from src.model.settings_model import SettingsModel
 from src.model.network_model import NetworkModel
@@ -42,7 +44,7 @@ class SettingsController:
     @Slot()
     def Sl_view_profile_logout(self):
         self._net_model.logout()
-        print('logging out')
+        sys.exit()
 
     @Slot()
     def Sg_set_path_widget_changed(self, value: str):
