@@ -9,7 +9,7 @@ Passi da seguire:
 4. `pip install -r requirements.txt`
 5. Create la cartella `.vscode` con all'interno il file `settings.json`
 6. Il file dovrà avere il seguente contenuto:
-```
+```json
 {
     "python.linting.pylintEnabled": false,
     "python.linting.flake8Enabled": true,
@@ -33,4 +33,23 @@ Passi da seguire:
     }
 }
 ```
-7. Per generare l'eseguibile: `pyinstaller .\app_inst.spec --noconfirm`
+7. Crea dentro la cartella `.vscode` il file  `launch.json`, con questo contenuto:
+```json
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: From main",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/main.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}"
+            }
+        }
+    ]
+}
+```
+8. Per generare l'eseguibile: `pyinstaller .\app_inst.spec --noconfirm`
