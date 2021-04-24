@@ -1,6 +1,5 @@
 import os
 import pathlib
-import unittest
 from unittest.mock import patch
 
 from src.algorithm import os_handler
@@ -10,17 +9,15 @@ from src.model.main_model import MainModel
 from tests import default_code
 
 
-class OsHandlerTest(unittest.TestCase):
+class OsHandlerTest(default_code.DefaultCode):
 
     def setUp(self) -> None:
-        tmp = default_code.setUp()
-        self.restore_path = tmp[0]
-        self.env_settings = tmp[1]
-        self.restore_credentials = tmp[2]
+        super().setUp()
+        self.env_settings = super().get_env_settings()
         self.main_model = MainModel()
         os_handler.set_model(self.main_model.network_model)
 
-        self.original_path = self.env_settings.value("sync_path")
+        self.original_path = self.env_settings.value(super().SYNC_ENV_VARIABLE)
         self.folder_name = "test"
         self.file_name = "test.txt"
 
@@ -28,22 +25,35 @@ class OsHandlerTest(unittest.TestCase):
         self.path = r'%s' % self.path
         pathlib.Path(self.path).mkdir(parents=True, exist_ok=True)
 
-    def tearDown(self) -> None:
+    def delete_files(self):
         folder_to_remove = os.path.join(self.path, self.folder_name)
         file_to_remove = os.path.join(folder_to_remove, self.file_name)
         optional_folder = os.path.join(folder_to_remove, self.folder_name)
-        default_code.tearDown(self.env_settings, self.restore_path, self.restore_credentials)
+
         try:
             if os.path.exists(file_to_remove):
                 os.remove(file_to_remove)
+        except Exception as e:
+            print(e)
+        try:
             if os.path.exists(optional_folder):
                 os.rmdir(optional_folder)
+        except Exception as e:
+            print(e)
+        try:
             if os.path.exists(folder_to_remove):
                 os.rmdir(folder_to_remove)
+        except Exception as e:
+            print(e)
+        try:
             if os.path.exists(self.path):
                 os.rmdir(self.path)
         except Exception as e:
             print(e)
+
+    def tearDown(self) -> None:
+        self.delete_files()
+        super().tearDown()
 
     def test_set_model(self):
         os_handler.set_model(None)

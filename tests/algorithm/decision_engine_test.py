@@ -1,5 +1,4 @@
 import time
-import unittest
 from unittest.mock import patch
 
 from src.algorithm.decision_engine import DecisionEngine
@@ -10,17 +9,15 @@ from tests import default_code
 from tests.default_code import ResultObj, _get_test_node
 
 
-class DecisionEngineTest(unittest.TestCase):
+class DecisionEngineTest(default_code.DefaultCode):
     def setUp(self) -> None:
-        tmp = default_code.setUp()
-        self.restore_path = tmp[0]
-        self.env_settings = tmp[1]
-        self.restore_credentials = tmp[2]
+        super().setUp()
+        self.env_settings = super().get_env_settings()
         self.main_model = MainModel()
         self.decision_engine = DecisionEngine(self.main_model.network_model, True)
 
     def tearDown(self) -> None:
-        default_code.tearDown(self.env_settings, self.restore_path, self.restore_credentials)
+        super().tearDown()
 
     def test_default(self):
         # Davide

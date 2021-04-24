@@ -5,18 +5,15 @@ import src.settings as settings
 from tests import default_code
 
 
-class TestSettings(unittest.TestCase):
+class TestSettings(default_code.DefaultCode):
 
     def setUp(self):
         """Metodo che viene chiamato prima di ogni metodo"""
-        tmp = default_code.setUp()
-        self.restore_path = tmp[0]
-        self.env_settings = tmp[1]
-        self.restore_credentials = tmp[2]
+        super().setUp()
 
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""
-        default_code.tearDown(self.env_settings, self.restore_path, self.restore_credentials)
+        super().tearDown()
 
     def test_get_quota_disco(self) -> None:
         quota_disco = settings.get_quota_disco()

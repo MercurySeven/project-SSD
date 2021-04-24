@@ -1,5 +1,4 @@
 import os
-import unittest
 import time
 
 from src.algorithm.tree_builder import _build_tree_node
@@ -10,14 +9,12 @@ from unittest.mock import patch
 from tests import default_code
 
 
-class FileWidgetTest(unittest.TestCase):
+class FileWidgetTest(default_code.DefaultCode):
 
     def setUp(self) -> None:
-        tmp = default_code.setUp()
-        self.restore_path = tmp[0]
-        self.env_settings = tmp[1]
-        self.restore_credentials = tmp[2]
-        self.path = self.env_settings.value("sync_path")
+        super().setUp()
+        self.env_settings = super().get_env_settings()
+        self.path = self.env_settings.value(self.SYNC_ENV_VARIABLE)
         self.file_name = os.path.join(self.path, "prova.txt")
         with open(self.file_name, "w"):
             pass
@@ -28,7 +25,7 @@ class FileWidgetTest(unittest.TestCase):
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""
         os.remove(os.path.join(self.path, "prova.txt"))
-        default_code.tearDown(self.env_settings, self.restore_path, self.restore_credentials)
+        super().tearDown()
 
     def test_defaults(self):
         """ Test file_widget default values"""

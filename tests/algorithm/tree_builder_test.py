@@ -1,6 +1,5 @@
 import os
 import pathlib
-import unittest
 from unittest.mock import patch
 
 from src.algorithm import tree_builder
@@ -11,15 +10,13 @@ from tests import default_code
 from tests.default_code import _get_default_dict, _get_tree_dict
 
 
-class TreeBuilderTest(unittest.TestCase):
+class TreeBuilderTest(default_code.DefaultCode):
     def setUp(self):
         """Metodo che viene chiamato prima di ogni metodo"""
-        tmp = default_code.setUp()
-        self.restore_path = tmp[0]
-        self.env_settings = tmp[1]
-        self.restore_credentials = tmp[2]
+        super().setUp()
+        self.env_settings = super().get_env_settings()
 
-        self.original_path = self.env_settings.value("sync_path")
+        self.original_path = self.env_settings.value(super().SYNC_ENV_VARIABLE)
 
         self.path = os.path.join(self.original_path, "tree")
         self.path = r'%s' % self.path
@@ -36,8 +33,11 @@ class TreeBuilderTest(unittest.TestCase):
 
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""
-        os.remove(os.path.join(self.path, "prova.txt"))
-        default_code.tearDown(self.env_settings, self.restore_path, self.restore_credentials)
+        try:
+            os.remove(os.path.join(self.path, "prova.txt"))
+        except Exception as e:
+            print(e)
+        super().tearDown()
         self._remove_dump()
         os.rmdir(self.path)
 

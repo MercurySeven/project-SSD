@@ -15,12 +15,12 @@ from .tree_comparator import Actions
 from src import settings
 from src.model.algorithm.tree_node import TreeNode
 from src.model.algorithm.policy import Policy
-from src.model.network_model import NetworkModel
 from src.network.api_exceptions import APIException
+from src.network.api import Api
 
 
 class DecisionEngine(Thread):
-    def __init__(self, model: NetworkModel, running: bool = False):
+    def __init__(self, model: Api, running: bool = False):
         Thread.__init__(self)
 
         self.setName("Algoritmo V3")

@@ -8,15 +8,12 @@ from src.controllers.widgets.sync_controller import SyncController
 from tests import default_code
 
 
-class SyncWidgetTest(unittest.TestCase):
+class SyncWidgetTest(default_code.DefaultCode):
     """ Test synchronized widget class"""
 
     def setUp(self):
         """Metodo che viene chiamato prima di ogni metodo"""
-        tmp = default_code.setUp()
-        self.restore_path = tmp[0]
-        self.env_settings = tmp[1]
-        self.restore_credentials = tmp[2]
+        super().setUp()
         self.main_model = MainModel()
         self.sync_model = self.main_model.sync_model
         self.test_sync = SyncWidget(self.sync_model)
@@ -24,7 +21,7 @@ class SyncWidgetTest(unittest.TestCase):
 
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""
-        default_code.tearDown(self.env_settings, self.restore_path, self.restore_credentials)
+        super().tearDown()
 
     def test_defaults(self):
         """Test default synchronized widget"""

@@ -1,21 +1,17 @@
-import unittest
 from unittest.mock import patch
 
 from src.view.notification_view import NotificationView
 from tests import default_code
 
 
-class NotificationViewTest(unittest.TestCase):
+class NotificationViewTest(default_code.DefaultCode):
 
     def setUp(self) -> None:
-        tmp = default_code.setUp()
-        self.restore_path = tmp[0]
-        self.env_settings = tmp[1]
-        self.restore_credentials = tmp[2]
+        super().setUp()
         self.notify_test = NotificationView()
 
     def tearDown(self) -> None:
-        default_code.tearDown(self.env_settings, self.restore_path, self.restore_credentials)
+        super().tearDown()
 
     def test_defaults(self):
         """ Test notification view test default values"""

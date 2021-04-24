@@ -12,15 +12,12 @@ from tests import default_code
 app = QApplication(sys.argv)
 
 
-class SettingsViewTest(unittest.TestCase):
+class SettingsViewTest(default_code.DefaultCode):
     """ Test the Policy view """
 
     def setUp(self) -> None:
         """ setup for settings view"""
-        tmp = default_code.setUp()
-        self.restore_path = tmp[0]
-        self.env_settings = tmp[1]
-        self.restore_credentials = tmp[2]
+        super().setUp()
 
         self.main_model = MainModel()
         self.settings_view = SettingsView(self.main_model)
@@ -35,7 +32,7 @@ class SettingsViewTest(unittest.TestCase):
 
     def tearDown(self) -> None:
         """Metodo che viene chiamato dopo ogni metodo"""
-        default_code.tearDown(self.env_settings, self.restore_path, self.restore_credentials)
+        super().tearDown()
 
     def test_defaults(self):
         """ Test the path widget in the default state """

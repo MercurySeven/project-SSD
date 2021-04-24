@@ -1,5 +1,6 @@
 import os
 import pathlib
+import unittest
 
 from PySide6.QtCore import QSettings, QCoreApplication
 import requests.exceptions
@@ -13,33 +14,45 @@ from src.network.api_implementation import ExceptionsHandler
 node_name = "CLIENT_NODE"
 
 
-def setUp() -> [str, QSettings]:
-    QCoreApplication.setOrganizationName("MercurySeven")
-    QCoreApplication.setApplicationName("SSD")
-    env_settings = QSettings()
-    restore_path = env_settings.value("sync_path")
-    restore_credentials = [env_settings.value(
-        "Credentials/user"), env_settings.value("Credentials/password")]
+class DefaultCode(unittest.TestCase):
+    ORGANIZATION_NAME = "MercurySeven"
+    APPLICATION_NAME = "SSD"
+    SYNC_ENV_VARIABLE = "sync_path"
+    USERNAME_ENV_VARIABLE = "Credentials/user"
+    PWD_ENV_VARIABLE = "Credentials/password"
+    CONFIG_FILE_NAME = "config.ini"
 
-    path = os.path.join(str(pathlib.Path().absolute()), "tests")
-    path = r'%s' % path
-    pathlib.Path(path).mkdir(parents=True, exist_ok=True)
-    env_settings.setValue("sync_path", path)
-    settings.file_name = os.path.join(path, "config.ini")
-    settings.check_file()
+    def setUp(self) -> None:
+        QCoreApplication.setOrganizationName(self.ORGANIZATION_NAME)
+        QCoreApplication.setApplicationName(self.APPLICATION_NAME)
+        self.env_settings = QSettings()
+        self.restore_path = self.env_settings.value(self.SYNC_ENV_VARIABLE)
+        self.restore_credentials = [self.env_settings.value(
+            self.USERNAME_ENV_VARIABLE), self.env_settings.value(self.PWD_ENV_VARIABLE)]
 
-    return [restore_path, env_settings, restore_credentials]
+        path = os.path.join(str(pathlib.Path().absolute()), "tests")
+        path = r'%s' % path
+        pathlib.Path(path).mkdir(parents=True, exist_ok=True)
+        self.env_settings.setValue(self.SYNC_ENV_VARIABLE, path)
+        settings.file_name = os.path.join(path, self.CONFIG_FILE_NAME)
+        settings.check_file()
 
+        # return [restore_path, env_settings, restore_credentials]
+    def get_env_settings(self):
+        return self.env_settings
 
-def tearDown(env_settings: QSettings, restore_path: str, restore_credentials: [str, str]) -> None:
-    if os.path.exists(settings.file_name):
-        try:
-            os.remove(settings.file_name)
-        except Exception as e:
-            print(e)
-    env_settings.setValue("sync_path", restore_path)
-    env_settings.setValue("Credentials/user", restore_credentials[0])
-    env_settings.setValue("Credentials/password", restore_credentials[1])
+    def tearDown(self) -> None:
+        if os.path.exists(settings.file_name):
+            try:
+                os.remove(settings.file_name)
+            except Exception as e:
+                print(e)
+        self.env_settings.setValue("sync_path", self.restore_path)
+        self.env_settings.setValue("Credentials/user", self.restore_credentials[0])
+        self.env_settings.setValue("Credentials/password", self.restore_credentials[1])
+        del self.env_settings
+        del self.restore_path
+        del self.restore_credentials
 
 
 def _get_test_node():
