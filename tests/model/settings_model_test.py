@@ -33,6 +33,14 @@ class TestSettings(unittest.TestCase):
         result = self.sett_model.get_policy()
         self.assertEqual(Policy.Manual, result)
 
+    def test_set_sync_time(self) -> None:
+        result = self.sett_model.get_sync_time()
+        self.assertEqual(15, result)
+        new_time = 20
+        self.sett_model.set_sync_time(new_time)
+        result = self.sett_model.get_sync_time()
+        self.assertEqual(new_time, result)
+
     def test_convert_size(self) -> None:
         test: dict[str, int] = {
             "0 B": 0,

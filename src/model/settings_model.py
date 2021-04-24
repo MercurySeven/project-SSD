@@ -44,6 +44,13 @@ class SettingsModel(QObject):
         self.Sg_model_changed.emit()
         self.Sg_model_path_changed.emit()
 
+    def set_sync_time(self, new_sync_time: int) -> None:
+        settings.update_sync_time(new_sync_time)
+        self.Sg_model_changed.emit()
+
+    def get_sync_time(self) -> Optional[int]:
+        return settings.get_sync_time()
+
     def get_quota_disco_raw(self) -> int:
         """Ritorna il valore grezzo"""
         return settings.get_quota_disco()

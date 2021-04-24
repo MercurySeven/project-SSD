@@ -26,7 +26,8 @@ def create_standard_settings() -> None:
     config["General"] = {
         "quota": "1024",
         "policy": "1",
-        "is_sync": "off"
+        "is_sync": "off",
+        "sync_time": "15"
     }
 
     __write_on_file()
@@ -79,6 +80,16 @@ def get_policy() -> int:
         return 1
 
 
+def get_sync_time() -> int:
+    """Ritorna il tempo di sync salvato"""
+    try:
+        return int(get_config("General", "sync_time"))
+    except ValueError:
+        logger.warning("Il valore del tempo di sync non e' int")
+        update_sync_time(15)
+        return 15
+
+
 def get_is_synch() -> bool:
     "Ritorna lo stato di sincronizzazione"
     return get_config("General", "is_sync") == "on"
@@ -97,6 +108,11 @@ def update_config(section: str, passed_config: str, value: str) -> None:
 def update_quota_disco(value: str) -> None:
     """Aggiorna la quota disco"""
     update_config("General", "quota", value)
+
+
+def update_sync_time(value: int) -> None:
+    """Aggiorna il sync time"""
+    update_config("General", "sync_time", str(value))
 
 
 def update_policy(policy: int) -> None:
