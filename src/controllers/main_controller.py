@@ -1,6 +1,9 @@
 from os import path
+
 from PySide6.QtCore import (QObject, Slot, QSettings)
 from PySide6.QtWidgets import (QApplication, QFileDialog)
+
+from src.algorithm.decision_engine import DecisionEngine
 from src.model.main_model import MainModel
 from src.model.watcher import Watcher
 from src.view.main_view import MainWindow
@@ -8,7 +11,6 @@ from .file_controller import FileController
 from .notification_controller import NotificationController
 from .settings_controller import SettingsController
 from .widgets.sync_controller import SyncController
-from src.algorithm.decision_engine import DecisionEngine
 
 
 class MainController(QObject):
@@ -64,7 +66,7 @@ class MainController(QObject):
 
         # ALGORITMO
         # TODO: Da spostare nel main model
-        self.algoritmo = DecisionEngine(self.model)
+        self.algoritmo = DecisionEngine(self.model, self.notification_icon)
         self.algoritmo.start()
 
         # Attivo il watchdog nella root definita dall'utente

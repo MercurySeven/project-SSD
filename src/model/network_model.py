@@ -180,9 +180,10 @@ class NetworkModel(QObject, Api, metaclass=NetworkMeta):
         return False
 
     @RetryLogin
-    def download_node(self, node: TreeNode, path_folder: str, quota_libera: int) -> None:
-        self.api_implementation.download_node(node, path_folder, quota_libera)
+    def download_node(self, node: TreeNode, path_folder: str, quota_libera: int) -> bool:
+        has_downloaded = self.api_implementation.download_node(node, path_folder, quota_libera)
         self.raise_for_status()
+        return has_downloaded
 
     @RetryLogin
     def upload_node(self, node: TreeNode, parent_folder_id: str) -> None:

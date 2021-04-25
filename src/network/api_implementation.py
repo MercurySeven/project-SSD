@@ -229,29 +229,28 @@ class ApiImplementation(Api):
     @ExceptionsHandler
     def download_node(self, node: TreeNode, path: str, quota_libera: int) -> None:
         """Il TreeNode viene scaricato e salvato nel path"""
-
+        payload = node.get_payload()
+        file_size = self.get_content_from_node(payload.id)["getNode"]["size"]
         headers = {
             "cookie": self.cookie
         }
-        payload = node.get_payload()
+
         url = f"{self.url_files}{self.get_user_id()}/{payload.id}"
-        response = requests.head(url)
-        print("====================================")
-        print(response.headers)
-        print("====================================")
         response = requests.get(url, headers=headers)
 
-        if response.ok:
+        if quota_libera > file_size and response.ok:
             path = os.path.join(path, payload.name)
             with open(path, "wb") as fh:
                 fh.write(response.content)
             # Cambiare la data di creazione sembra non funzionare
             os.utime(path, (payload.created_at, payload.updated_at))
             self.logger.info(f"Download del file {payload.name}, completato con successo")
+            return True
         else:
             self.logger.info(f"Download del file {payload.name}, fallito")
             # alzo le eccezioni del caso
             self.check_status_code(response)
+            return False
 
     @ExceptionsHandler
     def upload_node(self, node: TreeNode, parent_id: str = "LOCAL_ROOT"):

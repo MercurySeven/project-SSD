@@ -33,6 +33,9 @@ class Query:
                         ...nodo
                     }
                 }
+                ... on File {
+                    size
+                }
             }
         }
 
