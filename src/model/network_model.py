@@ -174,6 +174,7 @@ class NetworkModel(QObject, Api, metaclass=NetworkMeta):
             self.message = ""
             self.env_settings.setValue("Credentials/user", None)
             self.env_settings.setValue("Credentials/password", None)
+            self.env_settings.setValue("session_cookie", None)
             return True
         return False
 

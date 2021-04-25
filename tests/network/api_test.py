@@ -238,7 +238,7 @@ class ApiTest(default_code.DefaultCode):
     def test_login_already_logged_in(self, mocked_function):
         result = self.api.login("test", "test")
         mocked_function.assert_called_once()
-        self.assertTrue(result)
+        self.assertEqual(result, None)  # None è il cookie di sessione
 
     @patch('requests.sessions.Session.get', return_value=RequestObj())
     @patch('requests.sessions.Session.post', return_value=RequestObj())
