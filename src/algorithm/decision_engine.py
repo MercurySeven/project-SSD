@@ -21,7 +21,11 @@ from ..model.main_model import MainModel
 
 
 class DecisionEngine(Thread):
-    def __init__(self, main_model: MainModel, notification: NotificationController, running: bool = False):
+    def __init__(
+            self,
+            main_model: MainModel,
+            notification: NotificationController,
+            running: bool = False):
         Thread.__init__(self)
 
         self.setName("Algoritmo V3")
