@@ -14,7 +14,7 @@ class DecisionEngineTest(default_code.DefaultCode):
         super().setUp()
         self.env_settings = super().get_env_settings()
         self.main_model = MainModel()
-        self.decision_engine = DecisionEngine(self.main_model.network_model, True)
+        self.decision_engine = DecisionEngine(self.main_model, True)
 
     def tearDown(self) -> None:
         super().tearDown()
