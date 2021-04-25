@@ -7,7 +7,6 @@ from src.view.login_screen import LoginScreen
 class LoginController:
 
     def __init__(self, net_model: Api, next_controller):
-        print("Login controller")
         self._net_model = net_model
         self.login_screen = LoginScreen(self._net_model)
         self.login_screen.show()
