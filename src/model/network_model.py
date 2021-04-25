@@ -167,6 +167,8 @@ class NetworkModel(QObject, Api, metaclass=NetworkMeta):
     def logout(self) -> bool:
         if self.api_implementation.logout():
             self.message = ""
+            self.env_settings.setValue("Credentials/user", None)
+            self.env_settings.setValue("Credentials/password", None)
             return True
         return False
 
