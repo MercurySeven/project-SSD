@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 
+from src.model.algorithm.tree_node import TreeNode
+
 
 class Api(ABC):
     @abstractmethod
@@ -27,7 +29,7 @@ class Api(ABC):
         pass
 
     @abstractmethod
-    def download_node(self):
+    def download_node(self, node: TreeNode, path: str, quota_libera: int):
         pass
 
     @abstractmethod
