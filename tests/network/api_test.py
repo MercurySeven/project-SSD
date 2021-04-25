@@ -10,7 +10,7 @@ from src.model.network_model import Status
 from src.network.api_implementation import ApiImplementation
 from src.network.api_exceptions import NetworkError, ServerError, APIException, LoginError
 from tests import default_code
-from tests.default_code import RequestObj
+from tests.default_code import RequestObj, ResultObj
 
 
 class ApiTest(default_code.DefaultCode):
@@ -169,30 +169,53 @@ class ApiTest(default_code.DefaultCode):
 
     @patch('requests.get', return_value=RequestObj())
     @patch('src.network.api_implementation.ApiImplementation.get_user_id', return_value="test")
-    def test_download_node_from_server_ok(self, mocked_response, mocked_get_id):
+    @patch('src.network.api_implementation.ApiImplementation.get_content_from_node',
+           return_value=ResultObj(1).id)
+    def test_download_node_from_server_ok(self, mocked_1, mocked_2, mocked_3):
         updated = 200
         created = 100
         test_node = TreeNode(Node("CLIENT_NODE", self.file_name,
                                   Type.Folder, created, updated, self.path))
-        self.assertIsNone(self.api.download_node(test_node, self.path))
-        mocked_response.assert_called_once()
-        mocked_get_id.assert_called_once()
+        self.assertEquals(self.api.download_node(test_node, self.path, 10000), True)
+        mocked_1.assert_called_once()
+        mocked_2.assert_called_once()
+        mocked_3.assert_called_once()
         file_path = os.path.join(self.path, self.file_name)
         self.assertTrue(os.path.exists(file_path))
         self.assertEqual(os.path.getmtime(file_path), updated)
 
+    @patch('requests.get', return_value=RequestObj())
+    @patch('src.network.api_implementation.ApiImplementation.get_user_id', return_value="test")
+    @patch('src.network.api_implementation.ApiImplementation.get_content_from_node',
+           return_value=ResultObj(1).id)
+    def test_download_node_from_server_error_quota(self, mocked_response, mocked_get_id,
+                                                   mocked_content):
+        updated = 200
+        created = 100
+        test_node = TreeNode(Node("CLIENT_NODE", self.file_name,
+                                  Type.Folder, created, updated, self.path))
+        self.assertEquals(self.api.download_node(test_node, self.path, 0), False)
+        mocked_response.assert_called_once()
+        mocked_get_id.assert_called_once()
+        mocked_content.assert_called_once()
+        file_path = os.path.join(self.path, self.file_name)
+        self.assertEquals(os.path.exists(file_path), False)
+
     @patch('requests.get', return_value=RequestObj("test", Status.Error))
     @patch('src.network.api_implementation.ApiImplementation.get_user_id', return_value="test")
-    def test_download_node_from_server_error(self, mocked_response, mocked_get_id):
+    @patch('src.network.api_implementation.ApiImplementation.get_content_from_node',
+           return_value=ResultObj(1).id)
+    def test_download_node_from_server_error(self, mocked_response, mocked_get_id, mocked_content):
         updated = 200
         created = 100
         test_node = TreeNode(Node("CLIENT_NODE", self.file_name,
                                   Type.Folder, created, updated, self.path))
         try:
-            self.api.download_node(test_node, self.path)
+            self.api.download_node(test_node, self.path, 100)
         except APIException as e:
             mocked_response.assert_called_once()
             mocked_get_id.assert_called_once()
+            mocked_content.assert_called_once()
             self.assertEqual(str(e), str(APIException()))
 
     @patch('requests.post', return_value=RequestObj("test", Status.Ok))

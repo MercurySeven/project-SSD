@@ -51,7 +51,8 @@ def download_file(node: TreeNode, path_folder: str) -> None:
     quota_libera = settingsmodel.get_quota_disco_raw() - mem.used
     has_downloaded = networkmodel.download_node(node, path_folder, quota_libera)
     if not has_downloaded:
-        notificationcontroller.send_message("errore download file")
+        if notificationcontroller is not None:
+            notificationcontroller.send_message("errore download file")
 
 
 def upload_file(node: TreeNode, parent_folder_id: str) -> None:

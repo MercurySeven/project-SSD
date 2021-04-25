@@ -38,6 +38,7 @@ class DefaultCode(unittest.TestCase):
         settings.check_file()
 
         # return [restore_path, env_settings, restore_credentials]
+
     def get_env_settings(self):
         return self.env_settings
 
@@ -106,6 +107,11 @@ class ResultObj:
             "id": "id"
         }
         self.lun = _lun
+        self.id = {
+            "getNode": {
+                "size": 100
+            }
+        }
 
     # metodo usato per poter usare len(obj)
     def __len__(self):
