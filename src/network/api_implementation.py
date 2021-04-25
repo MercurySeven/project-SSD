@@ -1,16 +1,16 @@
-import logging
 import os
-
+import logging
 import requests
+
+from .api import Api
+from .query_model import Query
+from src.model.algorithm.tree_node import TreeNode
 from gql import gql, Client
 from gql.transport.requests import RequestsHTTPTransport
-from requests import Session
-from requests.utils import dict_from_cookiejar
-
-from src.model.algorithm.tree_node import TreeNode
-from .api import Api
 from .api_exceptions import (LoginError, NetworkError, ServerError, NetworkErrs, ServerErrs)
-from .query_model import Query
+
+from requests.utils import dict_from_cookiejar
+from requests import Session
 
 """
 
@@ -227,18 +227,13 @@ class ApiImplementation(Api):
             print("NON PUOI CANCELLARE LOCAL_ROOT")
 
     @ExceptionsHandler
-    def download_node(self, node: TreeNode, path: str, quota_libera: int) -> None:
+    def download_node(self, node: TreeNode, path: str) -> None:
         """Il TreeNode viene scaricato e salvato nel path"""
-
         headers = {
             "cookie": self.cookie
         }
         payload = node.get_payload()
         url = f"{self.url_files}{self.get_user_id()}/{payload.id}"
-        response = requests.head(url)
-        print("====================================")
-        print(response.headers)
-        print("====================================")
         response = requests.get(url, headers=headers)
 
         if response.ok:
