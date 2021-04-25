@@ -95,7 +95,7 @@ class ApiImplementation(Api):
         return KO() if "LoginScreen" in r.text else OK()
 
     @ExceptionsHandler
-    def login(self, _email: str = "", _pwd: str = "") -> bool:
+    def login(self, _email: str = "", _pwd: str = "") -> str:
         self.logger.debug("start login procedure...")
 
         def csrf(session) -> str:
@@ -112,7 +112,7 @@ class ApiImplementation(Api):
                 raise ServerError("NO CSRF code found")
 
         if self.is_logged():
-            return True
+            return self.cookie
 
         session = Session()
 
@@ -150,7 +150,7 @@ class ApiImplementation(Api):
             print(self.cookie)
 
             self.init_client()
-            return True
+            return self.cookie
         else:
             # se arrivo qui non mi sono loggato
             self.logger.error("raise LoginError")

@@ -37,5 +37,5 @@ if __name__ == "__main__":
 
     model = MainModel()
     controller = MainController(app, model)
-    login_controller = LoginController(model.network_model, controller)
+    login_controller = LoginController(model, controller)
     sys.exit(app.exec_())

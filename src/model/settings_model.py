@@ -51,6 +51,12 @@ class SettingsModel(QObject):
     def get_sync_time(self) -> Optional[int]:
         return settings.get_sync_time()
 
+    def set_cookie(self, new_cookie: str) -> None:
+        self.env_settings.setValue("session_cookie", new_cookie)
+
+    def get_cookie(self) -> Optional[str]:
+        return self.env_settings.value("session_cookie")
+
     def get_quota_disco_raw(self) -> int:
         """Ritorna il valore grezzo"""
         return settings.get_quota_disco()

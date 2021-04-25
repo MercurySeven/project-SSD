@@ -1,5 +1,6 @@
 from PySide6.QtCore import Slot
 
+from src.model.main_model import MainModel
 from src.model.network_model import NetworkModel
 from src.view.login_screen import LoginScreen
 
@@ -9,8 +10,10 @@ class LoginController:
     def start(self):
         self.login_screen.show()
 
-    def __init__(self, net_model: NetworkModel, main_controller):
-        self._net_model = net_model
+    def __init__(self, model: MainModel, main_controller):
+        self._net_model: NetworkModel = model.network_model
+        self._set_model = model.settings_model
+
         self.login_screen = LoginScreen(self._net_model)
         self._main_controller = main_controller
 
@@ -20,8 +23,22 @@ class LoginController:
 
         self._net_model.Sg_model_changed.connect(self.login_screen.Sl_model_changed)
         self.login_screen.login_button.click()
-        if not self._net_model.login():
-            self.start()
+
+        # Prendo cookie di sessione salvato nella variabile d'ambiente
+        self._set_model.get_cookie()
+        cookie = self._set_model.get_cookie()
+        # Purgo valori scorretti
+        cookie = cookie if cookie is not None else ""
+        # Provo login con cookie
+        if not self._net_model.login_with_cookie(cookie):
+            # Provo login con credenziali
+            if not self._net_model.login():
+                # Se i login automatici sono falliti mostro login
+                self.start()
+            else:
+                print("Logged con credenziali")
+        else:
+            print("Logged con cookie")
 
     def stop(self):
         self.login_screen.hide()
