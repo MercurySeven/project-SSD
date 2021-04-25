@@ -1,4 +1,7 @@
 import os
+
+import psutil
+
 from src.model.algorithm.tree_node import TreeNode
 from src.model.network_model import NetworkModel
 from src.model.settings_model import SettingsModel
@@ -37,7 +40,9 @@ def upload_folder(node: TreeNode, parent_folder_id: str = "LOCAL_ROOT") -> None:
 
 
 def download_file(node: TreeNode, path_folder: str) -> None:
-    networkmodel.download_node(node, path_folder)
+    mem = psutil.disk_usage(settingsmodel.get_path())
+    quota_libera = settingsmodel.get_quota_disco_raw() - mem.used
+    networkmodel.download_node(node, path_folder, quota_libera)
 
 
 def upload_file(node: TreeNode, parent_folder_id: str) -> None:

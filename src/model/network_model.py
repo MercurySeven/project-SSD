@@ -1,11 +1,12 @@
-from PySide6.QtCore import (QObject, Signal, QSettings)
-from src.network.api import Api
-from src.network.api_exceptions import (APIException, LoginError, NetworkError, ServerError)
-from src.model.algorithm.tree_node import TreeNode
-from functools import wraps
 import logging
 from enum import Enum
+from functools import wraps
 
+from PySide6.QtCore import (QObject, Signal, QSettings)
+
+from src.model.algorithm.tree_node import TreeNode
+from src.network.api import Api
+from src.network.api_exceptions import (APIException, LoginError, NetworkError, ServerError)
 from src.network.api_implementation import ApiImplementation
 
 
@@ -179,8 +180,8 @@ class NetworkModel(QObject, Api, metaclass=NetworkMeta):
         return False
 
     @RetryLogin
-    def download_node(self, node: TreeNode, path_folder: str) -> None:
-        self.api_implementation.download_node(node, path_folder)
+    def download_node(self, node: TreeNode, path_folder: str, quota_libera: int) -> None:
+        self.api_implementation.download_node(node, path_folder, quota_libera)
         self.raise_for_status()
 
     @RetryLogin
