@@ -1,7 +1,9 @@
 from PySide6.QtCore import Slot
 
+from src.controllers.main_controller import MainController
 from src.model.main_model import MainModel
 from src.model.network_model import NetworkModel
+from src.model.settings_model import SettingsModel
 from src.view.login_screen import LoginScreen
 
 
@@ -10,9 +12,9 @@ class LoginController:
     def start(self):
         self.login_screen.show()
 
-    def __init__(self, model: MainModel, main_controller):
+    def __init__(self, model: MainModel, main_controller: MainController):
         self._net_model: NetworkModel = model.network_model
-        self._set_model = model.settings_model
+        self._set_model: SettingsModel = model.settings_model
 
         self.login_screen = LoginScreen(self._net_model)
         self._main_controller = main_controller
