@@ -16,11 +16,11 @@ from src import settings
 from src.model.algorithm.tree_node import TreeNode
 from src.model.algorithm.policy import Policy
 from src.network.api_exceptions import APIException
-from src.network.api import Api
+from ..model.main_model import MainModel
 
 
 class DecisionEngine(Thread):
-    def __init__(self, model: Api, running: bool = False):
+    def __init__(self, main_model: MainModel, running: bool = False):
         Thread.__init__(self)
 
         self.setName("Algoritmo V3")
@@ -31,8 +31,8 @@ class DecisionEngine(Thread):
         self.running = running
 
         # set istanza di NetworkModel nei moduli per poter gestire i segnali di errore
-        os_handler.set_model(model)
-        tree_builder.set_model(model)
+        os_handler.set_model(main_model.network_model, main_model.settings_model)
+        tree_builder.set_model(main_model.network_model)
 
         self.compare_snap_client = CompareSnapClient()
         self.strategy: dict[Policy, Strategy] = {

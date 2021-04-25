@@ -64,7 +64,7 @@ class MainController(QObject):
 
         # ALGORITMO
         # TODO: Da spostare nel main model
-        self.algoritmo = DecisionEngine(self.model.network_model)
+        self.algoritmo = DecisionEngine(self.model)
         self.algoritmo.start()
 
         # Attivo il watchdog nella root definita dall'utente
