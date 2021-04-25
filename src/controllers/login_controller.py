@@ -12,7 +12,7 @@ class LoginController:
     def start(self):
         self.login_screen.show()
 
-    def __init__(self, model: MainModel, main_controller: MainController):
+    def __init__(self, model: MainModel, main_controller: MainController = None):
         self._net_model: NetworkModel = model.network_model
         self._set_model: SettingsModel = model.settings_model
 
@@ -41,7 +41,8 @@ class LoginController:
                 print("Logged con credenziali")
         else:
             print("Logged con cookie")
-            self._main_controller.start()
+            if self._main_controller is not None:
+                self._main_controller.start()
 
     def stop(self):
         self.login_screen.hide()
@@ -56,4 +57,5 @@ class LoginController:
     @Slot()
     def Sl_logged_in(self):
         self.stop()
-        self._main_controller.start()
+        if self._main_controller is not None:
+            self._main_controller.start()
