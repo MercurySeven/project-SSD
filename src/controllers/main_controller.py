@@ -27,15 +27,6 @@ class MainController(QObject):
         self.watcher = None
         self.algoritmo = None
 
-    def stop(self):
-        self.view = None
-        self.sync_controller = None
-        self.file_controller = None
-        self.settings_controller = None
-        self.notification_icon = None
-        self.watcher = None
-        self.algoritmo = None
-
     def start(self):
         # Controlliamo se l'utente ha già settato il PATH della cartella
         check_path = self.env_settings.value("sync_path")
