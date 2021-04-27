@@ -61,7 +61,7 @@ class OsHandlerTest(default_code.DefaultCode):
         os_handler.set_model(self.main_model.network_model, self.main_model.settings_model)
         self.assertEqual(os_handler.networkmodel, self.main_model.network_model)
 
-    @patch('src.model.network_model.NetworkModel.download_node', return_value=None)
+    @patch('src.model.network_model.NetworkModel.download_node', return_value=[True, "test"])
     def test_download_folder_with_file(self, mocked_fun):
         updated = 200
         created = 100

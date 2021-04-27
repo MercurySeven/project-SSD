@@ -176,7 +176,9 @@ class ApiTest(default_code.DefaultCode):
         created = 100
         test_node = TreeNode(Node("CLIENT_NODE", self.file_name,
                                   Type.Folder, created, updated, self.path))
-        self.assertEquals(self.api.download_node(test_node, self.path, 10000), True)
+        result = self.api.download_node(test_node, self.path, 10000)
+        self.assertEquals(result[0], True)
+        self.assertEqual(result[1], 'File downloaded')
         mocked_1.assert_called_once()
         mocked_2.assert_called_once()
         mocked_3.assert_called_once()
@@ -194,7 +196,11 @@ class ApiTest(default_code.DefaultCode):
         created = 100
         test_node = TreeNode(Node("CLIENT_NODE", self.file_name,
                                   Type.Folder, created, updated, self.path))
-        self.assertEquals(self.api.download_node(test_node, self.path, 0), False)
+        result = self.api.download_node(test_node, self.path, 0)
+        self.assertEquals(result[0], False)
+        message = "Fallito il download del file %s, aumentare " \
+                  "la quota disco o liberare spazio!" % self.file_name
+        self.assertEquals(result[1], message)
         mocked_response.assert_called_once()
         mocked_get_id.assert_called_once()
         mocked_content.assert_called_once()
