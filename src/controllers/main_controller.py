@@ -61,8 +61,8 @@ class MainController(QObject):
             self.model.file_model, self.view.main_widget.files_widget)
         self.settings_controller = SettingsController(
             self.model, self.view.main_widget.settings_view)
-
-        self.notification_icon = NotificationController(self.app, self.view)
+        self.notification_icon = NotificationController(
+            self.app, self.view, self.model.network_model.get_username())
 
         # ALGORITMO
         # TODO: Da spostare nel main model

@@ -41,8 +41,6 @@ class LoginController:
                 print("Logged con credenziali")
         else:
             print("Logged con cookie")
-            if self._main_controller is not None:
-                self._main_controller.start()
 
     def stop(self):
         self.login_screen.hide()
