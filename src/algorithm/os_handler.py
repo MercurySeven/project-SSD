@@ -49,10 +49,13 @@ def upload_folder(node: TreeNode, parent_folder_id: str = "LOCAL_ROOT") -> None:
 def download_file(node: TreeNode, path_folder: str) -> None:
     mem = psutil.disk_usage(settingsmodel.get_path())
     quota_libera = settingsmodel.get_quota_disco_raw() - mem.used
-    has_downloaded = networkmodel.download_node(node, path_folder, quota_libera)
-    if not has_downloaded:
+    result = networkmodel.download_node(node, path_folder, quota_libera)
+    # result[0] is a bool that represent if the op was successful
+    if not result[0]:
+        # if the op was unsuccessful and we have notification controller
+        # send operation message to user
         if notificationcontroller is not None:
-            notificationcontroller.send_message("errore download file")
+            notificationcontroller.send_message(result[1])
 
 
 def upload_file(node: TreeNode, parent_folder_id: str) -> None:
