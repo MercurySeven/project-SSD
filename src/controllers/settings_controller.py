@@ -20,6 +20,8 @@ class SettingsController:
 
         self._sett_model.Sg_model_changed.connect(self._view.set_quota_disk_widget.Sl_model_changed)
         self._view.set_quota_disk_widget.Sg_view_changed.connect(self.Sl_view_quota_disk_changed)
+        # Need to get called to update values
+        self.Sl_view_quota_disk_changed()
 
         self._sett_model.Sg_model_changed.connect(self._view.set_path_widget.Sl_model_changed)
         self._view.set_path_widget.Sg_view_changed.connect(self.Sg_set_path_widget_changed)

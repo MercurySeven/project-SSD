@@ -82,6 +82,8 @@ class MainController(QObject):
 
         # Connect segnali watchdog
         self.watcher.signal_event.connect(self.model.file_model.Sl_update_model)
+        self.watcher.signal_event.connect(
+            self.view.main_widget.settings_view.set_quota_disk_widget.Sl_model_changed)
 
         # Connect per cambiare le viste
         self.view.main_widget.Sg_switch_to_files.connect(self.Sl_switch_to_files)
