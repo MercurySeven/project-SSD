@@ -69,16 +69,19 @@ class SettingsModel(QObject):
         # trasforma new_quota scritto in mb in byte (non funziona)
         # quota = (int(new_quota) * 1024) ** 2
         # TODO: Il controllo non dovremmo farlo nel controller?
-        mem = psutil.disk_usage('/')
-        if self.get_size() <= int(new_quota) <= mem.free:
+        if self.get_size() <= int(new_quota) <= self.get_free_disk():
             settings.update_quota_disco(new_quota)
             self.Sg_model_changed.emit()
+
+    def get_free_disk(self):
+        mem = psutil.disk_usage('/')
+        return mem.free
 
     @staticmethod
     def convert_size(size_bytes: int) -> str:
         if size_bytes == 0:
             return "0 B"
-        size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
+        size_name = ("B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB")
         i = int(math.floor(math.log(size_bytes, 1024)))
         p = math.pow(1024, i)
         s = round(size_bytes / p, 2)
