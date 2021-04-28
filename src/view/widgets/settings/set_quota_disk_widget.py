@@ -39,8 +39,8 @@ class SetQuotaDiskWidget(QWidget):
         self.dedicated_space.setValidator(QDoubleValidator())
 
         self.sizes_box = QComboBox()
-        _path_size = model.convert_size(model.get_size())
-        _disk_free = model.convert_size(model.get_free_disk())
+        _path_size = bitmath.parse_string(model.convert_size(model.get_size()))
+        _disk_free = bitmath.parse_string(model.convert_size(model.get_free_disk()))
 
         self.populate_size_box(_path_size, _disk_free)
 
@@ -109,7 +109,7 @@ class SetQuotaDiskWidget(QWidget):
         :param _max: maximum value with unit ex 10 KiB or just 'KiB'
         :return: None
         """
-        _sizes = "Bytes", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"
+        _sizes = "Byte", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"
         # Converto in ogni caso a string, in caso in cui venga passato un oggetto
         # tipo bitmath
 
