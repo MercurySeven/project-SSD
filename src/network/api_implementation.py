@@ -183,7 +183,7 @@ class ApiImplementation(Api):
             print("NON PUOI CANCELLARE LOCAL_ROOT")
 
     @ExceptionsHandler
-    def download_node(self, node: TreeNode, path: str, quota_libera: int) -> [bool, str]:
+    def download_node(self, node: TreeNode, path: str, quota_libera: float) -> [bool, str]:
         """
         Il TreeNode viene scaricato e salvato nel path
         :param node: node to download
