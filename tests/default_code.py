@@ -135,6 +135,9 @@ class RequestObj:
     def set_text(self, _text):
         self.text = _text
 
+    def json(self):
+        return {'user_info': {'id': 1}, 'auth_token': {'cookie': 2}}
+
     @ExceptionsHandler
     def function_network_exception(self):
         raise requests.exceptions.ConnectionError("test")

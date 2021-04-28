@@ -137,18 +137,6 @@ class ApiTest(default_code.DefaultCode):
         mocked_info.assert_called_once()
         mocked_response.assert_called_once()
 
-    def test_cookie2str_success(self):
-        key = "ZM_AUTH_TOKEN"
-        value = "mamma"
-        result = self.api.cookie2str({key: value})
-        self.assertEqual(result, key + "=" + value)
-
-    def test_cookie2str_failure(self):
-        key = "test"
-        value = "mamma"
-        result = self.api.cookie2str({key: value})
-        self.assertEqual(result, "")
-
     def test_check_status_code_ok(self):
         test_obj = RequestObj()
         self.assertIsNone(self.api.check_status_code(test_obj))
@@ -263,47 +251,18 @@ class ApiTest(default_code.DefaultCode):
             mocked_get_id.assert_called_once()
             self.assertEqual(str(e), str(APIException()))
 
-    @patch('src.network.api_implementation.ApiImplementation.is_logged', return_value=True)
-    def test_login_already_logged_in(self, mocked_function):
-        result = self.api.login("test", "test")
-        mocked_function.assert_called_once()
-        self.assertEqual(result, None)  # None è il cookie di sessione
-
-    @patch('requests.sessions.Session.get', return_value=RequestObj())
-    @patch('requests.sessions.Session.post', return_value=RequestObj())
-    @patch('src.network.api_implementation.dict_from_cookiejar',
-           return_value={"ZM_LOGIN_CSRF": "value"})
-    @patch('src.network.api_implementation.ApiImplementation.is_logged', return_value=False)
-    def test_login_fail_login_exc(self, mock_1, mock_2, mock_3, mock_4):
+    @patch('src.network.api_implementation.requests.post', return_value=RequestObj("test", 401))
+    def test_login_fail_login_exc(self, mock_1):
         try:
             self.api.login("test", "test")
         except LoginError as e:
-            # is_logged viene chiamata due volte durante l'autenticazione
-            # una all'inizio per controllare se sei già loggato
-            # ed una alla fine per controllare se è andato a buon fine
-            self.assertEqual(mock_1.call_count, 2)
-            # con la patch di cookiejar invece dobbiamo puntare a
-            # api poichè cookiejar viene importato dentro e quindi
-            # è come un metodo interno
-            self.assertEqual(mock_2.call_count, 2)
-            mock_3.assert_called_once()
-            mock_4.assert_called_once()
+            mock_1.assert_called_once()
             self.assertEqual(str(e), str(LoginError("Credenziali non valide")))
 
-    @patch('requests.sessions.Session.get', return_value=RequestObj())
-    @patch('src.network.api_implementation.dict_from_cookiejar', return_value={"aaaa": "value"})
-    @patch('src.network.api_implementation.ApiImplementation.is_logged', return_value=False)
-    def test_login_fail_server_exc(self, mock_1, mock_2, mock_3):
+    @patch('src.network.api_implementation.requests.post', return_value=RequestObj("test", 500))
+    def test_login_fail_server_exc(self, mock_1):
         try:
             self.api.login("test", "test")
         except ServerError as e:
-            # is_logged viene chiamata due volte durante l'autenticazione
-            # una all'inizio per controllare se sei già loggato
-            # ed una alla fine per controllare se è andato a buon fine
             mock_1.assert_called_once()
-            # con la patch di cookiejar invece dobbiamo puntare a
-            # api poichè cookiejar viene importato dentro e quindi
-            # è come un metodo interno
-            mock_2.assert_called_once()
-            mock_3.assert_called_once()
-            self.assertEqual(str(e), str(ServerError("NO CSRF code found")))
+            self.assertEqual(str(e), str(ServerError()))
