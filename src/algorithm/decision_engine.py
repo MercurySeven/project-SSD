@@ -32,7 +32,7 @@ class DecisionEngine(Thread):
         self.setDaemon(True)
         self.env_settings = QSettings()
         # TODO: Il refresh minimo sarà ogni 60 secondi
-        self.refresh: int = 15
+        self.refresh: int = main_model.settings_model.get_sync_time()
         self.running = running
 
         # set istanza di NetworkModel nei moduli per poter gestire i segnali di errore

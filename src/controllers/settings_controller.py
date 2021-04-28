@@ -7,6 +7,7 @@ from src.model.main_model import MainModel
 from PySide6.QtCore import (Slot)
 from src.model.algorithm.policy import Policy
 import bitmath
+import re
 
 
 class SettingsController:
@@ -17,6 +18,9 @@ class SettingsController:
 
         self._sett_model.Sg_model_changed.connect(view.set_policy_widget.Sl_model_changed)
         self._view.set_policy_widget.Sg_view_changed.connect(self.Sl_view_policy_changed)
+
+        self._sett_model.Sg_model_changed.connect(self._view.set_sync_time_widget.Sl_model_changed)
+        self._view.set_sync_time_widget.Sg_view_changed.connect(self.Sl_view_sync_time_changed)
 
         self._sett_model.Sg_model_changed.connect(self._view.set_quota_disk_widget.Sl_model_changed)
         self._view.set_quota_disk_widget.Sg_view_changed.connect(self.Sl_view_quota_disk_changed)
@@ -37,6 +41,17 @@ class SettingsController:
             self._sett_model.set_policy(Policy.Client)
         elif manual and not client:
             self._sett_model.set_policy(Policy.Manual)
+
+    @Slot()
+    def Sl_view_sync_time_changed(self):
+        time = self._view.set_sync_time_widget.time_box.currentText()
+        time_int = int(re.search(r'\d+', time).group())
+        print(time_int)
+        if 'm' in time:
+            time_int = time_int * 60
+        if 'h' in time:
+            time_int = time_int * 3600
+        self._sett_model.set_sync_time(time_int)
 
     @Slot()
     def Sl_view_quota_disk_changed(self):
