@@ -13,7 +13,7 @@ class NotificationController:
 
         self.notification_view.show()
 
-        self.send_message("Bentornato %s" % username)
+        # self.send_message("Bentornato %s" % username)
 
     def send_message(self, msg: str, duration: int = 4000) -> None:
         self.notification_view.show_message("SSD: Zextras Drive Desktop", msg, duration)

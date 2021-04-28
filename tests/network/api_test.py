@@ -40,13 +40,13 @@ class ApiTest(default_code.DefaultCode):
 
     @patch('requests.get', return_value=RequestObj("LoginScreen"))
     def test_is_logged_false(self, mocked_function):
-        logged = self.api.is_logged("test")
+        logged = self.api.is_logged()
         mocked_function.assert_called_once()
         self.assertFalse(logged)
 
     @patch('requests.get', return_value=RequestObj())
     def test_is_logged_true(self, mocked_function):
-        logged = self.api.is_logged("test")
+        logged = self.api.is_logged()
         mocked_function.assert_called_once()
         self.assertTrue(logged)
 
@@ -69,7 +69,7 @@ class ApiTest(default_code.DefaultCode):
 
     def test_logout(self):
         self.assertTrue(self.api.logout())
-        self.assertIsNone(self.api.cookie)
+        self.assertEqual(self.api.cookie, "")
         self.assertIsNone(self.api.client)
 
     @patch('gql.client.Client.__init__', return_value=None)

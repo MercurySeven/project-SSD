@@ -37,7 +37,6 @@ class LoginScreen(QDialog):
         self.psw_field.setEchoMode(QLineEdit.Password)
 
         self.user_field.setText(self.model.get_username())
-        self.psw_field.setText(self.model.get_password())
 
         # pulsante invio form
         self.login_button = QPushButton(self)

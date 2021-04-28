@@ -119,10 +119,6 @@ class NetworkModel(QObject, Api, metaclass=NetworkMeta):
             raise APIException()
 
     @APIExceptionsHandler
-    def login_with_cookie(self, cookie: str = ""):
-        return self.api_implementation.is_logged(cookie)
-
-    @APIExceptionsHandler
     def login(self, user: str = "", password: str = "") -> None:
 
         NetworkModel.logger.info("try to login...")
@@ -130,14 +126,13 @@ class NetworkModel(QObject, Api, metaclass=NetworkMeta):
         user = user if user else self.env_settings.value("Credentials/user")
         password = password if password else self.env_settings.value("Credentials/password")
 
-        cookie = self.api_implementation.login(user, password)
+        self.api_implementation.login(user, password)
         NetworkModel.logger.info("login successful")
 
         # save to Qsettings
         NetworkModel.logger.info("saving credentials")
         self.env_settings.setValue("Credentials/user", user)
         self.env_settings.setValue("Credentials/password", password)
-        self.env_settings.setValue("session_cookie", cookie)
         self.env_settings.sync()
 
         self.Sg_model_changed.emit()
@@ -175,7 +170,6 @@ class NetworkModel(QObject, Api, metaclass=NetworkMeta):
             self.message = ""
             self.env_settings.setValue("Credentials/user", None)
             self.env_settings.setValue("Credentials/password", None)
-            self.env_settings.setValue("session_cookie", None)
             return True
         return False
 

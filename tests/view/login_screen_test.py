@@ -18,7 +18,7 @@ class LoginScreenTest(default_code.DefaultCode):
 
     def test_default(self):
         self.assertEqual(self.login_test.get_user(), self.login_test.model.get_username())
-        self.assertEqual(self.login_test.get_psw(), self.login_test.model.get_password())
+        self.assertEqual(self.login_test.get_psw(), "")
 
     @patch('src.model.network_model.NetworkModel.login', return_value=True)
     def test_login(self, mock_login):

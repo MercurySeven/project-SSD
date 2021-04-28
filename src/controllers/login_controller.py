@@ -9,9 +9,6 @@ from src.view.login_screen import LoginScreen
 
 class LoginController:
 
-    def start(self):
-        self.login_screen.show()
-
     def __init__(self, model: MainModel, main_controller: MainController = None):
         self._net_model: NetworkModel = model.network_model
         self._set_model: SettingsModel = model.settings_model
@@ -24,25 +21,19 @@ class LoginController:
         self.login_screen.login_button.clicked.connect(self.Sl_login)
 
         self._net_model.Sg_model_changed.connect(self.login_screen.Sl_model_changed)
-        self.login_screen.login_button.click()
 
-        # Prendo cookie di sessione salvato nella variabile d'ambiente
-        self._set_model.get_cookie()
-        cookie = self._set_model.get_cookie()
-        # Purgo valori scorretti
-        cookie = cookie if cookie is not None else ""
-        # Provo login con cookie
-        if not self._net_model.login_with_cookie(cookie):
-            # Provo login con credenziali
-            if not self._net_model.login():
-                # Se i login automatici sono falliti mostro login
-                self.start()
-            else:
-                print("Logged con credenziali")
+        user = self._net_model.get_username()
+        password = self._net_model.get_password()
+        if len(user) > 0 and len(password) > 0:
+            # Abbiamo le credenziali salvate, facciamo l'auto-login
+            self._net_model.login(user, password)
         else:
-            print("Logged con cookie")
+            self.start()
 
-    def stop(self):
+    def start(self) -> None:
+        self.login_screen.show()
+
+    def stop(self) -> None:
         self.login_screen.hide()
         self.login_screen.close()
 

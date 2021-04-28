@@ -54,8 +54,8 @@ class ApiImplementation(Api):
 
         self.email = ""
         self.password = ""
+        self.cookie = ""
         self.user_id = None
-        self.cookie: dict = None
         self.client = None
         self.logger = logging.getLogger("API")
 
@@ -72,11 +72,10 @@ class ApiImplementation(Api):
         response.raise_for_status()
 
     @ExceptionsHandler
-    def is_logged(self, _cookie: str = "") -> bool:
+    def is_logged(self) -> bool:
         self.logger.debug("checking login status...")
 
-        c = _cookie if _cookie else self.cookie
-        r = requests.get(self.url_base, headers={"cookie": c})
+        r = requests.get(self.url_base, headers={"cookie": self.cookie})
 
         if "LoginScreen" in r.text:
             self.logger.debug("not logged")
@@ -130,8 +129,7 @@ class ApiImplementation(Api):
 
     @ExceptionsHandler
     def logout(self) -> bool:
-
-        self.cookie = None
+        self.cookie = ""
         self.client = None
         self.user_id = None
         self.logger.debug("logout")
