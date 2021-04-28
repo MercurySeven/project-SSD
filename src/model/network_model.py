@@ -1,11 +1,12 @@
-from PySide6.QtCore import (QObject, Signal, QSettings)
-from src.network.api import Api
-from src.network.api_exceptions import (APIException, LoginError, NetworkError, ServerError)
-from src.model.algorithm.tree_node import TreeNode
-from functools import wraps
 import logging
 from enum import Enum
+from functools import wraps
 
+from PySide6.QtCore import (QObject, Signal, QSettings)
+
+from src.model.algorithm.tree_node import TreeNode
+from src.network.api import Api
+from src.network.api_exceptions import (APIException, LoginError, NetworkError, ServerError)
 from src.network.api_implementation import ApiImplementation
 
 
@@ -167,13 +168,16 @@ class NetworkModel(QObject, Api, metaclass=NetworkMeta):
     def logout(self) -> bool:
         if self.api_implementation.logout():
             self.message = ""
+            self.env_settings.setValue("Credentials/user", None)
+            self.env_settings.setValue("Credentials/password", None)
             return True
         return False
 
     @RetryLogin
-    def download_node(self, node: TreeNode, path_folder: str) -> None:
-        self.api_implementation.download_node(node, path_folder)
+    def download_node(self, node: TreeNode, path_folder: str, quota_libera: float) -> bool:
+        has_downloaded = self.api_implementation.download_node(node, path_folder, quota_libera)
         self.raise_for_status()
+        return has_downloaded
 
     @RetryLogin
     def upload_node(self, node: TreeNode, parent_folder_id: str) -> None:

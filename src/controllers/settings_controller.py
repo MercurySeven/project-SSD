@@ -1,9 +1,13 @@
+import sys
+
 from src.view.settings_view import SettingsView
 from src.model.settings_model import SettingsModel
 from src.model.network_model import NetworkModel
 from src.model.main_model import MainModel
 from PySide6.QtCore import (Slot)
 from src.model.algorithm.policy import Policy
+import bitmath
+import re
 
 
 class SettingsController:
@@ -15,8 +19,13 @@ class SettingsController:
         self._sett_model.Sg_model_changed.connect(view.set_policy_widget.Sl_model_changed)
         self._view.set_policy_widget.Sg_view_changed.connect(self.Sl_view_policy_changed)
 
+        self._sett_model.Sg_model_changed.connect(self._view.set_sync_time_widget.Sl_model_changed)
+        self._view.set_sync_time_widget.Sg_view_changed.connect(self.Sl_view_sync_time_changed)
+
         self._sett_model.Sg_model_changed.connect(self._view.set_quota_disk_widget.Sl_model_changed)
         self._view.set_quota_disk_widget.Sg_view_changed.connect(self.Sl_view_quota_disk_changed)
+        # Need to get called to update values
+        self.Sl_view_quota_disk_changed()
 
         self._sett_model.Sg_model_changed.connect(self._view.set_path_widget.Sl_model_changed)
         self._view.set_path_widget.Sg_view_changed.connect(self.Sg_set_path_widget_changed)
@@ -34,15 +43,31 @@ class SettingsController:
             self._sett_model.set_policy(Policy.Manual)
 
     @Slot()
+    def Sl_view_sync_time_changed(self):
+        time = self._view.set_sync_time_widget.time_box.currentText()
+        time_int = int(re.search(r'\d+', time).group())
+        print(time_int)
+        if 'm' in time:
+            time_int = time_int * 60
+        if 'h' in time:
+            time_int = time_int * 3600
+        self._sett_model.set_sync_time(time_int)
+
+    @Slot()
     def Sl_view_quota_disk_changed(self):
-        new_quota = self._view.set_quota_disk_widget.dedicated_space.text()
-        if self._sett_model.get_quota_disco_raw() != int(new_quota):
-            self._sett_model.set_quota_disco(new_quota)
+        raw_quota = self._view.set_quota_disk_widget.dedicated_space.text()
+        unit = self._view.set_quota_disk_widget.sizes_box.currentText()
+        new_quota = "%s %s" % (raw_quota, unit)
+        new_quota_to_byte = bitmath.parse_string(new_quota).to_Byte()
+        old_quota = "%s %s" % (self._sett_model.get_quota_disco_raw(), "Byte")
+        old_quota_to_byte = bitmath.parse_string(old_quota).to_Byte()
+        if old_quota_to_byte != new_quota_to_byte:
+            self._sett_model.set_quota_disco(new_quota_to_byte)
 
     @Slot()
     def Sl_view_profile_logout(self):
         self._net_model.logout()
-        print('logging out')
+        sys.exit()
 
     @Slot()
     def Sg_set_path_widget_changed(self, value: str):

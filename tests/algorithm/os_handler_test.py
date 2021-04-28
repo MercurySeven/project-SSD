@@ -15,7 +15,7 @@ class OsHandlerTest(default_code.DefaultCode):
         super().setUp()
         self.env_settings = super().get_env_settings()
         self.main_model = MainModel()
-        os_handler.set_model(self.main_model.network_model)
+        os_handler.set_model(self.main_model.network_model, self.main_model.settings_model)
 
         self.original_path = self.env_settings.value(super().SYNC_ENV_VARIABLE)
         self.folder_name = "test"
@@ -56,12 +56,12 @@ class OsHandlerTest(default_code.DefaultCode):
         super().tearDown()
 
     def test_set_model(self):
-        os_handler.set_model(None)
+        os_handler.set_model(None, None)
         self.assertIsNone(os_handler.networkmodel)
-        os_handler.set_model(self.main_model.network_model)
+        os_handler.set_model(self.main_model.network_model, self.main_model.settings_model)
         self.assertEqual(os_handler.networkmodel, self.main_model.network_model)
 
-    @patch('src.model.network_model.NetworkModel.download_node', return_value=None)
+    @patch('src.model.network_model.NetworkModel.download_node', return_value=[True, "test"])
     def test_download_folder_with_file(self, mocked_fun):
         updated = 200
         created = 100

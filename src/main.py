@@ -5,7 +5,9 @@ import ctypes
 from PySide6.QtCore import (QCoreApplication)
 from PySide6.QtWidgets import (QApplication)
 
+from src.controllers.login_controller import LoginController
 from src.controllers.main_controller import MainController
+from src.model.main_model import MainModel
 
 if __name__ == "__main__":
 
@@ -33,6 +35,7 @@ if __name__ == "__main__":
     logging.getLogger("gql.transport.aiohttp").setLevel(logging.WARNING)
     logging.getLogger("gql.transport.requests").setLevel(logging.WARNING)
 
-    controller = MainController(app)
-
+    model = MainModel()
+    controller = MainController(app, model)
+    login_controller = LoginController(model, controller)
     sys.exit(app.exec_())

@@ -1,14 +1,25 @@
 import os
+
+from src.controllers.notification_controller import NotificationController
 from src.model.algorithm.tree_node import TreeNode
 from src.model.network_model import NetworkModel
-
+from src.model.settings_model import SettingsModel
 
 networkmodel: NetworkModel = None
+settingsmodel: SettingsModel = None
+notificationcontroller: NotificationController = None
 
 
-def set_model(model: NetworkModel) -> None:
+def set_model(model: NetworkModel, settings_model: SettingsModel) -> None:
     global networkmodel
+    global settingsmodel
     networkmodel = model
+    settingsmodel = settings_model
+
+
+def set_notification(notification: NotificationController) -> None:
+    global notificationcontroller
+    notificationcontroller = notification
 
 
 def download_folder(node: TreeNode, path: str) -> None:
@@ -34,7 +45,14 @@ def upload_folder(node: TreeNode, parent_folder_id: str = "LOCAL_ROOT") -> None:
 
 
 def download_file(node: TreeNode, path_folder: str) -> None:
-    networkmodel.download_node(node, path_folder)
+    quota_libera = settingsmodel.get_quota_disco_raw() - settingsmodel.get_size()
+    result = networkmodel.download_node(node, path_folder, quota_libera)
+    # result[0] is a bool that represent if the op was successful
+    if not result[0]:
+        # if the op was unsuccessful and we have notification controller
+        # send operation message to user
+        if notificationcontroller is not None:
+            notificationcontroller.send_message(result[1])
 
 
 def upload_file(node: TreeNode, parent_folder_id: str) -> None:

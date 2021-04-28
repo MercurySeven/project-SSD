@@ -1,38 +1,43 @@
-from threading import Thread
-from time import sleep
 import logging
 import os
 import shutil
+from threading import Thread
+from time import sleep
 
 from PySide6.QtCore import QSettings
 
+from src import settings
+from src.controllers.notification_controller import NotificationController
+from src.model.algorithm.policy import Policy
+from src.model.algorithm.tree_node import TreeNode
+from src.model.main_model import MainModel
+from src.network.api_exceptions import APIException
 from . import tree_builder, tree_comparator, os_handler
 from .compare_snap_client import CompareSnapClient
 from .strategy.client_strategy import ClientStrategy
 from .strategy.manual_strategy import ManualStrategy
 from .strategy.strategy import Strategy
 from .tree_comparator import Actions
-from src import settings
-from src.model.algorithm.tree_node import TreeNode
-from src.model.algorithm.policy import Policy
-from src.model.network_model import NetworkModel
-from src.network.api_exceptions import APIException
 
 
 class DecisionEngine(Thread):
-    def __init__(self, model: NetworkModel, running: bool = False):
+    def __init__(self,
+                 main_model: MainModel,
+                 notification: NotificationController,
+                 running: bool = False):
         Thread.__init__(self)
 
         self.setName("Algoritmo V3")
         self.setDaemon(True)
         self.env_settings = QSettings()
         # TODO: Il refresh minimo sarà ogni 60 secondi
-        self.refresh: int = 15
+        self.refresh: int = main_model.settings_model.get_sync_time()
         self.running = running
 
         # set istanza di NetworkModel nei moduli per poter gestire i segnali di errore
-        os_handler.set_model(model)
-        tree_builder.set_model(model)
+        os_handler.set_model(main_model.network_model, main_model.settings_model)
+        os_handler.set_notification(notification)
+        tree_builder.set_model(main_model.network_model)
 
         self.compare_snap_client = CompareSnapClient()
         self.strategy: dict[Policy, Strategy] = {

@@ -4,6 +4,7 @@ from typing import Optional
 
 import psutil
 from PySide6.QtCore import (QObject, Signal, QSettings)
+import bitmath
 
 from src import settings
 from src.model.algorithm.policy import Policy
@@ -51,7 +52,7 @@ class SettingsModel(QObject):
     def get_sync_time(self) -> int:
         return settings.get_sync_time()
 
-    def get_quota_disco_raw(self) -> int:
+    def get_quota_disco_raw(self) -> float:
         """Ritorna il valore grezzo"""
         return settings.get_quota_disco()
 
@@ -59,20 +60,25 @@ class SettingsModel(QObject):
         """Ritorna il valore con la sua unità adatta"""
         return self.convert_size(settings.get_quota_disco())
 
-    def set_quota_disco(self, new_quota: str) -> None:
-        # trasforma new_quota scritto in mb in byte (non funziona)
-        # quota = (int(new_quota) * 1024) ** 2
+    def set_quota_disco(self, new_quota: bitmath.Byte) -> None:
         # TODO: Il controllo non dovremmo farlo nel controller?
-        mem = psutil.disk_usage('/')
-        if self.get_size() <= int(new_quota) <= mem.free:
-            settings.update_quota_disco(new_quota)
+        folder_size = bitmath.parse_string(self.convert_size(self.get_size()))
+        free_disk = bitmath.parse_string(self.convert_size(self.get_free_disk()))
+        # Controllo che la nuova quota sia minore dello spazio disponibile nell'hdd
+        # e maggiore dello spazio utilizzato dalla cartella corrente
+        if folder_size <= new_quota <= free_disk:
+            settings.update_quota_disco(str(new_quota.value))
             self.Sg_model_changed.emit()
+
+    def get_free_disk(self) -> int:
+        mem = psutil.disk_usage('/')
+        return mem.free
 
     @staticmethod
     def convert_size(size_bytes: int) -> str:
         if size_bytes == 0:
             return "0 B"
-        size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
+        size_name = ("B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB")
         i = int(math.floor(math.log(size_bytes, 1024)))
         p = math.pow(1024, i)
         s = round(size_bytes / p, 2)

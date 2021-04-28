@@ -6,6 +6,7 @@ from src.view.widgets.settings.set_path_widget import SetPathWidget
 from src.view.widgets.settings.set_policy_widget import SetPolicyWidget
 from src.view.widgets.settings.set_quota_disk_widget import SetQuotaDiskWidget
 from src.view.widgets.settings.set_profile_view import SetProfileView
+from src.view.widgets.settings.set_sync_time_widget import SetSyncTimeWidget
 
 
 class SettingsView(QWidget):
@@ -22,6 +23,8 @@ class SettingsView(QWidget):
         self.set_path_widget = SetPathWidget(main_model.settings_model)
         # Impostazioni Policy
         self.set_policy_widget = SetPolicyWidget(main_model.settings_model)
+        # Impostazioni finestra sync
+        self.set_sync_time_widget = SetSyncTimeWidget(main_model.settings_model)
         # Impostazioni quota disco
         self.set_quota_disk_widget = SetQuotaDiskWidget(main_model.settings_model)
 
@@ -32,6 +35,7 @@ class SettingsView(QWidget):
         layout.addWidget(self.title)
         layout.addWidget(self.set_path_widget)
         layout.addWidget(self.set_policy_widget)
+        layout.addWidget(self.set_sync_time_widget)
         layout.addWidget(self.set_quota_disk_widget)
         layout.addWidget(self.set_profile_widget)
         layout.addStretch()

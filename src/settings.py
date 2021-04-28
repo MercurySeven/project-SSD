@@ -58,14 +58,14 @@ def get_config(section: str, passed_config: str) -> Optional[str]:
     return config[section][passed_config]
 
 
-def get_quota_disco() -> int:
+def get_quota_disco() -> float:
     """Restituisce la quota disco"""
     try:
         value = get_config("General", "quota")
-        result = int(value)
+        result = float(value)
         return result
     except ValueError:
-        logger.warning("Il valore di quota disco non e' int")
+        logger.warning("Il valore di quota disco non e' un numero float")
         update_quota_disco("1024")
         return 1024
 

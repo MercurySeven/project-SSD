@@ -5,8 +5,7 @@ from src.view.main_view import MainWindow
 
 class NotificationController:
 
-    def __init__(self, app: QApplication, view: MainWindow):
-
+    def __init__(self, app: QApplication, view: MainWindow, username):
         self.notification_view = NotificationView(app)
 
         self.notification_view.exit_option.triggered.connect(app.quit)
@@ -14,5 +13,7 @@ class NotificationController:
 
         self.notification_view.show()
 
-    def send_message(self, msg: str, duration: int = 1000) -> None:
+        # self.send_message("Bentornato %s" % username)
+
+    def send_message(self, msg: str, duration: int = 4000) -> None:
         self.notification_view.show_message("SSD: Zextras Drive Desktop", msg, duration)
