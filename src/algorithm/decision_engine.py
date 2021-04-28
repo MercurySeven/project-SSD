@@ -7,8 +7,10 @@ from time import sleep
 from PySide6.QtCore import QSettings
 
 from src import settings
+from src.controllers.notification_controller import NotificationController
 from src.model.algorithm.policy import Policy
 from src.model.algorithm.tree_node import TreeNode
+from src.model.main_model import MainModel
 from src.network.api_exceptions import APIException
 from . import tree_builder, tree_comparator, os_handler
 from .compare_snap_client import CompareSnapClient
@@ -16,16 +18,13 @@ from .strategy.client_strategy import ClientStrategy
 from .strategy.manual_strategy import ManualStrategy
 from .strategy.strategy import Strategy
 from .tree_comparator import Actions
-from ..controllers.notification_controller import NotificationController
-from ..model.main_model import MainModel
 
 
 class DecisionEngine(Thread):
-    def __init__(
-            self,
-            main_model: MainModel,
-            notification: NotificationController,
-            running: bool = False):
+    def __init__(self,
+                 main_model: MainModel,
+                 notification: NotificationController,
+                 running: bool = False):
         Thread.__init__(self)
 
         self.setName("Algoritmo V3")

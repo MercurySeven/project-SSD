@@ -49,7 +49,7 @@ class SettingsModel(QObject):
         settings.update_sync_time(new_sync_time)
         self.Sg_model_changed.emit()
 
-    def get_sync_time(self) -> Optional[int]:
+    def get_sync_time(self) -> int:
         return settings.get_sync_time()
 
     def set_cookie(self, new_cookie: str) -> None:
