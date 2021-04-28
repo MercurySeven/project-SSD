@@ -1,10 +1,10 @@
 import logging
 import os
 import shutil
+import threading
 from threading import Thread
-from time import sleep
 
-from PySide6.QtCore import QSettings
+from PySide6.QtCore import QSettings, Slot
 
 from src import settings
 from src.controllers.notification_controller import NotificationController
@@ -31,7 +31,7 @@ class DecisionEngine(Thread):
         self.setDaemon(True)
         self.env_settings = QSettings()
         # TODO: Il refresh minimo sarà ogni 60 secondi
-        self.refresh: int = main_model.settings_model.get_sync_time()
+        self.refresh: int = (lambda: main_model.settings_model.get_sync_time())
         self.running = running
 
         # set istanza di NetworkModel nei moduli per poter gestire i segnali di errore
@@ -46,6 +46,7 @@ class DecisionEngine(Thread):
         }
 
         self.logger = logging.getLogger("decision_engine")
+        self.condition = threading.Condition()
 
     def set_running(self, running: bool) -> None:
         self.running = running
@@ -53,11 +54,21 @@ class DecisionEngine(Thread):
     def run(self):
         # Override the run() function of Thread class
         while True:
+            self.condition.acquire()
             if self.running:
                 self.check()
-                sleep(max(5, self.refresh))
+                self.condition.wait(max(5, self.refresh()))
             else:
-                sleep(5)
+                self.condition.wait(5)
+            self.condition.release()
+
+    @Slot()
+    def Sl_model_changed(self):
+        self.condition.acquire()
+        try:
+            self.condition.notify()
+        finally:
+            self.condition.release()
 
     def check(self) -> None:
         path = self.env_settings.value("sync_path")

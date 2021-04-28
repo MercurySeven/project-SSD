@@ -69,6 +69,8 @@ class MainController(QObject):
         self.algoritmo = DecisionEngine(self.model, self.notification_icon)
         self.algoritmo.start()
 
+        self.model.settings_model.Sg_model_changed.connect(self.algoritmo.Sl_model_changed)
+
         # Attivo il watchdog nella root definita dall'utente
         self.watcher = Watcher()
         self.watcher.run(True)
