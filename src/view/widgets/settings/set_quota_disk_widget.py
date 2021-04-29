@@ -42,6 +42,7 @@ class SetQuotaDiskWidget(QWidget):
         self.dedicated_space.setValidator(QDoubleValidator())
 
         self.sizes_box = QComboBox()
+        self.sizes_box.wheelEvent = lambda event: None
         _path_size = bitmath.parse_string(model.convert_size(model.get_size()))
         _disk_free = bitmath.parse_string(model.convert_size(model.get_free_disk()))
 

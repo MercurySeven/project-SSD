@@ -35,6 +35,7 @@ class SetSyncTimeWidget(QWidget):
         self.spaceLabel = QLabel(" ")
 
         self.time_box = QComboBox()
+        self.time_box.wheelEvent = lambda event: None
         self.time_box.addItems(self._time_list)
         self.Sl_model_changed()
 
