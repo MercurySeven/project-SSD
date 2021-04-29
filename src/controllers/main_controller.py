@@ -25,7 +25,7 @@ class MainController(QObject):
         self.sync_controller = None
         self.file_controller = None
         self.settings_controller = None
-        self.notification_icon = None
+        self.notification_controller = None
         self.watcher = None
         self.algoritmo = None
 
@@ -61,10 +61,10 @@ class MainController(QObject):
             self.model.file_model, self.view.main_widget.files_widget)
         self.settings_controller = SettingsController(
             self.model, self.view.main_widget.settings_view)
-        self.notification_icon = NotificationController(self.app, self.view)
+        self.notification_controller = NotificationController(self.app, self.view)
 
         # ALGORITMO
-        self.algoritmo = DecisionEngine(self.model, self.notification_icon)
+        self.algoritmo = DecisionEngine(self.model, self.notification_controller)
         self.algoritmo.start()
 
         self.model.settings_model.Sg_model_changed.connect(self.algoritmo.Sl_model_changed)
