@@ -123,17 +123,20 @@ class DecisionEngine(Thread):
                 node_message = os_handler.download_folder(node, path)
                 for item in node_message:
                     item["action"] = Actions.SERVER_NEW_FILE
-                    self.notification_controller.add_notification(item)
+                    if self.notification_controller is not None:
+                        self.notification_controller.add_notification(item)
                 self.logger.info(action.name + " " + name_node)
             elif action == Actions.SERVER_NEW_FILE:
                 path = r["path"]
                 node_message = os_handler.download_file(node, path)
                 node_message["action"] = action
-                self.notification_controller.add_notification(node_message)
+                if self.notification_controller is not None:
+                    self.notification_controller.add_notification(node_message)
                 self.logger.info(action.name + " " + name_node)
             elif action == Actions.SERVER_UPDATE_FILE:
                 path = r["path"]
                 node_message = os_handler.download_file(node, path)
                 node_message["action"] = action
-                self.notification_controller.add_notification(node_message)
+                if self.notification_controller is not None:
+                    self.notification_controller.add_notification(node_message)
                 self.logger.info(action.name + " " + name_node)
