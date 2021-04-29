@@ -49,7 +49,6 @@ jobs:
     - if: runner.os == 'Linux'
       name: Unit Test
       run: |
-        python -m unittest discover -v -s "./tests/algorithm/" -p "*_test.py"
         python -m unittest discover -v -s "./tests/model/" -p "*_test.py"
         python -m unittest discover -v -s "./tests/network/" -p "*_test.py"
         python -m unittest discover -v -s "./tests/" -p "settings_test.py"
