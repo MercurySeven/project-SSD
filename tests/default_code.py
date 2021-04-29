@@ -2,10 +2,10 @@ import os
 import pathlib
 import sys
 import unittest
+import platform
 
 from PySide6.QtCore import QSettings, QCoreApplication
 import requests.exceptions
-from PySide6.QtWidgets import QApplication
 
 from src import settings
 from src.model.algorithm.node import Node, Type
@@ -14,14 +14,16 @@ from src.model.network_model import Status
 from src.network.api_exceptions import APIException
 from src.network.api_implementation import ExceptionsHandler
 
+
 node_name = "CLIENT_NODE"
 
 
 class DefaultCode(unittest.TestCase):
-    try:
-        app = QApplication(sys.argv)
-    except Exception as e:
-        print(e)
+    BLACKLISTED_OS_FOR_CI = ""
+    print("==========================================\n")
+    print(platform.platform())
+    from PySide6.QtWidgets import QApplication
+    app = QApplication(sys.argv)
     ORGANIZATION_NAME = "MercurySeven"
     APPLICATION_NAME = "SSD"
     SYNC_ENV_VARIABLE = "sync_path"
