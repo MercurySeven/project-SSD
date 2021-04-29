@@ -69,33 +69,40 @@ class SetQuotaDiskWidget(QWidget):
 
     @Slot()
     def Sl_model_changed(self):
+
+        # Prendo quota disco con unità e il peso della cartella senza unità (Byte default)
         new_max_quota = self._model.get_quota_disco()
-        _quota = self._model.get_quota_disco_raw()
         _folder_size = self._model.get_size()
 
+        # Converto ad oggetto bitmath il peso della cartella e la quota disco
         folder_size_parsed = bitmath.parse_string(self._model.convert_size(_folder_size))
-        quota_parsed = bitmath.parse_string(self._model.convert_size(_quota))
+        quota_disco_parsed = bitmath.parse_string(new_max_quota)
 
+        # Imposto la textbox che mi dice quanto peso ho occupato su quello disponibile
         self.disk_quota.setText(f"{folder_size_parsed} su {new_max_quota}")
-        max_size_parsed = bitmath.parse_string(new_max_quota)
-        self.dedicated_space.setText(str(max_size_parsed.value))
-        self.sizes_box.setCurrentText(max_size_parsed.unit)
+
+        # Imposto la textbox che richiede input
+        self.dedicated_space.setText(str(quota_disco_parsed.value))
+        # Prendo quanto disco ho disponibile e la sua unità di misura
         free_disk_parsed = bitmath.parse_string(
             self._model.convert_size(self._model.get_free_disk()))
+
         self.populate_size_box(folder_size_parsed, free_disk_parsed)
+        # Imposto l'unità di misura mostrata
+        self.sizes_box.setCurrentText(quota_disco_parsed.unit)
 
         # Prendo dimensione corrente della sync folder e della quota disco
         # e metto in proporzione con quotadisco:100=syncfolder:x
         _progress_bar_max_value = 100
         _tmp = folder_size_parsed.to_Byte().value * _progress_bar_max_value
-        _progress_bar_current_percentage = _tmp / max_size_parsed.to_Byte().value
+        _progress_bar_current_percentage = _tmp / quota_disco_parsed.to_Byte().value
 
         # Inserisco nuovi valori nella progress bar
         self.disk_progress.setRange(0, _progress_bar_max_value)
         self.disk_progress.setValue(_progress_bar_current_percentage)
 
         # Se la cartella occupa più spazio di quanto voluto allora la porto a quanto occupa
-        if quota_parsed < folder_size_parsed:
+        if quota_disco_parsed < folder_size_parsed:
             self.dedicated_space.setText(str(folder_size_parsed.value))
             self.sizes_box.setCurrentText(folder_size_parsed.unit)
             self.Sg_view_changed.emit()
