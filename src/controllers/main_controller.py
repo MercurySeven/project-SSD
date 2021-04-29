@@ -89,6 +89,7 @@ class MainController(QObject):
 
         # Connect per cambiare le viste
         self.view.main_widget.Sg_switch_to_files.connect(self.Sl_switch_to_files)
+        self.view.main_widget.Sg_switch_to_remote.connect(self.Sl_switch_to_remote)
         self.view.main_widget.Sg_switch_to_settings.connect(self.Sl_switch_to_settings)
 
     @Slot()
@@ -105,6 +106,10 @@ class MainController(QObject):
     @Slot()
     def Sl_switch_to_files(self):
         self.view.main_widget.chage_current_view_to_files()
+
+    @Slot()
+    def Sl_switch_to_remote(self):
+        self.view.main_widget.chage_current_view_to_remote()
 
     @Slot()
     def Sl_switch_to_settings(self):

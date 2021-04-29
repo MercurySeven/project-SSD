@@ -11,6 +11,7 @@ from src.view.stylesheets.qssManager import setQss
 from src.view.widgets.sync_widget import SyncWidget
 from .file_view import FileView
 from .settings_view import SettingsView
+from .remote_file_view import RemoteView
 
 
 class MainWindow(QMainWindow):
@@ -37,6 +38,7 @@ class MainWindow(QMainWindow):
 class MainWidget(QWidget):
 
     Sg_switch_to_files = Signal()
+    Sg_switch_to_remote = Signal()
     Sg_switch_to_settings = Signal()
 
     def __init__(self, model: MainModel, parent=None):
@@ -64,18 +66,25 @@ class MainWidget(QWidget):
         self.files_button.setIconSize(QSize(30, 30))
         self.files_button.setCheckable(True)
 
+        self.remote_button = QPushButton(self)
+        self.remote_button.setIcon(QIcon("./assets/icons/copy.png"))
+        self.remote_button.setIconSize(QSize(30, 30))
+        self.remote_button.setCheckable(True)
+
         self.settings_button = QPushButton(self)
         self.settings_button.setIcon(QIcon("./assets/icons/settings.png"))
         self.settings_button.setIconSize(QSize(30, 30))
         self.settings_button.setCheckable(True)
 
         self.files_widget = FileView(self._model.file_model, self)
+        self.remote_widget = RemoteView(self._model.file_model, self)
         self.settings_view = SettingsView(self._model, self)
 
         # stacked
         self.swidget = QStackedWidget()
         self.swidget.setAccessibleName("Stacked")
         self.swidget.addWidget(self.files_widget)
+        self.swidget.addWidget(self.remote_widget)
         self.swidget.addWidget(self.settings_view)
         self.central_view.addWidget(self.swidget)
 
@@ -85,6 +94,7 @@ class MainWidget(QWidget):
         self.menu_laterale.setAlignment(Qt.AlignCenter)
         self.menu_laterale.addWidget(self.sync_widget)
         self.menu_laterale.addWidget(self.files_button)
+        self.menu_laterale.addWidget(self.remote_button)
         self.menu_laterale.addStretch()
         self.menu_laterale.addWidget(self.settings_button)
         self.menu_laterale.setSpacing(0)
@@ -98,6 +108,7 @@ class MainWidget(QWidget):
 
         self.files_button.clicked.connect(self.Sl_file_button_clicked)
         self.files_button.clicked.connect(self._model.file_model.Sl_update_model)
+        self.remote_button.clicked.connect(self.Sl_remote_button_clicked)
         self.settings_button.clicked.connect(self.Sl_settings_button_clicked)
 
         # stylesheet
@@ -112,15 +123,27 @@ class MainWidget(QWidget):
         self.Sg_switch_to_files.emit()
 
     @Slot()
+    def Sl_remote_button_clicked(self):
+        self.Sg_switch_to_remote.emit()
+
+    @Slot()
     def Sl_settings_button_clicked(self):
         self.Sg_switch_to_settings.emit()
 
     def chage_current_view_to_files(self) -> None:
         self.swidget.setCurrentWidget(self.files_widget)
         self.settings_button.setChecked(False)
+        self.remote_button.setChecked(False)
         self.files_button.setChecked(True)
+
+    def chage_current_view_to_remote(self) -> None:
+        self.swidget.setCurrentWidget(self.remote_widget)
+        self.settings_button.setChecked(False)
+        self.remote_button.setChecked(True)
+        self.files_button.setChecked(False)
 
     def chage_current_view_to_settings(self) -> None:
         self.swidget.setCurrentWidget(self.settings_view)
         self.settings_button.setChecked(True)
+        self.remote_button.setChecked(False)
         self.files_button.setChecked(False)
