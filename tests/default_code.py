@@ -56,18 +56,34 @@ class DefaultCode(unittest.TestCase):
         del self.restore_credentials
 
 
-def _get_test_node(name: str = "test", path: str = "test"):
-    updated = 200
-    created = 100
+def _get_test_node(name: str = "test", path: str = "test",
+                   updated: int = 200, created: int = 100):
     return TreeNode(Node(node_name, name,
                          Type.Folder, created, updated, path))
 
 
-def _get_file_test_node(name: str = "test", path: str = "test"):
-    updated = 200
-    created = 100
+def _get_file_test_node(name: str = "test", path: str = "test",
+                        updated: int = 200, created: int = 100):
     return TreeNode(Node(node_name, name,
                          Type.File, created, updated, path))
+
+
+def create_folder_with_folders(folder_list: list = None):
+    root_folder = _get_test_node()
+    if folder_list is None:
+        folder_list = []
+    for el in folder_list:
+        root_folder.add_node(_get_test_node(el))
+    return root_folder
+
+
+def create_folder_with_files(file_list: list = None):
+    root_folder = _get_test_node()
+    if file_list is None:
+        file_list = []
+    for el in file_list:
+        root_folder.add_node(_get_file_test_node(el))
+    return root_folder
 
 
 def _get_default_dict() -> dict:

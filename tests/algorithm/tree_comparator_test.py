@@ -34,16 +34,16 @@ class TreeComparatorTest(default_code.DefaultCode):
         self.assertEquals([first_folder_node], result)
 
     def test_compare_files_equals(self):
-        node = self.create_folder(self.FILE_NAME)
+        node = default_code.create_folder_with_files(self.FILE_NAME)
         result = tree_comparator._compareFiles(node, node)
         # Empty list, nothing to do
         self.assertEquals(result, [])
 
     def test_compare_files_client_new_file(self):
         # Imposto cartella server
-        server_node = self.create_folder(self.FILE_NAME)
+        server_node = default_code.create_folder_with_files(self.FILE_NAME)
         # imposto cartella client
-        client_node = self.create_folder(self.FILE_NAME)
+        client_node = default_code.create_folder_with_files(self.FILE_NAME)
         # Imposto file mancante
         missing_file = default_code._get_file_test_node()
         # Aggiungo file mancante
@@ -57,11 +57,17 @@ class TreeComparatorTest(default_code.DefaultCode):
 
         self.assertEquals(result, exp_result)
 
+    def test_compare_folders_equals(self):
+        node = default_code.create_folder_with_folders(self.FILE_NAME)
+        result = tree_comparator.compareFolders(node, node)
+        # Empty list, nothing to do
+        self.assertEquals(result, [])
+
     def test_compare_files_server_new_file(self):
         # Imposto cartella server
-        server_node = self.create_folder(self.FILE_NAME)
+        server_node = default_code.create_folder_with_files(self.FILE_NAME)
         # imposto cartella client
-        client_node = self.create_folder(self.FILE_NAME)
+        client_node = default_code.create_folder_with_files(self.FILE_NAME)
         # Imposto file mancante
         missing_file = default_code._get_file_test_node()
         # Aggiungo file mancante
@@ -75,10 +81,38 @@ class TreeComparatorTest(default_code.DefaultCode):
 
         self.assertEquals(result, exp_result)
 
-    def create_folder(self, file_list: list = None):
-        root_folder = default_code._get_test_node()
-        if file_list is None:
-            file_list = []
-        for el in file_list:
-            root_folder.add_node(default_code._get_file_test_node(el))
-        return root_folder
+    def test_compare_folders_client_new_folder(self):
+        # Imposto cartella server
+        server_node = default_code.create_folder_with_folders(self.FILE_NAME)
+        # imposto cartella client
+        client_node = default_code.create_folder_with_folders(self.FILE_NAME)
+        # Imposto file mancante
+        missing_file = default_code._get_test_node()
+        # Aggiungo file mancante
+        client_node.add_node(missing_file)
+        result = tree_comparator.compareFolders(client_node, server_node)
+        # expected result
+        exp_result = [{
+            'node': missing_file,
+            'id': 'CLIENT_NODE',
+            'action': Actions.CLIENT_NEW_FOLDER}]
+
+        self.assertEquals(result, exp_result)
+
+    def test_compare_folders_server_new_folder(self):
+        # Imposto cartella server
+        server_node = default_code.create_folder_with_folders(self.FILE_NAME)
+        # imposto cartella client
+        client_node = default_code.create_folder_with_folders(self.FILE_NAME)
+        # Imposto file mancante
+        missing_file = default_code._get_test_node()
+        # Aggiungo file mancante
+        server_node.add_node(missing_file)
+        result = tree_comparator.compareFolders(client_node, server_node)
+        # expected result
+        exp_result = [{
+            'node': missing_file,
+            'path': missing_file.get_payload().path,
+            'action': Actions.SERVER_NEW_FOLDER}]
+
+        self.assertEquals(result, exp_result)
