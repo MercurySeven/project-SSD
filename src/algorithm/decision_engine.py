@@ -4,6 +4,7 @@ import shutil
 from threading import Thread, Condition
 
 from PySide6.QtCore import QSettings, Slot
+from PySide6.QtWidgets import (QSystemTrayIcon)
 
 from src import settings
 from src.controllers.notification_controller import NotificationController
@@ -73,21 +74,19 @@ class DecisionEngine(Thread):
         snap_tree = tree_builder.read_dump_client_filesystem(path)
         client_tree = tree_builder.get_tree_from_system(path)
 
-        check_connection = True
         try:
             if snap_tree is not None:
                 policy = Policy(settings.get_policy())
                 self.compare_snap_client.check(snap_tree, client_tree, self.strategy[policy])
-        except APIException:
-            check_connection = False
 
-        # Se non ho connessione mi fermo e non creo nemmeno un nuovo snapshot
-        if check_connection:
             remote_tree = tree_builder.get_tree_from_node_id()
             self.compute_decision(client_tree, remote_tree, snap_tree is not None)
             tree_builder.dump_client_filesystem(path)
             self.logger.info("Eseguito snapshot dell'albero locale")
             self.notification_controller.send_best_message()
+        except APIException:
+            self.notification_controller.send_message(
+                "Errore di connessione al drive Zextras", icon=QSystemTrayIcon.Warning)
 
     def compute_decision(self,
                          client_tree: TreeNode,

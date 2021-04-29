@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import (QApplication)
+from PySide6.QtWidgets import (QApplication, QSystemTrayIcon)
 from src.view.notification_view import NotificationView
 from src.view.main_view import MainWindow
 from src.algorithm.tree_comparator import Actions
@@ -24,8 +24,11 @@ class NotificationController:
         self.space_error: int = 0
         self.space_message: str = ""
 
-    def send_message(self, msg: str, duration: int = 2000) -> None:
-        self.notification_view.show_message("SSD: Zextras Drive Desktop", msg, duration)
+    def send_message(self,
+                     msg: str,
+                     duration: int = 2000,
+                     icon: QSystemTrayIcon.MessageIcon = QSystemTrayIcon.Information) -> None:
+        self.notification_view.show_message("SSD: Zextras Drive Desktop", msg, duration, icon)
 
     def send_best_message(self, duration: int = 2000) -> None:
         """
@@ -39,13 +42,13 @@ class NotificationController:
         """
 
         if self.network_error > 0:
-            self.send_message(self.network_message, duration)
+            self.send_message(self.network_message, duration=duration)
         elif self.space_error > 0:
-            self.send_message(self.space_message, duration)
+            self.send_message(self.space_message, duration=duration)
         elif self.server_update_file > 0:
-            self.send_message(self.server_update_file_message, duration)
+            self.send_message(self.server_update_file_message, duration=duration)
         elif self.server_new_file > 0:
-            self.send_message(self.server_new_file_message, duration)
+            self.send_message(self.server_new_file_message, duration=duration)
 
         # Una volta inviato il messaggio resettiamo i contatori
         self._reset()
