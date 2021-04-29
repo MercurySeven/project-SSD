@@ -1,6 +1,6 @@
+from PySide6.QtCore import (Signal, Slot)
 from PySide6.QtWidgets import (
     QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton)
-from PySide6.QtCore import (Signal, Slot)
 
 from src.model.network_model import NetworkModel
 
@@ -13,9 +13,11 @@ class SetProfileView(QWidget):
         super(SetProfileView, self).__init__(parent)
         self._model = model
 
+        self.setAccessibleName("InfoBox")
+
         # Titolo
         self._titolo = QLabel('Profilo')
-        self._titolo.setAccessibleName('Subtitle')
+        self._titolo.setAccessibleName('Title2')
 
         self.username = QLabel()
 
