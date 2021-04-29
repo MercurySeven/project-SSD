@@ -22,15 +22,19 @@ def set_notification(notification: NotificationController) -> None:
     notificationcontroller = notification
 
 
-def download_folder(node: TreeNode, path: str) -> None:
-    """Il nodo rappresenta la cartella che non esiste"""
+def download_folder(node: TreeNode, path: str) -> list[dict]:
+    """Il nodo rappresenta la cartella che non esiste,
+    ritorna i risultati dei download che sono stati fatti"""
     path_folder = os.path.join(path, node.get_name())
     os.mkdir(path_folder)
+
+    download_operations_list = []
     for _node in node.get_children():
         if _node.is_directory():
-            download_folder(_node, path_folder)
+            download_operations_list.extend(download_folder(_node, path_folder))
         else:
-            download_file(_node, path_folder)
+            download_operations_list.append(download_file(_node, path_folder))
+    return download_operations_list
 
 
 def upload_folder(node: TreeNode, parent_folder_id: str = "LOCAL_ROOT") -> None:
@@ -44,15 +48,9 @@ def upload_folder(node: TreeNode, parent_folder_id: str = "LOCAL_ROOT") -> None:
             upload_file(_node, parent_folder_id)
 
 
-def download_file(node: TreeNode, path_folder: str) -> None:
+def download_file(node: TreeNode, path_folder: str) -> dict:
     quota_libera = settingsmodel.get_quota_disco_raw() - settingsmodel.get_size()
-    result = networkmodel.download_node(node, path_folder, quota_libera)
-    # result[0] is a bool that represent if the op was successful
-    if not result[0]:
-        # if the op was unsuccessful and we have notification controller
-        # send operation message to user
-        if notificationcontroller is not None:
-            notificationcontroller.send_message(result[1])
+    return networkmodel.download_node(node, path_folder, quota_libera)
 
 
 def upload_file(node: TreeNode, parent_folder_id: str) -> None:
