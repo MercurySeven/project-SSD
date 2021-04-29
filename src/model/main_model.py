@@ -13,4 +13,7 @@ class MainModel:
         self.settings_model = SettingsModel.get_instance()
         self.sync_model = SyncModel.get_instance()
         self.network_model: Api = NetworkModel.get_instance()
+        self.remote_file_model = None
+
+    def set_remote_file_model(self):
         self.remote_file_model = RemoteFileModel.get_instance(self.network_model)

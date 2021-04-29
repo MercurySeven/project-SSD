@@ -56,6 +56,8 @@ class MainController(QObject):
         self.view = MainWindow(self.model)
         self.view.show()
 
+        self.model.set_remote_file_model()
+
         # Creazione delle View principali
         self.sync_controller = SyncController(
             self.model.sync_model, self.view.main_widget.sync_widget)
