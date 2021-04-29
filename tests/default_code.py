@@ -1,9 +1,12 @@
 import os
 import pathlib
+import sys
 import unittest
 
 from PySide6.QtCore import QSettings, QCoreApplication
 import requests.exceptions
+from PySide6.QtWidgets import QApplication
+
 from src import settings
 from src.model.algorithm.node import Node, Type
 from src.model.algorithm.tree_node import TreeNode
@@ -15,6 +18,10 @@ node_name = "CLIENT_NODE"
 
 
 class DefaultCode(unittest.TestCase):
+    try:
+        app = QApplication(sys.argv)
+    except Exception as e:
+        print(e)
     ORGANIZATION_NAME = "MercurySeven"
     APPLICATION_NAME = "SSD"
     SYNC_ENV_VARIABLE = "sync_path"
@@ -122,6 +129,9 @@ class ResultObj:
         yield self.result
 
     def quit(self):
+        pass
+
+    def show(self):
         pass
 
 

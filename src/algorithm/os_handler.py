@@ -1,13 +1,10 @@
 import os
-
-from src.controllers.notification_controller import NotificationController
 from src.model.algorithm.tree_node import TreeNode
 from src.model.network_model import NetworkModel
 from src.model.settings_model import SettingsModel
 
 networkmodel: NetworkModel = None
 settingsmodel: SettingsModel = None
-notificationcontroller: NotificationController = None
 
 
 def set_model(model: NetworkModel, settings_model: SettingsModel) -> None:
@@ -15,11 +12,6 @@ def set_model(model: NetworkModel, settings_model: SettingsModel) -> None:
     global settingsmodel
     networkmodel = model
     settingsmodel = settings_model
-
-
-def set_notification(notification: NotificationController) -> None:
-    global notificationcontroller
-    notificationcontroller = notification
 
 
 def download_folder(node: TreeNode, path: str) -> list[dict]:

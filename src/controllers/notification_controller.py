@@ -6,7 +6,7 @@ from src.algorithm.tree_comparator import Actions
 
 class NotificationController:
 
-    def __init__(self, app: QApplication, view: MainWindow, username):
+    def __init__(self, app: QApplication, view: MainWindow):
         self.notification_view = NotificationView(app)
 
         self.notification_view.exit_option.triggered.connect(app.quit)

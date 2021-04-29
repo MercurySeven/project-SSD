@@ -35,7 +35,6 @@ class DecisionEngine(Thread):
 
         # set istanza di NetworkModel nei moduli per poter gestire i segnali di errore
         os_handler.set_model(main_model.network_model, main_model.settings_model)
-        os_handler.set_notification(notification_controller)
         tree_builder.set_model(main_model.network_model)
 
         self.compare_snap_client = CompareSnapClient()
@@ -123,20 +122,17 @@ class DecisionEngine(Thread):
                 node_message = os_handler.download_folder(node, path)
                 for item in node_message:
                     item["action"] = Actions.SERVER_NEW_FILE
-                    if self.notification_controller is not None:
-                        self.notification_controller.add_notification(item)
+                    self.notification_controller.add_notification(item)
                 self.logger.info(action.name + " " + name_node)
             elif action == Actions.SERVER_NEW_FILE:
                 path = r["path"]
                 node_message = os_handler.download_file(node, path)
                 node_message["action"] = action
-                if self.notification_controller is not None:
-                    self.notification_controller.add_notification(node_message)
+                self.notification_controller.add_notification(node_message)
                 self.logger.info(action.name + " " + name_node)
             elif action == Actions.SERVER_UPDATE_FILE:
                 path = r["path"]
                 node_message = os_handler.download_file(node, path)
                 node_message["action"] = action
-                if self.notification_controller is not None:
-                    self.notification_controller.add_notification(node_message)
+                self.notification_controller.add_notification(node_message)
                 self.logger.info(action.name + " " + name_node)

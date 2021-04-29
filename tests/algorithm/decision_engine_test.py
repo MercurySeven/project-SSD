@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 from src.algorithm.decision_engine import DecisionEngine
 from src.algorithm.tree_comparator import Actions
+from src.controllers.notification_controller import NotificationController
 from src.model.main_model import MainModel
 from src.network.api_exceptions import APIException
 from tests import default_code
@@ -14,7 +15,9 @@ class DecisionEngineTest(default_code.DefaultCode):
         super().setUp()
         self.env_settings = super().get_env_settings()
         self.main_model = MainModel()
-        self.decision_engine = DecisionEngine(self.main_model, None, True)
+        self.notif_controller = NotificationController(
+            default_code.DefaultCode.app, ResultObj("test"))
+        self.decision_engine = DecisionEngine(self.main_model, self.notif_controller, True)
 
     def tearDown(self) -> None:
         super().tearDown()
