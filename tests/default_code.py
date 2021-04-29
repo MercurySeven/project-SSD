@@ -56,11 +56,18 @@ class DefaultCode(unittest.TestCase):
         del self.restore_credentials
 
 
-def _get_test_node():
+def _get_test_node(name: str = "test", path: str = "test"):
     updated = 200
     created = 100
-    return TreeNode(Node(node_name, "test",
-                         Type.Folder, created, updated, "test"))
+    return TreeNode(Node(node_name, name,
+                         Type.Folder, created, updated, path))
+
+
+def _get_file_test_node(name: str = "test", path: str = "test"):
+    updated = 200
+    created = 100
+    return TreeNode(Node(node_name, name,
+                         Type.File, created, updated, path))
 
 
 def _get_default_dict() -> dict:
