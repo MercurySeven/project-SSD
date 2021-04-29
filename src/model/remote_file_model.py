@@ -1,12 +1,12 @@
 from typing import Tuple, Optional
 
-from PySide6.QtCore import (QSettings, Signal, Slot, QObject)
+from PySide6.QtCore import (Signal, Slot, QObject)
 
 from src.algorithm import tree_builder
 from src.model.algorithm.tree_node import TreeNode
+from src.model.network_model import NetworkModel
 from src.model.widgets.directory import Directory
 from src.model.widgets.file import File
-from src.model.network_model import NetworkModel
 
 
 class RemoteFileModel(QObject):
@@ -16,9 +16,9 @@ class RemoteFileModel(QObject):
     __create_key = object()
 
     @classmethod
-    def get_instance(cls):
+    def get_instance(cls, network_model: NetworkModel):
         if RemoteFileModel.__model is None:
-            RemoteFileModel.__model = RemoteFileModel(cls.__create_key)
+            RemoteFileModel.__model = RemoteFileModel(network_model, cls.__create_key)
         return RemoteFileModel.__model
 
     def __init__(self, network_model: NetworkModel, create_key):
@@ -30,6 +30,7 @@ class RemoteFileModel(QObject):
         self.tree = tree_builder.get_tree_from_node_id()
         self.current_folder = Directory(self.tree, self.tree.get_name())
         self.previous_folder = None
+        self.search_node_from_id(self.tree.get_payload().id)
 
     @Slot()
     def Sl_update_model(self) -> None:
@@ -50,7 +51,7 @@ class RemoteFileModel(QObject):
 
         return list_of_files, list_of_dirs
 
-    def set_current_node(self, path) -> None:
+    ''' def set_current_node(self, path) -> None:
         name = path.split('/')[-1]  # ottengo nome folder desiderato
         child = self._search_through_children(name, self.current_folder._node)  # cerco figlio
         if(child):
@@ -59,29 +60,16 @@ class RemoteFileModel(QObject):
         else:
             # imposto genitore come node folder
             self.current_folder._node = self.search_node_from_path(path)
-        self.Sl_update_model()
+        self.Sl_update_model() '''
 
-    def search_node_from_path(self, path: str) -> Optional[TreeNode]:
-        relative_path = path
-        folder_name = self.settings.value("sync_path").split(os.sep)[-1]
-        relative_path = relative_path[relative_path.find(folder_name):]
-        folders = relative_path.split(os.path.sep)
-        curr_node = self.tree
-        if self.tree.get_payload().name == "ROOT":
-            folders = folders[1:]
-            for f in folders:
-                folder_found = self._search_through_children(f, curr_node)
-                if folder_found is None:
-                    return curr_node
-                else:
-                    curr_node = folder_found
-            return curr_node
-        else:
-            return None
+    def search_node_from_id(self, id: str) -> Optional[TreeNode]:
+        n = self.tree.get_children()
+        for i in n:
+            print(i.get_name())
 
-    def _search_through_children(self, name, node) -> Optional[TreeNode]:
+    def _search_through_children(self, id, node) -> Optional[TreeNode]:
         children = node.get_children()
         for i in children:
-            if i.get_payload().name == name:
+            if i.get_payload().id == id:
                 return i
         return None

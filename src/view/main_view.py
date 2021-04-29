@@ -11,7 +11,7 @@ from src.view.stylesheets.qssManager import setQss
 from src.view.widgets.sync_widget import SyncWidget
 from .file_view import FileView
 from .settings_view import SettingsView
-from .remote_file_view import RemoteView
+from .remote_file_view import RemoteFileView
 
 
 class MainWindow(QMainWindow):
@@ -77,7 +77,7 @@ class MainWidget(QWidget):
         self.settings_button.setCheckable(True)
 
         self.files_widget = FileView(self._model.file_model, self)
-        self.remote_widget = RemoteView(self._model.file_model, self)
+        self.remote_widget = RemoteFileView(self._model.file_model, self)
         self.settings_view = SettingsView(self._model, self)
 
         # stacked

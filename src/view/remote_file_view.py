@@ -1,5 +1,5 @@
 from PySide6.QtCore import (QSettings, Slot, Qt, Signal)
-from PySide6.QtWidgets import (QVBoxLayout, QWidget, QScrollArea, QPushButton, QLabel)
+from PySide6.QtWidgets import (QVBoxLayout, QWidget, QScrollArea, QLabel)
 
 from src.model.remote_file_model import RemoteFileModel
 from src.view.layouts.flowlayout import FlowLayout
@@ -7,11 +7,11 @@ from src.view.widgets.directory_widget import DirectoryWidget
 from src.view.widgets.file_widget import FileWidget
 
 
-class RemoteView(QWidget):
+class RemoteFileView(QWidget):
     Sg_update_files_with_new_path = Signal(str)
 
     def __init__(self, model: RemoteFileModel, parent=None):
-        super(RemoteView, self).__init__(parent)
+        super(RemoteFileView, self).__init__(parent)
 
         self.env_settings = QSettings()
         self._model = model

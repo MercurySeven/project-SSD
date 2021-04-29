@@ -11,6 +11,7 @@ from .file_controller import FileController
 from .notification_controller import NotificationController
 from .settings_controller import SettingsController
 from .widgets.sync_controller import SyncController
+from .remote_file_controller import RemoteFileController
 
 
 class MainController(QObject):
@@ -24,6 +25,7 @@ class MainController(QObject):
         self.view = None
         self.sync_controller = None
         self.file_controller = None
+        self.remote_file_controller = None
         self.settings_controller = None
         self.notification_icon = None
         self.watcher = None
@@ -59,6 +61,8 @@ class MainController(QObject):
             self.model.sync_model, self.view.main_widget.sync_widget)
         self.file_controller = FileController(
             self.model.file_model, self.view.main_widget.files_widget)
+        self.remote_file_controller = RemoteFileController(
+            self.model.remote_file_model, self.view.main_widget.remote_widget)
         self.settings_controller = SettingsController(
             self.model, self.view.main_widget.settings_view)
         self.notification_icon = NotificationController(
