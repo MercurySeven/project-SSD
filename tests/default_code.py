@@ -19,11 +19,11 @@ node_name = "CLIENT_NODE"
 
 
 class DefaultCode(unittest.TestCase):
-    BLACKLISTED_OS_FOR_CI = ""
-    print("==========================================\n")
-    print(platform.platform())
-    from PySide6.QtWidgets import QApplication
-    app = QApplication(sys.argv)
+    BLACKLISTED_OS_FOR_CI = "Linux-5.4.0-1046-azure-x86_64-with-glibc2.31"
+    app = None
+    if platform.platform() != BLACKLISTED_OS_FOR_CI:
+        from PySide6.QtWidgets import QApplication
+        app = QApplication(sys.argv)
     ORGANIZATION_NAME = "MercurySeven"
     APPLICATION_NAME = "SSD"
     SYNC_ENV_VARIABLE = "sync_path"
