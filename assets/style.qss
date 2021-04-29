@@ -60,16 +60,22 @@ QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] > QComboBox 
     border-radius: 6px;
     border: 0px;
     padding: 5px;
-
     min-width: 8em;
 }
 
 QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] > QComboBox::drop-down {
     background-color: #783dbd;
+    border-radius: 4px;
+    min-width: 1.5em;
 }
 
 QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] > QComboBox::down-arrow {
     border-image: url(assets/icons/down-arrow.png);
+}
+
+QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] > QComboBox::drop-down:hover {
+    background-color: rgb(190, 190, 190);
+    color: #783dbd;
 }
 
 

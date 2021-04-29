@@ -38,7 +38,6 @@ class SettingsView(QWidget):
 
         self.settingsWindow = QWidget(self)
         self.layout = QVBoxLayout()
-        self.layout.addWidget(self.title)
         self.layout.addWidget(self.set_path_widget)
         self.layout.addWidget(self.set_policy_widget)
         self.layout.addWidget(self.set_sync_time_widget)
@@ -54,5 +53,6 @@ class SettingsView(QWidget):
         # layout
 
         settingsLayout = QVBoxLayout()
+        settingsLayout.addWidget(self.title)
         settingsLayout.addWidget(self.scrollArea)
         self.setLayout(settingsLayout)
