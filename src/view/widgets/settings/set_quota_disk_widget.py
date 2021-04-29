@@ -69,6 +69,10 @@ class SetQuotaDiskWidget(QWidget):
 
     @Slot()
     def Sl_model_changed(self):
+        """
+        Slot collegato ai segnali del model, aggiorna la vista con i nuovi valori
+        :return: None
+        """
 
         # Prendo quota disco con unità e il peso della cartella senza unità (Byte default)
         new_max_quota = self._model.get_quota_disco()
