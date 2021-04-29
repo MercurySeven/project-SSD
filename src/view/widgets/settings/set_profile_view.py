@@ -26,15 +26,23 @@ class SetProfileView(QWidget):
         sub_layout_user.addWidget(self.username)
         sub_layout_user.addStretch()
 
+        self.spaceLabel = QLabel(" ")
+
         # Pulsante logout
         self.logout_button = QPushButton('Logout')
+        self.logout_button.setMaximumWidth(150)
         self.logout_button.clicked.connect(self.Sl_logout)
+
+        self.buttonLayout = QHBoxLayout()
+        self.buttonLayout.addWidget(self.spaceLabel)
+        self.buttonLayout.addWidget(self.logout_button)
+        self.buttonLayout.addWidget(self.spaceLabel)
 
         # Layout
         layout = QVBoxLayout()
         layout.addWidget(self._titolo)
         layout.addLayout(sub_layout_user)
-        layout.addWidget(self.logout_button)
+        layout.addLayout(self.buttonLayout)
 
         self.setLayout(layout)
         self.Sl_model_changed()

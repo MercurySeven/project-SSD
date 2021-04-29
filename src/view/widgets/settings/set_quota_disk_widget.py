@@ -48,9 +48,15 @@ class SetQuotaDiskWidget(QWidget):
         self.populate_size_box(_path_size, _disk_free)
 
         self.change_quota_button = QPushButton("Cambia quota disco")
+        self.change_quota_button.setMaximumWidth(150)
 
         self.change_quota_button.clicked.connect(self.Sl_dedicated_space_changed)
         self.dedicated_space.returnPressed.connect(self.Sl_dedicated_space_changed)
+
+        self.buttonLayout = QHBoxLayout()
+        self.buttonLayout.addWidget(self.spaceLabel)
+        self.buttonLayout.addWidget(self.change_quota_button)
+        self.buttonLayout.addWidget(self.spaceLabel)
 
         set_space_layout = QHBoxLayout()
         set_space_layout.addWidget(self.dedicated_space)
@@ -71,7 +77,7 @@ class SetQuotaDiskWidget(QWidget):
         disk_layout.addWidget(self.disk_progress)
         disk_layout.addWidget(self.spaceLabel)
         disk_layout.addLayout(set_space_layout)
-        disk_layout.addWidget(self.change_quota_button)
+        disk_layout.addLayout(self.buttonLayout)
 
         self.setLayout(disk_layout)
         self.Sl_model_changed()
