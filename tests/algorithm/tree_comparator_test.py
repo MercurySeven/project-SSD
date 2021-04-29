@@ -39,6 +39,50 @@ class TreeComparatorTest(default_code.DefaultCode):
         # Empty list, nothing to do
         self.assertEquals(result, [])
 
+    def test_compare_files_update_server(self):
+        client_node = default_code.create_folder_with_files(self.FILE_NAME)
+        server_node = default_code.create_folder_with_files(self.FILE_NAME, 150)
+
+        result = tree_comparator._compareFiles(client_node, server_node)
+        # expected result
+        x = server_node.get_children()
+        exp_result = [
+            {
+                'node': x[0],
+                'path': 'test',
+                'action': Actions.SERVER_UPDATE_FILE,
+                'snap_last_update': 100
+            },
+            {
+                'node': x[1],
+                'path': 'test',
+                'action': Actions.SERVER_UPDATE_FILE,
+                'snap_last_update': 100
+            }
+        ]
+        self.assertEquals(result, exp_result)
+
+    def test_compare_files_update_client(self):
+        client_node = default_code.create_folder_with_files(self.FILE_NAME, 150)
+        server_node = default_code.create_folder_with_files(self.FILE_NAME)
+
+        result = tree_comparator._compareFiles(client_node, server_node)
+        # expected result
+        x = client_node.get_children()
+        exp_result = [
+            {
+                'node': x[0],
+                'id': 'CLIENT_NODE',
+                'action': Actions.CLIENT_UPDATE_FILE,
+            },
+            {
+                'node': x[1],
+                'id': 'CLIENT_NODE',
+                'action': Actions.CLIENT_UPDATE_FILE,
+            }
+        ]
+        self.assertEquals(result, exp_result)
+
     def test_compare_files_client_new_file(self):
         # Imposto cartella server
         server_node = default_code.create_folder_with_files(self.FILE_NAME)
