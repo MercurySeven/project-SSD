@@ -5,7 +5,7 @@ from PySide6.QtCore import (QSettings, Signal, Slot, QObject)
 
 from src.algorithm import tree_builder
 from src.model.algorithm.tree_node import TreeNode
-from src.model.widgets.directory import Directory
+from src.model.widgets.local_directory import LocalDirectory
 from src.model.widgets.file import File
 
 
@@ -28,7 +28,7 @@ class FileModel(QObject):
         super(FileModel, self).__init__()
         self.settings = QSettings()
         self.tree = tree_builder.get_tree_from_system(self.settings.value("sync_path"))
-        self.current_folder = Directory(self.tree, self.tree.get_name())
+        self.current_folder = LocalDirectory(self.tree, self.tree.get_name())
         self.previous_folder = None
 
     @Slot()
@@ -40,12 +40,12 @@ class FileModel(QObject):
         self.current_folder.update_list_of_content()  # aggiorno lista carelle e file
         self.Sg_model_changed.emit()
 
-    def get_data(self) -> Tuple[list[File], list[Directory]]:
+    def get_data(self) -> Tuple[list[File], list[LocalDirectory]]:
         list_of_files = self.current_folder._files  # lista file dalla dir
         list_of_dirs = self.current_folder._dirs  # lista dir dalla dir
 
         if self.current_folder._node._parent:
-            self.previous_folder = Directory(self.current_folder._node._parent, '..')
+            self.previous_folder = LocalDirectory(self.current_folder._node._parent, '..')
             list_of_dirs.insert(0, self.previous_folder)
 
         return list_of_files, list_of_dirs

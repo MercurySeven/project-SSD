@@ -4,7 +4,7 @@ from PySide6.QtWidgets import (QVBoxLayout, QWidget, QScrollArea, QPushButton, Q
 
 from src.model.file_model import FileModel
 from src.view.layouts.flowlayout import FlowLayout
-from src.view.widgets.directory_widget import DirectoryWidget
+from src.view.widgets.local_directory_widget import LocalDirectoryWidget
 from src.view.widgets.file_widget import FileWidget
 
 
@@ -60,7 +60,7 @@ class FileView(QWidget):
         for i in reversed(range(self.fileLayout.count())):
             self.fileLayout.itemAt(i).widget().setParent(None)
         for i in list_of_dirs:
-            self.fileLayout.addWidget(DirectoryWidget(i, self))
+            self.fileLayout.addWidget(LocalDirectoryWidget(i, self))
         for i in list_of_files:
             self.fileLayout.addWidget(FileWidget(i))
 

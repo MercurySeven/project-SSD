@@ -21,22 +21,12 @@ class DirectoryWidget(QToolButton):
         self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
 
         self.name = dir.get_name()
-        self.path = dir.get_path()
         self.setText(self.name)
 
-        if self.parent is not None:
-            self.Sg_double_clicked.connect(self.parent.Sl_update_files_with_new_path)
+        # if self.parent is not None:
+        #    self.Sg_double_clicked.connect(self.parent.Sl_update_files_with_new_path)
         # add fields to structure
 
     @Slot()
     def Sl_check_double_click(self):
-        if self.timer.isActive():
-            time = self.timer.remainingTime()
-            if time > 0:
-                self.Sg_double_clicked.emit(self.path)
-                self.timer.stop()
-            if time <= 0:
-                self.timer.start(250)
-
-        if self.timer.isActive() is False:
-            self.timer.start(250)
+        pass
