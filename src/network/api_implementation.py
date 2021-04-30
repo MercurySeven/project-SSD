@@ -181,39 +181,28 @@ class ApiImplementation(Api):
             print("NON PUOI CANCELLARE LOCAL_ROOT")
 
     @ExceptionsHandler
-    def download_node(self, node: TreeNode, path: str, quota_libera: float) -> [bool, str]:
-        """
-        Il TreeNode viene scaricato e salvato nel path
-        :param node: node to download
-        :param path: where to download
-        :param quota_libera: how much disk is left
-        :return: tupla [operation_successful, operation_message]
-        """
-        payload = node.get_payload()
-        file_size = self.get_content_from_node(payload.id)["getNode"]["size"]
+    def download_node(self, node: TreeNode, path: str) -> bool:
+        """Il TreeNode viene scaricato e salvato nel path, ritorna un bool a seconda dell'esito"""
         headers = {
             "cookie": self.cookie
         }
-
+        payload = node.get_payload()
         url = f"{self.url_files}{self.get_user_id()}/{payload.id}"
         response = requests.get(url, headers=headers)
-        if quota_libera < file_size:
-            return [False,
-                    "Fallito il download del file %s, aumentare "
-                    "la quota disco o liberare spazio!" % payload.name]
-        elif response.ok:
+
+        if response.ok:
             path = os.path.join(path, payload.name)
             with open(path, "wb") as fh:
                 fh.write(response.content)
             # Cambiare la data di creazione sembra non funzionare
             os.utime(path, (payload.created_at, payload.updated_at))
             self.logger.info(f"Download del file {payload.name}, completato con successo")
-            return [True, "File downloaded"]
+            return True
         else:
             self.logger.info(f"Download del file {payload.name}, fallito")
             # alzo le eccezioni del caso
             self.check_status_code(response)
-            return [False, "Network error"]
+            return False
 
     @ExceptionsHandler
     def upload_node(self, node: TreeNode, parent_id: str = "LOCAL_ROOT"):

@@ -27,7 +27,7 @@ class MainController(QObject):
         self.file_controller = None
         self.remote_file_controller = None
         self.settings_controller = None
-        self.notification_icon = None
+        self.notification_controller = None
         self.watcher = None
         self.algoritmo = None
 
@@ -66,12 +66,10 @@ class MainController(QObject):
             self.model.remote_file_model, self.view.main_widget.remote_widget)
         self.settings_controller = SettingsController(
             self.model, self.view.main_widget.settings_view)
-        self.notification_icon = NotificationController(
-            self.app, self.view, self.model.network_model.get_username())
+        self.notification_controller = NotificationController(self.app, self.view)
 
         # ALGORITMO
-        # TODO: Da spostare nel main model
-        self.algoritmo = DecisionEngine(self.model, self.notification_icon)
+        self.algoritmo = DecisionEngine(self.model, self.notification_controller)
         self.algoritmo.start()
 
         self.model.settings_model.Sg_model_changed.connect(self.algoritmo.Sl_model_changed)
@@ -101,7 +99,6 @@ class MainController(QObject):
     def Sl_path_updated(self):
         self.env_settings.sync()
         self.watcher.reboot()
-        self.notification_icon.send_message("Watcher riavviato")
 
     @Slot()
     def Sl_sync_model_changed(self):

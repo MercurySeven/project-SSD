@@ -1,9 +1,12 @@
 import os
 import pathlib
+import sys
 import unittest
+import platform
 
 from PySide6.QtCore import QSettings, QCoreApplication
 import requests.exceptions
+
 from src import settings
 from src.model.algorithm.node import Node, Type
 from src.model.algorithm.tree_node import TreeNode
@@ -11,10 +14,16 @@ from src.model.network_model import Status
 from src.network.api_exceptions import APIException
 from src.network.api_implementation import ExceptionsHandler
 
+
 node_name = "CLIENT_NODE"
 
 
 class DefaultCode(unittest.TestCase):
+    BLACKLISTED_OS_FOR_CI = "Linux-5.4.0-1046-azure-x86_64-with-glibc2.31"
+    app = None
+    if platform.platform() != BLACKLISTED_OS_FOR_CI:
+        from PySide6.QtWidgets import QApplication
+        app = QApplication(sys.argv)
     ORGANIZATION_NAME = "MercurySeven"
     APPLICATION_NAME = "SSD"
     SYNC_ENV_VARIABLE = "sync_path"
@@ -56,11 +65,34 @@ class DefaultCode(unittest.TestCase):
         del self.restore_credentials
 
 
-def _get_test_node():
-    updated = 200
-    created = 100
-    return TreeNode(Node(node_name, "test",
-                         Type.Folder, created, updated, "test"))
+def _get_test_node(name: str = "test", path: str = "test",
+                   updated: int = 200, created: int = 100):
+    return TreeNode(Node(node_name, name,
+                         Type.Folder, created, updated, path))
+
+
+def _get_file_test_node(name: str = "test", path: str = "test",
+                        updated: int = 200, created: int = 100):
+    return TreeNode(Node(node_name, name,
+                         Type.File, created, updated, path))
+
+
+def create_folder_with_folders(folder_list: list = None, time: int = 100):
+    root_folder = _get_test_node()
+    if folder_list is None:
+        folder_list = []
+    for el in folder_list:
+        root_folder.add_node(_get_test_node(el, el, time, time))
+    return root_folder
+
+
+def create_folder_with_files(file_list: list = None, time: int = 100):
+    root_folder = _get_test_node()
+    if file_list is None:
+        file_list = []
+    for el in file_list:
+        root_folder.add_node(_get_file_test_node(el, el, time, time))
+    return root_folder
 
 
 def _get_default_dict() -> dict:
@@ -122,6 +154,9 @@ class ResultObj:
         yield self.result
 
     def quit(self):
+        pass
+
+    def show(self):
         pass
 
 
