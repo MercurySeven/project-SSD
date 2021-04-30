@@ -1,5 +1,5 @@
 from PySide6.QtCore import (QSettings, Slot, Qt, Signal)
-from PySide6.QtWidgets import (QVBoxLayout, QWidget, QScrollArea, QLabel)
+from PySide6.QtWidgets import (QVBoxLayout, QWidget, QScrollArea, QLabel, QPushButton)
 
 from src.model.remote_file_model import RemoteFileModel
 from src.view.layouts.flowlayout import FlowLayout
@@ -20,6 +20,8 @@ class RemoteFileView(QWidget):
         self.title.setAlignment(Qt.AlignLeft)
         self.title.setAccessibleName("Title")
 
+        self.refresh_button = QPushButton("Refresh", self)
+        self.refresh_button.clicked.connect(self.Sl_refresh_button_clicked)
         # scroll area
         self.scrollArea = QScrollArea()
         self.scrollArea.setAccessibleName("FileScroll")
@@ -38,6 +40,7 @@ class RemoteFileView(QWidget):
 
         layout = QVBoxLayout()
         layout.addWidget(self.title)
+        layout.addWidget(self.refresh_button)
         layout.addWidget(self.scrollArea)
         self.setLayout(layout)
 
@@ -57,3 +60,8 @@ class RemoteFileView(QWidget):
     @Slot(str)
     def Sl_update_files_with_new_id(self, id: str) -> None:
         self.Sg_update_files_with_new_id.emit(id)
+
+    @Slot()
+    def Sl_refresh_button_clicked(self):
+        self._model.folder_queue = ["LOCAL_ROOT"]
+        self.Sl_model_changed()
