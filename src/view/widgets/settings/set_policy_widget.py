@@ -1,6 +1,6 @@
-from PySide6.QtWidgets import (
-    QWidget, QLabel, QRadioButton, QVBoxLayout, QHBoxLayout)
 from PySide6.QtCore import (Signal, Slot)
+from PySide6.QtWidgets import (
+    QWidget, QLabel, QRadioButton, QVBoxLayout)
 
 from src.model.algorithm.policy import Policy
 from src.model.settings_model import SettingsModel
@@ -15,9 +15,17 @@ class SetPolicyWidget(QWidget):
 
         self._model = model
 
+        self.setAccessibleName("InfoBox")
+
         self._titolo = QLabel()
-        self._titolo.setText("Seleziona la politica di gestione dei conflitti")
-        self._titolo.setAccessibleName('Subtitle')
+        self._titolo.setText("Politica di sincronizzazione")
+        self._titolo.setAccessibleName('Title2')
+
+        self.sottotitolo = QLabel()
+        self.sottotitolo.setAccessibleName('Sottotitolo')
+        self.sottotitolo.setText("Cambia la politica di sincronizzazione")
+
+        self.spaceLabel = QLabel(" ")
 
         self.client = QRadioButton("Client")
         self.manual = QRadioButton("Manuale")
@@ -25,8 +33,9 @@ class SetPolicyWidget(QWidget):
 
         layout = QVBoxLayout()
         layout.addWidget(self._titolo)
-
-        sub_layout = QHBoxLayout()
+        layout.addWidget(self.sottotitolo)
+        layout.addWidget(self.spaceLabel)
+        sub_layout = QVBoxLayout()
         sub_layout.addWidget(self.client)
         sub_layout.addWidget(self.manual)
 

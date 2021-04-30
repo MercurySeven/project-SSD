@@ -1,8 +1,8 @@
+import bitmath
 from PySide6.QtCore import (Qt, Signal, Slot)
 from PySide6.QtGui import QDoubleValidator
 from PySide6.QtWidgets import (QWidget, QProgressBar, QLabel,
-                               QVBoxLayout, QLineEdit, QComboBox, QPushButton)
-import bitmath
+                               QVBoxLayout, QHBoxLayout, QLineEdit, QComboBox, QPushButton)
 
 from src.model.settings_model import SettingsModel
 
@@ -18,13 +18,17 @@ class SetQuotaDiskWidget(QWidget):
         self.setAccessibleName("InfoBox")
 
         self.title = QLabel()
-        self.title.setText("Quota disco")
-        self.title.setAccessibleName("Subtitle")
+        self.title.setText("Spazio di archiviazione")
+        self.title.setAccessibleName("Title2")
+
+        self.sottotitolo = QLabel()
+        self.sottotitolo.setAccessibleName('Sottotitolo')
+        self.sottotitolo.setText(
+            "Cambia lo spazio di archiviazione destinato alla cartella sincronizzata")
 
         # Barra riempimento disco
         self.progress_label = QLabel()
-        self.progress_label.setText("Spazio occupato")
-        self.progress_label.setAccessibleName("Subtitle")
+        self.progress_label.setText("Spazio occupato:")
 
         self.disk_progress = QProgressBar()
         self.disk_progress.setFormat("")
@@ -32,33 +36,49 @@ class SetQuotaDiskWidget(QWidget):
         self.disk_quota = QLabel()
 
         # Modifica spazio dedicato
-        self.spaceLabel = QLabel("Spazio dedicato")
-        self.spaceLabel.setAccessibleName("Subtitle")
+        self.spaceLabel = QLabel(" ")
 
         self.dedicated_space = QLineEdit()
         self.dedicated_space.setValidator(QDoubleValidator())
 
         self.sizes_box = QComboBox()
+        self.sizes_box.wheelEvent = lambda event: None
         _path_size = bitmath.parse_string(model.convert_size(model.get_size()))
         _disk_free = bitmath.parse_string(model.convert_size(model.get_free_disk()))
 
         self.populate_size_box(_path_size, _disk_free)
 
         self.change_quota_button = QPushButton("Cambia quota disco")
+        self.change_quota_button.setMaximumWidth(150)
 
         self.change_quota_button.clicked.connect(self.Sl_dedicated_space_changed)
         self.dedicated_space.returnPressed.connect(self.Sl_dedicated_space_changed)
 
+        self.buttonLayout = QHBoxLayout()
+        self.buttonLayout.addWidget(self.spaceLabel)
+        self.buttonLayout.addWidget(self.change_quota_button)
+        self.buttonLayout.addWidget(self.spaceLabel)
+
+        set_space_layout = QHBoxLayout()
+        set_space_layout.addWidget(self.dedicated_space)
+        set_space_layout.addWidget(self.sizes_box)
+
+        quota_layout = QHBoxLayout()
+        quota_layout.setAlignment(Qt.AlignLeft)
+        quota_layout.addWidget(self.progress_label)
+        quota_layout.addWidget(self.disk_quota)
+
         # layout
         disk_layout = QVBoxLayout()
         disk_layout.setAlignment(Qt.AlignLeft)
-        disk_layout.addWidget(self.progress_label)
-        disk_layout.addWidget(self.disk_progress)
-        disk_layout.addWidget(self.disk_quota)
+        disk_layout.addWidget(self.title)
+        disk_layout.addWidget(self.sottotitolo)
         disk_layout.addWidget(self.spaceLabel)
-        disk_layout.addWidget(self.dedicated_space)
-        disk_layout.addWidget(self.sizes_box)
-        disk_layout.addWidget(self.change_quota_button)
+        disk_layout.addLayout(quota_layout)
+        disk_layout.addWidget(self.disk_progress)
+        disk_layout.addWidget(self.spaceLabel)
+        disk_layout.addLayout(set_space_layout)
+        disk_layout.addLayout(self.buttonLayout)
 
         self.setLayout(disk_layout)
         self.Sl_model_changed()
@@ -83,11 +103,11 @@ class SetQuotaDiskWidget(QWidget):
         quota_disco_parsed = bitmath.parse_string(new_max_quota)
 
         # Imposto la textbox che mi dice quanto peso ho occupato su quello disponibile
-        self.disk_quota.setText(f"{folder_size_parsed} su {new_max_quota}")
+        self.disk_quota.setText(f"{folder_size_parsed} su {new_max_quota} in uso")
 
         # Imposto la textbox che richiede input
         self.dedicated_space.setText(str(quota_disco_parsed.value))
-        # Prendo quanto disco ho disponibile e la sua unità di misura
+
         free_disk_parsed = bitmath.parse_string(
             self._model.convert_size(self._model.get_free_disk()))
 

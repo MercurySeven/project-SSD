@@ -1,6 +1,7 @@
+from PySide6.QtCore import (Slot, Signal)
 from PySide6.QtWidgets import (
     QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QFileDialog)
-from PySide6.QtCore import (Slot, Signal)
+
 from src.model.settings_model import SettingsModel
 
 
@@ -11,10 +12,19 @@ class SetPathWidget(QWidget):
         super(SetPathWidget, self).__init__(parent)
 
         self._model = model
+
+        self.setAccessibleName("InfoBox")
+
         self.debug = False
         self.titolo = QLabel()
-        self.titolo.setText("Cartella da sincronizzare")
-        self.titolo.setAccessibleName("Subtitle")
+        self.titolo.setText("Cartella sincronizzata")
+        self.titolo.setAccessibleName("Title2")
+
+        self.sottotitolo = QLabel()
+        self.sottotitolo.setAccessibleName('Sottotitolo')
+        self.sottotitolo.setText("Cambia il path della cartella sincronizzata")
+
+        self.spaceLabel = QLabel(" ")
 
         self.path = QLabel()
         self.path.setText(self._model.get_path())
@@ -24,7 +34,8 @@ class SetPathWidget(QWidget):
 
         layout = QVBoxLayout()
         layout.addWidget(self.titolo)
-
+        layout.addWidget(self.sottotitolo)
+        layout.addWidget(self.spaceLabel)
         sub_layout = QHBoxLayout()
         sub_layout.addWidget(self.path)
         sub_layout.addWidget(self.change_path_button)
