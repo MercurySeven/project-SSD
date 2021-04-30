@@ -5,7 +5,7 @@ from PySide6.QtCore import (Signal, Slot, QObject)
 from src.algorithm import tree_builder
 from src.model.algorithm.tree_node import TreeNode
 from src.model.network_model import NetworkModel
-from src.model.widgets.directory import Directory
+from src.model.widgets.remote_directory import RemoteDirectory
 from src.model.widgets.file import File
 
 
@@ -28,9 +28,9 @@ class RemoteFileModel(QObject):
         super(RemoteFileModel, self).__init__()
         tree_builder.set_model(network_model)
         self.tree = tree_builder.get_tree_from_node_id()
-        self.current_folder = Directory(self.tree, self.tree.get_name())
+        self.current_folder = RemoteDirectory(self.tree, self.tree.get_name())
         self.previous_folder = None
-        self.search_node_from_id(self.tree.get_payload().id)
+        # self.search_node_from_id(self.tree.get_payload().id)
 
     @Slot()
     def Sl_update_model(self) -> None:
@@ -40,12 +40,12 @@ class RemoteFileModel(QObject):
         self.current_folder.update_list_of_content()  # aggiorno lista carelle e file
         self.Sg_model_changed.emit()
 
-    def get_data(self) -> Tuple[list[File], list[Directory]]:
+    def get_data(self) -> Tuple[list[File], list[RemoteDirectory]]:
         list_of_files = self.current_folder._files  # lista file dalla dir
         list_of_dirs = self.current_folder._dirs  # lista dir dalla dir
 
         if self.current_folder._node._parent:
-            self.previous_folder = Directory(self.current_folder._node._parent, '..')
+            self.previous_folder = RemoteDirectory(self.current_folder._node._parent, '..')
             list_of_dirs.insert(0, self.previous_folder)
 
         return list_of_files, list_of_dirs

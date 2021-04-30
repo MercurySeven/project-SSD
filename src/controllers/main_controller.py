@@ -53,10 +53,10 @@ class MainController(QObject):
                 print("Nuova directory: " + self.env_settings.value("sync_path"))
 
         # Create main window
+        self.model.set_remote_file_model()
         self.view = MainWindow(self.model)
         self.view.show()
 
-        self.model.set_remote_file_model()
 
         # Creazione delle View principali
         self.sync_controller = SyncController(

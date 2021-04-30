@@ -10,9 +10,15 @@ class File:
         self._creation_date = self._convert_int_to_date(node.get_payload().created_at)
         self._last_modified_date = self._convert_int_to_date(node.get_updated_at())
         self._file_type = node.get_payload().type
-        self._size = SettingsModel.convert_size(os.stat(node.get_payload().path).st_size)
+        # self._size = SettingsModel.convert_size(os.stat(node.get_payload().path).st_size)
         self._status = 'status'
-        self._path = node.get_payload().path
+        # self._path = node.get_payload().path
+        if node.get_payload().path is None:
+            self._size = None
+            self._path = None
+        else:
+            self._path = node.get_payload().path
+            self._size = SettingsModel.convert_size(os.stat(node.get_payload().path).st_size)
 
     def get_name(self) -> str:
         return self._name

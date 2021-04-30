@@ -77,7 +77,7 @@ class MainWidget(QWidget):
         self.settings_button.setCheckable(True)
 
         self.files_widget = FileView(self._model.file_model, self)
-        self.remote_widget = RemoteFileView(self._model.file_model, self)
+        self.remote_widget = RemoteFileView(self._model.remote_file_model, self)
         self.settings_view = SettingsView(self._model, self)
 
         # stacked
@@ -109,6 +109,7 @@ class MainWidget(QWidget):
         self.files_button.clicked.connect(self.Sl_file_button_clicked)
         self.files_button.clicked.connect(self._model.file_model.Sl_update_model)
         self.remote_button.clicked.connect(self.Sl_remote_button_clicked)
+        self.remote_button.clicked.connect(self._model.remote_file_model.Sl_update_model)
         self.settings_button.clicked.connect(self.Sl_settings_button_clicked)
 
         # stylesheet
