@@ -60,32 +60,20 @@ def _create_node_from_dict(dict: str) -> TreeNode:
     return TreeNode(Node(id, name, type, created_at, updated_at))
 
 
-def get_tree_from_node_id(node_id: str = "LOCAL_ROOT") -> TreeNode:
+def get_tree_from_node_id(node_id: str = "LOCAL_ROOT", complete_tree: bool = True) -> TreeNode:
     """Funzione ricorsiva per costruire l'albero remodo dato un node_id"""
     json = networkmodel.get_content_from_node(node_id)
     folder = _create_node_from_dict(json["getNode"])
     for _file in json["getNode"]["children"]:
         new_node = _create_node_from_dict(_file)
 
-        if new_node.is_directory():
+        if new_node.is_directory() and complete_tree:
             # Fai chiamata web per il nuovo nodo
             folder_tree_node = get_tree_from_node_id(new_node._payload.id)
             folder.add_node(folder_tree_node)
         else:
             folder.add_node(new_node)
 
-    return folder
-
-
-def get_tree_children_from_node_id(node_id: str) -> TreeNode:
-    """Funzione ricorsiva per costruire l'albero remoto con solo i figli
-    ATTENZIONE: L'albero non è completo
-    """
-    json = networkmodel.get_content_from_node(node_id)
-    folder = _create_node_from_dict(json["getNode"])
-    for _file in json["getNode"]["children"]:
-        new_node = _create_node_from_dict(_file)
-        folder.add_node(new_node)
     return folder
 
 
