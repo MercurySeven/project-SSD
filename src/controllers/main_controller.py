@@ -53,7 +53,7 @@ class MainController(QObject):
                 print("Nuova directory: " + self.env_settings.value("sync_path"))
 
         # Create main window
-        self.model.set_remote_file_model()
+        self.model.remote_file_model.set_network_model(self.model.network_model)
         self.view = MainWindow(self.model)
         self.view.show()
 

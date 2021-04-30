@@ -18,18 +18,20 @@ class RemoteFileModel(QObject):
     __create_key = object()
 
     @classmethod
-    def get_instance(cls, network_model: NetworkModel):
+    def get_instance(cls):
         if RemoteFileModel.__model is None:
-            RemoteFileModel.__model = RemoteFileModel(network_model, cls.__create_key)
+            RemoteFileModel.__model = RemoteFileModel(cls.__create_key)
         return RemoteFileModel.__model
 
-    def __init__(self, network_model: NetworkModel, create_key):
+    def __init__(self, create_key):
         assert (create_key == RemoteFileModel.__create_key), \
             "RemoteFileModel objects must be created using NetworkModel.create"
 
         super(RemoteFileModel, self).__init__()
-        tree_builder.set_model(network_model)
         self.folder_queue = ["LOCAL_ROOT"]
+
+    def set_network_model(self, network_model: NetworkModel) -> None:
+        tree_builder.set_model(network_model)
 
     def get_current_tree(self) -> TreeNode:
         return tree_builder.get_tree_from_node_id(self.folder_queue[-1], False)
