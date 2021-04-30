@@ -20,4 +20,18 @@ class DirectoryWidget(QToolButton):
 
     @Slot()
     def Sl_check_double_click(self):
+        success = False
+        if self.timer.isActive():
+            time = self.timer.remainingTime()
+            if time > 0:
+                self.double_clicked_action()
+                success = True
+                self.timer.stop()
+            if time <= 0:
+                self.timer.start(250)
+
+        if self.timer.isActive() is False and success is False:
+            self.timer.start(250)
+
+    def double_clicked_action(self):
         pass
