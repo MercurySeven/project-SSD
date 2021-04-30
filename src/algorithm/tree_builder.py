@@ -29,7 +29,7 @@ def _build_tree_node(path: str, name: str) -> TreeNode:
     created_at = math.trunc(os.stat(path).st_ctime)
     updated_at = math.trunc(os.stat(path).st_mtime)
 
-    return TreeNode(Node(id, name, type, created_at, updated_at, path))
+    return TreeNode(Node(id, name, type, created_at, updated_at, path=path))
 
 
 def get_tree_from_system(path: str,
@@ -57,7 +57,11 @@ def _create_node_from_dict(dict: str) -> TreeNode:
     type = Type.File if dict["type"] == "File" else Type.Folder
     created_at = math.trunc(dict["created_at"] / 1000)
     updated_at = math.trunc(dict["updated_at"] / 1000)
-    return TreeNode(Node(id, name, type, created_at, updated_at))
+    size = 0 if type == Type.Folder else dict["size"]
+    last_editor = None if dict["last_editor"] is None else dict["last_editor"]["email"]
+
+    node = Node(id, name, type, created_at, updated_at, size=size, last_editor=last_editor)
+    return TreeNode(node)
 
 
 def get_tree_from_node_id(node_id: str = "LOCAL_ROOT", complete_tree: bool = True) -> TreeNode:

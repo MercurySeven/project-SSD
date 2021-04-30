@@ -101,12 +101,18 @@ def _get_default_dict() -> dict:
     _type = "File"
     _created = 2000
     _updated = 2000
+    _size = 14
+    _email = "a@a.it"
     thisdict = {
         "id": _id,
         "name": _name,
         "type": _type,
         "created_at": _created,
-        "updated_at": _updated
+        "updated_at": _updated,
+        "size": _size,
+        "last_editor": {
+            "email": _email
+        }
     }
     return thisdict
 
@@ -124,6 +130,7 @@ def _get_tree_dict() -> dict:
             "type": _type,
             "created_at": _created,
             "updated_at": _updated,
+            "last_editor": None,
             "children": [_get_default_dict()]
         }
     }

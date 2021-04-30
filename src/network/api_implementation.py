@@ -108,6 +108,9 @@ class ApiImplementation(Api):
         self.user_id = r.json()['user_info']['id']
         self.cookie = r.json()['auth_token']['cookie']
 
+        # Non cancellare questa linea, è utile per recuperare facilmente il cookie :)
+        print(self.cookie)
+
         self.init_client()
 
     @ExceptionsHandler
