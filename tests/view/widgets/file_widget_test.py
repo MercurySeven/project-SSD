@@ -18,7 +18,7 @@ class FileWidgetTest(default_code.DefaultCode):
         self.file_name = os.path.join(self.path, "prova.txt")
         with open(self.file_name, "w"):
             pass
-        self.tree = _build_tree_node(self.file_name, "prova")
+        self.tree = _build_tree_node(self.file_name, "prova.txt")
         self.file = LocalFile(self.tree)
         self.file_view_test = LocalFileWidget(self.file)
 
