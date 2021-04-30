@@ -59,25 +59,9 @@ class RemoteFileModel(QObject):
 
         return list_of_files, list_of_dirs
 
-    ''' def set_current_node(self, path) -> None:
-        name = path.split('/')[-1]  # ottengo nome folder desiderato
-        child = self._search_through_children(name, self.current_folder._node)  # cerco figlio
-        if(child):
-            # imposto figlio come node folder
-            self.current_folder._node = child
+    def set_current_node(self, id: str) -> None:
+        if id in self.folder_queue:
+            self.folder_queue.remove(id)
         else:
-            # imposto genitore come node folder
-            self.current_folder._node = self.search_node_from_path(path)
-        self.Sl_update_model() '''
-
-    '''def search_node_from_id(self, id: str) -> Optional[TreeNode]:
-        n = self.tree.get_children()
-        for i in n:
-            print(i.get_name())
-
-    def _search_through_children(self, id, node) -> Optional[TreeNode]:
-        children = node.get_children()
-        for i in children:
-            if i.get_payload().id == id:
-                return i
-        return None'''
+            self.folder_queue.append(id)
+        self.Sg_model_changed.emit()
