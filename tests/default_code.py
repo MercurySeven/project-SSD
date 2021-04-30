@@ -111,7 +111,7 @@ def _get_default_dict() -> dict:
         "updated_at": _updated,
         "size": _size,
         "last_editor": {
-            "email": _email,
+            "email": _email
         }
     }
     return thisdict
@@ -130,6 +130,7 @@ def _get_tree_dict() -> dict:
             "type": _type,
             "created_at": _created,
             "updated_at": _updated,
+            "last_editor": None,
             "children": [_get_default_dict()]
         }
     }
