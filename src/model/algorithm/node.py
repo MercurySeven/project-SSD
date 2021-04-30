@@ -15,11 +15,16 @@ class Node:
                  type: Type,
                  created_at: int,
                  updated_at: int,
-                 path: str = None):
-        # Un nodo con path = None è un nodo cloud
+                 path: str = None,
+                 size: int = 0,
+                 last_editor: str = None):
+
         self.id: str = id
         self.name: str = name
         self.type: Type = type
         self.created_at: int = created_at
         self.updated_at: int = updated_at
-        self.path: str = path
+
+        self.path: str = path  # E' None se è un nodo remoto
+        self.size: int = size  # Se il nodo è cartella questo valore è 0
+        self.last_editor: str = last_editor  # E' None se è un nodo locale
