@@ -9,8 +9,8 @@ class RemoteFileController:
         self._view = view
         self._model.Sg_model_changed.connect(self._view.Sl_model_changed)
         # Connect per caricare il contenuto della cartella selezionata
-        self._view.Sg_update_files_with_new_path.connect(self.Sl_update_files_with_new_path)
+        self._view.Sg_update_files_with_new_id.connect(self.Sl_update_files_with_new_id)
 
     @Slot(str)
-    def Sl_update_files_with_new_path(self, path: str) -> None:
-        self._model.set_current_node(path)
+    def Sl_update_files_with_new_id(self, id: str) -> None:
+        self._model.set_current_node(id)

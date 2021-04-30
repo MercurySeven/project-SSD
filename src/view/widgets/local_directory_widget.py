@@ -6,9 +6,11 @@ from PySide6.QtCore import Slot
 class LocalDirectoryWidget(DirectoryWidget):
 
     def __init__(self, dir: LocalDirectory, parent=None):
-        super(LocalDirectoryWidget, self).__init__(dir, parent)
+        super(LocalDirectoryWidget, self).__init__()
         self.path = dir.get_path()
-
+        self.parent = parent
+        self.name = dir.get_name()
+        self.setText(self.name)
         if self.parent is not None:
             self.Sg_double_clicked.connect(self.parent.Sl_update_files_with_new_path)
 

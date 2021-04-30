@@ -1,21 +1,11 @@
-from src.model.algorithm.node import Type
 from src.model.algorithm.tree_node import TreeNode
-from src.model.widgets.file import File
-from src.model.widgets.directory import Directory
 
 
-class RemoteDirectory(Directory):
+class RemoteDirectory:
     def __init__(self, tree: TreeNode, override_name: str = None):
-        super().__init__(tree, override_name)
+        self._name = tree.get_name() if override_name is None else override_name
+        self.id = tree.get_payload().id
+        self._node = tree.get_payload()
 
-    def update_list_of_content(self) -> None:
-        self._files.clear()
-        self._dirs.clear()
-        #if self._node.get_children is None:
-        #    return
-        content = self._node.get_children()
-        for entry in content:
-            if entry.get_payload().type == Type.File:
-                self._files.append(File(entry))
-            else:
-                self._dirs.append(RemoteDirectory(entry))
+    def get_name(self):
+        return self._name

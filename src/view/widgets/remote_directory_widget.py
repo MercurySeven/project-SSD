@@ -6,11 +6,13 @@ from PySide6.QtCore import Slot
 class RemoteDirectoryWidget(DirectoryWidget):
 
     def __init__(self, dir: RemoteDirectory, parent=None):
-        super(RemoteDirectoryWidget, self).__init__(dir, parent)
-        self.id = dir._node.get_payload().id
-
+        super(RemoteDirectoryWidget, self).__init__()
+        self.parent = parent
+        self.id = dir._node.id
+        self.name = dir.get_name()
+        self.setText(self.name)
         if self.parent is not None:
-            self.Sg_double_clicked.connect(self.parent.Sl_update_files_with_new_path)
+            self.Sg_double_clicked.connect(self.parent.Sl_update_files_with_new_id)
 
     @Slot()
     def Sl_check_double_click(self):

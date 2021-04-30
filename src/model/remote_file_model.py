@@ -1,13 +1,14 @@
-from typing import Tuple, Optional
+from typing import Tuple
 
 from PySide6.QtCore import (Signal, Slot, QObject)
 
 from src.algorithm import tree_builder
+from src.model.algorithm.node import Type, Node
 from src.model.algorithm.tree_node import TreeNode
 from src.model.network_model import NetworkModel
-from src.model.widgets.remote_directory import RemoteDirectory
 from src.model.widgets.file import File
-from src.model.algorithm.node import Type
+from src.model.widgets.remote_directory import RemoteDirectory
+from src.model.widgets.remote_file import RemoteFile
 
 
 class RemoteFileModel(QObject):
@@ -30,33 +31,31 @@ class RemoteFileModel(QObject):
         tree_builder.set_model(network_model)
         self.folder_queue = ["LOCAL_ROOT"]
 
-        self.tree = tree_builder.get_tree_children_from_node_id("LOCAL_ROOT")
-        # self.search_node_from_id(self.tree.get_payload().id)
+        self.tree = self.get_current_tree()
 
     @Slot()
     def Sl_update_model(self) -> None:
         # ricreo tree dalla root
-        self.tree = tree_builder.get_tree_from_node_id()
-
+        # self.tree = tree_builder.get_tree_from_node_id()
         self.Sg_model_changed.emit()
 
-    def get_current_tree(self):
-        self.tree = tree_builder.get_tree_children_from_node_id(self.folder_queue[-1])
+    def get_current_tree(self) -> TreeNode:
+        return tree_builder.get_tree_from_node_id(self.folder_queue[-1], False)
 
     def get_data(self) -> Tuple[list[File], list[RemoteDirectory]]:
         list_of_files = []
         list_of_dirs = []
 
-        content = self.tree
-        for entry in content:
+        for entry in self.get_current_tree().get_children():
             if entry.get_payload().type == Type.File:
-                list_of_files.append(File(entry))
+                list_of_files.append(RemoteFile(entry))
             else:
                 list_of_dirs.append(RemoteDirectory(entry))
 
         if self.folder_queue[-1] != "LOCAL_ROOT":
-            self.previous_folder = RemoteDirectory(self.current_folder._node._parent, '..')
-            list_of_dirs.insert(0, self.previous_folder)
+            previous_folder = RemoteDirectory(
+                TreeNode(Node(self.folder_queue[-1], '..', Type.Folder, None, None)))
+            list_of_dirs.insert(0, previous_folder)
 
         return list_of_files, list_of_dirs
 

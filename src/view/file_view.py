@@ -5,7 +5,7 @@ from PySide6.QtWidgets import (QVBoxLayout, QWidget, QScrollArea, QPushButton, Q
 from src.model.file_model import FileModel
 from src.view.layouts.flowlayout import FlowLayout
 from src.view.widgets.local_directory_widget import LocalDirectoryWidget
-from src.view.widgets.file_widget import FileWidget
+from src.view.widgets.local_file_widget import LocalFileWidget
 
 
 class FileView(QWidget):
@@ -62,7 +62,7 @@ class FileView(QWidget):
         for i in list_of_dirs:
             self.fileLayout.addWidget(LocalDirectoryWidget(i, self))
         for i in list_of_files:
-            self.fileLayout.addWidget(FileWidget(i))
+            self.fileLayout.addWidget(LocalFileWidget(i))
 
     @Slot(str)
     def Sl_update_files_with_new_path(self, path: str) -> None:

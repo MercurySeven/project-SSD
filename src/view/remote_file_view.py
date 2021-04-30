@@ -3,8 +3,8 @@ from PySide6.QtWidgets import (QVBoxLayout, QWidget, QScrollArea, QLabel)
 
 from src.model.remote_file_model import RemoteFileModel
 from src.view.layouts.flowlayout import FlowLayout
-from src.view.widgets.directory_widget import DirectoryWidget
-from src.view.widgets.file_widget import FileWidget
+from src.view.widgets.remote_directory_widget import RemoteDirectoryWidget
+from src.view.widgets.remote_file_widget import RemoteFileWidget
 
 
 class RemoteFileView(QWidget):
@@ -50,9 +50,9 @@ class RemoteFileView(QWidget):
         for i in reversed(range(self.fileLayout.count())):
             self.fileLayout.itemAt(i).widget().setParent(None)
         for i in list_of_dirs:
-            self.fileLayout.addWidget(DirectoryWidget(i, self))
+            self.fileLayout.addWidget(RemoteDirectoryWidget(i, self))
         for i in list_of_files:
-            self.fileLayout.addWidget(FileWidget(i))
+            self.fileLayout.addWidget(RemoteFileWidget(i))
 
     @Slot(str)
     def Sl_update_files_with_new_id(self, id: str) -> None:
