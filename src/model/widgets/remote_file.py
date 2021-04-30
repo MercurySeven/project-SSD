@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from src.model.algorithm.tree_node import TreeNode
 from src.model.widgets.file import File
 
@@ -12,7 +10,3 @@ class RemoteFile(File):
 
     def get_status(self) -> str:
         return self._status
-
-    @staticmethod
-    def _convert_int_to_date(time: int) -> str:
-        return datetime.fromtimestamp(time).strftime("%H:%M:%S %d/%m/%Y")

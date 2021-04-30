@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from src.model.algorithm.tree_node import TreeNode
 
 

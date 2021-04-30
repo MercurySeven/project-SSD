@@ -13,5 +13,5 @@ class LocalDirectoryWidget(DirectoryWidget):
         if self.parent is not None:
             self.Sg_double_clicked.connect(self.parent.Sl_update_files_with_new_path)
 
-    def double_clicked_action(self):
+    def double_clicked_action(self) -> None:
         self.Sg_double_clicked.emit(self.path)
