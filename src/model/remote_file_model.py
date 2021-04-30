@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from PySide6.QtCore import (Signal, Slot, QObject)
+from PySide6.QtCore import (Signal, QObject)
 
 from src.algorithm import tree_builder
 from src.model.algorithm.node import Type, Node
@@ -30,14 +30,6 @@ class RemoteFileModel(QObject):
         super(RemoteFileModel, self).__init__()
         tree_builder.set_model(network_model)
         self.folder_queue = ["LOCAL_ROOT"]
-
-        self.tree = self.get_current_tree()
-
-    @Slot()
-    def Sl_update_model(self) -> None:
-        # ricreo tree dalla root
-        # self.tree = tree_builder.get_tree_from_node_id()
-        self.Sg_model_changed.emit()
 
     def get_current_tree(self) -> TreeNode:
         return tree_builder.get_tree_from_node_id(self.folder_queue[-1], False)
