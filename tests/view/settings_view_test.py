@@ -31,8 +31,8 @@ class SettingsViewTest(default_code.DefaultCode):
 
     def test_defaults(self):
         """ Test the path widget in the default state """
-        self.assertEqual(self.path_test.titolo.text(), "Cartella da sincronizzare")
-        self.assertEqual(self.path_test.titolo.accessibleName(), "Subtitle")
+        self.assertEqual(self.path_test.titolo.text(), "Cartella sincronizzata")
+        self.assertEqual(self.path_test.titolo.accessibleName(), "Title2")
         path = ""
         if self.main_model.settings_model.get_path() is not None:
             path = self.main_model.settings_model.get_path()
@@ -43,17 +43,17 @@ class SettingsViewTest(default_code.DefaultCode):
         self.assertTrue(self.policy_test.client.isChecked())
         self.assertFalse(self.policy_test.manual.isChecked())
         self.assertEqual(self.policy_test._titolo.text(),
-                         "Seleziona la politica di gestione dei conflitti")
-        self.assertEqual(self.policy_test._titolo.accessibleName(), 'Subtitle')
+                         "Politica di sincronizzazione")
+        self.assertEqual(self.policy_test._titolo.accessibleName(), 'Title2')
         self.assertEqual(self.policy_test.client.text(), "Client")
         self.assertEqual(self.policy_test.manual.text(), "Manuale")
 
         """ Test the quota disk widget in the default state """
         self.assertEqual(self.quota_test.accessibleName(), "InfoBox")
-        self.assertEqual(self.quota_test.title.text(), "Quota disco")
-        self.assertEqual(self.quota_test.title.accessibleName(), "Subtitle")
-        self.assertEqual(self.quota_test.progress_label.text(), "Spazio occupato")
-        self.assertEqual(self.quota_test.progress_label.accessibleName(), "Subtitle")
+        self.assertEqual(self.quota_test.title.text(), "Spazio di archiviazione")
+        self.assertEqual(self.quota_test.title.accessibleName(), "Title2")
+        self.assertEqual(self.quota_test.progress_label.text(), "Spazio occupato:")
+        self.assertEqual(self.quota_test.progress_label.accessibleName(), "")
 
     # patch is used to "make and empty shell" of the method passed so we can just check if
     # the methods gets called or not
@@ -113,7 +113,7 @@ class SettingsViewTest(default_code.DefaultCode):
         value = self.main_model.settings_model.convert_size(
             self.main_model.settings_model.get_size())
         new_max_quota = self.main_model.settings_model.get_quota_disco()
-        self.assertEqual(self.quota_test.disk_quota.text(), f"{value} su {new_max_quota}")
+        self.assertEqual(self.quota_test.disk_quota.text(), f"{value} su {new_max_quota} in uso")
 
 
 if __name__ == "__main__":

@@ -23,17 +23,26 @@ class SetSyncTimeWidget(QWidget):
             self._time_in_sec.append(time_int)
 
         self._model = model
-
+        self.setAccessibleName('InfoBox')
         self._titolo = QLabel()
-        self._titolo.setText("Seleziona finestra temporale per la sincronizzazione")
-        self._titolo.setAccessibleName('Subtitle')
+        self._titolo.setText("Finestra Temporale")
+        self._titolo.setAccessibleName('Title2')
+
+        self.sottotitolo = QLabel()
+        self.sottotitolo.setAccessibleName('Sottotitolo')
+        self.sottotitolo.setText("Seleziona finestra temporale per la sincronizzazione")
+
+        self.spaceLabel = QLabel(" ")
 
         self.time_box = QComboBox()
+        self.time_box.wheelEvent = lambda event: None
         self.time_box.addItems(self._time_list)
         self.Sl_model_changed()
 
         layout = QVBoxLayout()
         layout.addWidget(self._titolo)
+        layout.addWidget(self.sottotitolo)
+        layout.addWidget(self.spaceLabel)
         layout.addWidget(self.time_box)
 
         self.setLayout(layout)
