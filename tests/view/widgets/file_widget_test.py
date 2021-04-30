@@ -2,10 +2,10 @@ import os
 import time
 
 from src.algorithm.tree_builder import _build_tree_node
-from src.model.widgets.file import File
-from src.view.widgets.file_widget import FileWidget
+from src.model.widgets.local_file import LocalFile
 from unittest.mock import patch
 
+from src.view.widgets.local_file_widget import LocalFileWidget
 from tests import default_code
 
 
@@ -19,8 +19,8 @@ class FileWidgetTest(default_code.DefaultCode):
         with open(self.file_name, "w"):
             pass
         self.tree = _build_tree_node(self.file_name, "prova")
-        self.file = File(self.tree)
-        self.file_view_test = FileWidget(self.file)
+        self.file = LocalFile(self.tree)
+        self.file_view_test = LocalFileWidget(self.file)
 
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""
