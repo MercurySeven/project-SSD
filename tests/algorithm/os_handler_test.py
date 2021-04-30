@@ -56,9 +56,9 @@ class OsHandlerTest(default_code.DefaultCode):
         super().tearDown()
 
     def test_set_model(self):
-        os_handler.set_model(None)
+        os_handler.set_network_model(None)
         self.assertIsNone(os_handler.networkmodel)
-        os_handler.set_model(self.main_model.network_model)
+        os_handler.set_network_model(self.main_model.network_model)
         self.assertEqual(os_handler.networkmodel, self.main_model.network_model)
 
     @patch('src.model.network_model.NetworkModel.download_node', return_value=[True, "test"])
