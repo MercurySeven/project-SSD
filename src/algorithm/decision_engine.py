@@ -11,6 +11,7 @@ from src.controllers.notification_controller import NotificationController
 from src.model.algorithm.policy import Policy
 from src.model.algorithm.tree_node import TreeNode
 from src.model.main_model import MainModel
+from src.model.settings_model import SettingsModel
 from src.network.api_exceptions import APIException
 from . import tree_builder, tree_comparator, os_handler
 from .compare_snap_client import CompareSnapClient
@@ -30,12 +31,14 @@ class DecisionEngine(Thread):
         self.setName("Algoritmo V3")
         self.setDaemon(True)
         self.env_settings = QSettings()
-        self.refresh: int = (lambda: main_model.settings_model.get_sync_time())
+        self.settings_model: SettingsModel = main_model.settings_model
+
+        self.refresh: int = (lambda: self.settings_model.get_sync_time())
         self.running = running
         self.notification_controller = notification_controller
 
         # set istanza di NetworkModel nei moduli per poter gestire i segnali di errore
-        os_handler.set_model(main_model.network_model, main_model.settings_model)
+        os_handler.set_network_model(main_model.network_model)
         tree_builder.set_model(main_model.network_model)
 
         self.compare_snap_client = CompareSnapClient()
@@ -118,20 +121,15 @@ class DecisionEngine(Thread):
                     self.logger.info(f"Nuovo file da caricare nel server: {name_node}")
             elif action == Actions.SERVER_NEW_FOLDER:
                 path = r["path"]
-                node_message = os_handler.download_folder(node, path)
+                quota_libera = self.settings_model.get_quota_libera()
+                node_message = os_handler.download_folder(node, path, quota_libera)
                 for item in node_message:
                     item["action"] = Actions.SERVER_NEW_FILE
                     self.notification_controller.add_notification(item)
                 self.logger.info(action.name + " " + name_node)
-            elif action == Actions.SERVER_NEW_FILE:
+            elif action == Actions.SERVER_NEW_FILE or action == Actions.SERVER_UPDATE_FILE:
                 path = r["path"]
-                node_message = os_handler.download_file(node, path)
-                node_message["action"] = action
-                self.notification_controller.add_notification(node_message)
-                self.logger.info(action.name + " " + name_node)
-            elif action == Actions.SERVER_UPDATE_FILE:
-                path = r["path"]
-                node_message = os_handler.download_file(node, path)
+                node_message = os_handler.download_file(node, path, quota_libera)
                 node_message["action"] = action
                 self.notification_controller.add_notification(node_message)
                 self.logger.info(action.name + " " + name_node)

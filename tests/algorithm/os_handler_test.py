@@ -15,7 +15,7 @@ class OsHandlerTest(default_code.DefaultCode):
         super().setUp()
         self.env_settings = super().get_env_settings()
         self.main_model = MainModel()
-        os_handler.set_model(self.main_model.network_model, self.main_model.settings_model)
+        os_handler.set_network_model(self.main_model.network_model)
 
         self.original_path = self.env_settings.value(super().SYNC_ENV_VARIABLE)
         self.folder_name = "test"
@@ -56,9 +56,9 @@ class OsHandlerTest(default_code.DefaultCode):
         super().tearDown()
 
     def test_set_model(self):
-        os_handler.set_model(None, None)
+        os_handler.set_model(None)
         self.assertIsNone(os_handler.networkmodel)
-        os_handler.set_model(self.main_model.network_model, self.main_model.settings_model)
+        os_handler.set_model(self.main_model.network_model)
         self.assertEqual(os_handler.networkmodel, self.main_model.network_model)
 
     @patch('src.model.network_model.NetworkModel.download_node', return_value=[True, "test"])
@@ -69,7 +69,8 @@ class OsHandlerTest(default_code.DefaultCode):
                                   Type.Folder, created, updated, self.path))
         test_node.add_node(TreeNode(Node("CLIENT_NODE", self.file_name,
                                          Type.File, created, updated, self.path)))
-        os_handler.download_folder(test_node, self.path)
+        quota_libera = self.main_model.settings_model.get_quota_libera()
+        os_handler.download_folder(test_node, self.path, quota_libera)
         mocked_fun.assert_called_once()
         self.assertTrue(os.path.exists(os.path.join(self.path, self.folder_name)))
 
@@ -80,7 +81,8 @@ class OsHandlerTest(default_code.DefaultCode):
                                   Type.Folder, created, updated, self.path))
         test_node.add_node(TreeNode(Node("CLIENT_NODE", self.folder_name,
                                          Type.Folder, created, updated, self.path)))
-        os_handler.download_folder(test_node, self.path)
+        quota_libera = self.main_model.settings_model.get_quota_libera()
+        os_handler.download_folder(test_node, self.path, quota_libera)
         folder_path = os.path.join(self.path, self.folder_name)
         inner_folder_path = os.path.join(folder_path, self.folder_name)
         self.assertTrue(os.path.exists(folder_path))
