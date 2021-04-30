@@ -42,13 +42,13 @@ class NotificationController:
         """
 
         if self.network_error > 0:
-            self.send_message(self.network_message, duration=duration)
+            self.send_message(self.network_message, duration, QSystemTrayIcon.Warning)
         elif self.space_error > 0:
-            self.send_message(self.space_message, duration=duration)
+            self.send_message(self.space_message, duration, QSystemTrayIcon.Warning)
         elif self.server_update_file > 0:
-            self.send_message(self.server_update_file_message, duration=duration)
+            self.send_message(self.server_update_file_message, duration)
         elif self.server_new_file > 0:
-            self.send_message(self.server_new_file_message, duration=duration)
+            self.send_message(self.server_new_file_message, duration)
 
         # Una volta inviato il messaggio resettiamo i contatori
         self._reset()
