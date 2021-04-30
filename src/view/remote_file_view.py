@@ -8,7 +8,7 @@ from src.view.widgets.file_widget import FileWidget
 
 
 class RemoteFileView(QWidget):
-    Sg_update_files_with_new_path = Signal(str)
+    Sg_update_files_with_new_id = Signal(str)
 
     def __init__(self, model: RemoteFileModel, parent=None):
         super(RemoteFileView, self).__init__(parent)
@@ -55,5 +55,5 @@ class RemoteFileView(QWidget):
             self.fileLayout.addWidget(FileWidget(i))
 
     @Slot(str)
-    def Sl_update_files_with_new_path(self, path: str) -> None:
-        self.Sg_update_files_with_new_path.emit(path)
+    def Sl_update_files_with_new_id(self, id: str) -> None:
+        self.Sg_update_files_with_new_id.emit(id)

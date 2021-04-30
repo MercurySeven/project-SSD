@@ -7,7 +7,7 @@ class RemoteDirectoryWidget(DirectoryWidget):
 
     def __init__(self, dir: RemoteDirectory, parent=None):
         super(RemoteDirectoryWidget, self).__init__(dir, parent)
-        self.path = dir.get_path()
+        self.id = dir._node.get_payload().id
 
         if self.parent is not None:
             self.Sg_double_clicked.connect(self.parent.Sl_update_files_with_new_path)
@@ -18,7 +18,7 @@ class RemoteDirectoryWidget(DirectoryWidget):
         if self.timer.isActive():
             time = self.timer.remainingTime()
             if time > 0:
-                self.Sg_double_clicked.emit(self.path)
+                self.Sg_double_clicked.emit(self.id)
                 success = True
                 self.timer.stop()
             if time <= 0:
