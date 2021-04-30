@@ -57,9 +57,9 @@ class OsHandlerTest(default_code.DefaultCode):
 
     def test_set_model(self):
         os_handler.set_network_model(None)
-        self.assertIsNone(os_handler.networkmodel)
+        self.assertIsNone(os_handler.network_model)
         os_handler.set_network_model(self.main_model.network_model)
-        self.assertEqual(os_handler.networkmodel, self.main_model.network_model)
+        self.assertEqual(os_handler.network_model, self.main_model.network_model)
 
     @patch('src.model.network_model.NetworkModel.download_node', return_value=[True, "test"])
     def test_download_folder_with_file(self, mocked_fun):
