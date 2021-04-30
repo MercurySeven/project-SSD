@@ -46,7 +46,6 @@ class SettingsController:
     def Sl_view_sync_time_changed(self):
         time = self._view.set_sync_time_widget.time_box.currentText()
         time_int = int(re.search(r'\d+', time).group())
-        print(time_int)
         if 'm' in time:
             time_int = time_int * 60
         if 'h' in time:

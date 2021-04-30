@@ -20,5 +20,9 @@ class NotificationView(QSystemTrayIcon):
 
         self.setContextMenu(menu)
 
-    def show_message(self, title: str, msg: str, duration: int = 1000):
-        self.showMessage(title, msg, msecs=duration)
+    def show_message(self,
+                     title: str,
+                     msg: str,
+                     duration: int = 1000,
+                     icon: QSystemTrayIcon.MessageIcon = QSystemTrayIcon.Information) -> None:
+        self.showMessage(title, msg, msecs=duration, icon=icon)
