@@ -26,6 +26,7 @@ class FileWidget(QToolButton):
         self.extension = self.get_extension()
 
         self.set_icon()
+        self.setText(self.name)
 
         self.setText(self.name)
 

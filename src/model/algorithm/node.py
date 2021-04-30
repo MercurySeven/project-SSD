@@ -26,5 +26,5 @@ class Node:
         self.updated_at: int = updated_at
 
         self.path: str = path  # E' None se è un nodo remoto
-        self.size: int = size  # Se il nodo è cartella questo valore è 0
+        self.size: int = size  # Se il nodo è cartella questo valore è 0, only remote
         self.last_editor: str = last_editor  # E' None se è un nodo locale

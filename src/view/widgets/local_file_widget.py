@@ -13,9 +13,11 @@ class LocalFileWidget(FileWidget):
         self.size = file.get_size()
         self.path = file.get_path()
 
-        self.setText(self.name)
-        self.setToolTip(
-            f"Nome: {self.name}\nUltima modifica: {self.last_modified_date}\nSize: {self.size}")
+        tooltip = (f"Nome: {self.name}\n"
+                   f"Ultima modifica: {self.last_modified_date}\n"
+                   f"Dimensioni: {self.size}")
+
+        self.setToolTip(tooltip)
 
     @Slot()
     def Sl_on_double_click(self):

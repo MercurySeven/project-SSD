@@ -9,9 +9,15 @@ class RemoteFileWidget(FileWidget):
         super(RemoteFileWidget, self).__init__(file)
 
         self.status = file.get_status()
+        self.size = file.get_size()
+        self.last_editor = file.get_last_editor()
 
-        self.setText(self.name)
-        self.setToolTip(f"Nome: {self.name}\nUltima modifica: {self.last_modified_date}")
+        tooltip = (f"Nome: {self.name}\n"
+                   f"Ultima modifica: {self.last_modified_date}\n"
+                   f"Dimensioni: {self.size}\n"
+                   f"Ultimo editor: {self.last_editor}")
+
+        self.setToolTip(tooltip)
 
     @Slot()
     def Sl_on_double_click(self):
