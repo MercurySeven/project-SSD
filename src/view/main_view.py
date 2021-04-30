@@ -4,14 +4,14 @@ from PySide6 import QtCore
 from PySide6.QtCore import (Signal, Slot, QSize, Qt)
 from PySide6.QtGui import (QIcon)
 from PySide6.QtWidgets import (
-    QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QStackedWidget, QPushButton)
+    QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QStackedWidget, QPushButton, QLabel)
 
 from src.model.main_model import MainModel
 from src.view.stylesheets.qssManager import setQss
 from src.view.widgets.sync_widget import SyncWidget
 from .file_view import FileView
-from .settings_view import SettingsView
 from .remote_file_view import RemoteFileView
+from .settings_view import SettingsView
 
 
 class MainWindow(QMainWindow):
@@ -62,19 +62,21 @@ class MainWidget(QWidget):
         self.sync_widget = SyncWidget(self._model.sync_model)
 
         self.files_button = QPushButton(self)
-        self.files_button.setIcon(QIcon("./assets/icons/copy.png"))
-        self.files_button.setIconSize(QSize(30, 30))
+        self.files_button.setIcon(QIcon("./assets/icons/Locali.png"))
+        self.files_button.setIconSize(QSize(45, 45))
         self.files_button.setCheckable(True)
 
         self.remote_button = QPushButton(self)
-        self.remote_button.setIcon(QIcon("./assets/icons/copy.png"))
-        self.remote_button.setIconSize(QSize(30, 30))
+        self.remote_button.setIcon(QIcon("./assets/icons/Server.png"))
+        self.remote_button.setIconSize(QSize(45, 45))
         self.remote_button.setCheckable(True)
 
         self.settings_button = QPushButton(self)
         self.settings_button.setIcon(QIcon("./assets/icons/settings.png"))
-        self.settings_button.setIconSize(QSize(30, 30))
+        self.settings_button.setIconSize(QSize(45, 45))
         self.settings_button.setCheckable(True)
+
+        self.space = QLabel(" ")
 
         self.files_widget = FileView(self._model.file_model, self)
         self.remote_widget = RemoteFileView(self._model.remote_file_model, self)
@@ -94,6 +96,7 @@ class MainWidget(QWidget):
         self.menu_laterale.setAlignment(Qt.AlignCenter)
         self.menu_laterale.addWidget(self.sync_widget)
         self.menu_laterale.addWidget(self.files_button)
+        self.menu_laterale.addWidget(self.space)
         self.menu_laterale.addWidget(self.remote_button)
         self.menu_laterale.addStretch()
         self.menu_laterale.addWidget(self.settings_button)

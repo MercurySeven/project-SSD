@@ -19,15 +19,37 @@ class FileWidget(QToolButton):
 
         self.setAccessibleName('File')
 
-        self.setIcon(QIcon('./assets/icons/copy.png'))
-        self.setIconSize(QSize(45, 45))
-        self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
-
         self.name = file.get_name()
         self.creation_date = file.get_creation_date()
         self.last_modified_date = file.get_last_modified_date()
 
+        self.extension = self.get_extension()
+
+        self.set_icon()
+
         self.setText(self.name)
+
+    def get_extension(self) -> str:
+        e = self.name.split(".")
+        return e[1]
+
+    def set_icon(self):
+        if self.extension == "txt":
+            self.setIcon(QIcon('./assets/icons/Txt.png'))
+            self.setIconSize(QSize(45, 45))
+            self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
+        if self.extension == "mp4":
+            self.setIcon(QIcon('./assets/icons/Video.png'))
+            self.setIconSize(QSize(45, 45))
+            self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
+        if (self.extension == "jpg") or (self.extension == "png"):
+            self.setIcon(QIcon('./assets/icons/Immagine.png'))
+            self.setIconSize(QSize(45, 45))
+            self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
+        if self.extension == "mp3":
+            self.setIcon(QIcon('./assets/icons/Audio.png'))
+            self.setIconSize(QSize(45, 45))
+            self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
 
     def check_double_click(self):
         if self.timer.isActive():
