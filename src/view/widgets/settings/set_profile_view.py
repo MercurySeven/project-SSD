@@ -41,6 +41,7 @@ class SetProfileView(QWidget):
         # Layout
         layout = QVBoxLayout()
         layout.addWidget(self._titolo)
+        layout.addWidget(self.spaceLabel)
         layout.addLayout(sub_layout_user)
         layout.addLayout(self.buttonLayout)
 
