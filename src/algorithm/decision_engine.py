@@ -129,6 +129,7 @@ class DecisionEngine(Thread):
                 self.logger.info(action.name + " " + name_node)
             elif action == Actions.SERVER_NEW_FILE or action == Actions.SERVER_UPDATE_FILE:
                 path = r["path"]
+                quota_libera = self.settings_model.get_quota_libera()
                 node_message = os_handler.download_file(node, path, quota_libera)
                 node_message["action"] = action
                 self.notification_controller.add_notification(node_message)
