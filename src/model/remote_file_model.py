@@ -6,7 +6,6 @@ from src.algorithm import tree_builder
 from src.model.algorithm.node import Type, Node
 from src.model.algorithm.tree_node import TreeNode
 from src.model.network_model import NetworkModel
-from src.model.widgets.file import File
 from src.model.widgets.remote_directory import RemoteDirectory
 from src.model.widgets.remote_file import RemoteFile
 
@@ -36,7 +35,7 @@ class RemoteFileModel(QObject):
     def get_current_tree(self) -> TreeNode:
         return tree_builder.get_tree_from_node_id(self.folder_queue[-1], False)
 
-    def get_data(self) -> Tuple[list[File], list[RemoteDirectory]]:
+    def get_data(self) -> Tuple[list[RemoteFile], list[RemoteDirectory]]:
         list_of_files = []
         list_of_dirs = []
 

@@ -6,7 +6,7 @@ from PySide6.QtCore import (QSettings, Signal, Slot, QObject)
 from src.algorithm import tree_builder
 from src.model.algorithm.tree_node import TreeNode
 from src.model.widgets.local_directory import LocalDirectory
-from src.model.widgets.file import File
+from src.model.widgets.local_file import LocalFile
 
 
 class FileModel(QObject):
@@ -40,7 +40,7 @@ class FileModel(QObject):
         self.current_folder.update_list_of_content()  # aggiorno lista carelle e file
         self.Sg_model_changed.emit()
 
-    def get_data(self) -> Tuple[list[File], list[LocalDirectory]]:
+    def get_data(self) -> Tuple[list[LocalFile], list[LocalDirectory]]:
         list_of_files = self.current_folder._files  # lista file dalla dir
         list_of_dirs = self.current_folder._dirs  # lista dir dalla dir
 
