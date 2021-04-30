@@ -77,6 +77,18 @@ def get_tree_from_node_id(node_id: str = "LOCAL_ROOT") -> TreeNode:
     return folder
 
 
+def get_tree_children_from_node_id(node_id: str) -> TreeNode:
+    """Funzione ricorsiva per costruire l'albero remoto con solo i figli
+    ATTENZIONE: L'albero non è completo
+    """
+    json = networkmodel.get_content_from_node(node_id)
+    folder = _create_node_from_dict(json["getNode"])
+    for _file in json["getNode"]["children"]:
+        new_node = _create_node_from_dict(_file)
+        folder.add_node(new_node)
+    return folder
+
+
 def dump_client_filesystem(path: str) -> None:
     """Crea lo snapshot dell'albero locale e lo salva nel path passato, all'interno di una
         cartella nascosta"""

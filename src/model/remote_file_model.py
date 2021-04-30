@@ -27,8 +27,9 @@ class RemoteFileModel(QObject):
 
         super(RemoteFileModel, self).__init__()
         tree_builder.set_model(network_model)
-        self.tree = tree_builder.get_tree_from_node_id()
-        self.current_folder = RemoteDirectory(self.tree, self.tree.get_name())
+        self.tree = tree_builder.get_tree_children_from_node_id("LOCAL_ROOT")
+        print(self.tree)
+        self.current_folder = RemoteDirectory(self.tree)
         self.previous_folder = None
         # self.search_node_from_id(self.tree.get_payload().id)
 
