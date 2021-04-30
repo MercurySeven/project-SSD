@@ -1,9 +1,12 @@
 import os
 import pathlib
+import sys
 import unittest
+import platform
 
 from PySide6.QtCore import QSettings, QCoreApplication
 import requests.exceptions
+
 from src import settings
 from src.model.algorithm.node import Node, Type
 from src.model.algorithm.tree_node import TreeNode
@@ -11,10 +14,16 @@ from src.model.network_model import Status
 from src.network.api_exceptions import APIException
 from src.network.api_implementation import ExceptionsHandler
 
+
 node_name = "CLIENT_NODE"
 
 
 class DefaultCode(unittest.TestCase):
+    BLACKLISTED_OS_FOR_CI = "Linux-5.4.0-1046-azure-x86_64-with-glibc2.31"
+    app = None
+    if platform.platform() != BLACKLISTED_OS_FOR_CI:
+        from PySide6.QtWidgets import QApplication
+        app = QApplication(sys.argv)
     ORGANIZATION_NAME = "MercurySeven"
     APPLICATION_NAME = "SSD"
     SYNC_ENV_VARIABLE = "sync_path"
@@ -145,6 +154,9 @@ class ResultObj:
         yield self.result
 
     def quit(self):
+        pass
+
+    def show(self):
         pass
 
 

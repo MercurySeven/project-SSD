@@ -1,15 +1,10 @@
-import sys
 import unittest
 from unittest.mock import patch
-
-from PySide6.QtWidgets import QApplication
 
 from src.model.main_model import MainModel
 from src.controllers.settings_controller import SettingsController
 from src.view.settings_view import SettingsView
 from tests import default_code
-
-app = QApplication(sys.argv)
 
 
 class SettingsViewTest(default_code.DefaultCode):

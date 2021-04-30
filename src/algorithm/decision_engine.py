@@ -1,16 +1,17 @@
 import logging
 import os
 import shutil
-import threading
-from threading import Thread
+from threading import Thread, Condition
 
 from PySide6.QtCore import QSettings, Slot
+from PySide6.QtWidgets import (QSystemTrayIcon)
 
 from src import settings
 from src.controllers.notification_controller import NotificationController
 from src.model.algorithm.policy import Policy
 from src.model.algorithm.tree_node import TreeNode
 from src.model.main_model import MainModel
+from src.model.settings_model import SettingsModel
 from src.network.api_exceptions import APIException
 from . import tree_builder, tree_comparator, os_handler
 from .compare_snap_client import CompareSnapClient
@@ -23,20 +24,21 @@ from .tree_comparator import Actions
 class DecisionEngine(Thread):
     def __init__(self,
                  main_model: MainModel,
-                 notification: NotificationController,
+                 notification_controller: NotificationController,
                  running: bool = False):
         Thread.__init__(self)
 
         self.setName("Algoritmo V3")
         self.setDaemon(True)
         self.env_settings = QSettings()
-        # TODO: Il refresh minimo sarà ogni 60 secondi
-        self.refresh: int = (lambda: main_model.settings_model.get_sync_time())
+        self.settings_model: SettingsModel = main_model.settings_model
+
+        self.refresh: int = (lambda: self.settings_model.get_sync_time())
         self.running = running
+        self.notification_controller = notification_controller
 
         # set istanza di NetworkModel nei moduli per poter gestire i segnali di errore
-        os_handler.set_model(main_model.network_model, main_model.settings_model)
-        os_handler.set_notification(notification)
+        os_handler.set_network_model(main_model.network_model)
         tree_builder.set_model(main_model.network_model)
 
         self.compare_snap_client = CompareSnapClient()
@@ -46,7 +48,7 @@ class DecisionEngine(Thread):
         }
 
         self.logger = logging.getLogger("decision_engine")
-        self.condition = threading.Condition()
+        self.condition = Condition()
 
     def set_running(self, running: bool) -> None:
         self.running = running
@@ -75,20 +77,19 @@ class DecisionEngine(Thread):
         snap_tree = tree_builder.read_dump_client_filesystem(path)
         client_tree = tree_builder.get_tree_from_system(path)
 
-        check_connection = True
         try:
             if snap_tree is not None:
                 policy = Policy(settings.get_policy())
                 self.compare_snap_client.check(snap_tree, client_tree, self.strategy[policy])
-        except APIException:
-            check_connection = False
 
-        # Se non ho connessione mi fermo e non creo nemmeno un nuovo snapshot
-        if check_connection:
             remote_tree = tree_builder.get_tree_from_node_id()
             self.compute_decision(client_tree, remote_tree, snap_tree is not None)
-            self.logger.info("Eseguito snapshot dell'albero locale")
             tree_builder.dump_client_filesystem(path)
+            self.logger.info("Eseguito snapshot dell'albero locale")
+            self.notification_controller.send_best_message()
+        except APIException:
+            self.notification_controller.send_message(
+                "Errore di connessione al drive Zextras", icon=QSystemTrayIcon.Warning)
 
     def compute_decision(self,
                          client_tree: TreeNode,
@@ -120,13 +121,16 @@ class DecisionEngine(Thread):
                     self.logger.info(f"Nuovo file da caricare nel server: {name_node}")
             elif action == Actions.SERVER_NEW_FOLDER:
                 path = r["path"]
-                os_handler.download_folder(node, path)
+                quota_libera = self.settings_model.get_quota_libera()
+                node_message = os_handler.download_folder(node, path, quota_libera)
+                for item in node_message:
+                    item["action"] = Actions.SERVER_NEW_FILE
+                    self.notification_controller.add_notification(item)
                 self.logger.info(action.name + " " + name_node)
-            elif action == Actions.SERVER_NEW_FILE:
+            elif action == Actions.SERVER_NEW_FILE or action == Actions.SERVER_UPDATE_FILE:
                 path = r["path"]
-                os_handler.download_file(node, path)
-                self.logger.info(action.name + " " + name_node)
-            elif action == Actions.SERVER_UPDATE_FILE:
-                path = r["path"]
-                os_handler.download_file(node, path)
+                quota_libera = self.settings_model.get_quota_libera()
+                node_message = os_handler.download_file(node, path, quota_libera)
+                node_message["action"] = action
+                self.notification_controller.add_notification(node_message)
                 self.logger.info(action.name + " " + name_node)

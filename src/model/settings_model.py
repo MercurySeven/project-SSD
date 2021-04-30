@@ -84,6 +84,9 @@ class SettingsModel(QObject):
         s = round(size_bytes / p, 2)
         return "%s %s" % (s, size_name[i])
 
+    def get_quota_libera(self) -> float:
+        return self.get_quota_disco_raw() - self.get_size()
+
     def get_size(self) -> int:
         total_size = 0
         if not self.get_path():

@@ -152,9 +152,6 @@ class NetworkModel(QObject, Api, metaclass=NetworkMeta):
     def is_logged(self) -> bool:
         return self.api_implementation.is_logged()
 
-    def get_credentials(self) -> [str, str]:
-        return [self.get_username(), self.get_password()]
-
     def get_username(self) -> str:
         user = self.env_settings.value("Credentials/user")
         return user if user else ""
@@ -174,29 +171,37 @@ class NetworkModel(QObject, Api, metaclass=NetworkMeta):
         return False
 
     @RetryLogin
-    def download_node(self, node: TreeNode, path_folder: str, quota_libera: float) -> bool:
-        has_downloaded = self.api_implementation.download_node(node, path_folder, quota_libera)
-        self.raise_for_status()
-        return has_downloaded
+    def download_node(self, node: TreeNode, path_folder: str, quota_libera: float) -> dict:
+        remote_node = self.api_implementation.get_content_from_node(node.get_payload().id)
+        file_size = remote_node["getNode"]["size"]
+
+        # Se ho spazio procedo al download
+        if quota_libera > file_size:
+            result = self.api_implementation.download_node(node, path_folder)
+            return {
+                "node_name": node.get_name(),
+                "result": result,
+                "type": "network_error" if not result else ""
+            }
+
+        return {
+            "node_name": node.get_name(),
+            "result": False,
+            "type": "space_error"
+        }
 
     @RetryLogin
     def upload_node(self, node: TreeNode, parent_folder_id: str) -> None:
         self.api_implementation.upload_node(node, parent_folder_id)
-        self.raise_for_status()
 
     @RetryLogin
     def delete_node(self, node_id: str) -> None:
         self.api_implementation.delete_node(node_id)
-        self.raise_for_status()
 
     @RetryLogin
     def get_content_from_node(self, node_id: str = "LOCAL_ROOT") -> str:
-        result = self.api_implementation.get_content_from_node(node_id)
-        self.raise_for_status()
-        return result
+        return self.api_implementation.get_content_from_node(node_id)
 
     @RetryLogin
     def create_folder(self, folder_name: str, parent_folder_id: str = "LOCAL_ROOT") -> str:
-        result = self.api_implementation.create_folder(folder_name, parent_folder_id)
-        self.raise_for_status()
-        return result
+        return self.api_implementation.create_folder(folder_name, parent_folder_id)

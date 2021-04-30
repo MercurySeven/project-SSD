@@ -1,36 +1,30 @@
 import os
-
-from src.controllers.notification_controller import NotificationController
 from src.model.algorithm.tree_node import TreeNode
 from src.model.network_model import NetworkModel
-from src.model.settings_model import SettingsModel
 
-networkmodel: NetworkModel = None
-settingsmodel: SettingsModel = None
-notificationcontroller: NotificationController = None
+network_model: NetworkModel = None
 
 
-def set_model(model: NetworkModel, settings_model: SettingsModel) -> None:
-    global networkmodel
-    global settingsmodel
-    networkmodel = model
-    settingsmodel = settings_model
+def set_network_model(net_model: NetworkModel) -> None:
+    global network_model
+    network_model = net_model
 
 
-def set_notification(notification: NotificationController) -> None:
-    global notificationcontroller
-    notificationcontroller = notification
-
-
-def download_folder(node: TreeNode, path: str) -> None:
-    """Il nodo rappresenta la cartella che non esiste"""
+def download_folder(node: TreeNode, path: str, quota_libera: float) -> list[dict]:
+    """Il nodo rappresenta la cartella che non esiste,
+    ritorna i risultati dei download che sono stati fatti"""
     path_folder = os.path.join(path, node.get_name())
     os.mkdir(path_folder)
+
+    download_operations_list = []
     for _node in node.get_children():
         if _node.is_directory():
-            download_folder(_node, path_folder)
+            result = download_folder(_node, path_folder, quota_libera)
+            download_operations_list.extend(result)
         else:
-            download_file(_node, path_folder)
+            result = download_file(_node, path_folder, quota_libera)
+            download_operations_list.append(result)
+    return download_operations_list
 
 
 def upload_folder(node: TreeNode, parent_folder_id: str = "LOCAL_ROOT") -> None:
@@ -44,25 +38,18 @@ def upload_folder(node: TreeNode, parent_folder_id: str = "LOCAL_ROOT") -> None:
             upload_file(_node, parent_folder_id)
 
 
-def download_file(node: TreeNode, path_folder: str) -> None:
-    quota_libera = settingsmodel.get_quota_disco_raw() - settingsmodel.get_size()
-    result = networkmodel.download_node(node, path_folder, quota_libera)
-    # result[0] is a bool that represent if the op was successful
-    if not result[0]:
-        # if the op was unsuccessful and we have notification controller
-        # send operation message to user
-        if notificationcontroller is not None:
-            notificationcontroller.send_message(result[1])
+def download_file(node: TreeNode, path_folder: str, quota_libera: float) -> dict:
+    return network_model.download_node(node, path_folder, quota_libera)
 
 
 def upload_file(node: TreeNode, parent_folder_id: str) -> None:
-    networkmodel.upload_node(node, parent_folder_id)
+    network_model.upload_node(node, parent_folder_id)
 
 
 def delete_node(node_id: str) -> None:
     """Elimina un nodo in base al suo id"""
-    networkmodel.delete_node(node_id)
+    network_model.delete_node(node_id)
 
 
 def create_folder(folder_name: str, parent_folder_id: str = "LOCAL_ROOT") -> str:
-    return networkmodel.create_folder(folder_name, parent_folder_id)
+    return network_model.create_folder(folder_name, parent_folder_id)

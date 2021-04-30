@@ -21,7 +21,7 @@ class ManualStrategy(Strategy):
                 # con la data del server, se quella del server è diversa significa che ho avuto un
                 # upload nel mentre ero offline.
                 node_id = get_id_from_path(node.get_payload().path)
-                node_metadata = os_handler.networkmodel.get_content_from_node(node_id)
+                node_metadata = os_handler.network_model.get_content_from_node(node_id)
                 last_update_raw = node_metadata["getNode"]["updated_at"]
                 node_last_update_server = math.trunc(last_update_raw / 1000)
                 snap_last_update = node_raw["snap_last_update"]
