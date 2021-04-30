@@ -101,18 +101,12 @@ def _get_default_dict() -> dict:
     _type = "File"
     _created = 2000
     _updated = 2000
-    _size = 12
-    _email = "a@a.it"
     thisdict = {
         "id": _id,
         "name": _name,
         "type": _type,
         "created_at": _created,
-        "updated_at": _updated,
-        "size": _size,
-        "last_editor": {
-            "email": _email
-        }
+        "updated_at": _updated
     }
     return thisdict
 
