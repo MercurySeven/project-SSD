@@ -1,5 +1,5 @@
 from PySide6.QtCore import (QSettings, Slot, Qt, Signal)
-from PySide6.QtWidgets import (QVBoxLayout, QWidget, QScrollArea, QLabel, QPushButton)
+from PySide6.QtWidgets import (QVBoxLayout, QWidget, QScrollArea, QLabel, QMenu)
 
 from src.model.remote_file_model import RemoteFileModel
 from src.view.layouts.flowlayout import FlowLayout
@@ -9,6 +9,7 @@ from src.view.widgets.remote_file_widget import RemoteFileWidget
 
 class RemoteFileView(QWidget):
     Sg_update_files_with_new_id = Signal(str)
+    Sg_refresh = Signal()
 
     def __init__(self, model: RemoteFileModel, parent=None):
         super(RemoteFileView, self).__init__(parent)
@@ -20,8 +21,6 @@ class RemoteFileView(QWidget):
         self.title.setAlignment(Qt.AlignLeft)
         self.title.setAccessibleName("Title")
 
-        self.refresh_button = QPushButton("Refresh", self)
-        self.refresh_button.clicked.connect(self.Sl_refresh_button_clicked)
         # scroll area
         self.scrollArea = QScrollArea()
         self.scrollArea.setAccessibleName("FileScroll")
@@ -40,11 +39,20 @@ class RemoteFileView(QWidget):
 
         layout = QVBoxLayout()
         layout.addWidget(self.title)
-        layout.addWidget(self.refresh_button)
         layout.addWidget(self.scrollArea)
         self.setLayout(layout)
 
         self.Sl_model_changed()
+
+    def contextMenuEvent(self, event):
+        context_menu = QMenu(self)
+
+        refresh_action = context_menu.addAction("Aggiorna")
+
+        action = context_menu.exec_(self.mapToGlobal(event.pos()))
+
+        if action == refresh_action:
+            self.Sg_refresh.emit()
 
     @Slot()
     def Sl_model_changed(self) -> None:
