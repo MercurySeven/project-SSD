@@ -100,6 +100,7 @@ class MainWidget(QWidget):
         self.menu_laterale.addWidget(self.remote_button)
         self.menu_laterale.addStretch()
         self.menu_laterale.addWidget(self.settings_button)
+        self.menu_laterale.addWidget(self.space)
         self.menu_laterale.setSpacing(0)
 
         self.container_menu.setLayout(self.menu_laterale)
