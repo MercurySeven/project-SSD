@@ -1,6 +1,6 @@
 from PySide6.QtCore import (QSettings, QUrl, Slot, Qt, Signal)
 from PySide6.QtGui import (QDesktopServices)
-from PySide6.QtWidgets import (QVBoxLayout, QWidget, QScrollArea, QLabel, QMenu)
+from PySide6.QtWidgets import (QVBoxLayout, QHBoxLayout, QWidget, QScrollArea, QPushButton, QLabel)
 
 from src.model.file_model import FileModel
 from src.view.layouts.flowlayout import FlowLayout
@@ -10,7 +10,6 @@ from src.view.widgets.local_file_widget import LocalFileWidget
 
 class FileView(QWidget):
     Sg_update_files_with_new_path = Signal(str)
-    Sg_show_path = Signal()
 
     def __init__(self, model: FileModel, parent=None):
         super(FileView, self).__init__(parent)
@@ -33,27 +32,24 @@ class FileView(QWidget):
         self.fileLayout = FlowLayout()
         self.fileLayout.setContentsMargins(0, 0, 0, 0)
 
+        self.show_path_button = QPushButton(self)
+        self.show_path_button.setText("Apri file manager")
+
         self.fileWindow.setParent(self.scrollArea)
         self.fileWindow.setLayout(self.fileLayout)
 
         self.scrollArea.setWidget(self.fileWindow)
 
+        header_layout = QHBoxLayout()
+        header_layout.addWidget(self.title)
+        header_layout.addWidget(self.show_path_button)
+
         layout = QVBoxLayout()
-        layout.addWidget(self.title)
+        layout.addLayout(header_layout)
         layout.addWidget(self.scrollArea)
         self.setLayout(layout)
 
         self.Sl_model_changed()
-
-    def contextMenuEvent(self, event):
-        context_menu = QMenu(self)
-
-        file_manager_action = context_menu.addAction("Apri file manager")
-
-        action = context_menu.exec_(self.mapToGlobal(event.pos()))
-
-        if action == file_manager_action:
-            self.Sg_show_path.emit()
 
     @Slot()
     def Sl_show_path_button_clicked(self) -> None:

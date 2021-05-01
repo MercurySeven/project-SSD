@@ -1,5 +1,5 @@
 from PySide6.QtCore import (QSettings, Slot, Qt, Signal)
-from PySide6.QtWidgets import (QVBoxLayout, QHBoxLayout, QWidget, QScrollArea, QLabel, QPushButton, QMenu)
+from PySide6.QtWidgets import (QVBoxLayout, QHBoxLayout, QWidget, QScrollArea, QLabel, QPushButton)
 
 from src.model.remote_file_model import RemoteFileModel
 from src.view.layouts.flowlayout import FlowLayout
