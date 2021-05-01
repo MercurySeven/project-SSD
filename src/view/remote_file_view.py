@@ -9,6 +9,8 @@ from src.view.widgets.remote_file_widget import RemoteFileWidget
 
 class RemoteFileView(QWidget):
     Sg_update_files_with_new_id = Signal(str)
+    Sg_add_sync_folder = Signal(str)
+    Sg_remove_sync_folder = Signal(str)
 
     def __init__(self, model: RemoteFileModel, parent=None):
         super(RemoteFileView, self).__init__(parent)
@@ -57,6 +59,9 @@ class RemoteFileView(QWidget):
             self.fileLayout.itemAt(i).widget().setParent(None)
         for i in list_of_dirs:
             self.fileLayout.addWidget(RemoteDirectoryWidget(i, self))
+            self.fileLayout._item_list[-1].wid.Sg_add_sync_folder.connect(self.Sl_add_sync_folder)
+            self.fileLayout._item_list[-1].wid.Sg_remove_sync_folder.connect(
+                self.Sl_remove_sync_folder)
         for i in list_of_files:
             self.fileLayout.addWidget(RemoteFileWidget(i))
 
@@ -68,3 +73,11 @@ class RemoteFileView(QWidget):
     def Sl_refresh_button_clicked(self):
         self._model.folder_queue = ["LOCAL_ROOT"]
         self.Sl_model_changed()
+
+    @Slot()
+    def Sl_add_sync_folder(self, id: str) -> None:
+        self.Sg_add_sync_folder.emit(id)
+
+    @Slot()
+    def Sl_remove_sync_folder(self, id: str) -> None:
+        self.Sg_remove_sync_folder.emit(id)
