@@ -1,27 +1,27 @@
 from src.view.widgets.directory_widget import DirectoryWidget
 from src.model.widgets.remote_directory import RemoteDirectory
+from src.model.settings_model import SettingsModel
 from PySide6.QtWidgets import QMenu
 from PySide6.QtCore import Signal
-
-from src import settings
 
 
 class RemoteDirectoryWidget(DirectoryWidget):
     Sg_add_sync_folder = Signal(str)
     Sg_remove_sync_folder = Signal(str)
 
-    def __init__(self, dir: RemoteDirectory, parent=None):
+    def __init__(self, dir: RemoteDirectory, settings: SettingsModel, parent=None):
         super(RemoteDirectoryWidget, self).__init__()
         self.parent = parent
         self.id = dir.get_id()
         self.name = dir.get_name()
         self.setText(self.name)
+        self.settings_model = settings
         if self.parent is not None:
             self.Sg_double_clicked.connect(self.parent.Sl_update_files_with_new_id)
 
     def contextMenuEvent(self, event) -> None:
         context_menu = QMenu(self)
-        folder_is_synced = settings.id_is_in_sync_list(self.id)
+        folder_is_synced = self.settings_model.id_is_in_sync_list(self.id)
 
         # se il folder non è syncato mostra aggiungi, altrimenti mostra rimuovi
         if folder_is_synced is False:

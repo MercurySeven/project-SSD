@@ -63,7 +63,7 @@ class MainController(QObject):
         self.file_controller = FileController(
             self.model.file_model, self.view.main_widget.files_widget)
         self.remote_file_controller = RemoteFileController(
-            self.model.remote_file_model, self.view.main_widget.remote_widget)
+            self.model, self.view.main_widget.remote_widget)
         self.settings_controller = SettingsController(
             self.model, self.view.main_widget.settings_view)
         self.notification_controller = NotificationController(self.app, self.view)

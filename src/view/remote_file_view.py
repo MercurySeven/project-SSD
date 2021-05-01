@@ -2,6 +2,8 @@ from PySide6.QtCore import (QSettings, Slot, Qt, Signal)
 from PySide6.QtWidgets import (QVBoxLayout, QHBoxLayout, QWidget, QScrollArea, QLabel, QPushButton)
 
 from src.model.remote_file_model import RemoteFileModel
+from src.model.main_model import MainModel
+from src.model.settings_model import SettingsModel
 from src.view.layouts.flowlayout import FlowLayout
 from src.view.widgets.remote_directory_widget import RemoteDirectoryWidget
 from src.view.widgets.remote_file_widget import RemoteFileWidget
@@ -12,11 +14,12 @@ class RemoteFileView(QWidget):
     Sg_add_sync_folder = Signal(str)
     Sg_remove_sync_folder = Signal(str)
 
-    def __init__(self, model: RemoteFileModel, parent=None):
+    def __init__(self, model: MainModel, parent=None):
         super(RemoteFileView, self).__init__(parent)
 
         self.env_settings = QSettings()
-        self._model = model
+        self._model: RemoteFileModel = model.remote_file_model
+        self.settings_model: SettingsModel = model.settings_model
 
         self.title = QLabel("File remoti", self)
         self.title.setAlignment(Qt.AlignLeft)
@@ -58,7 +61,7 @@ class RemoteFileView(QWidget):
         for i in reversed(range(self.fileLayout.count())):
             self.fileLayout.itemAt(i).widget().setParent(None)
         for i in list_of_dirs:
-            self.fileLayout.addWidget(RemoteDirectoryWidget(i, self))
+            self.fileLayout.addWidget(RemoteDirectoryWidget(i, self.settings_model, self))
             self.fileLayout._item_list[-1].wid.Sg_add_sync_folder.connect(self.Sl_add_sync_folder)
             self.fileLayout._item_list[-1].wid.Sg_remove_sync_folder.connect(
                 self.Sl_remove_sync_folder)

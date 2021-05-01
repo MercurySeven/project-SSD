@@ -1,12 +1,14 @@
 from src.model.remote_file_model import RemoteFileModel
+from src.model.settings_model import SettingsModel
+from src.model.main_model import MainModel
 from src.view.remote_file_view import RemoteFileView
 from PySide6.QtCore import (Slot)
-from src import settings
 
 
 class RemoteFileController:
-    def __init__(self, model: RemoteFileModel, view: RemoteFileView):
-        self._model = model
+    def __init__(self, model: MainModel, view: RemoteFileView):
+        self._model: RemoteFileModel = model.remote_file_model
+        self.settings_model: SettingsModel = model.settings_model
         self._view = view
         self._model.Sg_model_changed.connect(self._view.Sl_model_changed)
         # Connect per caricare il contenuto della cartella selezionata
@@ -22,8 +24,8 @@ class RemoteFileController:
 
     @Slot(str)
     def Sl_add_sync_folder(self, id: str) -> None:
-        settings.add_id_to_sync_list(id)
+        self.settings_model.add_id_to_sync_list(id)
 
     @Slot(str)
     def Sl_remove_sync_folder(self, id: str) -> None:
-        settings.remove_id_from_sync_list(id)
+        self.settings_model.remove_id_from_sync_list(id)

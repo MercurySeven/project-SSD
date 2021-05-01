@@ -79,7 +79,7 @@ class MainWidget(QWidget):
         self.space = QLabel(" ")
 
         self.files_widget = FileView(self._model.file_model, self)
-        self.remote_widget = RemoteFileView(self._model.remote_file_model, self)
+        self.remote_widget = RemoteFileView(self._model, self)
         self.settings_view = SettingsView(self._model, self)
 
         # stacked

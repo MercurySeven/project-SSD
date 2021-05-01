@@ -139,30 +139,6 @@ def update_sync_list(id_list: list) -> None:
     update_config("Whitelist", "folders_to_sync", cs_id_string)
 
 
-def id_is_in_sync_list(id: str) -> bool:
-    id_list = get_sync_list()
-    if id in id_list:
-        return True
-    else:
-        return False
-
-
-def add_id_to_sync_list(id: str) -> None:
-    """Aggiungi id a whitelist"""
-    id_list = get_sync_list()
-    if id_is_in_sync_list(id) is False:
-        id_list.append(id)
-        update_sync_list(id_list)
-
-
-def remove_id_from_sync_list(id: str) -> None:
-    """Rimuovi id da whitelist"""
-    id_list = get_sync_list()
-    if id_is_in_sync_list(id) is True:
-        id_list.remove(id)
-        update_sync_list(id_list)
-
-
 config = configparser.ConfigParser()
 logger = logging.getLogger("settings")
 if os.path.exists(file_name):
