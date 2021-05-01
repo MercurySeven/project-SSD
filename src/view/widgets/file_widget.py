@@ -28,29 +28,21 @@ class FileWidget(QToolButton):
         self.set_icon()
         self.setText(self.name)
 
-        self.setText(self.name)
-
     def get_extension(self) -> str:
         e = self.name.split(".")
         return e[1]
 
     def set_icon(self):
-        if self.extension == "txt":
+        self.setIconSize(QSize(45, 45))
+        self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
+        if self.extension in ["txt"]:
             self.setIcon(QIcon('./assets/icons/Txt.png'))
-            self.setIconSize(QSize(45, 45))
-            self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
-        if self.extension == "mp4":
+        elif self.extension in ["mp4"]:
             self.setIcon(QIcon('./assets/icons/Video.png'))
-            self.setIconSize(QSize(45, 45))
-            self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
-        if (self.extension == "jpg") or (self.extension == "png"):
+        elif self.extension in ["jpg", "png"]:
             self.setIcon(QIcon('./assets/icons/Immagine.png'))
-            self.setIconSize(QSize(45, 45))
-            self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
-        if self.extension == "mp3":
+        elif self.extension in ["mp3"]:
             self.setIcon(QIcon('./assets/icons/Audio.png'))
-            self.setIconSize(QSize(45, 45))
-            self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
 
     def check_double_click(self):
         if self.timer.isActive():
