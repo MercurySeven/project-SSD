@@ -34,7 +34,7 @@ class RemoteFileWidget(FileWidget):
 
     def contextMenuEvent(self, event) -> None:
         context_menu = QMenu(self)
-        file_is_synced = self.settings_model.id_is_in_sync_list(self.id)
+        file_is_synced = self.settings_model.is_id_in_sync_list(self.id)
 
         # se il file non è syncato mostra aggiungi, altrimenti mostra rimuovi
         if file_is_synced is False:
@@ -70,8 +70,8 @@ class RemoteFileWidget(FileWidget):
 
     @Slot()
     def Sl_on_file_status_changed(self):
-        file_is_synced = self.settings_model.id_is_in_sync_list(self.id)
-        if file_is_synced is True:
+        file_is_synced = self.settings_model.is_id_in_sync_list(self.id)
+        if file_is_synced:
             self.show_synced()
         else:
             self.set_icon()
