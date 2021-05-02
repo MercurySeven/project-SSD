@@ -19,6 +19,7 @@ from .strategy.client_strategy import ClientStrategy
 from .strategy.manual_strategy import ManualStrategy
 from .strategy.strategy import Strategy
 from .tree_comparator import Actions
+from src.view.conflict_message_box import ConflictMessageBox
 
 
 class DecisionEngine(Thread):
@@ -37,6 +38,8 @@ class DecisionEngine(Thread):
         self.running = running
         self.notification_controller = notification_controller
 
+        # current_email_user = main_model.network_model.get_info_from_email()["email"]
+
         # set istanza di NetworkModel nei moduli per poter gestire i segnali di errore
         os_handler.set_network_model(main_model.network_model)
         tree_builder.set_model(main_model.network_model)
@@ -46,6 +49,9 @@ class DecisionEngine(Thread):
             Policy.Client: ClientStrategy(),
             Policy.Manual: ManualStrategy()
         }
+
+        self.conflict_messagebox = ConflictMessageBox()
+        self.strategy[Policy.Manual].Sg_set_nodes.connect(self.conflict_messagebox.set_info)
 
         self.logger = logging.getLogger("decision_engine")
         self.condition = Condition()
