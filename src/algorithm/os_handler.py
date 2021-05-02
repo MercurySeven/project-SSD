@@ -1,4 +1,5 @@
 import os
+import shutil
 from typing import Optional
 from src.model.algorithm.tree_node import TreeNode
 from src.model.network_model import NetworkModel
@@ -25,6 +26,7 @@ def download_folder(node: TreeNode, path: str, quota_libera: float) -> list[dict
     os.mkdir(path_folder)
 
     download_operations_list = []
+    folder_has_nodes = len(node.get_children()) > 0
     for _node in node.get_children():
         if _node.is_directory():
             result = download_folder(_node, path_folder, quota_libera)
@@ -33,6 +35,9 @@ def download_folder(node: TreeNode, path: str, quota_libera: float) -> list[dict
             result = download_file(_node, path_folder, quota_libera)
             if result is not None:
                 download_operations_list.append(result)
+
+    if folder_has_nodes and len(download_operations_list) == 0:
+        shutil.rmtree(path_folder)
     return download_operations_list
 
 
