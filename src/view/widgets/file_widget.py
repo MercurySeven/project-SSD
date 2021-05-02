@@ -43,6 +43,8 @@ class FileWidget(QToolButton):
             self.setIcon(QIcon('./assets/icons/Immagine.png'))
         elif self.extension in ["mp3"]:
             self.setIcon(QIcon('./assets/icons/Audio.png'))
+        else:
+            self.setIcon(QIcon('./assets/icons/DocGenerico.png'))
 
     def check_double_click(self):
         if self.timer.isActive():
