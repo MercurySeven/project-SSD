@@ -109,6 +109,7 @@ class SettingsModel(QObject):
         if not self.id_is_in_sync_list(id):
             id_list.append(id)
             settings.update_sync_list(id_list)
+            self.Sg_model_changed.emit()
 
     def remove_id_from_sync_list(self, id: str) -> None:
         """Rimuovi id da whitelist"""
@@ -116,3 +117,4 @@ class SettingsModel(QObject):
         if self.id_is_in_sync_list(id):
             id_list.remove(id)
             settings.update_sync_list(id_list)
+            self.Sg_model_changed.emit()

@@ -13,19 +13,21 @@ class RemoteFileController:
         self._model.Sg_model_changed.connect(self._view.Sl_model_changed)
         # Connect per caricare il contenuto della cartella selezionata
         self._view.Sg_update_files_with_new_id.connect(self.Sl_update_files_with_new_id)
-        # Connect per l'aggiunta di folder alla whitelist
-        self._view.Sg_add_sync_folder.connect(self.Sl_add_sync_folder)
-        # Connect per la rimozione di folder dalla whitelist
-        self._view.Sg_remove_sync_folder.connect(self.Sl_remove_sync_folder)
+        # Connect per l'aggiunta di file alla whitelist
+        self._view.Sg_add_sync_file.connect(self.Sl_add_sync_file)
+        # Connect per la rimozione di file dalla whitelist
+        self._view.Sg_remove_sync_file.connect(self.Sl_remove_sync_file)
+        # Connect update dal model alla view
+        self.settings_model.Sg_model_changed.connect(self._view.Sl_file_status_changed)
 
     @Slot(str)
     def Sl_update_files_with_new_id(self, id: str) -> None:
         self._model.set_current_node(id)
 
     @Slot(str)
-    def Sl_add_sync_folder(self, id: str) -> None:
+    def Sl_add_sync_file(self, id: str) -> None:
         self.settings_model.add_id_to_sync_list(id)
 
     @Slot(str)
-    def Sl_remove_sync_folder(self, id: str) -> None:
+    def Sl_remove_sync_file(self, id: str) -> None:
         self.settings_model.remove_id_from_sync_list(id)

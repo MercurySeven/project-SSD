@@ -97,7 +97,7 @@ def get_is_synch() -> bool:
 
 def get_sync_list() -> list:
     """Ritorna la lista di id da sincronizzare"""
-    cs_id_string = get_config("Whitelist", "folders_to_sync")
+    cs_id_string = get_config("Whitelist", "files_to_sync")
     id_list = []
     if cs_id_string is not None and cs_id_string != "":
         id_list = cs_id_string.split(',')
@@ -136,7 +136,7 @@ def update_is_sync(state: bool) -> None:
 
 def update_sync_list(id_list: list) -> None:
     cs_id_string = ",".join(id_list)
-    update_config("Whitelist", "folders_to_sync", cs_id_string)
+    update_config("Whitelist", "files_to_sync", cs_id_string)
 
 
 config = configparser.ConfigParser()

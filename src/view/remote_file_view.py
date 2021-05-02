@@ -11,8 +11,9 @@ from src.view.widgets.remote_file_widget import RemoteFileWidget
 
 class RemoteFileView(QWidget):
     Sg_update_files_with_new_id = Signal(str)
-    Sg_add_sync_folder = Signal(str)
-    Sg_remove_sync_folder = Signal(str)
+    Sg_add_sync_file = Signal(str)
+    Sg_remove_sync_file = Signal(str)
+    Sg_file_status_changed = Signal()
 
     def __init__(self, model: MainModel, parent=None):
         super(RemoteFileView, self).__init__(parent)
@@ -61,12 +62,14 @@ class RemoteFileView(QWidget):
         for i in reversed(range(self.fileLayout.count())):
             self.fileLayout.itemAt(i).widget().setParent(None)
         for i in list_of_dirs:
-            self.fileLayout.addWidget(RemoteDirectoryWidget(i, self.settings_model, self))
-            self.fileLayout._item_list[-1].wid.Sg_add_sync_folder.connect(self.Sl_add_sync_folder)
-            self.fileLayout._item_list[-1].wid.Sg_remove_sync_folder.connect(
-                self.Sl_remove_sync_folder)
+            self.fileLayout.addWidget(RemoteDirectoryWidget(i))
         for i in list_of_files:
-            self.fileLayout.addWidget(RemoteFileWidget(i))
+            self.fileLayout.addWidget(RemoteFileWidget(i, self.settings_model))
+            self.fileLayout._item_list[-1].wid.Sg_add_sync_file.connect(self.Sl_add_sync_file)
+            self.fileLayout._item_list[-1].wid.Sg_remove_sync_file.connect(
+                self.Sl_remove_sync_file)
+            self.Sg_file_status_changed.connect(
+                self.fileLayout._item_list[-1].wid.Sl_on_file_status_changed)
 
     @Slot(str)
     def Sl_update_files_with_new_id(self, id: str) -> None:
@@ -78,9 +81,13 @@ class RemoteFileView(QWidget):
         self.Sl_model_changed()
 
     @Slot()
-    def Sl_add_sync_folder(self, id: str) -> None:
-        self.Sg_add_sync_folder.emit(id)
+    def Sl_add_sync_file(self, id: str) -> None:
+        self.Sg_add_sync_file.emit(id)
 
     @Slot()
-    def Sl_remove_sync_folder(self, id: str) -> None:
-        self.Sg_remove_sync_folder.emit(id)
+    def Sl_remove_sync_file(self, id: str) -> None:
+        self.Sg_remove_sync_file.emit(id)
+
+    @Slot()
+    def Sl_file_status_changed(self) -> None:
+        self.Sg_file_status_changed.emit()
