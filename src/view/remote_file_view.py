@@ -62,7 +62,7 @@ class RemoteFileView(QWidget):
         for i in reversed(range(self.fileLayout.count())):
             self.fileLayout.itemAt(i).widget().setParent(None)
         for i in list_of_dirs:
-            self.fileLayout.addWidget(RemoteDirectoryWidget(i))
+            self.fileLayout.addWidget(RemoteDirectoryWidget(i, self))
         for i in list_of_files:
             self.fileLayout.addWidget(RemoteFileWidget(i, self.settings_model))
             self.fileLayout._item_list[-1].wid.Sg_add_sync_file.connect(self.Sl_add_sync_file)
