@@ -71,6 +71,15 @@ class TestSettings(default_code.DefaultCode):
         value = settings.get_is_synch()
         self.assertFalse(value)
 
+    def test_update_sync_time(self) -> None:
+        settings.update_sync_time(60)
+        value = settings.get_sync_time()
+        self.assertEqual(value, 60)
+
+    def test_get_sync_time(self) -> None:
+        value = settings.get_sync_time()
+        self.assertEqual(value, 15)
+
 
 if __name__ == "__main__":
     unittest.main()
