@@ -58,12 +58,12 @@ class TestSettings(default_code.DefaultCode):
 
     def test_get_quota_disco_raw(self) -> None:
         value = self.sett_model.get_quota_disco_raw()
-        self.assertEqual(1024, value)
+        self.assertEqual(20971520.0, value)
 
     def test_set_quota_disco(self) -> None:
         value = self.sett_model.convert_size(self.sett_model.get_quota_disco_raw())
         value = bitmath.parse_string(value).to_Byte()
-        self.assertEqual(1024, value)
+        self.assertEqual(20971520.0, value)
         new_value = self.sett_model.convert_size(self.sett_model.get_size() + 1)
         new_value = bitmath.parse_string(new_value)
         self.sett_model.set_quota_disco(new_value.to_Byte())

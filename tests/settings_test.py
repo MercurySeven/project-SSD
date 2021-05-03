@@ -17,11 +17,11 @@ class TestSettings(default_code.DefaultCode):
 
     def test_get_quota_disco(self) -> None:
         quota_disco = settings.get_quota_disco()
-        self.assertEqual(quota_disco, 1024)
+        self.assertEqual(quota_disco, 20971520.0)
 
     def test_get_config(self) -> None:
         result = settings.get_config("General", "quota")
-        self.assertEqual(result, "1024")
+        self.assertEqual(result, "20971520.0")
 
         result = settings.get_config("Generale", "quota")
         self.assertIsNone(result)
