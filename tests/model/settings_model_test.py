@@ -54,7 +54,7 @@ class TestSettings(default_code.DefaultCode):
 
     def test_get_quota_disco(self) -> None:
         value = self.sett_model.get_quota_disco()
-        self.assertEqual("1.0 KiB", value)
+        self.assertEqual("20.0 MiB", value)
 
     def test_get_quota_disco_raw(self) -> None:
         value = self.sett_model.get_quota_disco_raw()
