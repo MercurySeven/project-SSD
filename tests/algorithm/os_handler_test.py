@@ -72,7 +72,7 @@ class OsHandlerTest(default_code.DefaultCode):
                                          Type.File, created, updated, self.path)))
         quota_libera = self.main_model.settings_model.get_quota_libera()
         x = os_handler.download_folder(test_node, self.path, quota_libera)
-        self.assertEquals(x, [True])
+        self.assertEqual(x, [True])
         mock_1.assert_called_once()
         mock_2.assert_called_once()
 
@@ -87,8 +87,8 @@ class OsHandlerTest(default_code.DefaultCode):
         os_handler.download_folder(test_node, self.path, quota_libera)
         folder_path = os.path.join(self.path, self.folder_name)
         inner_folder_path = os.path.join(folder_path, self.folder_name)
-        self.assertEquals(os.path.exists(folder_path), False)
-        self.assertEquals(os.path.exists(inner_folder_path), False)
+        self.assertEqual(os.path.exists(folder_path), False)
+        self.assertEqual(os.path.exists(inner_folder_path), False)
 
     @patch('src.model.network_model.NetworkModel.upload_node', return_value=None)
     @patch('src.model.network_model.NetworkModel.create_folder', return_value=None)

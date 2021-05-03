@@ -20,6 +20,7 @@ class NetworkModelTest(default_code.DefaultCode):
     @patch('src.network.api_implementation.ApiImplementation.login', return_value=False)
     def test_login_value_exception(self, mocked_function):
         self.model_test.login("test", "test")
+        mocked_function.assert_called_once()
         self.assertFalse(self.model_test.is_logged())
 
     @patch('src.network.api_implementation.ApiImplementation.login', return_value=False)
@@ -29,6 +30,7 @@ class NetworkModelTest(default_code.DefaultCode):
         # self.assertRaises(ValueError, self.model_test.login("test", "test"))
         self.model_test.login("test", "test")
         self.assertFalse(self.model_test.is_logged())
+        mocked_function.assert_called_once()
 
     @patch('src.network.api_implementation.ApiImplementation.login', return_value=False)
     def test_login_response_exception(self, mocked_function):
@@ -36,6 +38,7 @@ class NetworkModelTest(default_code.DefaultCode):
         mocked_function.side_effect = LoginError(exception_string)
         self.model_test.login("test", "test")
         self.assertFalse(self.model_test.is_logged())
+        mocked_function.assert_called_once()
 
     @patch('src.network.api_implementation.ApiImplementation.login', return_value=False)
     def test_login_server_response_exception(self, mocked_function):
@@ -43,6 +46,7 @@ class NetworkModelTest(default_code.DefaultCode):
         mocked_function.side_effect = ServerError(exception_string)
         self.model_test.login("test", "test")
         self.assertFalse(self.model_test.is_logged())
+        mocked_function.assert_called_once()
 
     @patch('src.network.api_implementation.ApiImplementation.login', return_value=True)
     @patch('src.network.api_implementation.ApiImplementation.is_logged', return_value=True)
@@ -50,3 +54,4 @@ class NetworkModelTest(default_code.DefaultCode):
         self.model_test.login("test", "test")
         mocked_login.assert_called_once()
         self.assertTrue(self.model_test.is_logged())
+        mocked_is_logged_in.assert_called_once()
