@@ -37,8 +37,6 @@ class DecisionEngine(Thread):
         self.running = running
         self.notification_controller = notification_controller
 
-        # current_email_user = main_model.network_model.get_info_from_email()["email"]
-
         # set istanza di NetworkModel nei moduli per poter gestire i segnali di errore
         os_handler.set_network_model(main_model.network_model)
         os_handler.set_settings_model(main_model.settings_model)
