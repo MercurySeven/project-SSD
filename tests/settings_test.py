@@ -38,7 +38,7 @@ class TestSettings(default_code.DefaultCode):
 
     def test_get_quota_disco_fix(self) -> None:
         settings.update_quota_disco("ABCDEFG")
-        self.assertEqual(settings.get_quota_disco(), 1024)
+        self.assertEqual(settings.get_quota_disco(), 20971520.0)
 
     def test_update_config(self) -> None:
         settings.update_config("Extra", "darkmode", "True")
