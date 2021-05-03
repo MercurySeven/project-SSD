@@ -61,8 +61,9 @@ class OsHandlerTest(default_code.DefaultCode):
         os_handler.set_network_model(self.main_model.network_model)
         self.assertEqual(os_handler.network_model, self.main_model.network_model)
 
-    @patch('src.model.network_model.NetworkModel.download_node', return_value=[True, "test"])
-    def test_download_folder_with_file(self, mocked_fun):
+    @patch('src.model.network_model.NetworkModel.download_node', return_value=True)
+    @patch('src.model.settings_model.SettingsModel.is_id_in_sync_list', return_value=True)
+    def test_download_folder_with_file(self, mock_1, mock_2):
         updated = 200
         created = 100
         test_node = TreeNode(Node("CLIENT_NODE", self.folder_name,
@@ -70,9 +71,10 @@ class OsHandlerTest(default_code.DefaultCode):
         test_node.add_node(TreeNode(Node("CLIENT_NODE", self.file_name,
                                          Type.File, created, updated, self.path)))
         quota_libera = self.main_model.settings_model.get_quota_libera()
-        os_handler.download_folder(test_node, self.path, quota_libera)
-        mocked_fun.assert_called_once()
-        self.assertTrue(os.path.exists(os.path.join(self.path, self.folder_name)))
+        x = os_handler.download_folder(test_node, self.path, quota_libera)
+        self.assertEquals(x, [True])
+        mock_1.assert_called_once()
+        mock_2.assert_called_once()
 
     def test_download_folder_with_folder(self):
         created = 100
@@ -85,8 +87,8 @@ class OsHandlerTest(default_code.DefaultCode):
         os_handler.download_folder(test_node, self.path, quota_libera)
         folder_path = os.path.join(self.path, self.folder_name)
         inner_folder_path = os.path.join(folder_path, self.folder_name)
-        self.assertTrue(os.path.exists(folder_path))
-        self.assertTrue(os.path.exists(inner_folder_path))
+        self.assertEquals(os.path.exists(folder_path), False)
+        self.assertEquals(os.path.exists(inner_folder_path), False)
 
     @patch('src.model.network_model.NetworkModel.upload_node', return_value=None)
     @patch('src.model.network_model.NetworkModel.create_folder', return_value=None)
