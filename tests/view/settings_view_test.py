@@ -44,8 +44,8 @@ class SettingsViewTest(default_code.DefaultCode):
         self.assertFalse(self.policy_test.manual.isChecked())
         self.assertEqual(self.policy_test.titolo.text(), "Politica di gestione conflitti")
         self.assertEqual(self.policy_test.titolo.accessibleName(), 'Title2')
-        self.assertEqual(self.policy_test.client.text(), "Client")
-        self.assertEqual(self.policy_test.manual.text(), "Manuale")
+        self.assertEqual("Client" in self.policy_test.client.text(), True)
+        self.assertEqual("Manuale" in self.policy_test.manual.text(), True)
 
         """ Test the quota disk widget in the default state """
         self.assertEqual(self.quota_test.accessibleName(), "InfoBox")

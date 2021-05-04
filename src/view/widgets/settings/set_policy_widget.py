@@ -25,8 +25,10 @@ class SetPolicyWidget(QWidget):
 
         self.spaceLabel = QLabel(" ")
 
-        self.client = QRadioButton("Client")
-        self.manual = QRadioButton("Manuale")
+        self.client = QRadioButton(
+            "Client (le tue modifiche sovrascrivono quelle presenti nel server)")
+        self.manual = QRadioButton(
+            "Manuale (verranno salvati entrambi i file, sarai te a decidere cosa tenere)")
         self.Sl_model_changed()
 
         layout = QVBoxLayout()

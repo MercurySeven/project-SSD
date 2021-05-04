@@ -11,18 +11,14 @@ class RemoteFileWidget(FileWidget):
 
     def __init__(self, file: RemoteFile, settings: SettingsModel):
         super(RemoteFileWidget, self).__init__(file)
-
-        self.status = file.get_status()
-        self.size = file.get_size()
-        self.last_editor = file.get_last_editor()
-        self.id = file.id
-
         self.settings_model = settings
+
+        self.id = file.id
 
         tooltip = (f"Nome: {self.name}\n"
                    f"Ultima modifica: {self.last_modified_date}\n"
-                   f"Dimensioni: {self.size}\n"
-                   f"Ultimo editor: {self.last_editor}")
+                   f"Dimensioni: {file.get_size()}\n"
+                   f"Ultimo editor: {file.get_last_editor()}")
 
         self.setToolTip(tooltip)
         self.Sl_on_file_status_changed()

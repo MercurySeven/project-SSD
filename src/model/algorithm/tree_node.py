@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Optional
 from src.model.algorithm.node import (Node, Type)
 from datetime import datetime, timezone
 
@@ -33,7 +34,7 @@ class TreeNode:
     def get_payload(self) -> Node:
         return self._payload
 
-    def get_path(self) -> str:
+    def get_path(self) -> Optional[str]:
         return self._payload.path
 
     def __str__(self, level: int = 0):
