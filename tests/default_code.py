@@ -142,7 +142,8 @@ class ResultObj:
             "action": action,
             "node": _get_test_node(),
             "path": "test",
-            "id": "id"
+            "id": "id",
+            "snap_last_update": 1
         }
         self.lun = _lun
         self.id = {
@@ -173,6 +174,15 @@ class ResultObj:
 class FakeLogger:
     def info(self, text: str):
         pass
+
+
+class NodeMetadata:
+
+    def __init__(self, updated_at: int = 1000):
+        self.updated = updated_at
+
+    def get_content_from_node(self):
+        return {'getNode': {'updated_at': self.updated}, 'random': {'random': 2}}
 
 
 class RequestObj:
