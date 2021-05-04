@@ -42,9 +42,8 @@ class SettingsViewTest(default_code.DefaultCode):
         """ Test the policy widget in the default state """
         self.assertTrue(self.policy_test.client.isChecked())
         self.assertFalse(self.policy_test.manual.isChecked())
-        self.assertEqual(self.policy_test._titolo.text(),
-                         "Politica di sincronizzazione")
-        self.assertEqual(self.policy_test._titolo.accessibleName(), 'Title2')
+        self.assertEqual(self.policy_test.titolo.text(), "Politica di gestione conflitti")
+        self.assertEqual(self.policy_test.titolo.accessibleName(), 'Title2')
         self.assertEqual(self.policy_test.client.text(), "Client")
         self.assertEqual(self.policy_test.manual.text(), "Manuale")
 

@@ -24,7 +24,7 @@ def __write_on_file() -> None:
 def create_standard_settings() -> None:
     """Genera il file di impostazioni standard"""
     config["General"] = {
-        "quota": "1024",
+        "quota": "20971520.0",
         "policy": "1",
         "is_sync": "off",
         "sync_time": "15"
@@ -66,8 +66,8 @@ def get_quota_disco() -> float:
         return result
     except ValueError:
         logger.warning("Il valore di quota disco non e' un numero float")
-        update_quota_disco("1024")
-        return 1024
+        update_quota_disco("20971520.0")
+        return 20971520.0
 
 
 def get_policy() -> int:
