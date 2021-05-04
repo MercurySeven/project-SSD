@@ -12,7 +12,7 @@ from src.model.algorithm.policy import Policy
 from src.model.algorithm.tree_node import TreeNode
 from src.model.main_model import MainModel
 from src.model.settings_model import SettingsModel
-from src.network.api_exceptions import APIException
+from src.network.api_exceptions import APIException, LoginError
 from . import tree_builder, tree_comparator, os_handler
 from .compare_snap_client import CompareSnapClient
 from .strategy.client_strategy import ClientStrategy
@@ -41,6 +41,8 @@ class DecisionEngine(Thread):
         os_handler.set_network_model(main_model.network_model)
         os_handler.set_settings_model(main_model.settings_model)
         tree_builder.set_model(main_model.network_model)
+
+        self.main_model = main_model
 
         self.compare_snap_client = CompareSnapClient()
         self.strategy: dict[Policy, Strategy] = {
@@ -88,9 +90,15 @@ class DecisionEngine(Thread):
             tree_builder.dump_client_filesystem(path)
             self.logger.info("Eseguito snapshot dell'albero locale")
             self.notification_controller.send_best_message()
-        except APIException:
-            self.notification_controller.send_message(
-                "Errore di connessione al drive Zextras", icon=QSystemTrayIcon.Warning)
+        except APIException as e:
+            if isinstance(e, LoginError):
+                self.notification_controller.send_message(
+                    "Credenziali errate. Eseguire logout e riprovare",
+                    icon=QSystemTrayIcon.Critical)
+                self.main_model.sync_model.set_state(False)
+            else:
+                self.notification_controller.send_message(
+                    "Errore di connessione al drive Zextras", icon=QSystemTrayIcon.Warning)
 
     def compute_decision(self,
                          client_tree: TreeNode,
