@@ -34,7 +34,7 @@ class RemoteFileWidget(FileWidget):
 
     def show_synced(self) -> None:
         p1 = QPixmap(self.icon().pixmap(self.icon().actualSize(QSize(1024, 1024))))
-        p2 = QPixmap('./assets/icons/check.png')
+        p2 = QPixmap('./assets/icons/Check.png')
 
         mode = QPainter.CompositionMode_SourceOver
         s = p1.size().expandedTo(p2.size())
