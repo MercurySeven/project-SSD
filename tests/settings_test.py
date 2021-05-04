@@ -80,6 +80,11 @@ class TestSettings(default_code.DefaultCode):
         value = settings.get_sync_time()
         self.assertEqual(value, 15)
 
+    def test_get_sync_time_fix(self) -> None:
+        settings.update_config("General", "sync_time", "ABCDE")
+        value = settings.get_sync_time()
+        self.assertEqual(value, 15)
+
 
 if __name__ == "__main__":
     unittest.main()
