@@ -28,7 +28,7 @@ class DecisionEngine(Thread):
                  running: bool = False):
         Thread.__init__(self)
 
-        self.setName("Algoritmo V3")
+        self.setName("Algoritmo V4")
         self.setDaemon(True)
         self.env_settings = QSettings()
         self.settings_model: SettingsModel = main_model.settings_model
