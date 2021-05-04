@@ -25,7 +25,7 @@ class RemoteFileModel(QObject):
 
     def __init__(self, create_key):
         assert (create_key == RemoteFileModel.__create_key), \
-            "RemoteFileModel objects must be created using NetworkModel.create"
+            "RemoteFileModel objects must be created using RemoteFileModel.get_instance()"
 
         super(RemoteFileModel, self).__init__()
         self.folder_queue = ["LOCAL_ROOT"]

@@ -25,7 +25,7 @@ class SettingsModel(QObject):
 
     def __init__(self, create_key):
         assert (create_key == SettingsModel.__create_key), \
-            "Settings objects must be created using NetworkModel.create"
+            "SettingsModel objects must be created using SettingsModel.get_instance()"
         super(SettingsModel, self).__init__(None)
         self.env_settings = QSettings()
 

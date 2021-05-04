@@ -23,7 +23,7 @@ class FileModel(QObject):
 
     def __init__(self, create_key):
         assert (create_key == FileModel.__create_key), \
-            "FileModel objects must be created using NetworkModel.create"
+            "FileModel objects must be created using FileModel.get_instance()"
 
         super(FileModel, self).__init__()
         self.settings = QSettings()

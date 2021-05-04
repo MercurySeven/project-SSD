@@ -83,7 +83,7 @@ def get_policy() -> int:
 def get_sync_time() -> int:
     """Ritorna il tempo di sync salvato"""
     try:
-        return int(str(get_config("General", "sync_time")))
+        return int(get_config("General", "sync_time"))
     except ValueError:
         logger.warning("Il valore del tempo di sync non e' int")
         update_sync_time(15)

@@ -107,7 +107,7 @@ class NetworkModel(QObject, Api, metaclass=NetworkMeta):
     def __init__(self, create_key):
 
         assert (create_key == NetworkModel.__create_key), \
-            "Network objects must be created using NetworkModel.create"
+            "NetworkModel objects must be created using NetworkModel.get_instance()"
         super(NetworkModel, self).__init__(None)
         super(Api, self).__init__()
 
