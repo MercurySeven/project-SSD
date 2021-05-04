@@ -57,19 +57,24 @@ class RemoteFileView(QWidget):
 
     @Slot()
     def Sl_model_changed(self) -> None:
-        list_of_files, list_of_dirs = self._model.get_data()
-
+        data = self._model.get_data()
+        # Pulisco la vista
         for i in reversed(range(self.fileLayout.count())):
             self.fileLayout.itemAt(i).widget().setParent(None)
-        for i in list_of_dirs:
-            self.fileLayout.addWidget(RemoteDirectoryWidget(i, self))
-        for i in list_of_files:
-            self.fileLayout.addWidget(RemoteFileWidget(i, self.settings_model))
-            self.fileLayout._item_list[-1].wid.Sg_add_sync_file.connect(self.Sl_add_sync_file)
-            self.fileLayout._item_list[-1].wid.Sg_remove_sync_file.connect(
-                self.Sl_remove_sync_file)
-            self.Sg_file_status_changed.connect(
-                self.fileLayout._item_list[-1].wid.Sl_on_file_status_changed)
+        # Se model.get_data ha avuto eccezioni di rete restituisce None
+        if data is not None:
+            list_of_files, list_of_dirs = data
+            # Aggiungo le cartelle
+            for i in list_of_dirs:
+                self.fileLayout.addWidget(RemoteDirectoryWidget(i, self))
+            # Aggiungo i file
+            for i in list_of_files:
+                self.fileLayout.addWidget(RemoteFileWidget(i, self.settings_model))
+                self.fileLayout._item_list[-1].wid.Sg_add_sync_file.connect(self.Sl_add_sync_file)
+                self.fileLayout._item_list[-1].wid.Sg_remove_sync_file.connect(
+                    self.Sl_remove_sync_file)
+                self.Sg_file_status_changed.connect(
+                    self.fileLayout._item_list[-1].wid.Sl_on_file_status_changed)
 
     @Slot(str)
     def Sl_update_files_with_new_id(self, id: str) -> None:

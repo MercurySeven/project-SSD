@@ -8,6 +8,7 @@ from src.model.algorithm.tree_node import TreeNode
 from src.model.network_model import NetworkModel
 from src.model.widgets.remote_directory import RemoteDirectory
 from src.model.widgets.remote_file import RemoteFile
+from src.network.api_exceptions import APIException
 
 
 class RemoteFileModel(QObject):
@@ -38,17 +39,19 @@ class RemoteFileModel(QObject):
     def get_data(self) -> Tuple[list[RemoteFile], list[RemoteDirectory]]:
         list_of_files = []
         list_of_dirs = []
+        try:
+            for entry in self.get_current_tree().get_children():
+                if entry.get_payload().type == Type.File:
+                    list_of_files.append(RemoteFile(entry))
+                else:
+                    list_of_dirs.append(RemoteDirectory(entry))
 
-        for entry in self.get_current_tree().get_children():
-            if entry.get_payload().type == Type.File:
-                list_of_files.append(RemoteFile(entry))
-            else:
-                list_of_dirs.append(RemoteDirectory(entry))
-
-        if self.folder_queue[-1] != "LOCAL_ROOT":
-            previous_folder = RemoteDirectory(
-                TreeNode(Node(self.folder_queue[-1], '..', Type.Folder, None, None)))
-            list_of_dirs.insert(0, previous_folder)
+            if self.folder_queue[-1] != "LOCAL_ROOT":
+                previous_folder = RemoteDirectory(
+                    TreeNode(Node(self.folder_queue[-1], '..', Type.Folder, None, None)))
+                list_of_dirs.insert(0, previous_folder)
+        except APIException:
+            return None
 
         return list_of_files, list_of_dirs
 
