@@ -33,6 +33,9 @@ class TreeNode:
     def get_payload(self) -> Node:
         return self._payload
 
+    def get_path(self) -> str:
+        return self._payload.path
+
     def __str__(self, level: int = 0):
         """Metodo per stampare tutto l'albero"""
         folder = " - Folder" if self.is_directory() else ""

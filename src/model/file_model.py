@@ -47,6 +47,8 @@ class FileModel(QObject):
         if self.current_folder._node._parent:
             self.previous_folder = LocalDirectory(self.current_folder._node._parent, '..')
             list_of_dirs.insert(0, self.previous_folder)
+        else:
+            self.previous_folder = None
 
         return list_of_files, list_of_dirs
 
@@ -56,9 +58,12 @@ class FileModel(QObject):
         if(child):
             # imposto figlio come node folder
             self.current_folder._node = child
+            self.current_folder._name = child.get_name()
         else:
             # imposto genitore come node folder
-            self.current_folder._node = self.search_node_from_path(path)
+            result_node = self.search_node_from_path(path)
+            self.current_folder._node = result_node
+            self.current_folder._name = result_node.get_name()
         self.Sl_update_model()
 
     def search_node_from_path(self, path: str) -> Optional[TreeNode]:
