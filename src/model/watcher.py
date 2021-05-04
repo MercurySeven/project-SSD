@@ -32,7 +32,7 @@ class Watcher(QObject):
         # Debug < Info < Warning < Error so setting debug will get everything
         # I need to create a new logger cuz davide's logger is root log
         self.logger = logging.getLogger("watchdog")
-        self.logger.setLevel(logging.INFO)
+        self.logger.setLevel(logging.WARNING)
         formatter = logging.Formatter(
             '%(asctime)s:%(levelname)s:%(pathname)s:%(process)d:%(message)s')
         file_handler = logging.FileHandler('log.mer')
@@ -50,15 +50,15 @@ class Watcher(QObject):
         """
 
         if watch:
-            self.logger.info("Attivato watchdog")
+            self.logger.warning("Attivato watchdog")
             path = self.path()
             path = "" if path is None else path
-            self.logger.info("Controllo cartella: " + path)
+            self.logger.warning("Controllo cartella: " + path)
             return self.background()
         else:
             self.observer.unschedule_all()
             self.observer.stop()
-            self.logger.info("Disattivato watchdog")
+            self.logger.warning("Disattivato watchdog")
             return True
 
     def background(self):
