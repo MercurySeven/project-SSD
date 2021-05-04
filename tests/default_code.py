@@ -14,7 +14,6 @@ from src.model.network_model import Status
 from src.network.api_exceptions import APIException
 from src.network.api_implementation import ExceptionsHandler
 
-
 node_name = "CLIENT_NODE"
 
 
@@ -138,7 +137,7 @@ def _get_tree_dict() -> dict:
 
 
 class ResultObj:
-    def __init__(self, action, _lun: int = 0):
+    def __init__(self, action, _lun: int = 0, _name: str = "test"):
         self.result = {
             "action": action,
             "node": _get_test_node(),
@@ -151,6 +150,7 @@ class ResultObj:
                 "size": 100
             }
         }
+        self.name = _name
 
     # metodo usato per poter usare len(obj)
     def __len__(self):
@@ -164,6 +164,14 @@ class ResultObj:
         pass
 
     def show(self):
+        pass
+
+    def get_name(self):
+        return self.name
+
+
+class FakeLogger:
+    def info(self, text: str):
         pass
 
 
