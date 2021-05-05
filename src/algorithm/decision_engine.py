@@ -78,6 +78,11 @@ class DecisionEngine(Thread):
     def check(self) -> None:
         self.logger.info("Avvio sincronizzazione")
         path = self.env_settings.value("sync_path")
+        if not os.path.isdir(path):
+            self.notification_controller.send_message("La cartella scelta non è stata trovata",
+                                                      icon=QSystemTrayIcon.Critical)
+            self.main_model.sync_model.set_state(False)
+            return
         snap_tree = tree_builder.read_dump_client_filesystem(path)
         client_tree = tree_builder.get_tree_from_system(path)
 
