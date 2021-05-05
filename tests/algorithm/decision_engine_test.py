@@ -56,7 +56,7 @@ class DecisionEngineTest(default_code.DefaultCode):
         mock_2.assert_called_once()
         mock_3.assert_called_once()
         mock_4.assert_called_once()
-        mock_5.assert_called_once()
+        self.assertEqual(mock_5.call_count, 2)
         mock_6.assert_called_once()
 
     @patch('src.algorithm.tree_builder.read_dump_client_filesystem', return_value="test")

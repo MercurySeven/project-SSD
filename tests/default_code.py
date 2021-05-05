@@ -94,12 +94,12 @@ def create_folder_with_files(file_list: list = None, time: int = 100):
     return root_folder
 
 
-def _get_default_dict() -> dict:
+def _get_default_dict(upd: int = 2000) -> dict:
     _id = "id"
     _name = "name"
     _type = "File"
     _created = 2000
-    _updated = 2000
+    _updated = upd
     _size = 14
     _email = "a@a.it"
     thisdict = {
@@ -136,14 +136,34 @@ def _get_tree_dict() -> dict:
     return thisdict
 
 
+def _get_special_tree_dict() -> dict:
+    _id = "id"
+    _name = "name.ciao.we"
+    _type = "Folder"
+    _created = 1
+    _updated = 1
+    thisdict = {
+        "getNode": {
+            "id": _id,
+            "name": _name,
+            "type": _type,
+            "created_at": _created,
+            "updated_at": _updated,
+            "last_editor": None,
+            "children": [_get_default_dict(_updated)]
+        }
+    }
+    return thisdict
+
+
 class ResultObj:
-    def __init__(self, action, _lun: int = 0, _name: str = "test"):
+    def __init__(self, action, _lun: int = 0, _name: str = "test", snap_upd: int = 1):
         self.result = {
             "action": action,
-            "node": _get_test_node(),
+            "node": _get_test_node(_name),
             "path": "test",
             "id": "id",
-            "snap_last_update": 1
+            "snap_last_update": snap_upd
         }
         self.lun = _lun
         self.id = {
@@ -152,6 +172,9 @@ class ResultObj:
             }
         }
         self.name = _name
+
+    def get_updated_at(self):
+        return 1
 
     # metodo usato per poter usare len(obj)
     def __len__(self):
