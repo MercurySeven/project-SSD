@@ -1,6 +1,8 @@
 from unittest.mock import patch
 
 from src.model.main_model import MainModel
+from src.model.network_model import Status
+from src.network.api_exceptions import APIException
 from src.network.api_implementation import LoginError, NetworkError, ServerError
 from tests import default_code
 
@@ -16,6 +18,24 @@ class NetworkModelTest(default_code.DefaultCode):
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""
         super().tearDown()
+        self.model_test.status = Status.Ok
+
+    def test_raise_for_status_error(self):
+        self.model_test.status = Status.Error
+        try:
+            self.model_test.raise_for_status()
+        except APIException as e:
+            self.assertEqual(str(e), str(APIException()))
+
+    def test_raise_for_status_ok(self):
+        self.model_test.status = Status.Ok
+        self.assertEqual(self.model_test.raise_for_status(), None)
+
+    @patch('src.network.api_implementation.ApiImplementation.get_info_from_email',
+           return_value=True)
+    def test_info_from_email(self, mock_get_user_id):
+        self.assertEqual(self.model_test.get_info_from_email(), True)
+        mock_get_user_id.assert_called_once()
 
     @patch('src.network.api_implementation.ApiImplementation.get_user_id',
            return_value=True)
