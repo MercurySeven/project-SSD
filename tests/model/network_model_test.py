@@ -55,3 +55,13 @@ class NetworkModelTest(default_code.DefaultCode):
         mocked_login.assert_called_once()
         self.assertTrue(self.model_test.is_logged())
         mocked_is_logged_in.assert_called_once()
+
+    @patch('src.network.api_implementation.ApiImplementation.logout', return_value=True)
+    def test_logout_success(self, mock_api_logout):
+        self.assertEqual(self.model_test.logout(), True)
+        mock_api_logout.assert_called_once()
+
+    @patch('src.network.api_implementation.ApiImplementation.logout', return_value=False)
+    def test_logout_failure(self, mock_api_logout):
+        self.assertEqual(self.model_test.logout(), False)
+        mock_api_logout.assert_called_once()
