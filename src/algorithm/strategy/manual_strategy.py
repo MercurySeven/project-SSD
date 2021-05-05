@@ -26,7 +26,11 @@ class ManualStrategy(Strategy):
                 node_server = tree_builder._create_node_from_dict(node_json["getNode"])
                 node_last_update_server = node_server.get_updated_at()
                 snap_last_update = node_raw["snap_last_update"]
-                if snap_last_update == node_last_update_server:
+
+                # Devo fare il controllo per Trinity, verificare che
+                # il nodo non sia stato cancellato
+                is_different_node = node_server.get_name() != name_node
+                if snap_last_update == node_last_update_server or is_different_node:
                     """L'utente ha modificato il file aggiornato rispetto al server, non ci
                     saranno perdite di informazioni"""
                     node_id = super().get_or_create_folder_id(node.get_payload().path)
