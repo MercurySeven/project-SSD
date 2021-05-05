@@ -1,7 +1,9 @@
 import os
 from abc import ABC, abstractmethod
-from PySide6.QtCore import QSettings
 from logging import Logger
+from typing import Optional
+from PySide6.QtCore import QSettings
+
 from src.algorithm import os_handler, tree_builder
 from src.algorithm.tree_comparator import Actions
 from src.model.algorithm.tree_node import TreeNode
@@ -16,14 +18,16 @@ def common_strategy(node_raw: dict, logger: Logger) -> None:
 
     if action == Actions.CLIENT_NEW_FOLDER:
         # Elimina nel server la cartella
-        node_id = get_id_from_path(node.get_payload().path)
-        os_handler.delete_node(node_id)
-        logger.info(f"Eliminata nel server la cartella: {name_node}")
+        node_id = check_node_still_exists(node.get_path())
+        if node_id is not None:
+            os_handler.delete_node(node_id)
+            logger.info(f"Eliminata nel server la cartella: {name_node}")
     elif action == Actions.CLIENT_NEW_FILE:
-        # Elimina nel server il client
-        node_id = get_id_from_path(node.get_payload().path)
-        os_handler.delete_node(node_id)
-        logger.info(f"Eliminato nel server il file: {name_node}")
+        # Elimina nel server il file
+        node_id = check_node_still_exists(node.get_path())
+        if node_id is not None:
+            os_handler.delete_node(node_id)
+            logger.info(f"Eliminato nel server il file: {name_node}")
     elif action == Actions.SERVER_NEW_FOLDER:
         # Il client ha una nuova cartella che deve essere caricata nel server
         parent_id = get_id_from_path(node_raw["path"])
@@ -34,6 +38,27 @@ def common_strategy(node_raw: dict, logger: Logger) -> None:
         parent_id = get_id_from_path(node_raw["path"])
         os_handler.upload_file(node, parent_id)
         logger.info(f"Nuovo file da caricare nel server: {name_node}")
+
+
+def check_node_still_exists(path) -> Optional[str]:
+    """Ritorna un id se un nodo è presente, None altrimenti"""
+    env_settings = QSettings()
+    path_folder = env_settings.value("sync_path")
+    result = os.path.relpath(path, path_folder)
+    node_name = result.split(os.sep)
+
+    current_node = tree_builder.get_tree_from_node_id()
+    trovato = False
+    for name in node_name:
+        trovato = False
+        for node in current_node.get_children():
+            if node.get_name() == name:
+                current_node = node
+                trovato = True
+                break
+    if trovato:
+        return current_node.get_payload().id
+    return None
 
 
 def get_id_from_path(path: str) -> str:
