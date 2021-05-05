@@ -30,7 +30,7 @@ class FileWidget(QToolButton):
 
     def get_extension(self) -> str:
         e = self.name.split(".")
-        return e[1]
+        return e[-1]
 
     def set_icon(self):
         self.setIconSize(QSize(45, 45))
