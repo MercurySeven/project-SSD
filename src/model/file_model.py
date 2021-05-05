@@ -49,7 +49,12 @@ class FileModel(QObject):
             except FileNotFoundError as e:
                 print("File not found: " + str(e))
         else:
-            print("Pulire file view")
+            self.clear_view()
+
+    def clear_view(self):
+        self.current_folder._files.clear()
+        self.current_folder._dirs.clear()
+        self.Sg_model_changed.emit()
 
     def get_data(self) -> Tuple[list[LocalFile], list[LocalDirectory]]:
         list_of_files = self.current_folder._files  # lista file dalla dir
