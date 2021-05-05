@@ -5,26 +5,23 @@ import src.settings as settings
 from tests import default_code
 
 
-class TestSettings(unittest.TestCase):
+class TestSettings(default_code.DefaultCode):
 
     def setUp(self):
         """Metodo che viene chiamato prima di ogni metodo"""
-        tmp = default_code.setUp()
-        self.restore_path = tmp[0]
-        self.env_settings = tmp[1]
-        self.restore_credentials = tmp[2]
+        super().setUp()
 
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""
-        default_code.tearDown(self.env_settings, self.restore_path, self.restore_credentials)
+        super().tearDown()
 
     def test_get_quota_disco(self) -> None:
         quota_disco = settings.get_quota_disco()
-        self.assertEqual(quota_disco, 1024)
+        self.assertEqual(quota_disco, 20971520.0)
 
     def test_get_config(self) -> None:
         result = settings.get_config("General", "quota")
-        self.assertEqual(result, "1024")
+        self.assertEqual(result, "20971520.0")
 
         result = settings.get_config("Generale", "quota")
         self.assertIsNone(result)
@@ -41,7 +38,7 @@ class TestSettings(unittest.TestCase):
 
     def test_get_quota_disco_fix(self) -> None:
         settings.update_quota_disco("ABCDEFG")
-        self.assertEqual(settings.get_quota_disco(), 1024)
+        self.assertEqual(settings.get_quota_disco(), 20971520.0)
 
     def test_update_config(self) -> None:
         settings.update_config("Extra", "darkmode", "True")
@@ -73,6 +70,30 @@ class TestSettings(unittest.TestCase):
         settings.update_is_sync(False)
         value = settings.get_is_synch()
         self.assertFalse(value)
+
+    def test_update_sync_time(self) -> None:
+        settings.update_sync_time(60)
+        value = settings.get_sync_time()
+        self.assertEqual(value, 60)
+
+    def test_get_sync_time(self) -> None:
+        value = settings.get_sync_time()
+        self.assertEqual(value, 15)
+
+    def test_get_sync_time_fix(self) -> None:
+        settings.update_config("General", "sync_time", "ABCDE")
+        value = settings.get_sync_time()
+        self.assertEqual(value, 15)
+
+    def test_get_sync_list(self) -> None:
+        value = settings.get_sync_list()
+        self.assertEqual(len(value), 0)
+
+    def test_update_sync_list(self) -> None:
+        lista = ["a", "b", "c"]
+        settings.update_sync_list(lista)
+        value = settings.get_sync_list()
+        self.assertEqual(value, lista)
 
 
 if __name__ == "__main__":

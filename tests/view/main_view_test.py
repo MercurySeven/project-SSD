@@ -1,18 +1,14 @@
-import unittest
+from unittest.mock import patch
 from src.model.main_model import MainModel
 from src.view.main_view import MainWindow, MainWidget
 from tests import default_code
 
 
-class MainWindowTest(unittest.TestCase):
+class MainWindowTest(default_code.DefaultCode):
+    @patch('src.view.remote_file_view.RemoteFileView.Sl_model_changed')
+    def setUp(self, mock_1) -> None:
 
-    def setUp(self) -> None:
-
-        tmp = default_code.setUp()
-        self.restore_path = tmp[0]
-        self.env_settings = tmp[1]
-        self.restore_credentials = tmp[2]
-
+        super().setUp()
         self.main_model = MainModel()
         self.main_window = MainWindow(self.main_model)
         self.main_widget_test = self.main_window.main_widget
@@ -20,7 +16,7 @@ class MainWindowTest(unittest.TestCase):
 
     def tearDown(self) -> None:
         """Metodo che viene chiamato dopo ogni metodo"""
-        default_code.tearDown(self.env_settings, self.restore_path, self.restore_credentials)
+        super().tearDown()
 
     def test_defaults(self):
         self.assertEqual(self.main_widget_test.container_menu.accessibleName(),

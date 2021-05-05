@@ -8,7 +8,6 @@ from src.model.algorithm.node import Node, Type
 from typing import Optional
 from src.model.network_model import NetworkModel
 
-
 FILE_DUMP_NAME = "client_dump.mer"
 FOLDER_NAME = ".zextrasdrive"
 
@@ -25,11 +24,12 @@ def _build_tree_node(path: str, name: str) -> TreeNode:
     """Costruisce un TreeNode a partire dal path"""
     id = "CLIENT_NODE"
     # name = os.path.basename(path)
+    if not os.path.exists(path):
+        raise FileNotFoundError()
     type = Type.Folder if os.path.isdir(path) else Type.File
     created_at = math.trunc(os.stat(path).st_ctime)
     updated_at = math.trunc(os.stat(path).st_mtime)
-
-    return TreeNode(Node(id, name, type, created_at, updated_at, path))
+    return TreeNode(Node(id, name, type, created_at, updated_at, path=path))
 
 
 def get_tree_from_system(path: str,
@@ -57,17 +57,21 @@ def _create_node_from_dict(dict: str) -> TreeNode:
     type = Type.File if dict["type"] == "File" else Type.Folder
     created_at = math.trunc(dict["created_at"] / 1000)
     updated_at = math.trunc(dict["updated_at"] / 1000)
-    return TreeNode(Node(id, name, type, created_at, updated_at))
+    size = 0 if type == Type.Folder else dict["size"]
+    last_editor = None if dict["last_editor"] is None else dict["last_editor"]["email"]
+
+    node = Node(id, name, type, created_at, updated_at, size=size, last_editor=last_editor)
+    return TreeNode(node)
 
 
-def get_tree_from_node_id(node_id: str = "LOCAL_ROOT") -> TreeNode:
+def get_tree_from_node_id(node_id: str = "LOCAL_ROOT", complete_tree: bool = True) -> TreeNode:
     """Funzione ricorsiva per costruire l'albero remodo dato un node_id"""
     json = networkmodel.get_content_from_node(node_id)
     folder = _create_node_from_dict(json["getNode"])
     for _file in json["getNode"]["children"]:
         new_node = _create_node_from_dict(_file)
 
-        if new_node.is_directory():
+        if new_node.is_directory() and complete_tree:
             # Fai chiamata web per il nuovo nodo
             folder_tree_node = get_tree_from_node_id(new_node._payload.id)
             folder.add_node(folder_tree_node)

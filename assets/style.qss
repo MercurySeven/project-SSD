@@ -42,8 +42,8 @@ Stile Infobox in schermata a Dx
 QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] {
     background-color: #353535;
     border-radius: 6px;
-    max-width: 500px;
 }
+
 
 QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] > QWidget {
     background-color: #353535;
@@ -54,8 +54,33 @@ QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] > QProgressB
     border-radius: 6px;
 }
 
+QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] > QComboBox {
+    background-color: #404040;
+    selection-background-color: #565656;
+    border-radius: 6px;
+    border: 0px;
+    padding: 5px;
+    min-width: 8em;
+}
+
+QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] > QComboBox::drop-down {
+    background-color: #783dbd;
+    border-radius: 4px;
+    min-width: 1.5em;
+}
+
+QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] > QComboBox::down-arrow {
+    border-image: url(assets/icons/down-arrow.png);
+}
+
+QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] > QComboBox::drop-down:hover {
+    background-color: rgb(190, 190, 190);
+    color: #783dbd;
+}
+
+
 QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] > QProgressBar:chunk {
-    background-color: #4B4B4B;
+    background-color: #783dbd;
     border-radius: 6px;
 }
 
@@ -64,28 +89,51 @@ QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] > QLineEdit 
     border-radius: 6px;
     border: 0px;
     padding: 5px;
-    margin:0px;
+    margin: 0px;
 }
 
-/* 
+QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] > QPushButton {
+    background-color: #783dbd;
+
+}
+
+QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] > QPushButton:hover {
+    background-color: rgb(190, 190, 190);
+    color: #783dbd;
+}
+
+
+/*
 Stile Label default
 */
-QLabel[accessibleName='Title']{
+QLabel[accessibleName='Title'] {
     font-size: 30px;
     margin-bottom: 0px;
     font-weight: bold;
 
 }
-QLabel[accessibleName='Subtitle']{
+
+QLabel[accessibleName='Title2'] {
+    font-size: 17px;
+    margin-bottom: 0px;
+    font-weight: bold;
+
+}
+
+QLabel[accessibleName='Sottotitolo'] {
+    font-size: 11px;
+}
+
+QLabel[accessibleName='Subtitle'] {
     font-weight: bold;
 }
 
-QLabel[accessibleName='LoginLabel']{
+QLabel[accessibleName='LoginLabel'] {
     background-color: #2A2A2A;
-    margin-left:2px;
+    margin-left: 2px;
 }
 
-QLabel[accessibleName='LoginTitle']{
+QLabel[accessibleName='LoginTitle'] {
     background-color: #2A2A2A;
     font-size: 30px;
     margin-bottom: 0px;
@@ -109,10 +157,10 @@ QWidget > QLineEdit {
 /* 
 Stile Pulsanti default
 */
-QWidget > QPushButton{
+QWidget > QPushButton {
     background-color: #4B4B4B;
-    margin:5px;
-    border:0px;
+    margin: 5px;
+    border: 0px;
     border-radius: 6px;
     color: rgb(190, 190, 190);
     padding: 5px;
@@ -123,14 +171,14 @@ QWidget > QPushButton:hover {
 }
 
 QPushButton[accessibleName='HighlightButton'] {
-    
-    border-width:0px;
-    border-radius:50px;
+
+    border-width: 0px;
+    border-radius: 50px;
     font-size: 70px;
-    max-width:100px;
-    max-height:100px;
-    min-width:100px;
-    min-height:100px;
+    max-width: 100px;
+    max-height: 100px;
+    min-width: 100px;
+    min-height: 100px;
     padding: 0px;
     margin: 0px;
     background-color: #404040;
@@ -204,7 +252,7 @@ QWidget[accessibleName='Stacked'] QToolButton[accessibleName='Directory'] {
     min-height: 100px;
     max-height: 100px;
     width: 100%;
-    text-align:bottom;
+    text-align: bottom;
     background-color: #2A2A2A;
     font: 14px
 }
@@ -213,26 +261,34 @@ QWidget[accessibleName='Stacked'] QToolButton[accessibleName='Directory']:hover 
     background-color: #353535;
 }
 
-
 QWidget[accessibleName='FileScroll'] QScrollBar {
-    width: 6px;
-    border-radius: 6px;
-    color: #404040;
+    width: 10px;
 }
 
-QWidget[accessibleName='FileScroll'] > QWidget > QWidget{
+QWidget > QScrollBar::handle {
+    background-color: #565656;
+}
+
+
+QScrollBar::add-line {
+    background-color: transparent;
+}
+
+QScrollBar::sub-line {
+    background-color: transparent;
+}
+
+QWidget[accessibleName='FileScroll'] > QWidget > QWidget {
     padding: 0;
     margin: 0;
     border: 0px;
-    border-radius: 6px;
     background-color: #2A2A2A;
 }
 
 QWidget[accessibleName='FileScroll'] {
     border: 0px;
-    border-radius: 6px;
-    background-color: #353535;
 }
+
 QWidget[accessibleName='Stacked'] QToolButton[accessibleName='File'] QToolTip {
     color: black;
     padding: 3px;

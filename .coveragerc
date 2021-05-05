@@ -2,3 +2,4 @@
 omit =
     *controllers*
     */main.py
+    */api.py

@@ -1,24 +1,23 @@
 import unittest
+import bitmath
 
 from src.model.main_model import MainModel
+from src.model.settings_model import SettingsModel
 from src.model.algorithm.policy import Policy
 from tests import default_code
 
 
-class TestSettings(unittest.TestCase):
+class TestSettings(default_code.DefaultCode):
 
     def setUp(self):
         """Metodo che viene chiamato prima di ogni metodo"""
-        tmp = default_code.setUp()
-        self.restore_path = tmp[0]
-        self.env_settings = tmp[1]
-        self.restore_credentials = tmp[2]
+        super().setUp()
         self.main_model = MainModel()
-        self.sett_model = self.main_model.settings_model
+        self.sett_model: SettingsModel = self.main_model.settings_model
 
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""
-        default_code.tearDown(self.env_settings, self.restore_path, self.restore_credentials)
+        super().tearDown()
 
     def test_get_policy(self) -> None:
         result = self.sett_model.get_policy()
@@ -33,13 +32,21 @@ class TestSettings(unittest.TestCase):
         result = self.sett_model.get_policy()
         self.assertEqual(Policy.Manual, result)
 
+    def test_set_sync_time(self) -> None:
+        result = self.sett_model.get_sync_time()
+        self.assertEqual(15, result)
+        new_time = 20
+        self.sett_model.set_sync_time(new_time)
+        result = self.sett_model.get_sync_time()
+        self.assertEqual(new_time, result)
+
     def test_convert_size(self) -> None:
         test: dict[str, int] = {
             "0 B": 0,
-            "1.0 KB": 1024,
-            "2.0 KB": 2048,
-            "1000.0 KB": 1024000,
-            "976.56 MB": 1024000000
+            "1.0 KiB": 1024,
+            "2.0 KiB": 2048,
+            "1000.0 KiB": 1024000,
+            "976.56 MiB": 1024000000
         }
 
         for key, value in test.items():
@@ -47,23 +54,37 @@ class TestSettings(unittest.TestCase):
 
     def test_get_quota_disco(self) -> None:
         value = self.sett_model.get_quota_disco()
-        self.assertEqual("1.0 KB", value)
+        self.assertEqual("20.0 MiB", value)
 
     def test_get_quota_disco_raw(self) -> None:
         value = self.sett_model.get_quota_disco_raw()
-        self.assertEqual(1024, value)
+        self.assertEqual(20971520.0, value)
 
     def test_set_quota_disco(self) -> None:
-        value = self.sett_model.get_quota_disco_raw()
-        self.assertEqual(1024, value)
-        new_value = self.sett_model.get_size() + 1
-        self.sett_model.set_quota_disco(str(new_value))
+        value = self.sett_model.convert_size(self.sett_model.get_quota_disco_raw())
+        value = bitmath.parse_string(value).to_Byte()
+        self.assertEqual(20971520.0, value)
+        new_value = self.sett_model.convert_size(self.sett_model.get_size() + 1)
+        new_value = bitmath.parse_string(new_value)
+        self.sett_model.set_quota_disco(new_value.to_Byte())
 
-        value = self.sett_model.get_quota_disco_raw()
+        value = self.sett_model.convert_size(self.sett_model.get_quota_disco_raw())
+        self.assertEqual(new_value, bitmath.parse_string(value))
+
+        value = bitmath.parse_string(self.sett_model.get_quota_disco())
         self.assertEqual(new_value, value)
 
-        value = self.sett_model.get_quota_disco()
-        self.assertEqual(self.sett_model.convert_size(new_value), value)
+    def test_sync_list(self) -> None:
+        value = self.sett_model.is_id_in_sync_list("a")
+        self.assertFalse(value)
+
+        self.sett_model.add_id_to_sync_list("a")
+        value = self.sett_model.is_id_in_sync_list("a")
+        self.assertTrue(value)
+
+        self.sett_model.remove_id_from_sync_list("a")
+        value = self.sett_model.is_id_in_sync_list("a")
+        self.assertFalse(value)
 
 
 if __name__ == "__main__":

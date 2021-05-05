@@ -1,16 +1,14 @@
-import os
 import logging
-import requests
+import os
 
-from .api import Api
-from .query_model import Query
-from src.model.algorithm.tree_node import TreeNode
+import requests
 from gql import gql, Client
 from gql.transport.requests import RequestsHTTPTransport
-from .api_exceptions import (LoginError, NetworkError, ServerError, NetworkErrs, ServerErrs)
 
-from requests.utils import dict_from_cookiejar
-from requests import Session
+from src.model.algorithm.tree_node import TreeNode
+from .api import Api
+from .api_exceptions import (LoginError, NetworkError, ServerError, NetworkErrs, ServerErrs)
+from .query_model import Query
 
 """
 
@@ -51,12 +49,13 @@ class ApiImplementation(Api):
     def __init__(self):
         self.url_base = "https://mail-eu-south.testarea.zextras.com/"
         self.url_graphql = self.url_base + "zx/drive/graphql/v1/"
+        self.url_login = self.url_base + "zx/team/login"
         self.url_files = self.url_base + "service/extension/drive/"
 
         self.email = ""
         self.password = ""
-        self.user_id = ""
-        self.cookie: dict = None
+        self.cookie = ""
+        self.user_id = None
         self.client = None
         self.logger = logging.getLogger("API")
 
@@ -72,89 +71,47 @@ class ApiImplementation(Api):
         # l'eccezione è intercettata dal gruppo ServerErrs
         response.raise_for_status()
 
-    def cookie2str(self, cookie: dict) -> str:
-        for key, value in cookie.items():
-            if key == "ZM_AUTH_TOKEN":
-                return "ZM_AUTH_TOKEN=" + value
-        return ""
-
     @ExceptionsHandler
-    def is_logged(self, _cookie: str = "") -> bool:
+    def is_logged(self) -> bool:
         self.logger.debug("checking login status...")
 
-        def OK():
+        r = requests.get(self.url_base, headers={"cookie": self.cookie})
+
+        if "LoginScreen" in r.text:
+            self.logger.debug("not logged")
+            return False
+        else:
             self.logger.debug("logged")
             return True
 
-        def KO():
-            self.logger.debug("not logged")
-            return False
-
-        c = _cookie if _cookie else self.cookie
-        r = requests.get(self.url_base, headers={"cookie": c})
-        return KO() if "LoginScreen" in r.text else OK()
-
     @ExceptionsHandler
-    def login(self, _email: str = "", _pwd: str = "") -> bool:
+    def login(self, _email: str = "", _pwd: str = ""):
         self.logger.debug("start login procedure...")
 
-        def csrf(session) -> str:
-            # estraggo il codice csrf dai cookie di sessione
-            try:
-                _cookies = dict_from_cookiejar(session.cookies)
-                csrf = _cookies['ZM_LOGIN_CSRF']
-                if csrf:
-                    self.logger.debug("CSRF code found")
-                    return csrf
-            except Exception:
-                self.logger.error("NO CSRF code found")
-                self.logger.error("raise ServerError")
-                raise ServerError("NO CSRF code found")
-
-        if self.is_logged():
-            return True
-
-        session = Session()
-
-        # questa chiamata setta i cookie di sessione che conterranno il codice csrf
-        self.logger.debug("getting CSRF code from zextras")
-        r = session.get(self.url_base)
-        self.check_status_code(r)
-
-        # dati estrapolati dalla chiamata post di login nel browser
-        # il codice csrf è generato dinamicamente
-        # da una chiamata get all'interfaccia web
-        login = {
-            "loginOp": "login",
-            "login_csrf": csrf(session),
-            "username": _email if _email else self.email,
+        payload = {
+            "auth_method": "password",
+            "email": _email if _email else self.email,
             "password": _pwd if _pwd else self.password,
-            "zrememberme": 1,
-            "client": "preferred"
+            "min_api_version": 1,
+            "max_api_version": 10
         }
 
         self.logger.debug("sending login POST request")
-        r = session.post(self.url_base, data=login)
+        r = requests.post(self.url_login, json=payload)
+
+        # check for login errors
         self.check_status_code(r)
 
-        new_cookie = self.cookie2str(dict_from_cookiejar(session.cookies))
+        self.logger.debug("setting new cookie and credentials")
+        self.email = _email
+        self.password = _pwd
+        self.user_id = r.json()['user_info']['id']
+        self.cookie = r.json()['auth_token']['cookie']
 
-        # se è andata bene i nuovi cookie di sessione
-        # contengono il token di autenticazione
-        if self.is_logged(new_cookie):
-            # setto i nuovi parametri
-            self.logger.debug("setting new cookie and credentials")
-            self.email = _email
-            self.password = _pwd
-            self.cookie = new_cookie
-            print(self.cookie)
+        # Non cancellare questa linea, è utile per recuperare facilmente il cookie :)
+        print(self.cookie)
 
-            self.init_client()
-            return True
-        else:
-            # se arrivo qui non mi sono loggato
-            self.logger.error("raise LoginError")
-            raise LoginError()
+        self.init_client()
 
     @ExceptionsHandler
     def init_client(self):
@@ -175,9 +132,9 @@ class ApiImplementation(Api):
 
     @ExceptionsHandler
     def logout(self) -> bool:
-
-        self.cookie = None
+        self.cookie = ""
         self.client = None
+        self.user_id = None
         self.logger.debug("logout")
         return True
 
@@ -201,7 +158,7 @@ class ApiImplementation(Api):
     @ExceptionsHandler
     def get_user_id(self) -> str:
         """Metodo che recupera l'id se non scaricato in precedenza"""
-        if self.user_id == "":
+        if not self.user_id:
             self.user_id = self.get_info_from_email()["id"]
         return self.user_id
 
@@ -220,12 +177,15 @@ class ApiImplementation(Api):
     @ExceptionsHandler
     def delete_node(self, node_id: str) -> None:
         """Rimuove il nodo dato l'id"""
-        query, params = Query.delete_node(node_id)
-        self.client.execute(gql(query), variable_values=params)
+        if node_id != "LOCAL_ROOT":
+            query, params = Query.delete_node(node_id)
+            self.client.execute(gql(query), variable_values=params)
+        else:
+            print("NON PUOI CANCELLARE LOCAL_ROOT")
 
     @ExceptionsHandler
-    def download_node(self, node: TreeNode, path: str) -> None:
-        """Il TreeNode viene scaricato e salvato nel path"""
+    def download_node(self, node: TreeNode, path: str) -> bool:
+        """Il TreeNode viene scaricato e salvato nel path, ritorna un bool a seconda dell'esito"""
         headers = {
             "cookie": self.cookie
         }
@@ -240,10 +200,12 @@ class ApiImplementation(Api):
             # Cambiare la data di creazione sembra non funzionare
             os.utime(path, (payload.created_at, payload.updated_at))
             self.logger.info(f"Download del file {payload.name}, completato con successo")
+            return True
         else:
             self.logger.info(f"Download del file {payload.name}, fallito")
             # alzo le eccezioni del caso
             self.check_status_code(response)
+            return False
 
     @ExceptionsHandler
     def upload_node(self, node: TreeNode, parent_id: str = "LOCAL_ROOT"):

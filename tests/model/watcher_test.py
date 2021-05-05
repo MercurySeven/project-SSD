@@ -1,27 +1,24 @@
 import os
 import pathlib
 import time
-import unittest
 from unittest.mock import patch
 
 from src.model.watcher import Watcher
-from tests.default_code import setUp, tearDown
+from tests import default_code
 
 
-class WatcherTest(unittest.TestCase):
+class WatcherTest(default_code.DefaultCode):
 
     def setUp(self) -> None:
-        tmp = setUp()
-        self.restore_path = tmp[0]
-        self.env_settings = tmp[1]
-        self.restore_credentials = tmp[2]
+        super().setUp()
+        self.env_settings = super().get_env_settings()
         self.watcher_to_test = Watcher()
-        self.path = self.env_settings.value("sync_path")
+        self.path = self.env_settings.value(super().SYNC_ENV_VARIABLE)
         self.path = os.path.join(self.path, "folder")
         pathlib.Path(self.path).mkdir(parents=True, exist_ok=True)
         self.file_test = os.path.join(self.path, "test.txt")
 
-    def tearDown(self) -> None:
+    def delete_files(self):
         if os.path.exists(self.file_test):
             try:
                 os.remove(self.file_test)
@@ -37,7 +34,10 @@ class WatcherTest(unittest.TestCase):
                 os.rmdir(self.path)
             except Exception as e:
                 print(e)
-        tearDown(self.env_settings, self.restore_path, self.restore_credentials)
+
+    def tearDown(self) -> None:
+        self.delete_files()
+        super().tearDown()
 
     def test_path_change(self):
         string_to_test = "ciao"

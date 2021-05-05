@@ -55,3 +55,29 @@ class Strategy(ABC):
     @abstractmethod
     def execute(self, result_actions: list, logger: Logger) -> None:
         pass
+
+    def get_or_create_folder_id(self, path: str) -> str:
+        """Ritorna l'id della cartella dove vuoi inserire il file, se non presente ne crea una"""
+        env_settings = QSettings()
+        path_folder = env_settings.value("sync_path")
+        dir_path = os.path.dirname(path)
+        result = os.path.relpath(dir_path, path_folder)
+        node_name = result.split(os.sep)
+        # Elimino il punto che mette se siamo nello stesso livello
+        node_name = [name for name in node_name if name != "."]
+
+        current_node = tree_builder.get_tree_from_node_id()
+        index = 0
+        for name in node_name:
+            trovato = False
+            for node in current_node.get_children():
+                if node.get_name() == name:
+                    current_node = node
+                    trovato = True
+                    break
+            if not trovato and index < len(node_name):
+                id_new_folder = os_handler.create_folder(name, current_node.get_payload().id)
+                current_node = tree_builder.get_tree_from_node_id(id_new_folder)
+            index = index + 1
+
+        return current_node.get_payload().id

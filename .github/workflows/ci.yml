@@ -50,6 +50,7 @@ jobs:
       name: Unit Test
       run: |
         python -m unittest discover -v -s "./tests/model/" -p "*_test.py"
+        python -m unittest discover -v -s "./tests/network/" -p "*_test.py"
         python -m unittest discover -v -s "./tests/" -p "settings_test.py"
 
   notify:
@@ -65,6 +66,6 @@ jobs:
         SLACK_COLOR: "${{ needs.build.result == 'success' && '#00ff00' || '#ff0000' }}"
         SLACK_ICON: https://raw.githubusercontent.com/MercurySeven/project-docs/main/Stile/Logo_blank.png
         SLACK_TITLE: "La build è ${{ needs.build.result == 'success' && 'valida' || 'fallita' }}"
-        SLACK_USERNAME: Huston - Bot
+        SLACK_USERNAME: Houston - Bot
         MSG_MINIMAL: Commit,Actions URL
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}

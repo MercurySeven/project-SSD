@@ -1,6 +1,5 @@
 import os
 import pathlib
-import unittest
 from unittest.mock import patch
 
 from src.algorithm import os_handler
@@ -10,17 +9,16 @@ from src.model.main_model import MainModel
 from tests import default_code
 
 
-class OsHandlerTest(unittest.TestCase):
+class OsHandlerTest(default_code.DefaultCode):
 
     def setUp(self) -> None:
-        tmp = default_code.setUp()
-        self.restore_path = tmp[0]
-        self.env_settings = tmp[1]
-        self.restore_credentials = tmp[2]
+        super().setUp()
+        self.env_settings = super().get_env_settings()
         self.main_model = MainModel()
-        os_handler.set_model(self.main_model.network_model)
+        os_handler.set_network_model(self.main_model.network_model)
+        os_handler.set_settings_model(self.main_model.settings_model)
 
-        self.original_path = self.env_settings.value("sync_path")
+        self.original_path = self.env_settings.value(super().SYNC_ENV_VARIABLE)
         self.folder_name = "test"
         self.file_name = "test.txt"
 
@@ -28,40 +26,55 @@ class OsHandlerTest(unittest.TestCase):
         self.path = r'%s' % self.path
         pathlib.Path(self.path).mkdir(parents=True, exist_ok=True)
 
-    def tearDown(self) -> None:
+    def delete_files(self):
         folder_to_remove = os.path.join(self.path, self.folder_name)
         file_to_remove = os.path.join(folder_to_remove, self.file_name)
         optional_folder = os.path.join(folder_to_remove, self.folder_name)
-        default_code.tearDown(self.env_settings, self.restore_path, self.restore_credentials)
+
         try:
             if os.path.exists(file_to_remove):
                 os.remove(file_to_remove)
+        except Exception as e:
+            print(e)
+        try:
             if os.path.exists(optional_folder):
                 os.rmdir(optional_folder)
+        except Exception as e:
+            print(e)
+        try:
             if os.path.exists(folder_to_remove):
                 os.rmdir(folder_to_remove)
+        except Exception as e:
+            print(e)
+        try:
             if os.path.exists(self.path):
                 os.rmdir(self.path)
         except Exception as e:
             print(e)
 
-    def test_set_model(self):
-        os_handler.set_model(None)
-        self.assertIsNone(os_handler.networkmodel)
-        os_handler.set_model(self.main_model.network_model)
-        self.assertEqual(os_handler.networkmodel, self.main_model.network_model)
+    def tearDown(self) -> None:
+        self.delete_files()
+        super().tearDown()
 
-    @patch('src.model.network_model.NetworkModel.download_node', return_value=None)
-    def test_download_folder_with_file(self, mocked_fun):
+    def test_set_model(self):
+        os_handler.set_network_model(None)
+        self.assertIsNone(os_handler.network_model)
+        os_handler.set_network_model(self.main_model.network_model)
+        self.assertEqual(os_handler.network_model, self.main_model.network_model)
+
+    @patch('src.model.network_model.NetworkModel.download_node', return_value=True)
+    @patch('src.model.settings_model.SettingsModel.is_id_in_sync_list', return_value=True)
+    def test_download_folder_with_file(self, mock_1, mock_2):
         updated = 200
         created = 100
         test_node = TreeNode(Node("CLIENT_NODE", self.folder_name,
                                   Type.Folder, created, updated, self.path))
         test_node.add_node(TreeNode(Node("CLIENT_NODE", self.file_name,
                                          Type.File, created, updated, self.path)))
-        os_handler.download_folder(test_node, self.path)
-        mocked_fun.assert_called_once()
-        self.assertTrue(os.path.exists(os.path.join(self.path, self.folder_name)))
+        x = os_handler.download_folder(test_node, self.path)
+        self.assertEqual(x, [True])
+        mock_1.assert_called_once()
+        mock_2.assert_called_once()
 
     def test_download_folder_with_folder(self):
         created = 100
@@ -73,8 +86,8 @@ class OsHandlerTest(unittest.TestCase):
         os_handler.download_folder(test_node, self.path)
         folder_path = os.path.join(self.path, self.folder_name)
         inner_folder_path = os.path.join(folder_path, self.folder_name)
-        self.assertTrue(os.path.exists(folder_path))
-        self.assertTrue(os.path.exists(inner_folder_path))
+        self.assertEqual(os.path.exists(folder_path), False)
+        self.assertEqual(os.path.exists(inner_folder_path), False)
 
     @patch('src.model.network_model.NetworkModel.upload_node', return_value=None)
     @patch('src.model.network_model.NetworkModel.create_folder', return_value=None)

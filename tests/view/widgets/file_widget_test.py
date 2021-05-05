@@ -1,34 +1,31 @@
 import os
-import unittest
 import time
 
 from src.algorithm.tree_builder import _build_tree_node
-from src.model.widgets.file import File
-from src.view.widgets.file_widget import FileWidget
+from src.model.widgets.local_file import LocalFile
 from unittest.mock import patch
 
+from src.view.widgets.local_file_widget import LocalFileWidget
 from tests import default_code
 
 
-class FileWidgetTest(unittest.TestCase):
+class FileWidgetTest(default_code.DefaultCode):
 
     def setUp(self) -> None:
-        tmp = default_code.setUp()
-        self.restore_path = tmp[0]
-        self.env_settings = tmp[1]
-        self.restore_credentials = tmp[2]
-        self.path = self.env_settings.value("sync_path")
+        super().setUp()
+        self.env_settings = super().get_env_settings()
+        self.path = self.env_settings.value(self.SYNC_ENV_VARIABLE)
         self.file_name = os.path.join(self.path, "prova.txt")
         with open(self.file_name, "w"):
             pass
-        self.tree = _build_tree_node(self.file_name, "prova")
-        self.file = File(self.tree)
-        self.file_view_test = FileWidget(self.file)
+        self.tree = _build_tree_node(self.file_name, "prova.txt")
+        self.file = LocalFile(self.tree)
+        self.file_view_test = LocalFileWidget(self.file)
 
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""
         os.remove(os.path.join(self.path, "prova.txt"))
-        default_code.tearDown(self.env_settings, self.restore_path, self.restore_credentials)
+        super().tearDown()
 
     def test_defaults(self):
         """ Test file_widget default values"""

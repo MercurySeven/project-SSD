@@ -8,6 +8,7 @@ class Query:
             getUserByEmail(email: $email) {
                 id
                 full_name
+                email
             }
         }
         """
@@ -23,20 +24,16 @@ class Query:
         query = """
         query GetNode ($id: ID!) {
             getNode(id: $id) {
-                id
-                name
-                created_at
-                updated_at
-                type
+                ... node
                 ... on Folder {
                     children(limit:50) {
-                        ...nodo
+                        ...node
                     }
                 }
             }
         }
 
-        fragment nodo on Node {
+        fragment node on Node {
             id
             name
             created_at
@@ -44,6 +41,9 @@ class Query:
             type
             ... on File {
                 size
+            }
+            last_editor {
+                email
             }
         }
         """

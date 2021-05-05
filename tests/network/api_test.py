@@ -1,6 +1,5 @@
 import os
 import pathlib
-import unittest
 from unittest.mock import patch
 
 import gql
@@ -14,18 +13,15 @@ from tests import default_code
 from tests.default_code import RequestObj
 
 
-class ApiTest(unittest.TestCase):
+class ApiTest(default_code.DefaultCode):
     def setUp(self) -> None:
-        tmp = default_code.setUp()
-        self.restore_path = tmp[0]
-        self.env_settings = tmp[1]
-        self.restore_credentials = tmp[2]
-
+        super().setUp()
+        self.env_settings = super().get_env_settings()
         self.file_name = "test.txt"
 
         self.api = ApiImplementation()
 
-        self.original_path = self.env_settings.value("sync_path")
+        self.original_path = self.env_settings.value(super().SYNC_ENV_VARIABLE)
 
         self.path = os.path.join(self.original_path, "tree")
         self.path = r'%s' % self.path
@@ -33,7 +29,7 @@ class ApiTest(unittest.TestCase):
 
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""
-        default_code.tearDown(self.env_settings, self.restore_path, self.restore_credentials)
+        super().tearDown()
         to_remove = os.path.join(self.path, self.file_name)
         if os.path.exists(to_remove):
             try:
@@ -44,13 +40,13 @@ class ApiTest(unittest.TestCase):
 
     @patch('requests.get', return_value=RequestObj("LoginScreen"))
     def test_is_logged_false(self, mocked_function):
-        logged = self.api.is_logged("test")
+        logged = self.api.is_logged()
         mocked_function.assert_called_once()
         self.assertFalse(logged)
 
     @patch('requests.get', return_value=RequestObj())
     def test_is_logged_true(self, mocked_function):
-        logged = self.api.is_logged("test")
+        logged = self.api.is_logged()
         mocked_function.assert_called_once()
         self.assertTrue(logged)
 
@@ -73,7 +69,7 @@ class ApiTest(unittest.TestCase):
 
     def test_logout(self):
         self.assertTrue(self.api.logout())
-        self.assertIsNone(self.api.cookie)
+        self.assertEqual(self.api.cookie, "")
         self.assertIsNone(self.api.client)
 
     @patch('gql.client.Client.__init__', return_value=None)
@@ -141,18 +137,6 @@ class ApiTest(unittest.TestCase):
         mocked_info.assert_called_once()
         mocked_response.assert_called_once()
 
-    def test_cookie2str_success(self):
-        key = "ZM_AUTH_TOKEN"
-        value = "mamma"
-        result = self.api.cookie2str({key: value})
-        self.assertEqual(result, key + "=" + value)
-
-    def test_cookie2str_failure(self):
-        key = "test"
-        value = "mamma"
-        result = self.api.cookie2str({key: value})
-        self.assertEqual(result, "")
-
     def test_check_status_code_ok(self):
         test_obj = RequestObj()
         self.assertIsNone(self.api.check_status_code(test_obj))
@@ -173,17 +157,34 @@ class ApiTest(unittest.TestCase):
 
     @patch('requests.get', return_value=RequestObj())
     @patch('src.network.api_implementation.ApiImplementation.get_user_id', return_value="test")
-    def test_download_node_from_server_ok(self, mocked_response, mocked_get_id):
+    def test_download_node_from_server_ok(self, mocked_1, mocked_2):
         updated = 200
         created = 100
         test_node = TreeNode(Node("CLIENT_NODE", self.file_name,
                                   Type.Folder, created, updated, self.path))
-        self.assertIsNone(self.api.download_node(test_node, self.path))
-        mocked_response.assert_called_once()
-        mocked_get_id.assert_called_once()
+        result = self.api.download_node(test_node, self.path)
+        self.assertEqual(result, True)
+        mocked_1.assert_called_once()
+        mocked_2.assert_called_once()
         file_path = os.path.join(self.path, self.file_name)
         self.assertTrue(os.path.exists(file_path))
         self.assertEqual(os.path.getmtime(file_path), updated)
+
+    @patch('requests.get', return_value=RequestObj("test", Status.Error))
+    @patch('src.network.api_implementation.ApiImplementation.get_user_id', return_value="test")
+    def test_download_node_from_server_error_quota(self, mocked_response, mocked_get_id):
+        updated = 200
+        created = 100
+        test_node = TreeNode(Node("CLIENT_NODE", self.file_name,
+                                  Type.Folder, created, updated, self.path))
+        try:
+            self.api.download_node(test_node, self.path)
+        except APIException as e:
+            self.assertEqual(str(e), str(APIException()))
+            mocked_response.assert_called_once()
+            mocked_get_id.assert_called_once()
+            file_path = os.path.join(self.path, self.file_name)
+            self.assertEqual(os.path.exists(file_path), False)
 
     @patch('requests.get', return_value=RequestObj("test", Status.Error))
     @patch('src.network.api_implementation.ApiImplementation.get_user_id', return_value="test")
@@ -238,47 +239,18 @@ class ApiTest(unittest.TestCase):
             mocked_get_id.assert_called_once()
             self.assertEqual(str(e), str(APIException()))
 
-    @patch('src.network.api_implementation.ApiImplementation.is_logged', return_value=True)
-    def test_login_already_logged_in(self, mocked_function):
-        result = self.api.login("test", "test")
-        mocked_function.assert_called_once()
-        self.assertTrue(result)
-
-    @patch('requests.sessions.Session.get', return_value=RequestObj())
-    @patch('requests.sessions.Session.post', return_value=RequestObj())
-    @patch('src.network.api_implementation.dict_from_cookiejar',
-           return_value={"ZM_LOGIN_CSRF": "value"})
-    @patch('src.network.api_implementation.ApiImplementation.is_logged', return_value=False)
-    def test_login_fail_login_exc(self, mock_1, mock_2, mock_3, mock_4):
+    @patch('src.network.api_implementation.requests.post', return_value=RequestObj("test", 401))
+    def test_login_fail_login_exc(self, mock_1):
         try:
             self.api.login("test", "test")
         except LoginError as e:
-            # is_logged viene chiamata due volte durante l'autenticazione
-            # una all'inizio per controllare se sei già loggato
-            # ed una alla fine per controllare se è andato a buon fine
-            self.assertEqual(mock_1.call_count, 2)
-            # con la patch di cookiejar invece dobbiamo puntare a
-            # api poichè cookiejar viene importato dentro e quindi
-            # è come un metodo interno
-            self.assertEqual(mock_2.call_count, 2)
-            mock_3.assert_called_once()
-            mock_4.assert_called_once()
+            mock_1.assert_called_once()
             self.assertEqual(str(e), str(LoginError("Credenziali non valide")))
 
-    @patch('requests.sessions.Session.get', return_value=RequestObj())
-    @patch('src.network.api_implementation.dict_from_cookiejar', return_value={"aaaa": "value"})
-    @patch('src.network.api_implementation.ApiImplementation.is_logged', return_value=False)
-    def test_login_fail_server_exc(self, mock_1, mock_2, mock_3):
+    @patch('src.network.api_implementation.requests.post', return_value=RequestObj("test", 500))
+    def test_login_fail_server_exc(self, mock_1):
         try:
             self.api.login("test", "test")
         except ServerError as e:
-            # is_logged viene chiamata due volte durante l'autenticazione
-            # una all'inizio per controllare se sei già loggato
-            # ed una alla fine per controllare se è andato a buon fine
             mock_1.assert_called_once()
-            # con la patch di cookiejar invece dobbiamo puntare a
-            # api poichè cookiejar viene importato dentro e quindi
-            # è come un metodo interno
-            mock_2.assert_called_once()
-            mock_3.assert_called_once()
-            self.assertEqual(str(e), str(ServerError("NO CSRF code found")))
+            self.assertEqual(str(e), str(ServerError()))
