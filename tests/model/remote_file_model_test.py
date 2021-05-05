@@ -3,7 +3,7 @@ from unittest.mock import patch
 from src.model.main_model import MainModel
 from src.algorithm import tree_builder
 from tests import default_code
-
+from src.network.api_exceptions import APIException
 
 class RemoteFileModelTest(default_code.DefaultCode):
 
@@ -54,6 +54,15 @@ class RemoteFileModelTest(default_code.DefaultCode):
         self.model_test.folder_queue.append("NonRoot")
         file_result, dir_result = self.model_test.get_data()
         self.assertEqual(dir_result[0].get_name(), "..")
+
+    @patch(
+        'src.model.remote_file_model.RemoteFileModel.get_current_tree',
+        return_value=default_code.create_folder_with_files(
+            ["TestFile"]))
+    def test_get_data_exception(self, mocked_get_tree_from_node):
+        mocked_get_tree_from_node.side_effect = APIException
+        test_result = self.model_test.get_data()
+        self.assertEqual(test_result, None)
 
     def test_set_current_node_descend(self):
         self.model_test.set_current_node("TestNode")
