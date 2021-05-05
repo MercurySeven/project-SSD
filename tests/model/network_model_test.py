@@ -17,6 +17,12 @@ class NetworkModelTest(default_code.DefaultCode):
         """Metodo che viene chiamato dopo ogni metodo"""
         super().tearDown()
 
+    @patch('src.network.api_implementation.ApiImplementation.get_user_id',
+           return_value=True)
+    def test_get_user_id(self, mock_get_user_id):
+        self.assertEqual(self.model_test.get_user_id(), True)
+        mock_get_user_id.assert_called_once()
+
     @patch('src.network.api_implementation.ApiImplementation.login', return_value=False)
     def test_login_value_exception(self, mocked_function):
         self.model_test.login("test", "test")
@@ -29,7 +35,6 @@ class NetworkModelTest(default_code.DefaultCode):
         mocked_function.side_effect = NetworkError(exception_string)
         # self.assertRaises(ValueError, self.model_test.login("test", "test"))
         self.model_test.login("test", "test")
-        self.assertFalse(self.model_test.is_logged())
         mocked_function.assert_called_once()
 
     @patch('src.network.api_implementation.ApiImplementation.login', return_value=False)
@@ -37,7 +42,6 @@ class NetworkModelTest(default_code.DefaultCode):
         exception_string = "Login error"
         mocked_function.side_effect = LoginError(exception_string)
         self.model_test.login("test", "test")
-        self.assertFalse(self.model_test.is_logged())
         mocked_function.assert_called_once()
 
     @patch('src.network.api_implementation.ApiImplementation.login', return_value=False)
@@ -45,7 +49,6 @@ class NetworkModelTest(default_code.DefaultCode):
         exception_string = "Server error"
         mocked_function.side_effect = ServerError(exception_string)
         self.model_test.login("test", "test")
-        self.assertFalse(self.model_test.is_logged())
         mocked_function.assert_called_once()
 
     @patch('src.network.api_implementation.ApiImplementation.login', return_value=True)
