@@ -151,7 +151,11 @@ class NetworkModel(QObject, Api, metaclass=NetworkMeta):
     @APIExceptionsHandler
     @RetryLogin
     def get_user_id(self) -> str:
-        return self.api_implementation.get_user_id()
+        self.lock.acquire()
+        try:
+            return self.api_implementation.get_user_id()
+        finally:
+            self.lock.release()
 
     @APIExceptionsHandler
     @RetryLogin
