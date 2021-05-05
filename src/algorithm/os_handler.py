@@ -19,7 +19,7 @@ def set_settings_model(set_model: SettingsModel) -> None:
     settings_model = set_model
 
 
-def download_folder(node: TreeNode, path: str, quota_libera: float) -> list[dict]:
+def download_folder(node: TreeNode, path: str) -> list[dict]:
     """Il nodo rappresenta la cartella che non esiste,
     ritorna i risultati dei download che sono stati fatti"""
     path_folder = os.path.join(path, node.get_name())
@@ -29,10 +29,10 @@ def download_folder(node: TreeNode, path: str, quota_libera: float) -> list[dict
     folder_has_nodes = len(node.get_children()) > 0
     for _node in node.get_children():
         if _node.is_directory():
-            result = download_folder(_node, path_folder, quota_libera)
+            result = download_folder(_node, path_folder)
             download_operations_list.extend(result)
         else:
-            result = download_file(_node, path_folder, quota_libera)
+            result = download_file(_node, path_folder)
             if result is not None:
                 download_operations_list.append(result)
 
@@ -52,9 +52,10 @@ def upload_folder(node: TreeNode, parent_folder_id: str = "LOCAL_ROOT") -> None:
             upload_file(_node, parent_folder_id)
 
 
-def download_file(node: TreeNode, path_folder: str, quota_libera: float) -> Optional[dict]:
+def download_file(node: TreeNode, path_folder: str) -> Optional[dict]:
     node_id = node.get_payload().id
     if settings_model.is_id_in_sync_list(node_id):
+        quota_libera = settings_model.get_quota_libera()
         return network_model.download_node(node, path_folder, quota_libera)
     else:
         return None

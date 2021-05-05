@@ -8,6 +8,7 @@ class Query:
             getUserByEmail(email: $email) {
                 id
                 full_name
+                email
             }
         }
         """

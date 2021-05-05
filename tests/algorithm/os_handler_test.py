@@ -16,6 +16,7 @@ class OsHandlerTest(default_code.DefaultCode):
         self.env_settings = super().get_env_settings()
         self.main_model = MainModel()
         os_handler.set_network_model(self.main_model.network_model)
+        os_handler.set_settings_model(self.main_model.settings_model)
 
         self.original_path = self.env_settings.value(super().SYNC_ENV_VARIABLE)
         self.folder_name = "test"
@@ -70,8 +71,7 @@ class OsHandlerTest(default_code.DefaultCode):
                                   Type.Folder, created, updated, self.path))
         test_node.add_node(TreeNode(Node("CLIENT_NODE", self.file_name,
                                          Type.File, created, updated, self.path)))
-        quota_libera = self.main_model.settings_model.get_quota_libera()
-        x = os_handler.download_folder(test_node, self.path, quota_libera)
+        x = os_handler.download_folder(test_node, self.path)
         self.assertEqual(x, [True])
         mock_1.assert_called_once()
         mock_2.assert_called_once()
@@ -83,8 +83,7 @@ class OsHandlerTest(default_code.DefaultCode):
                                   Type.Folder, created, updated, self.path))
         test_node.add_node(TreeNode(Node("CLIENT_NODE", self.folder_name,
                                          Type.Folder, created, updated, self.path)))
-        quota_libera = self.main_model.settings_model.get_quota_libera()
-        os_handler.download_folder(test_node, self.path, quota_libera)
+        os_handler.download_folder(test_node, self.path)
         folder_path = os.path.join(self.path, self.folder_name)
         inner_folder_path = os.path.join(folder_path, self.folder_name)
         self.assertEqual(os.path.exists(folder_path), False)

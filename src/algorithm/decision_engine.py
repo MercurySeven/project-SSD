@@ -28,7 +28,7 @@ class DecisionEngine(Thread):
                  running: bool = False):
         Thread.__init__(self)
 
-        self.setName("Algoritmo V3")
+        self.setName("Algoritmo V4")
         self.setDaemon(True)
         self.env_settings = QSettings()
         self.settings_model: SettingsModel = main_model.settings_model
@@ -90,6 +90,7 @@ class DecisionEngine(Thread):
             if snap_tree is not None:
                 policy = Policy(settings.get_policy())
                 self.compare_snap_client.check(snap_tree, client_tree, self.strategy[policy])
+                client_tree = tree_builder.get_tree_from_system(path)
 
             remote_tree = tree_builder.get_tree_from_node_id()
             self.compute_decision(client_tree, remote_tree, snap_tree is not None)
@@ -136,16 +137,14 @@ class DecisionEngine(Thread):
                     self.logger.info(f"Nuovo file da caricare nel server: {name_node}")
             elif action == Actions.SERVER_NEW_FOLDER:
                 path = r["path"]
-                quota_libera = self.settings_model.get_quota_libera()
-                node_message = os_handler.download_folder(node, path, quota_libera)
+                node_message = os_handler.download_folder(node, path)
                 for item in node_message:
                     item["action"] = Actions.SERVER_NEW_FILE
                     self.notification_controller.add_notification(item)
                 self.logger.info(action.name + " " + name_node)
             elif action == Actions.SERVER_NEW_FILE or action == Actions.SERVER_UPDATE_FILE:
                 path = r["path"]
-                quota_libera = self.settings_model.get_quota_libera()
-                node_message = os_handler.download_file(node, path, quota_libera)
+                node_message = os_handler.download_file(node, path)
                 if node_message is not None:
                     node_message["action"] = action
                     self.notification_controller.add_notification(node_message)
