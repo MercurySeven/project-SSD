@@ -1,6 +1,7 @@
 import logging
 from enum import Enum
 from functools import wraps
+from threading import Lock
 
 from PySide6.QtCore import (QObject, Signal, QSettings)
 
@@ -113,7 +114,6 @@ class NetworkModel(QObject, Api, metaclass=NetworkMeta):
 
         self.api_implementation = ApiImplementation()
         self.env_settings = QSettings()
-        from threading import Lock
         self.lock = Lock()
 
     def raise_for_status(self):

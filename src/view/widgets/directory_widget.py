@@ -30,7 +30,7 @@ class DirectoryWidget(QToolButton):
             if time <= 0:
                 self.timer.start(250)
 
-        if self.timer.isActive() is False and success is False:
+        if not self.timer.isActive() and not success:
             self.timer.start(250)
 
     def double_clicked_action(self) -> None:

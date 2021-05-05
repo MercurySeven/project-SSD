@@ -35,13 +35,13 @@ class FileWidget(QToolButton):
     def set_icon(self):
         self.setIconSize(QSize(45, 45))
         self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
-        if self.extension in ["txt"]:
+        if self.extension in ["txt", "xml", "json", "docx", "xlsx"]:
             self.setIcon(QIcon('./assets/icons/Txt.png'))
-        elif self.extension in ["mp4"]:
+        elif self.extension in ["mp4", "avi", "mpeg", "wmv"]:
             self.setIcon(QIcon('./assets/icons/Video.png'))
-        elif self.extension in ["jpg", "png"]:
+        elif self.extension in ["jpg", "png", "gif"]:
             self.setIcon(QIcon('./assets/icons/Immagine.png'))
-        elif self.extension in ["mp3"]:
+        elif self.extension in ["mp3", "wav", "ogg"]:
             self.setIcon(QIcon('./assets/icons/Audio.png'))
         else:
             self.setIcon(QIcon('./assets/icons/DocGenerico.png'))
