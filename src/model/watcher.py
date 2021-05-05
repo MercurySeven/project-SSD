@@ -1,5 +1,6 @@
 import logging
 import os
+import time
 
 from PySide6.QtCore import (QSettings, QObject, Signal)
 from watchdog.events import PatternMatchingEventHandler
@@ -123,4 +124,5 @@ class MyHandler(PatternMatchingEventHandler, QObject):
         self.signal_watchdog()
 
     def signal_watchdog(self):
+        time.sleep(0.5)
         self.watchdog.signal_event.emit()
