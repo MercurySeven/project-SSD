@@ -34,11 +34,16 @@ class FileModel(QObject):
     @Slot()
     def Sl_update_model(self) -> None:
         # ricreo tree dalla root
-        self.tree = tree_builder.get_tree_from_system(self.settings.value("sync_path"))
-        self.current_folder._node = self.search_node_from_path(
-            self.current_folder._node.get_payload().path)  # cerco il nodo attuale nel nuovo tree
-        self.current_folder.update_list_of_content()  # aggiorno lista carelle e file
-        self.Sg_model_changed.emit()
+        try:
+            self.tree = tree_builder.get_tree_from_system(self.settings.value("sync_path"))
+            self.current_folder._node = self.search_node_from_path(
+                self.current_folder._node.get_payload().path)
+            # cerco il nodo attuale nel nuovo tree
+            self.current_folder.update_list_of_content()
+            # aggiorno lista carelle e file
+            self.Sg_model_changed.emit()
+        except FileNotFoundError as e:
+            print("File not found: " + str(e))
 
     def get_data(self) -> Tuple[list[LocalFile], list[LocalDirectory]]:
         list_of_files = self.current_folder._files  # lista file dalla dir

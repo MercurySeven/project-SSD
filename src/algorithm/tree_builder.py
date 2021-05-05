@@ -8,7 +8,6 @@ from src.model.algorithm.node import Node, Type
 from typing import Optional
 from src.model.network_model import NetworkModel
 
-
 FILE_DUMP_NAME = "client_dump.mer"
 FOLDER_NAME = ".zextrasdrive"
 
@@ -25,10 +24,11 @@ def _build_tree_node(path: str, name: str) -> TreeNode:
     """Costruisce un TreeNode a partire dal path"""
     id = "CLIENT_NODE"
     # name = os.path.basename(path)
+    if not os.path.exists(path):
+        raise FileNotFoundError()
     type = Type.Folder if os.path.isdir(path) else Type.File
     created_at = math.trunc(os.stat(path).st_ctime)
     updated_at = math.trunc(os.stat(path).st_mtime)
-
     return TreeNode(Node(id, name, type, created_at, updated_at, path=path))
 
 
