@@ -1,11 +1,11 @@
 from PySide6.QtCore import (QSettings, QUrl, Slot, Qt, Signal)
 from PySide6.QtGui import (QDesktopServices)
-from PySide6.QtWidgets import (QVBoxLayout, QWidget, QScrollArea, QPushButton, QLabel)
+from PySide6.QtWidgets import (QVBoxLayout, QHBoxLayout, QWidget, QScrollArea, QPushButton, QLabel)
 
 from src.model.file_model import FileModel
 from src.view.layouts.flowlayout import FlowLayout
-from src.view.widgets.directory_widget import DirectoryWidget
-from src.view.widgets.file_widget import FileWidget
+from src.view.widgets.local_directory_widget import LocalDirectoryWidget
+from src.view.widgets.local_file_widget import LocalFileWidget
 
 
 class FileView(QWidget):
@@ -40,9 +40,12 @@ class FileView(QWidget):
 
         self.scrollArea.setWidget(self.fileWindow)
 
+        header_layout = QHBoxLayout()
+        header_layout.addWidget(self.title)
+        header_layout.addWidget(self.show_path_button)
+
         layout = QVBoxLayout()
-        layout.addWidget(self.title)
-        layout.addWidget(self.show_path_button)
+        layout.addLayout(header_layout)
         layout.addWidget(self.scrollArea)
         self.setLayout(layout)
 
@@ -60,9 +63,9 @@ class FileView(QWidget):
         for i in reversed(range(self.fileLayout.count())):
             self.fileLayout.itemAt(i).widget().setParent(None)
         for i in list_of_dirs:
-            self.fileLayout.addWidget(DirectoryWidget(i, self))
+            self.fileLayout.addWidget(LocalDirectoryWidget(i, self))
         for i in list_of_files:
-            self.fileLayout.addWidget(FileWidget(i))
+            self.fileLayout.addWidget(LocalFileWidget(i))
 
     @Slot(str)
     def Sl_update_files_with_new_path(self, path: str) -> None:

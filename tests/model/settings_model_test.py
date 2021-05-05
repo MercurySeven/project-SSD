@@ -1,8 +1,8 @@
 import unittest
-
 import bitmath
 
 from src.model.main_model import MainModel
+from src.model.settings_model import SettingsModel
 from src.model.algorithm.policy import Policy
 from tests import default_code
 
@@ -13,7 +13,7 @@ class TestSettings(default_code.DefaultCode):
         """Metodo che viene chiamato prima di ogni metodo"""
         super().setUp()
         self.main_model = MainModel()
-        self.sett_model = self.main_model.settings_model
+        self.sett_model: SettingsModel = self.main_model.settings_model
 
     def tearDown(self):
         """Metodo che viene chiamato dopo ogni metodo"""
@@ -73,6 +73,18 @@ class TestSettings(default_code.DefaultCode):
 
         value = bitmath.parse_string(self.sett_model.get_quota_disco())
         self.assertEqual(new_value, value)
+
+    def test_sync_list(self) -> None:
+        value = self.sett_model.is_id_in_sync_list("a")
+        self.assertFalse(value)
+
+        self.sett_model.add_id_to_sync_list("a")
+        value = self.sett_model.is_id_in_sync_list("a")
+        self.assertTrue(value)
+
+        self.sett_model.remove_id_from_sync_list("a")
+        value = self.sett_model.is_id_in_sync_list("a")
+        self.assertFalse(value)
 
 
 if __name__ == "__main__":

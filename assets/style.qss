@@ -252,7 +252,7 @@ QWidget[accessibleName='Stacked'] QToolButton[accessibleName='Directory'] {
     min-height: 100px;
     max-height: 100px;
     width: 100%;
-    text-align:bottom;
+    text-align: bottom;
     background-color: #2A2A2A;
     font: 14px
 }
@@ -261,26 +261,34 @@ QWidget[accessibleName='Stacked'] QToolButton[accessibleName='Directory']:hover 
     background-color: #353535;
 }
 
-
 QWidget[accessibleName='FileScroll'] QScrollBar {
-    width: 6px;
-    border-radius: 6px;
-    color: #404040;
+    width: 10px;
 }
 
-QWidget[accessibleName='FileScroll'] > QWidget > QWidget{
+QWidget > QScrollBar::handle {
+    background-color: #565656;
+}
+
+
+QScrollBar::add-line {
+    background-color: transparent;
+}
+
+QScrollBar::sub-line {
+    background-color: transparent;
+}
+
+QWidget[accessibleName='FileScroll'] > QWidget > QWidget {
     padding: 0;
     margin: 0;
     border: 0px;
-    border-radius: 6px;
     background-color: #2A2A2A;
 }
 
 QWidget[accessibleName='FileScroll'] {
     border: 0px;
-    border-radius: 6px;
-    background-color: #353535;
 }
+
 QWidget[accessibleName='Stacked'] QToolButton[accessibleName='File'] QToolTip {
     color: black;
     padding: 3px;

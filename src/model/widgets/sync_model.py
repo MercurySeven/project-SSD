@@ -17,7 +17,7 @@ class SyncModel(QObject):
 
     def __init__(self, create_key):
         assert (create_key == SyncModel.__create_key), \
-            "SyncModel objects must be created using NetworkModel.create"
+            "SyncModel objects must be created using SyncModel.get_instance()"
         super(SyncModel, self).__init__(None)
         self.state = settings.get_is_synch()
 

@@ -8,6 +8,7 @@ from src.view.stylesheets.qssManager import setQss
 class LoginScreen(QDialog):
 
     Sg_login_success = Signal()
+    Sg_login_failure = Signal()
 
     def __init__(self, model: NetworkModel, parent=None):
         super(LoginScreen, self).__init__(parent)
@@ -65,3 +66,7 @@ class LoginScreen(QDialog):
 
     def get_psw(self) -> str:
         return self.psw_field.text()
+
+    @Slot()
+    def Sl_login_fail(self):
+        self.Sg_login_failure.emit()

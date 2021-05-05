@@ -1,7 +1,5 @@
-from os import path
-
 from PySide6.QtCore import (QObject, Slot, QSettings)
-from PySide6.QtWidgets import (QApplication, QFileDialog)
+from PySide6.QtWidgets import (QApplication)
 
 from src.algorithm.decision_engine import DecisionEngine
 from src.model.main_model import MainModel
@@ -11,6 +9,7 @@ from .file_controller import FileController
 from .notification_controller import NotificationController
 from .settings_controller import SettingsController
 from .widgets.sync_controller import SyncController
+from .remote_file_controller import RemoteFileController
 
 
 class MainController(QObject):
@@ -24,33 +23,15 @@ class MainController(QObject):
         self.view = None
         self.sync_controller = None
         self.file_controller = None
+        self.remote_file_controller = None
         self.settings_controller = None
         self.notification_controller = None
         self.watcher = None
         self.algoritmo = None
 
     def start(self):
-        # Controlliamo se l'utente ha già settato il PATH della cartella
-        check_path = self.env_settings.value("sync_path")
-        if not check_path or not path.isdir(check_path):
-            dialog = QFileDialog()
-            dialog.setFileMode(QFileDialog.Directory)
-            dialog.setViewMode(QFileDialog.Detail)  # provare anche .List
-            dialog.setOption(QFileDialog.ShowDirsOnly)
-            dialog.setOption(QFileDialog.DontResolveSymlinks)
-
-            # L'utente non ha selezionato la cartella
-            if not dialog.exec_():
-                self.env_settings.setValue("sync_path", None)
-                self.app.quit()
-
-            sync_path = dialog.selectedFiles()
-            if len(sync_path) == 1:
-                self.env_settings.setValue("sync_path", sync_path[0])
-                self.env_settings.sync()
-                print("Nuova directory: " + self.env_settings.value("sync_path"))
-
         # Create main window
+        self.model.remote_file_model.set_network_model(self.model.network_model)
         self.view = MainWindow(self.model)
         self.view.show()
 
@@ -59,6 +40,8 @@ class MainController(QObject):
             self.model.sync_model, self.view.main_widget.sync_widget)
         self.file_controller = FileController(
             self.model.file_model, self.view.main_widget.files_widget)
+        self.remote_file_controller = RemoteFileController(
+            self.model, self.view.main_widget.remote_widget)
         self.settings_controller = SettingsController(
             self.model, self.view.main_widget.settings_view)
         self.notification_controller = NotificationController(self.app, self.view)
@@ -87,6 +70,7 @@ class MainController(QObject):
 
         # Connect per cambiare le viste
         self.view.main_widget.Sg_switch_to_files.connect(self.Sl_switch_to_files)
+        self.view.main_widget.Sg_switch_to_remote.connect(self.Sl_switch_to_remote)
         self.view.main_widget.Sg_switch_to_settings.connect(self.Sl_switch_to_settings)
 
     @Slot()
@@ -102,6 +86,10 @@ class MainController(QObject):
     @Slot()
     def Sl_switch_to_files(self):
         self.view.main_widget.chage_current_view_to_files()
+
+    @Slot()
+    def Sl_switch_to_remote(self):
+        self.view.main_widget.chage_current_view_to_remote()
 
     @Slot()
     def Sl_switch_to_settings(self):

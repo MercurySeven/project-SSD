@@ -12,7 +12,7 @@ from src.model.algorithm.policy import Policy
 from src.model.algorithm.tree_node import TreeNode
 from src.model.main_model import MainModel
 from src.model.settings_model import SettingsModel
-from src.network.api_exceptions import APIException
+from src.network.api_exceptions import APIException, LoginError
 from . import tree_builder, tree_comparator, os_handler
 from .compare_snap_client import CompareSnapClient
 from .strategy.client_strategy import ClientStrategy
@@ -39,7 +39,10 @@ class DecisionEngine(Thread):
 
         # set istanza di NetworkModel nei moduli per poter gestire i segnali di errore
         os_handler.set_network_model(main_model.network_model)
+        os_handler.set_settings_model(main_model.settings_model)
         tree_builder.set_model(main_model.network_model)
+
+        self.main_model = main_model
 
         self.compare_snap_client = CompareSnapClient()
         self.strategy: dict[Policy, Strategy] = {
@@ -73,7 +76,13 @@ class DecisionEngine(Thread):
             self.condition.release()
 
     def check(self) -> None:
+        self.logger.info("Avvio sincronizzazione")
         path = self.env_settings.value("sync_path")
+        if not os.path.isdir(path):
+            self.notification_controller.send_message("La cartella scelta non è stata trovata",
+                                                      icon=QSystemTrayIcon.Critical)
+            self.main_model.sync_model.set_state(False)
+            return
         snap_tree = tree_builder.read_dump_client_filesystem(path)
         client_tree = tree_builder.get_tree_from_system(path)
 
@@ -87,9 +96,15 @@ class DecisionEngine(Thread):
             tree_builder.dump_client_filesystem(path)
             self.logger.info("Eseguito snapshot dell'albero locale")
             self.notification_controller.send_best_message()
-        except APIException:
-            self.notification_controller.send_message(
-                "Errore di connessione al drive Zextras", icon=QSystemTrayIcon.Warning)
+        except APIException as e:
+            if isinstance(e, LoginError):
+                self.notification_controller.send_message(
+                    "Credenziali errate. Eseguire logout e riprovare",
+                    icon=QSystemTrayIcon.Critical)
+                self.main_model.sync_model.set_state(False)
+            else:
+                self.notification_controller.send_message(
+                    "Errore di connessione al drive Zextras", icon=QSystemTrayIcon.Warning)
 
     def compute_decision(self,
                          client_tree: TreeNode,
@@ -131,6 +146,7 @@ class DecisionEngine(Thread):
                 path = r["path"]
                 quota_libera = self.settings_model.get_quota_libera()
                 node_message = os_handler.download_file(node, path, quota_libera)
-                node_message["action"] = action
-                self.notification_controller.add_notification(node_message)
-                self.logger.info(action.name + " " + name_node)
+                if node_message is not None:
+                    node_message["action"] = action
+                    self.notification_controller.add_notification(node_message)
+                    self.logger.info(action.name + " " + name_node)

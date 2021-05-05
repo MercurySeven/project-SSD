@@ -1,6 +1,7 @@
+from PySide6.QtCore import (Qt, QSize, QTimer, Signal, Slot)
+from PySide6.QtGui import (QIcon)
 from PySide6.QtWidgets import (QToolButton)
-from PySide6.QtGui import (QIcon, QDesktopServices)
-from PySide6.QtCore import (Qt, QSize, QTimer, Signal, Slot, QUrl)
+
 from src.model.widgets.file import File
 
 
@@ -12,27 +13,38 @@ class FileWidget(QToolButton):
 
         self.timer = QTimer()
         self.timer.setSingleShot(True)
-        self.clicked.connect(self.check_double_click)
 
+        self.clicked.connect(self.check_double_click)
         self.Sg_double_clicked.connect(self.Sl_on_double_click)
 
         self.setAccessibleName('File')
 
-        self.setIcon(QIcon('./assets/icons/copy.png'))
-        self.setIconSize(QSize(45, 45))
-        self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
-
         self.name = file.get_name()
         self.creation_date = file.get_creation_date()
         self.last_modified_date = file.get_last_modified_date()
-        self.type = file.get_type()
-        self.size = file.get_size()
-        self.status = file.get_status()
-        self.path = file.get_path()
 
+        self.extension = self.get_extension()
+
+        self.set_icon()
         self.setText(self.name)
-        self.setToolTip(
-            f"Nome: {self.name}\nUltima modifica: {self.last_modified_date}\nSize: {self.size}")
+
+    def get_extension(self) -> str:
+        e = self.name.split(".")
+        return e[1]
+
+    def set_icon(self):
+        self.setIconSize(QSize(45, 45))
+        self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
+        if self.extension in ["txt"]:
+            self.setIcon(QIcon('./assets/icons/Txt.png'))
+        elif self.extension in ["mp4"]:
+            self.setIcon(QIcon('./assets/icons/Video.png'))
+        elif self.extension in ["jpg", "png"]:
+            self.setIcon(QIcon('./assets/icons/Immagine.png'))
+        elif self.extension in ["mp3"]:
+            self.setIcon(QIcon('./assets/icons/Audio.png'))
+        else:
+            self.setIcon(QIcon('./assets/icons/DocGenerico.png'))
 
     def check_double_click(self):
         if self.timer.isActive():
@@ -48,5 +60,4 @@ class FileWidget(QToolButton):
 
     @Slot()
     def Sl_on_double_click(self):
-        file_path = QUrl.fromUserInput(self.path)
-        QDesktopServices.openUrl(file_path)
+        pass
