@@ -76,6 +76,7 @@ class DecisionEngine(Thread):
             self.condition.release()
 
     def check(self) -> None:
+        self.logger.info("Avvio sincronizzazione")
         path = self.env_settings.value("sync_path")
         snap_tree = tree_builder.read_dump_client_filesystem(path)
         client_tree = tree_builder.get_tree_from_system(path)
