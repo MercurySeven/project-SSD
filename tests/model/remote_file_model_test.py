@@ -5,6 +5,7 @@ from src.algorithm import tree_builder
 from tests import default_code
 from src.network.api_exceptions import APIException
 
+
 class RemoteFileModelTest(default_code.DefaultCode):
 
     def setUp(self):
