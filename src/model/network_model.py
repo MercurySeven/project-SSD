@@ -113,6 +113,8 @@ class NetworkModel(QObject, Api, metaclass=NetworkMeta):
 
         self.api_implementation = ApiImplementation()
         self.env_settings = QSettings()
+        from threading import Lock
+        self.lock = Lock()
 
     def raise_for_status(self):
         if self.status == Status.Error:
@@ -140,7 +142,11 @@ class NetworkModel(QObject, Api, metaclass=NetworkMeta):
     @APIExceptionsHandler
     @RetryLogin
     def get_info_from_email(self) -> dict[str, str]:
-        return self.api_implementation.get_info_from_email()
+        self.lock.acquire()
+        try:
+            return self.api_implementation.get_info_from_email()
+        finally:
+            self.lock.release()
 
     @APIExceptionsHandler
     @RetryLogin
@@ -163,12 +169,16 @@ class NetworkModel(QObject, Api, metaclass=NetworkMeta):
     @APIExceptionsHandler
     @RetryLogin
     def logout(self) -> bool:
-        if self.api_implementation.logout():
-            self.message = ""
-            self.env_settings.setValue("Credentials/user", None)
-            self.env_settings.setValue("Credentials/password", None)
-            return True
-        return False
+        self.lock.acquire()
+        try:
+            if self.api_implementation.logout():
+                self.message = ""
+                self.env_settings.setValue("Credentials/user", None)
+                self.env_settings.setValue("Credentials/password", None)
+                return True
+            return False
+        finally:
+            self.lock.release()
 
     @RetryLogin
     def download_node(self, node: TreeNode, path_folder: str, quota_libera: float) -> dict:
@@ -196,12 +206,24 @@ class NetworkModel(QObject, Api, metaclass=NetworkMeta):
 
     @RetryLogin
     def delete_node(self, node_id: str) -> None:
-        self.api_implementation.delete_node(node_id)
+        self.lock.acquire()
+        try:
+            self.api_implementation.delete_node(node_id)
+        finally:
+            self.lock.release()
 
     @RetryLogin
     def get_content_from_node(self, node_id: str = "LOCAL_ROOT") -> str:
-        return self.api_implementation.get_content_from_node(node_id)
+        self.lock.acquire()
+        try:
+            return self.api_implementation.get_content_from_node(node_id)
+        finally:
+            self.lock.release()
 
     @RetryLogin
     def create_folder(self, folder_name: str, parent_folder_id: str = "LOCAL_ROOT") -> str:
-        return self.api_implementation.create_folder(folder_name, parent_folder_id)
+        self.lock.acquire()
+        try:
+            return self.api_implementation.create_folder(folder_name, parent_folder_id)
+        finally:
+            self.lock.release()
