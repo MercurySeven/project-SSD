@@ -29,8 +29,11 @@ class FileWidget(QToolButton):
         self.setText(self.name)
 
     def get_extension(self) -> str:
-        e = self.name.split(".")
-        return e[-1]
+        if self.name.find('.') != -1:
+            e = self.name.split(".")
+            return e[-1]
+        else:
+            return "no"
 
     def set_icon(self):
         self.setIconSize(QSize(45, 45))
