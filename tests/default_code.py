@@ -122,6 +122,7 @@ def _get_tree_dict() -> dict:
     _type = "Folder"
     _created = 2000
     _updated = 2000
+    _size = 14
     thisdict = {
         "getNode": {
             "id": _id,
@@ -129,6 +130,7 @@ def _get_tree_dict() -> dict:
             "type": _type,
             "created_at": _created,
             "updated_at": _updated,
+            "size": _size,
             "last_editor": None,
             "children": [_get_default_dict()]
         }

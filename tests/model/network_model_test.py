@@ -65,3 +65,48 @@ class NetworkModelTest(default_code.DefaultCode):
     def test_logout_failure(self, mock_api_logout):
         self.assertEqual(self.model_test.logout(), False)
         mock_api_logout.assert_called_once()
+
+    @patch('src.network.api_implementation.ApiImplementation.get_content_from_node',
+           return_value=default_code._get_tree_dict())
+    @patch('src.network.api_implementation.ApiImplementation.download_node',
+           return_value=True)
+    def test_download_success(self, download_mock, get_content_mock):
+        expected_result = {
+            "node_name": default_code._get_test_node().get_name(),
+            "result": True,
+            "type": ""
+        }
+        result = self.model_test.download_node(default_code._get_test_node(), "test", 100)
+        download_mock.assert_called_once()
+        get_content_mock.assert_called_once()
+        self.assertEqual(result, expected_result)
+
+    @patch('src.network.api_implementation.ApiImplementation.get_content_from_node',
+           return_value=default_code._get_tree_dict())
+    @patch('src.network.api_implementation.ApiImplementation.download_node',
+           return_value=False)
+    def test_download_fail_for_quota(self, download_mock, get_content_mock):
+        expected_result = {
+            "node_name": default_code._get_test_node().get_name(),
+            "result": False,
+            "type": "space_error"
+        }
+        result = self.model_test.download_node(default_code._get_test_node(), "test", 0)
+        get_content_mock.assert_called_once()
+        self.assertEqual(download_mock.call_count, 0)
+        self.assertEqual(result, expected_result)
+
+    @patch('src.network.api_implementation.ApiImplementation.get_content_from_node',
+           return_value=default_code._get_tree_dict())
+    @patch('src.network.api_implementation.ApiImplementation.download_node',
+           return_value=False)
+    def test_download_fail_for_network_error(self, download_mock, get_content_mock):
+        expected_result = {
+            "node_name": default_code._get_test_node().get_name(),
+            "result": False,
+            "type": "network_error"
+        }
+        result = self.model_test.download_node(default_code._get_test_node(), "test", 100)
+        download_mock.assert_called_once()
+        get_content_mock.assert_called_once()
+        self.assertEqual(result, expected_result)
