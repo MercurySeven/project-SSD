@@ -110,3 +110,25 @@ class NetworkModelTest(default_code.DefaultCode):
         download_mock.assert_called_once()
         get_content_mock.assert_called_once()
         self.assertEqual(result, expected_result)
+
+    @patch('src.network.api_implementation.ApiImplementation.upload_node')
+    def test_upload_node(self, mock_upload):
+        self.model_test.upload_node(default_code._get_test_node(), "test")
+        mock_upload.assert_called_once()
+
+    @patch('src.network.api_implementation.ApiImplementation.delete_node')
+    def test_delete_node(self, mock_delete):
+        self.model_test.delete_node("test")
+        mock_delete.assert_called_once()
+
+    @patch('src.network.api_implementation.ApiImplementation.get_content_from_node',
+           return_value=True)
+    def test_get_content_from_node(self, mock_content):
+        self.assertEqual(self.model_test.get_content_from_node("test"), True)
+        mock_content.assert_called_once()
+
+    @patch('src.network.api_implementation.ApiImplementation.create_folder',
+           return_value=True)
+    def test_create_folder(self, mock_create):
+        self.assertEqual(self.model_test.create_folder("test"), True)
+        mock_create.assert_called_once()
