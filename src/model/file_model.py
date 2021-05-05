@@ -27,23 +27,29 @@ class FileModel(QObject):
 
         super(FileModel, self).__init__()
         self.settings = QSettings()
-        self.tree = tree_builder.get_tree_from_system(self.settings.value("sync_path"))
-        self.current_folder = LocalDirectory(self.tree, self.tree.get_name())
-        self.previous_folder = None
+        path = self.settings.value("sync_path")
+        if os.path.isdir(path):
+            self.tree = tree_builder.get_tree_from_system(path)
+            self.current_folder = LocalDirectory(self.tree, self.tree.get_name())
+            self.previous_folder = None
 
     @Slot()
     def Sl_update_model(self) -> None:
         # ricreo tree dalla root
-        try:
-            self.tree = tree_builder.get_tree_from_system(self.settings.value("sync_path"))
-            self.current_folder._node = self.search_node_from_path(
-                self.current_folder._node.get_payload().path)
-            # cerco il nodo attuale nel nuovo tree
-            self.current_folder.update_list_of_content()
-            # aggiorno lista carelle e file
-            self.Sg_model_changed.emit()
-        except FileNotFoundError as e:
-            print("File not found: " + str(e))
+        path = self.settings.value("sync_path")
+        if os.path.isdir(path):
+            try:
+                self.tree = tree_builder.get_tree_from_system(path)
+                self.current_folder._node = self.search_node_from_path(
+                    self.current_folder._node.get_payload().path)
+                # cerco il nodo attuale nel nuovo tree
+                self.current_folder.update_list_of_content()
+                # aggiorno lista carelle e file
+                self.Sg_model_changed.emit()
+            except FileNotFoundError as e:
+                print("File not found: " + str(e))
+        else:
+            print("Pulire file view")
 
     def get_data(self) -> Tuple[list[LocalFile], list[LocalDirectory]]:
         list_of_files = self.current_folder._files  # lista file dalla dir

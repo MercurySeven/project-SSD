@@ -1,7 +1,5 @@
-from os import path
-
 from PySide6.QtCore import (QObject, Slot, QSettings)
-from PySide6.QtWidgets import (QApplication, QFileDialog)
+from PySide6.QtWidgets import (QApplication)
 
 from src.algorithm.decision_engine import DecisionEngine
 from src.model.main_model import MainModel
@@ -32,26 +30,6 @@ class MainController(QObject):
         self.algoritmo = None
 
     def start(self):
-        # Controlliamo se l'utente ha già settato il PATH della cartella
-        check_path = self.env_settings.value("sync_path")
-        if not check_path or not path.isdir(check_path):
-            dialog = QFileDialog()
-            dialog.setFileMode(QFileDialog.Directory)
-            dialog.setViewMode(QFileDialog.Detail)  # provare anche .List
-            dialog.setOption(QFileDialog.ShowDirsOnly)
-            dialog.setOption(QFileDialog.DontResolveSymlinks)
-
-            # L'utente non ha selezionato la cartella
-            if not dialog.exec_():
-                self.env_settings.setValue("sync_path", None)
-                self.app.quit()
-
-            sync_path = dialog.selectedFiles()
-            if len(sync_path) == 1:
-                self.env_settings.setValue("sync_path", sync_path[0])
-                self.env_settings.sync()
-                print("Nuova directory: " + self.env_settings.value("sync_path"))
-
         # Create main window
         self.model.remote_file_model.set_network_model(self.model.network_model)
         self.view = MainWindow(self.model)
