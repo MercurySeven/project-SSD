@@ -20,14 +20,14 @@ def common_strategy(node_raw: dict, logger: Logger) -> None:
         # Elimina nel server la cartella
         node_id = check_node_still_exists(node.get_path())
         if node_id is not None:
-            os_handler.delete_node(node_id)
-            logger.info(f"Eliminata nel server la cartella: {name_node}")
+            if os_handler.delete_node(node_id):
+                logger.info(f"Eliminata nel server la cartella: {name_node}")
     elif action == Actions.CLIENT_NEW_FILE:
         # Elimina nel server il file
         node_id = check_node_still_exists(node.get_path())
         if node_id is not None:
-            os_handler.delete_node(node_id)
-            logger.info(f"Eliminato nel server il file: {name_node}")
+            if os_handler.delete_node(node_id):
+                logger.info(f"Eliminato nel server il file: {name_node}")
     elif action == Actions.SERVER_NEW_FOLDER:
         # Il client ha una nuova cartella che deve essere caricata nel server
         parent_id = get_id_from_path(node_raw["path"])

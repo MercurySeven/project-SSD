@@ -65,10 +65,12 @@ def upload_file(node: TreeNode, parent_folder_id: str) -> None:
     network_model.upload_node(node, parent_folder_id)
 
 
-def delete_node(node_id: str) -> None:
-    """Elimina un nodo in base al suo id"""
+def delete_node(node_id: str) -> bool:
+    """Elimina un nodo in base al suo id, ritorna se l'eliminazione è avvenuta o no"""
     if settings_model.is_id_in_sync_list(node_id):
         network_model.delete_node(node_id)
+        return True
+    return False
 
 
 def create_folder(folder_name: str, parent_folder_id: str = "LOCAL_ROOT") -> str:
