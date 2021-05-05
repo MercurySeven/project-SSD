@@ -5,8 +5,8 @@ from PySide6.QtCore import (QSettings, Signal, Slot, QObject)
 
 from src.algorithm import tree_builder
 from src.model.algorithm.tree_node import TreeNode
-from src.model.widgets.directory import Directory
-from src.model.widgets.file import File
+from src.model.widgets.local_directory import LocalDirectory
+from src.model.widgets.local_file import LocalFile
 
 
 class FileModel(QObject):
@@ -23,30 +23,43 @@ class FileModel(QObject):
 
     def __init__(self, create_key):
         assert (create_key == FileModel.__create_key), \
-            "FileModel objects must be created using NetworkModel.create"
+            "FileModel objects must be created using FileModel.get_instance()"
 
         super(FileModel, self).__init__()
         self.settings = QSettings()
-        self.tree = tree_builder.get_tree_from_system(self.settings.value("sync_path"))
-        self.current_folder = Directory(self.tree, self.tree.get_name())
-        self.previous_folder = None
+        path = self.settings.value("sync_path")
+        if os.path.isdir(path):
+            self.tree = tree_builder.get_tree_from_system(path)
+            self.current_folder = LocalDirectory(self.tree, self.tree.get_name())
+            self.previous_folder = None
 
     @Slot()
     def Sl_update_model(self) -> None:
         # ricreo tree dalla root
-        self.tree = tree_builder.get_tree_from_system(self.settings.value("sync_path"))
-        self.current_folder._node = self.search_node_from_path(
-            self.current_folder._node.get_payload().path)  # cerco il nodo attuale nel nuovo tree
-        self.current_folder.update_list_of_content()  # aggiorno lista carelle e file
-        self.Sg_model_changed.emit()
+        path = self.settings.value("sync_path")
+        if os.path.isdir(path):
+            try:
+                self.tree = tree_builder.get_tree_from_system(path)
+                self.current_folder._node = self.search_node_from_path(
+                    self.current_folder._node.get_payload().path)
+                # cerco il nodo attuale nel nuovo tree
+                self.current_folder.update_list_of_content()
+                # aggiorno lista carelle e file
+                self.Sg_model_changed.emit()
+            except FileNotFoundError as e:
+                print("File not found: " + str(e))
+        else:
+            print("Pulire file view")
 
-    def get_data(self) -> Tuple[list[File], list[Directory]]:
+    def get_data(self) -> Tuple[list[LocalFile], list[LocalDirectory]]:
         list_of_files = self.current_folder._files  # lista file dalla dir
         list_of_dirs = self.current_folder._dirs  # lista dir dalla dir
 
         if self.current_folder._node._parent:
-            self.previous_folder = Directory(self.current_folder._node._parent, '..')
+            self.previous_folder = LocalDirectory(self.current_folder._node._parent, '..')
             list_of_dirs.insert(0, self.previous_folder)
+        else:
+            self.previous_folder = None
 
         return list_of_files, list_of_dirs
 
@@ -56,9 +69,12 @@ class FileModel(QObject):
         if(child):
             # imposto figlio come node folder
             self.current_folder._node = child
+            self.current_folder._name = child.get_name()
         else:
             # imposto genitore come node folder
-            self.current_folder._node = self.search_node_from_path(path)
+            result_node = self.search_node_from_path(path)
+            self.current_folder._node = result_node
+            self.current_folder._name = result_node.get_name()
         self.Sl_update_model()
 
     def search_node_from_path(self, path: str) -> Optional[TreeNode]:

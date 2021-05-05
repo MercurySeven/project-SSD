@@ -24,7 +24,7 @@ def __write_on_file() -> None:
 def create_standard_settings() -> None:
     """Genera il file di impostazioni standard"""
     config["General"] = {
-        "quota": "1024",
+        "quota": "20971520.0",
         "policy": "1",
         "is_sync": "off",
         "sync_time": "15"
@@ -66,8 +66,8 @@ def get_quota_disco() -> float:
         return result
     except ValueError:
         logger.warning("Il valore di quota disco non e' un numero float")
-        update_quota_disco("1024")
-        return 1024
+        update_quota_disco("20971520.0")
+        return 20971520.0
 
 
 def get_policy() -> int:
@@ -93,6 +93,15 @@ def get_sync_time() -> int:
 def get_is_synch() -> bool:
     "Ritorna lo stato di sincronizzazione"
     return get_config("General", "is_sync") == "on"
+
+
+def get_sync_list() -> list:
+    """Ritorna la lista di id da sincronizzare"""
+    cs_id_string = get_config("Whitelist", "files_to_sync")
+    id_list = []
+    if cs_id_string is not None and cs_id_string != "":
+        id_list = cs_id_string.split(',')
+    return id_list
 
 
 def update_config(section: str, passed_config: str, value: str) -> None:
@@ -123,6 +132,11 @@ def update_policy(policy: int) -> None:
 def update_is_sync(state: bool) -> None:
     """Aggiorna lo stato di sincronizzazione"""
     update_config("General", "is_sync", "on" if state else "off")
+
+
+def update_sync_list(id_list: list) -> None:
+    cs_id_string = ",".join(id_list)
+    update_config("Whitelist", "files_to_sync", cs_id_string)
 
 
 config = configparser.ConfigParser()

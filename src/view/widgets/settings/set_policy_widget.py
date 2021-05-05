@@ -17,22 +17,22 @@ class SetPolicyWidget(QWidget):
 
         self.setAccessibleName("InfoBox")
 
-        self._titolo = QLabel()
-        self._titolo.setText("Politica di sincronizzazione")
-        self._titolo.setAccessibleName('Title2')
+        self.titolo = QLabel("Politica di gestione conflitti")
+        self.titolo.setAccessibleName('Title2')
 
-        self.sottotitolo = QLabel()
+        self.sottotitolo = QLabel("Cambia come vengono gestiti conflitti")
         self.sottotitolo.setAccessibleName('Sottotitolo')
-        self.sottotitolo.setText("Cambia la politica di sincronizzazione")
 
         self.spaceLabel = QLabel(" ")
 
-        self.client = QRadioButton("Client")
-        self.manual = QRadioButton("Manuale")
+        self.client = QRadioButton(
+            "Client (le tue modifiche sovrascrivono quelle presenti nel server)")
+        self.manual = QRadioButton(
+            "Manuale (verranno salvati entrambi i file, sarai te a decidere cosa tenere)")
         self.Sl_model_changed()
 
         layout = QVBoxLayout()
-        layout.addWidget(self._titolo)
+        layout.addWidget(self.titolo)
         layout.addWidget(self.sottotitolo)
         layout.addWidget(self.spaceLabel)
         sub_layout = QVBoxLayout()

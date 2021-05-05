@@ -25,7 +25,7 @@ class SettingsModel(QObject):
 
     def __init__(self, create_key):
         assert (create_key == SettingsModel.__create_key), \
-            "Network objects must be created using NetworkModel.create"
+            "SettingsModel objects must be created using SettingsModel.get_instance()"
         super(SettingsModel, self).__init__(None)
         self.env_settings = QSettings()
 
@@ -99,3 +99,22 @@ class SettingsModel(QObject):
                     total_size += os.path.getsize(fp)
 
         return total_size
+
+    def is_id_in_sync_list(self, id: str) -> bool:
+        return id in settings.get_sync_list()
+
+    def add_id_to_sync_list(self, id: str) -> None:
+        """Aggiungi id a whitelist"""
+        id_list = settings.get_sync_list()
+        if not self.is_id_in_sync_list(id):
+            id_list.append(id)
+            settings.update_sync_list(id_list)
+            self.Sg_model_changed.emit()
+
+    def remove_id_from_sync_list(self, id: str) -> None:
+        """Rimuovi id da whitelist"""
+        id_list = settings.get_sync_list()
+        if self.is_id_in_sync_list(id):
+            id_list.remove(id)
+            settings.update_sync_list(id_list)
+            self.Sg_model_changed.emit()

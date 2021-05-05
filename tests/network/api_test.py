@@ -163,7 +163,7 @@ class ApiTest(default_code.DefaultCode):
         test_node = TreeNode(Node("CLIENT_NODE", self.file_name,
                                   Type.Folder, created, updated, self.path))
         result = self.api.download_node(test_node, self.path)
-        self.assertEquals(result, True)
+        self.assertEqual(result, True)
         mocked_1.assert_called_once()
         mocked_2.assert_called_once()
         file_path = os.path.join(self.path, self.file_name)
@@ -180,11 +180,11 @@ class ApiTest(default_code.DefaultCode):
         try:
             self.api.download_node(test_node, self.path)
         except APIException as e:
-            self.assertEquals(str(e), str(APIException()))
+            self.assertEqual(str(e), str(APIException()))
             mocked_response.assert_called_once()
             mocked_get_id.assert_called_once()
             file_path = os.path.join(self.path, self.file_name)
-            self.assertEquals(os.path.exists(file_path), False)
+            self.assertEqual(os.path.exists(file_path), False)
 
     @patch('requests.get', return_value=RequestObj("test", Status.Error))
     @patch('src.network.api_implementation.ApiImplementation.get_user_id', return_value="test")

@@ -1,15 +1,21 @@
 from unittest.mock import patch
 
+from PySide6.QtCore import QSettings
+
 from src.controllers.login_controller import LoginController
 from src.model.main_model import MainModel
 from tests import default_code
 
 
 class LoginScreenTest(default_code.DefaultCode):
+
     def setUp(self) -> None:
         super().setUp()
 
         self.model = MainModel()
+        self.env_settings = QSettings()
+        self.env_settings.setValue("Credentials/password", None)
+        self.env_settings.setValue("Credentials/user", None)
         self.login_controller = LoginController(self.model, None)
         self.login_test = self.login_controller.login_screen
 
