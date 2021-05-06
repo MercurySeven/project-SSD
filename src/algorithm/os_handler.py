@@ -26,7 +26,7 @@ def download_folder(node: TreeNode, path: str) -> list[dict]:
     os.mkdir(path_folder)
 
     download_operations_list = []
-    folder_has_nodes = len(node.get_children()) > 0
+    # folder_has_nodes = len(node.get_children()) > 0
     for _node in node.get_children():
         if _node.is_directory():
             result = download_folder(_node, path_folder)
@@ -36,7 +36,7 @@ def download_folder(node: TreeNode, path: str) -> list[dict]:
             if result is not None:
                 download_operations_list.append(result)
 
-    if folder_has_nodes and len(download_operations_list) == 0:
+    if len(download_operations_list) == 0:
         shutil.rmtree(path_folder)
     return download_operations_list
 
