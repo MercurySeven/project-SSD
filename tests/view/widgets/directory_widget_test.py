@@ -3,7 +3,7 @@ from tests import default_code
 from src.view.widgets.directory_widget import DirectoryWidget
 from src.view.widgets.local_directory_widget import LocalDirectoryWidget
 from src.model.widgets.local_directory import LocalDirectory
-import time
+# import time
 
 
 class DirectoryWidgetTest(default_code.DefaultCode):
@@ -26,12 +26,12 @@ class DirectoryWidgetTest(default_code.DefaultCode):
         test_result = self.test_dir.timer.isActive()
         self.assertEqual(test_result, True)
 
-    def test_check_double_click_fail_time(self):
+    '''def test_check_double_click_fail_time(self):
         self.test_dir.Sl_check_double_click()
         time.sleep(0.250)
         self.test_dir.Sl_check_double_click()
         test_result = self.test_dir.timer.isActive()
-        self.assertEqual(test_result, True)
+        self.assertEqual(test_result, True)'''
 
     def test_double_clicked_action_exists(self):
         self.test_dir.double_clicked_action()
