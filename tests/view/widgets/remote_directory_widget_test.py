@@ -5,6 +5,7 @@ from src.view.remote_file_view import RemoteFileView
 from src.model.main_model import MainModel
 from unittest.mock import patch
 
+
 class RemoteDirectoryWidgetTest(default_code.DefaultCode):
 
     @patch(
