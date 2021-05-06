@@ -89,8 +89,10 @@ class DecisionEngine(Thread):
         try:
             if snap_tree is not None:
                 policy = Policy(settings.get_policy())
-                self.compare_snap_client.check(snap_tree, client_tree, self.strategy[policy])
-                client_tree = tree_builder.get_tree_from_system(path)
+                done_something = self.compare_snap_client.check(
+                    snap_tree, client_tree, self.strategy[policy])
+                if done_something:
+                    client_tree = tree_builder.get_tree_from_system(path)
 
             remote_tree = tree_builder.get_tree_from_node_id()
             self.compute_decision(client_tree, remote_tree, snap_tree is not None)
