@@ -30,17 +30,17 @@ def common_strategy(node_raw: dict, logger: Logger) -> None:
                 logger.info(f"Eliminato nel server il file: {name_node}")
     elif action == Actions.SERVER_NEW_FOLDER:
         # Il client ha una nuova cartella che deve essere caricata nel server
-        parent_id = get_id_from_path(node_raw["path"])
+        parent_id = get_or_create_folder_id(node_raw["path"])
         os_handler.upload_folder(node, parent_id)
         logger.info(f"Nuova cartella da caricare nel server: {name_node}")
     elif action == Actions.SERVER_NEW_FILE:
         # Il client ha un nuovo file che deve essere caricato nel server
-        parent_id = get_id_from_path(node_raw["path"])
+        parent_id = get_or_create_folder_id(node_raw["path"])
         os_handler.upload_file(node, parent_id)
         logger.info(f"Nuovo file da caricare nel server: {name_node}")
 
 
-def check_node_still_exists(path) -> Optional[str]:
+def check_node_still_exists(path: str) -> Optional[str]:
     """Ritorna un id se un nodo è presente, None altrimenti"""
     env_settings = QSettings()
     path_folder = env_settings.value("sync_path")
@@ -59,6 +59,36 @@ def check_node_still_exists(path) -> Optional[str]:
     if trovato:
         return current_node.get_payload().id
     return None
+
+
+def get_or_create_folder_id(path: str) -> str:
+    """Ritorna l'id della cartella dove vuoi inserire il file, se non presente ne crea una"""
+    env_settings = QSettings()
+    path_folder = env_settings.value("sync_path")
+    if os.path.isfile(path):
+        dir_path = os.path.dirname(path)
+    else:
+        dir_path = path
+    result = os.path.relpath(dir_path, path_folder)
+    node_name = result.split(os.sep)
+    # Elimino il punto che mette se siamo nello stesso livello
+    node_name = [name for name in node_name if name != "."]
+
+    current_node = tree_builder.get_tree_from_node_id()
+    index = 0
+    for name in node_name:
+        trovato = False
+        for node in current_node.get_children():
+            if node.get_name() == name:
+                current_node = node
+                trovato = True
+                break
+        if not trovato and index < len(node_name):
+            id_new_folder = os_handler.create_folder(name, current_node.get_payload().id)
+            current_node = tree_builder.get_tree_from_node_id(id_new_folder)
+        index = index + 1
+
+    return current_node.get_payload().id
 
 
 def get_id_from_path(path: str) -> str:
@@ -80,29 +110,3 @@ class Strategy(ABC):
     @abstractmethod
     def execute(self, result_actions: list, logger: Logger) -> None:
         pass
-
-    def get_or_create_folder_id(self, path: str) -> str:
-        """Ritorna l'id della cartella dove vuoi inserire il file, se non presente ne crea una"""
-        env_settings = QSettings()
-        path_folder = env_settings.value("sync_path")
-        dir_path = os.path.dirname(path)
-        result = os.path.relpath(dir_path, path_folder)
-        node_name = result.split(os.sep)
-        # Elimino il punto che mette se siamo nello stesso livello
-        node_name = [name for name in node_name if name != "."]
-
-        current_node = tree_builder.get_tree_from_node_id()
-        index = 0
-        for name in node_name:
-            trovato = False
-            for node in current_node.get_children():
-                if node.get_name() == name:
-                    current_node = node
-                    trovato = True
-                    break
-            if not trovato and index < len(node_name):
-                id_new_folder = os_handler.create_folder(name, current_node.get_payload().id)
-                current_node = tree_builder.get_tree_from_node_id(id_new_folder)
-            index = index + 1
-
-        return current_node.get_payload().id
