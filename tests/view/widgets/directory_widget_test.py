@@ -22,3 +22,6 @@ class DirectoryWidgetTest(default_code.DefaultCode):
         self.test_dir.Sl_check_double_click()
         test_result = self.test_dir.timer.isActive()
         self.assertEqual(test_result, True)
+
+    def test_double_clicked_action_exists(self):
+        self.test_dir.double_clicked_action()
