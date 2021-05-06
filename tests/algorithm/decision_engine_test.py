@@ -5,7 +5,7 @@ from src.algorithm.decision_engine import DecisionEngine
 from src.algorithm.tree_comparator import Actions
 from src.controllers.notification_controller import NotificationController
 from src.model.main_model import MainModel
-from src.network.api_exceptions import APIException
+from src.network.api_exceptions import APIException, LoginError
 from tests import default_code
 from tests.default_code import ResultObj, _get_test_node
 
@@ -130,14 +130,16 @@ class DecisionEngineTest(default_code.DefaultCode):
         mock_1.assert_called_once()
         mock_2.assert_called_once()
 
+    @patch('src.controllers.notification_controller.NotificationController.add_notification')
     @patch('src.algorithm.tree_comparator.compareFolders',
            return_value=ResultObj(Actions.SERVER_NEW_FOLDER, 1))
-    @patch('src.algorithm.os_handler.download_folder')
-    def test_compute_decision_new_server_folder(self, mock_1, mock_2):
+    @patch('src.algorithm.os_handler.download_folder', return_value=ResultObj(Actions.SERVER_NEW_FOLDER, 1))
+    def test_compute_decision_new_server_folder(self, mock_1, mock_2, mock_3):
         test_node = _get_test_node()
         self.decision_engine.compute_decision(test_node, test_node, True)
         mock_1.assert_called_once()
         mock_2.assert_called_once()
+        mock_3.assert_called_once()
 
     @patch('src.algorithm.tree_comparator.compareFolders',
            return_value=ResultObj(Actions.SERVER_NEW_FILE, 1))
@@ -156,3 +158,37 @@ class DecisionEngineTest(default_code.DefaultCode):
         self.decision_engine.compute_decision(test_node, test_node, True)
         mock_1.assert_called_once()
         mock_2.assert_called_once()
+
+    @patch('os.path.isdir', return_value=False)
+    @patch('src.controllers.notification_controller.NotificationController.send_message')
+    def test_check_isdir_false(self, mock_1, mock_2):
+        self.decision_engine.check()
+        mock_1.assert_called_once()
+        mock_2.assert_called_once()
+
+    @patch('src.controllers.notification_controller.NotificationController.send_message')
+    @patch('src.algorithm.tree_builder.read_dump_client_filesystem', return_value="test")
+    @patch('src.algorithm.tree_builder.get_tree_from_system', return_value="test")
+    @patch('src.algorithm.compare_snap_client.CompareSnapClient.check', side_effect=LoginError(APIException))
+    @patch('src.algorithm.tree_builder.get_tree_from_node_id')
+    @patch('src.algorithm.decision_engine.DecisionEngine.compute_decision')
+    @patch('src.algorithm.tree_builder.dump_client_filesystem')
+    def test_run_thread_login_exception(self, mock_1, mock_2, mock_3, mock_4, mock_5, mock_6, mock_7):
+        # Attiva il thread
+        self.decision_engine.start()
+
+        time.sleep(0.5)
+        self.decision_engine.set_running(False)
+        # Aspetta che entri nell' if per poi mettere il booleano = False
+
+        mock_6.assert_called_once()
+        mock_5.assert_called_once()
+        mock_4.assert_called_once()
+        mock_7.assert_called_once()
+
+        # Queste call non devono essere fatte, perchè se l'eccezione
+        # è stata correttamente alzata allora queste funzioni non
+        # vengono mai chiamate
+        self.assertEqual(mock_1.call_count, 0)
+        self.assertEqual(mock_2.call_count, 0)
+        self.assertEqual(mock_3.call_count, 0)
