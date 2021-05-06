@@ -3,9 +3,11 @@ import time
 
 from src.algorithm.tree_builder import _build_tree_node
 from src.model.widgets.local_file import LocalFile
+from src.model.widgets.file import File
 from unittest.mock import patch
 
 from src.view.widgets.local_file_widget import LocalFileWidget
+from src.view.widgets.file_widget import FileWidget
 from tests import default_code
 
 
@@ -121,3 +123,8 @@ class FileWidgetTest(default_code.DefaultCode):
     def test_set_icon_audio(self):
         self.file_view_test.extension = "mp3"
         self.file_view_test.set_icon()
+
+    def test_on_double_click_exists(self):
+        test_file = File(default_code._get_test_node())
+        test_widget = FileWidget(test_file)
+        test_widget.Sl_on_double_click()
