@@ -109,3 +109,15 @@ class FileWidgetTest(default_code.DefaultCode):
         self.file_view_test.click()
         self.file_view_test.click()
         self.assertEqual(mock_dialog.call_count, 3)
+
+    def test_set_icon_video(self):
+        self.file_view_test.extension = "mp4"
+        self.file_view_test.set_icon()
+
+    def test_set_icon_image(self):
+        self.file_view_test.extension = "jpg"
+        self.file_view_test.set_icon()
+
+    def test_set_icon_audio(self):
+        self.file_view_test.extension = "mp3"
+        self.file_view_test.set_icon()
