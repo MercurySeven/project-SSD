@@ -133,7 +133,8 @@ class DecisionEngineTest(default_code.DefaultCode):
     @patch('src.controllers.notification_controller.NotificationController.add_notification')
     @patch('src.algorithm.tree_comparator.compareFolders',
            return_value=ResultObj(Actions.SERVER_NEW_FOLDER, 1))
-    @patch('src.algorithm.os_handler.download_folder', return_value=ResultObj(Actions.SERVER_NEW_FOLDER, 1))
+    @patch('src.algorithm.os_handler.download_folder',
+           return_value=ResultObj(Actions.SERVER_NEW_FOLDER, 1))
     def test_compute_decision_new_server_folder(self, mock_1, mock_2, mock_3):
         test_node = _get_test_node()
         self.decision_engine.compute_decision(test_node, test_node, True)
@@ -167,13 +168,17 @@ class DecisionEngineTest(default_code.DefaultCode):
         mock_2.assert_called_once()
 
     @patch('src.controllers.notification_controller.NotificationController.send_message')
-    @patch('src.algorithm.tree_builder.read_dump_client_filesystem', return_value="test")
-    @patch('src.algorithm.tree_builder.get_tree_from_system', return_value="test")
-    @patch('src.algorithm.compare_snap_client.CompareSnapClient.check', side_effect=LoginError(APIException))
+    @patch('src.algorithm.tree_builder.read_dump_client_filesystem',
+           return_value="test")
+    @patch('src.algorithm.tree_builder.get_tree_from_system',
+           return_value="test")
+    @patch('src.algorithm.compare_snap_client.CompareSnapClient.check',
+           side_effect=LoginError(APIException))
     @patch('src.algorithm.tree_builder.get_tree_from_node_id')
     @patch('src.algorithm.decision_engine.DecisionEngine.compute_decision')
     @patch('src.algorithm.tree_builder.dump_client_filesystem')
-    def test_run_thread_login_exception(self, mock_1, mock_2, mock_3, mock_4, mock_5, mock_6, mock_7):
+    def test_run_thread_login_exception(
+            self, mock_1, mock_2, mock_3, mock_4, mock_5, mock_6, mock_7):
         # Attiva il thread
         self.decision_engine.start()
 
