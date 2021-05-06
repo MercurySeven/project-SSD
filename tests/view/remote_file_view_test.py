@@ -33,6 +33,17 @@ class RemoteFileViewTest(default_code.DefaultCode):
 
     @patch(
         'src.algorithm.tree_builder.get_tree_from_node_id',
+        return_value=default_code.create_folder_with_folders(
+            ["test1", "test2", "test3"]))
+    def test_model_changed_dirs(self, mock):
+        self.file_view_test.Sl_model_changed()
+        test_list = self.file_view_test.fileLayout._item_list
+        self.assertEqual(test_list[0].wid.name == "test1", True)
+        self.assertEqual(test_list[1].wid.name == "test2", True)
+        self.assertEqual(test_list[2].wid.name == "test3", True)
+
+    @patch(
+        'src.algorithm.tree_builder.get_tree_from_node_id',
         return_value=default_code.create_folder_with_files(
             ["test1", "test2", "test3"]))
     def test_refresh_button(self, mock):
