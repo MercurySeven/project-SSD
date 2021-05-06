@@ -17,7 +17,7 @@ class FileView(QWidget):
         self.env_settings = QSettings()
         self._model = model
 
-        self.title = QLabel("File sincronizzati", self)
+        self.title = QLabel("File locali", self)
         self.title.setAlignment(Qt.AlignLeft)
         self.title.setAccessibleName("Title")
 
