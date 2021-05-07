@@ -19,7 +19,7 @@ class FileViewTest(default_code.DefaultCode):
 
     def test_defaults(self):
         """ Test file view test default values"""
-        self.assertEqual(self.file_view_test.title.text(), "File sincronizzati")
+        self.assertEqual(self.file_view_test.title.text(), "File locali")
         self.assertEqual(self.file_view_test.title.accessibleName(), "Title")
         self.assertEqual(self.file_view_test.show_path_button.text(), "Apri file manager")
 

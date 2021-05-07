@@ -1,7 +1,7 @@
 import os
 
 from logging import Logger
-from .strategy import Strategy, common_strategy, get_id_from_path
+from .strategy import Strategy, common_strategy, get_id_from_path, get_or_create_folder_id
 from src.algorithm import os_handler, tree_builder
 from src.algorithm.tree_comparator import Actions
 from src.model.algorithm.tree_node import TreeNode
@@ -26,10 +26,14 @@ class ManualStrategy(Strategy):
                 node_server = tree_builder._create_node_from_dict(node_json["getNode"])
                 node_last_update_server = node_server.get_updated_at()
                 snap_last_update = node_raw["snap_last_update"]
-                if snap_last_update == node_last_update_server:
+
+                # Devo fare il controllo per Trinity, verificare che
+                # il nodo non sia stato cancellato
+                is_different_node = node_server.get_name() != name_node
+                if snap_last_update == node_last_update_server or is_different_node:
                     """L'utente ha modificato il file aggiornato rispetto al server, non ci
                     saranno perdite di informazioni"""
-                    node_id = super().get_or_create_folder_id(node.get_payload().path)
+                    node_id = get_or_create_folder_id(node.get_payload().path)
                     os_handler.upload_file(node, node_id)
                     logger.info("File aggiornato, effettuato l'upload " + name_node)
                 else:
@@ -52,7 +56,7 @@ class ManualStrategy(Strategy):
                     name_node = node.get_name()
 
                     # Effettuo l'upload
-                    node_id = super().get_or_create_folder_id(node.get_payload().path)
+                    node_id = get_or_create_folder_id(node.get_payload().path)
                     os_handler.upload_file(node, node_id)
 
                     # Il file che è stato modificato dall'altro client, viene scaricato dopo

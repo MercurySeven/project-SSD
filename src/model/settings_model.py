@@ -100,6 +100,9 @@ class SettingsModel(QObject):
 
         return total_size
 
+    def get_sync_list(self) -> list:
+        return settings.get_sync_list()
+
     def is_id_in_sync_list(self, id: str) -> bool:
         return id in settings.get_sync_list()
 

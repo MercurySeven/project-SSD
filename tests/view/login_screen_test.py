@@ -30,3 +30,11 @@ class LoginScreenTest(default_code.DefaultCode):
     def test_login(self, mock_login):
         self.login_test.login_button.click()
         mock_login.assert_called_once()
+
+    def test_login_fail_slot_exists(self):
+        self.login_test.Sl_login_fail()
+
+    @patch('src.model.network_model.NetworkModel.is_logged', return_value=True)
+    def test_model_changed(self, mock_is_logged):
+        self.login_test.Sl_model_changed()
+        mock_is_logged.assert_called_once()

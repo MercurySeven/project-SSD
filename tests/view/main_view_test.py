@@ -25,3 +25,43 @@ class MainWindowTest(default_code.DefaultCode):
                          self.main_widget_double.files_button.isChecked())
         self.assertEqual(self.main_widget_test.swidget.accessibleName(),
                          self.main_widget_double.swidget.accessibleName())
+
+    def test_switch_view_to_files(self):
+        self.main_widget_test.chage_current_view_to_files()
+        self.assertEqual(self.main_widget_test.settings_button.isChecked(), False)
+        self.assertEqual(self.main_widget_test.remote_button.isChecked(), False)
+        self.assertEqual(self.main_widget_test.files_button.isChecked(), True)
+        self.assertEqual(
+            self.main_widget_test.swidget.currentWidget(),
+            self.main_widget_test.files_widget)
+
+    def test_switch_view_to_remote(self):
+        self.main_widget_test.chage_current_view_to_remote()
+        self.assertEqual(self.main_widget_test.settings_button.isChecked(), False)
+        self.assertEqual(self.main_widget_test.remote_button.isChecked(), True)
+        self.assertEqual(self.main_widget_test.files_button.isChecked(), False)
+        self.assertEqual(
+            self.main_widget_test.swidget.currentWidget(),
+            self.main_widget_test.remote_widget)
+
+    def test_switch_view_to_settings(self):
+        self.main_widget_test.chage_current_view_to_settings()
+        self.assertEqual(self.main_widget_test.settings_button.isChecked(), True)
+        self.assertEqual(self.main_widget_test.remote_button.isChecked(), False)
+        self.assertEqual(self.main_widget_test.files_button.isChecked(), False)
+        self.assertEqual(
+            self.main_widget_test.swidget.currentWidget(),
+            self.main_widget_test.settings_view)
+
+    def test_remote_button(self):
+        self.main_widget_test.remote_button.click()
+        self.assertEqual(self.main_widget_test.remote_button.isChecked(), True)
+
+    def test_files_button(self):
+        self.main_widget_test.files_button.setChecked(False)
+        self.main_widget_test.files_button.click()
+        self.assertEqual(self.main_widget_test.files_button.isChecked(), True)
+
+    def test_settings_button(self):
+        self.main_widget_test.settings_button.click()
+        self.assertEqual(self.main_widget_test.settings_button.isChecked(), True)

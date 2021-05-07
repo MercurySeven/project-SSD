@@ -38,9 +38,9 @@ class DecisionEngine(Thread):
         self.notification_controller = notification_controller
 
         # set istanza di NetworkModel nei moduli per poter gestire i segnali di errore
+        tree_builder.set_model(main_model.network_model)
         os_handler.set_network_model(main_model.network_model)
         os_handler.set_settings_model(main_model.settings_model)
-        tree_builder.set_model(main_model.network_model)
 
         self.main_model = main_model
 
@@ -89,8 +89,10 @@ class DecisionEngine(Thread):
         try:
             if snap_tree is not None:
                 policy = Policy(settings.get_policy())
-                self.compare_snap_client.check(snap_tree, client_tree, self.strategy[policy])
-                client_tree = tree_builder.get_tree_from_system(path)
+                done_something = self.compare_snap_client.check(
+                    snap_tree, client_tree, self.strategy[policy])
+                if done_something:
+                    client_tree = tree_builder.get_tree_from_system(path)
 
             remote_tree = tree_builder.get_tree_from_node_id()
             self.compute_decision(client_tree, remote_tree, snap_tree is not None)
