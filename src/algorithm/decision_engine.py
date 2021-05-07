@@ -38,9 +38,9 @@ class DecisionEngine(Thread):
         self.notification_controller = notification_controller
 
         # set istanza di NetworkModel nei moduli per poter gestire i segnali di errore
+        tree_builder.set_model(main_model.network_model)
         os_handler.set_network_model(main_model.network_model)
         os_handler.set_settings_model(main_model.settings_model)
-        tree_builder.set_model(main_model.network_model)
 
         self.main_model = main_model
 
