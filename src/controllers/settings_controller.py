@@ -1,5 +1,7 @@
 import sys
 
+from PySide6.QtWidgets import QMessageBox
+
 from src.view.settings_view import SettingsView
 from src.model.settings_model import SettingsModel
 from src.model.network_model import NetworkModel
@@ -65,8 +67,14 @@ class SettingsController:
 
     @Slot()
     def Sl_view_profile_logout(self):
-        self._net_model.logout()
-        sys.exit()
+        msg = QMessageBox(QMessageBox.Question,
+                          "Logout",
+                          "Siete sicuri di voler effettuare il logout?",
+                          QMessageBox.Yes | QMessageBox.No)
+        msg.setButtonText(QMessageBox.Yes, "Sì")
+        if msg.exec_() == QMessageBox.Yes:
+            self._net_model.logout()
+            sys.exit()
 
     @Slot()
     def Sg_set_path_widget_changed(self, value: str):
