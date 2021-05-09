@@ -325,6 +325,9 @@ class FakeLogger:
 
 
 class NodeMetadata:
+    """
+    Classe utilizzata per simulare le chiamate richiedenti info sui metadati dei file
+    """
 
     def __init__(self, updated_at: int = 1000):
         self.updated = updated_at
