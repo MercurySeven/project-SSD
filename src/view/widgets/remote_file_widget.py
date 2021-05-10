@@ -26,12 +26,6 @@ class RemoteFileWidget(FileWidget):
 
     @Slot()
     def Sl_on_double_click(self):
-        """file_is_synced = self.settings_model.is_id_in_sync_list(self.id)
-
-        if file_is_synced is False:
-            self.Sg_add_sync_file.emit(self.id)
-        else:
-            self.Sg_remove_sync_file.emit(self.id)"""
         pass
 
     def contextMenuEvent(self, event) -> None:
