@@ -1,8 +1,7 @@
 import logging
 import os
 import shutil
-import sys
-from threading import Thread, Condition, Lock
+from threading import Thread, Condition
 
 from PySide6.QtCore import QSettings, Slot
 from PySide6.QtWidgets import (QSystemTrayIcon)
@@ -20,7 +19,6 @@ from .strategy.client_strategy import ClientStrategy
 from .strategy.manual_strategy import ManualStrategy
 from .strategy.strategy import Strategy
 from .tree_comparator import Actions
-from .uploader import Uploader
 
 
 class DecisionEngine(Thread):
@@ -29,8 +27,6 @@ class DecisionEngine(Thread):
                  notification_controller: NotificationController,
                  running: bool = False):
         Thread.__init__(self)
-
-        self.upload_counter = 0
 
         self.setName("Algoritmo V4")
         self.setDaemon(True)
@@ -56,8 +52,6 @@ class DecisionEngine(Thread):
 
         self.logger = logging.getLogger("decision_engine")
         self.condition = Condition()
-        self.snapshot_lock = Lock()
-        self.counter_lock = Lock()
 
     def set_running(self, running: bool) -> None:
         self.running = running
@@ -80,35 +74,6 @@ class DecisionEngine(Thread):
             self.condition.notify()
         finally:
             self.condition.release()
-
-    @Slot()
-    def Sl_file_uploaded(self, obj: Uploader):
-        try:
-            obj.signal_uploaded.disconnect(self.Sl_file_uploaded)
-        except RuntimeError:
-            self.logger.info("Errore nella disconnessione del segnale di %s", obj.name)
-        self.snapshot_lock.acquire()
-        try:
-            self.logger.info("Terminato %s" % obj.name)
-            del obj
-            # Update snapshot e salvalo
-        finally:
-            self.snapshot_lock.release()
-
-    @Slot()
-    def Sl_file_added(self, file_path):
-        self.counter_lock.acquire()
-        try:
-            thread_name = "Uploader n° %s" % self.upload_counter
-            uploader_thread = Uploader(thread_name, file_path,
-                                       self.main_model.network_model)
-            self.upload_counter += 1
-            if self.upload_counter > sys.maxsize - 10000:
-                self.upload_counter = 0
-        finally:
-            self.counter_lock.release()
-        uploader_thread.signal_uploaded.connect(self.Sl_file_uploaded)
-        uploader_thread.run()
 
     def check(self) -> None:
         self.logger.info("Avvio sincronizzazione")

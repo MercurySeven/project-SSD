@@ -9,7 +9,6 @@ from watchdog.observers import Observer
 
 class Watcher(QObject):
     signal_event = Signal()
-    signal_upload = Signal(str)
     """the Watcher class is used to activate or deactivate the watchdog thread,
     this is usually done automatically with signals or manually using
     the reboot method or run method
@@ -110,8 +109,6 @@ class MyHandler(PatternMatchingEventHandler, QObject):
         what = 'Directory' if event.is_directory else 'File'  # for future use
         self.logger.info(f"{what}, created, {event.src_path}")
         self.signal_watchdog()
-        if what == 'File':
-            self.signal_upload(event.src_path)
 
     def on_deleted(self, event):
         super(MyHandler, self).on_deleted(event)
@@ -129,6 +126,3 @@ class MyHandler(PatternMatchingEventHandler, QObject):
     def signal_watchdog(self):
         time.sleep(0.5)
         self.watchdog.signal_event.emit()
-
-    def signal_upload(self, file_path: str):
-        self.watchdog.signal_upload.emit(file_path)
