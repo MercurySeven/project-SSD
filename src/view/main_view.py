@@ -1,9 +1,9 @@
 import re
 
-from PySide6 import QtCore
-from PySide6.QtCore import (Signal, Slot, QSize, Qt)
-from PySide6.QtGui import (QIcon)
-from PySide6.QtWidgets import (
+from PySide2 import QtCore
+from PySide2.QtCore import (Signal, Slot, QSize, Qt)
+from PySide2.QtGui import (QIcon)
+from PySide2.QtWidgets import (
     QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QStackedWidget, QPushButton, QLabel)
 
 from src.model.main_model import MainModel

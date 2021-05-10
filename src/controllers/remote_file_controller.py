@@ -2,7 +2,7 @@ from src.model.remote_file_model import RemoteFileModel
 from src.model.settings_model import SettingsModel
 from src.model.main_model import MainModel
 from src.view.remote_file_view import RemoteFileView
-from PySide6.QtCore import (Slot)
+from PySide2.QtCore import (Slot)
 
 
 class RemoteFileController:

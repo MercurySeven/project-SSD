@@ -1,5 +1,5 @@
-from PySide6.QtCore import (Qt)
-from PySide6.QtWidgets import (QLabel, QVBoxLayout, QWidget, QScrollArea)
+from PySide2.QtCore import (Qt)
+from PySide2.QtWidgets import (QLabel, QVBoxLayout, QWidget, QScrollArea)
 
 from src.model.main_model import MainModel
 from src.view.widgets.settings.set_path_widget import SetPathWidget

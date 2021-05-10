@@ -1,6 +1,6 @@
-from PySide6.QtCore import (Qt, QSize, QTimer, Signal, Slot)
-from PySide6.QtGui import (QIcon)
-from PySide6.QtWidgets import (QToolButton)
+from PySide2.QtCore import (Qt, QSize, QTimer, Signal, Slot)
+from PySide2.QtGui import (QIcon)
+from PySide2.QtWidgets import (QToolButton)
 
 
 class DirectoryWidget(QToolButton):

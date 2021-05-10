@@ -1,7 +1,7 @@
 import os
 from typing import Tuple, Optional
 
-from PySide6.QtCore import (QSettings, Signal, Slot, QObject)
+from PySide2.QtCore import (QSettings, Signal, Slot, QObject)
 
 from src.algorithm import tree_builder
 from src.model.algorithm.tree_node import TreeNode

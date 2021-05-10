@@ -3,7 +3,7 @@ import os
 from typing import Optional
 
 import psutil
-from PySide6.QtCore import (QObject, Signal, QSettings)
+from PySide2.QtCore import (QObject, Signal, QSettings)
 import bitmath
 
 from src import settings

@@ -3,7 +3,7 @@ from enum import Enum
 from functools import wraps
 from threading import Lock
 
-from PySide6.QtCore import (QObject, Signal, QSettings)
+from PySide2.QtCore import (QObject, Signal, QSettings)
 
 from src.model.algorithm.tree_node import TreeNode
 from src.network.api import Api

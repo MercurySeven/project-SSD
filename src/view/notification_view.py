@@ -1,5 +1,5 @@
-from PySide6.QtWidgets import (QSystemTrayIcon, QMenu)
-from PySide6.QtGui import (QAction, QIcon)
+from PySide2.QtWidgets import (QSystemTrayIcon, QMenu, QAction)
+from PySide2.QtGui import QIcon
 
 
 class NotificationView(QSystemTrayIcon):

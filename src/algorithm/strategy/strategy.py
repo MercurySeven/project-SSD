@@ -2,7 +2,7 @@ import os
 from abc import ABC, abstractmethod
 from logging import Logger
 from typing import Optional
-from PySide6.QtCore import QSettings
+from PySide2.QtCore import QSettings
 
 from src.algorithm import os_handler, tree_builder
 from src.algorithm.tree_comparator import Actions

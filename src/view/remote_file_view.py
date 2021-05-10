@@ -1,5 +1,5 @@
-from PySide6.QtCore import (QSettings, Slot, Qt, Signal)
-from PySide6.QtWidgets import (QVBoxLayout, QHBoxLayout, QWidget, QScrollArea, QLabel, QPushButton)
+from PySide2.QtCore import (QSettings, Slot, Qt, Signal)
+from PySide2.QtWidgets import (QVBoxLayout, QHBoxLayout, QWidget, QScrollArea, QLabel, QPushButton)
 
 from src.model.remote_file_model import RemoteFileModel
 from src.model.main_model import MainModel

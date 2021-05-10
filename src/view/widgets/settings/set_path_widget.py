@@ -1,5 +1,5 @@
-from PySide6.QtCore import (Slot, Signal)
-from PySide6.QtWidgets import (
+from PySide2.QtCore import (Slot, Signal)
+from PySide2.QtWidgets import (
     QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QFileDialog)
 
 from src.model.settings_model import SettingsModel

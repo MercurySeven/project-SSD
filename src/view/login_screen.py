@@ -1,5 +1,5 @@
-from PySide6.QtCore import (Signal, Slot, Qt)
-from PySide6.QtWidgets import (QVBoxLayout, QLineEdit, QPushButton, QLabel, QDialog)
+from PySide2.QtCore import (Signal, Slot, Qt)
+from PySide2.QtWidgets import (QVBoxLayout, QLineEdit, QPushButton, QLabel, QDialog)
 
 from src.model.network_model import NetworkModel
 from src.view.stylesheets.qssManager import setQss

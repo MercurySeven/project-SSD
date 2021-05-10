@@ -1,7 +1,7 @@
 import re
 
-from PySide6.QtCore import Slot, Signal
-from PySide6.QtWidgets import QComboBox, QLabel, QWidget, QVBoxLayout
+from PySide2.QtCore import Slot, Signal
+from PySide2.QtWidgets import QComboBox, QLabel, QWidget, QVBoxLayout
 
 from src.model.settings_model import SettingsModel
 

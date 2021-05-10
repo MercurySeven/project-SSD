@@ -37,14 +37,14 @@ class FileWidgetTest(default_code.DefaultCode):
         # self.assertEqual(self.file_view_test.toolTip(), to_compare)
         self.assertEqual(self.file_view_test.text(), self.file.get_name())
 
-    @patch("PySide6.QtGui.QDesktopServices.openUrl")
+    @patch("PySide2.QtGui.QDesktopServices.openUrl")
     def test_one_click(self, mock_dialog):
         """ Test if the function with just one click
         does not trigger the double click function"""
         self.file_view_test.click()
         mock_dialog.assert_not_called()
 
-    @patch("PySide6.QtGui.QDesktopServices.openUrl")
+    @patch("PySide2.QtGui.QDesktopServices.openUrl")
     def test_double_click(self, mock_dialog):
         """ Check that with a double click the function
         gets called"""
@@ -52,7 +52,7 @@ class FileWidgetTest(default_code.DefaultCode):
         self.file_view_test.click()
         mock_dialog.assert_called_once()
 
-    @patch("PySide6.QtGui.QDesktopServices.openUrl")
+    @patch("PySide2.QtGui.QDesktopServices.openUrl")
     def test_triple_click(self, mock_dialog):
         """ Check that with a triple click the function
         gets called"""
@@ -61,7 +61,7 @@ class FileWidgetTest(default_code.DefaultCode):
         self.file_view_test.click()
         self.assertEqual(mock_dialog.call_count, 2)
 
-    @patch("PySide6.QtGui.QDesktopServices.openUrl")
+    @patch("PySide2.QtGui.QDesktopServices.openUrl")
     def test_quad_click(self, mock_dialog):
         """ Check that with a triple click the function
         gets called"""
@@ -71,21 +71,21 @@ class FileWidgetTest(default_code.DefaultCode):
         self.file_view_test.click()
         self.assertEqual(mock_dialog.call_count, 3)
 
-    @patch("PySide6.QtGui.QDesktopServices.openUrl")
+    @patch("PySide2.QtGui.QDesktopServices.openUrl")
     def test_click_pause500_click(self, mock_dialog):
         self.file_view_test.click()
         time.sleep(0.500)
         self.file_view_test.click()
         mock_dialog.assert_not_called()
 
-    @patch("PySide6.QtGui.QDesktopServices.openUrl")
+    @patch("PySide2.QtGui.QDesktopServices.openUrl")
     def test_click_pause050_click(self, mock_dialog):
         self.file_view_test.click()
         time.sleep(0.050)
         self.file_view_test.click()
         mock_dialog.assert_called_once()
 
-    @patch("PySide6.QtGui.QDesktopServices.openUrl")
+    @patch("PySide2.QtGui.QDesktopServices.openUrl")
     def test_click_pause_double_click(self, mock_dialog):
         self.file_view_test.click()
         time.sleep(0.500)
@@ -93,7 +93,7 @@ class FileWidgetTest(default_code.DefaultCode):
         self.file_view_test.click()
         mock_dialog.assert_called_once()
 
-    @patch("PySide6.QtGui.QDesktopServices.openUrl")
+    @patch("PySide2.QtGui.QDesktopServices.openUrl")
     def test_click_pause_triple_click(self, mock_dialog):
         self.file_view_test.click()
         time.sleep(0.500)
@@ -102,7 +102,7 @@ class FileWidgetTest(default_code.DefaultCode):
         self.file_view_test.click()
         self.assertEqual(mock_dialog.call_count, 2)
 
-    @patch("PySide6.QtGui.QDesktopServices.openUrl")
+    @patch("PySide2.QtGui.QDesktopServices.openUrl")
     def test_click_pause_quad_click(self, mock_dialog):
         self.file_view_test.click()
         time.sleep(0.500)

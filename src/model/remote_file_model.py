@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from PySide6.QtCore import (Signal, QObject)
+from PySide2.QtCore import (Signal, QObject)
 
 from src.algorithm import tree_builder
 from src.model.algorithm.node import Type, Node

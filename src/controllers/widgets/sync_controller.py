@@ -1,4 +1,4 @@
-from PySide6.QtCore import (Slot)
+from PySide2.QtCore import (Slot)
 from src.model.widgets.sync_model import SyncModel
 from src.view.widgets.sync_widget import SyncWidget
 

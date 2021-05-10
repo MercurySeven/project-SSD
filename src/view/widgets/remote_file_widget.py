@@ -1,8 +1,8 @@
-from PySide6.QtCore import (Slot, Qt, QPoint, QSize, Signal)
+from PySide2.QtCore import (Slot, Qt, QPoint, QSize, Signal)
 from src.model.widgets.remote_file import RemoteFile
 from src.view.widgets.file_widget import FileWidget
 from src.model.settings_model import SettingsModel
-from PySide6.QtGui import QPixmap, QPainter, QIcon
+from PySide2.QtGui import QPixmap, QPainter, QIcon
 
 
 class RemoteFileWidget(FileWidget):

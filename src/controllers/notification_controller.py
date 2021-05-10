@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import (QApplication, QSystemTrayIcon)
+from PySide2.QtWidgets import (QApplication, QSystemTrayIcon)
 from src.view.notification_view import NotificationView
 from src.view.main_view import MainWindow
 from src.algorithm.tree_comparator import Actions

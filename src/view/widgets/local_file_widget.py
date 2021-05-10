@@ -1,5 +1,5 @@
-from PySide6.QtCore import (Slot, QUrl)
-from PySide6.QtGui import (QDesktopServices)
+from PySide2.QtCore import (Slot, QUrl)
+from PySide2.QtGui import (QDesktopServices)
 
 from src.model.widgets.local_file import LocalFile
 from src.view.widgets.file_widget import FileWidget

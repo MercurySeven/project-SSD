@@ -4,7 +4,7 @@ from src.view.settings_view import SettingsView
 from src.model.settings_model import SettingsModel
 from src.model.network_model import NetworkModel
 from src.model.main_model import MainModel
-from PySide6.QtCore import (Slot)
+from PySide2.QtCore import (Slot)
 from src.model.algorithm.policy import Policy
 import bitmath
 import re

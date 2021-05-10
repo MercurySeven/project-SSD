@@ -3,8 +3,8 @@ import os
 import shutil
 from threading import Thread, Condition
 
-from PySide6.QtCore import QSettings, Slot
-from PySide6.QtWidgets import (QSystemTrayIcon)
+from PySide2.QtCore import QSettings, Slot
+from PySide2.QtWidgets import (QSystemTrayIcon)
 
 from src import settings
 from src.controllers.notification_controller import NotificationController

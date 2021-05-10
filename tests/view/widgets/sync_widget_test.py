@@ -1,6 +1,6 @@
 import unittest
 
-from PySide6.QtCore import QSize
+from PySide2.QtCore import QSize
 
 from src.model.main_model import MainModel
 from src.view.widgets.sync_widget import SyncWidget

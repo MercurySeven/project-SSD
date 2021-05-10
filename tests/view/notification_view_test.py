@@ -22,7 +22,7 @@ class NotificationViewTest(default_code.DefaultCode):
         self.assertEqual(self.notify_test.exit_option.text(), "Esci")
         self.assertEqual(self.notify_test.exit_option.toolTip(), "Esci")
 
-    @patch("PySide6.QtWidgets.QSystemTrayIcon.showMessage")
+    @patch("PySide2.QtWidgets.QSystemTrayIcon.showMessage")
     def test_show_message_without_duration(self, mock_dialog):
         """ Test if show message gets called, patches the
         default method for the show message in the pyside lib
@@ -31,7 +31,7 @@ class NotificationViewTest(default_code.DefaultCode):
         self.notify_test.show_message("ciao", "mamma")
         mock_dialog.assert_called_once()
 
-    @patch("PySide6.QtWidgets.QSystemTrayIcon.showMessage")
+    @patch("PySide2.QtWidgets.QSystemTrayIcon.showMessage")
     def test_show_message_with_duration(self, mock_dialog):
         """ Test if show message gets called, patches the
         default method for the show message in the pyside lib

@@ -2,7 +2,7 @@ import logging
 import os
 import time
 
-from PySide6.QtCore import (QSettings, QObject, Signal)
+from PySide2.QtCore import (QSettings, QObject, Signal)
 from watchdog.events import PatternMatchingEventHandler
 from watchdog.observers import Observer
 

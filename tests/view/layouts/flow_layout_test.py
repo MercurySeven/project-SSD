@@ -1,6 +1,6 @@
 import unittest
 
-from PySide6.QtCore import QMargins
+from PySide2.QtCore import QMargins
 
 from src.model.widgets.file import File
 from src.view.layouts.flowlayout import FlowLayout

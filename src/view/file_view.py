@@ -1,6 +1,6 @@
-from PySide6.QtCore import (QSettings, QUrl, Slot, Qt, Signal)
-from PySide6.QtGui import (QDesktopServices)
-from PySide6.QtWidgets import (QVBoxLayout, QHBoxLayout, QWidget, QScrollArea, QPushButton, QLabel)
+from PySide2.QtCore import (QSettings, QUrl, Slot, Qt, Signal)
+from PySide2.QtGui import (QDesktopServices)
+from PySide2.QtWidgets import (QVBoxLayout, QHBoxLayout, QWidget, QScrollArea, QPushButton, QLabel)
 
 from src.model.file_model import FileModel
 from src.view.layouts.flowlayout import FlowLayout

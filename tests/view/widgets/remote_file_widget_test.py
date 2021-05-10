@@ -37,19 +37,19 @@ class RemoteFileWidgetTest(default_code.DefaultCode):
         self.assertEqual(result, False)
         self.test_model.settings_model.remove_id_from_sync_list("NOT_CLIENT_NODE")
 
-    @patch('PySide6.QtGui.QPainter.drawPixmap')
+    @patch('PySide2.QtGui.QPainter.drawPixmap')
     def test_show_synced(self, mocked):
         self.test_file_widget.show_synced()
         mocked.assert_called()
 
-    @patch('PySide6.QtGui.QPainter.drawPixmap')
+    @patch('PySide2.QtGui.QPainter.drawPixmap')
     def test_files_status_changed_synced(self, mocked):
         self.test_model.settings_model.add_id_to_sync_list("CLIENT_NODE")
         self.test_file_widget.Sl_on_file_status_changed()
         mocked.assert_called()
         self.test_model.settings_model.remove_id_from_sync_list("CLIENT_NODE")
 
-    @patch('PySide6.QtGui.QPainter.drawPixmap')
+    @patch('PySide2.QtGui.QPainter.drawPixmap')
     def test_files_status_changed_not_synced(self, mocked):
         self.test_file_widget.Sl_on_file_status_changed()
         mocked.assert_not_called()

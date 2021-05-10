@@ -1,6 +1,6 @@
 from src.model.file_model import FileModel
 from src.view.file_view import FileView
-from PySide6.QtCore import (Slot)
+from PySide2.QtCore import (Slot)
 
 
 class FileController:

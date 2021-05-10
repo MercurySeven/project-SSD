@@ -1,5 +1,5 @@
-from PySide6.QtCore import (QObject, Slot, QSettings)
-from PySide6.QtWidgets import (QApplication)
+from PySide2.QtCore import (QObject, Slot, QSettings)
+from PySide2.QtWidgets import (QApplication)
 
 from src.algorithm.decision_engine import DecisionEngine
 from src.model.main_model import MainModel

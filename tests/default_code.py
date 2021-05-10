@@ -4,7 +4,7 @@ import sys
 import unittest
 import platform
 
-from PySide6.QtCore import QSettings, QCoreApplication
+from PySide2.QtCore import QSettings, QCoreApplication
 import requests.exceptions
 
 from src import settings
@@ -21,7 +21,7 @@ class DefaultCode(unittest.TestCase):
     BLACKLISTED_OS_FOR_CI = "Linux-5.4.0-1046-azure-x86_64-with-glibc2.31"
     app = None
     if platform.platform() != BLACKLISTED_OS_FOR_CI:
-        from PySide6.QtWidgets import QApplication
+        from PySide2.QtWidgets import QApplication
         app = QApplication(sys.argv)
     ORGANIZATION_NAME = "MercurySeven"
     APPLICATION_NAME = "SSD"

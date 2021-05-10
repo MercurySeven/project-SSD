@@ -3,8 +3,8 @@ import sys
 import logging
 import ctypes
 
-from PySide6.QtCore import (QCoreApplication, QSettings)
-from PySide6.QtWidgets import (QApplication, QFileDialog)
+from PySide2.QtCore import (QCoreApplication, QSettings)
+from PySide2.QtWidgets import (QApplication, QFileDialog)
 
 from src.controllers.login_controller import LoginController
 from src.controllers.main_controller import MainController

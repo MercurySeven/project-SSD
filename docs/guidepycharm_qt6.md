@@ -36,7 +36,7 @@ di avere roba che non serve)
 andare in basso a sinistra e premere su terminal.
 inserire 
 
-pip install pyside6
+pip install PySide2
 
 ora copiamo questo codice e facciamolo runnare, dovrebbe funzionare!
 
@@ -44,9 +44,9 @@ ora copiamo questo codice e facciamolo runnare, dovrebbe funzionare!
 
 import sys
 import random
-from PySide6.QtWidgets import (QApplication, QLabel, QPushButton,
+from PySide2.QtWidgets import (QApplication, QLabel, QPushButton,
                                QVBoxLayout, QWidget)
-from PySide6.QtCore import Slot, Qt
+from PySide2.QtCore import Slot, Qt
 
 class MyWidget(QWidget):
     def __init__(self):

@@ -1,5 +1,5 @@
-from PySide6.QtCore import Slot
-from PySide6.QtWidgets import QMessageBox
+from PySide2.QtCore import Slot
+from PySide2.QtWidgets import QMessageBox
 
 from src.controllers.main_controller import MainController
 from src.model.main_model import MainModel

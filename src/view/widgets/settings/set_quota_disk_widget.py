@@ -1,7 +1,7 @@
 import bitmath
-from PySide6.QtCore import (Qt, Signal, Slot)
-from PySide6.QtGui import QDoubleValidator
-from PySide6.QtWidgets import (QWidget, QProgressBar, QLabel,
+from PySide2.QtCore import (Qt, Signal, Slot)
+from PySide2.QtGui import QDoubleValidator
+from PySide2.QtWidgets import (QWidget, QProgressBar, QLabel,
                                QVBoxLayout, QHBoxLayout, QLineEdit, QComboBox, QPushButton)
 
 from src.model.settings_model import SettingsModel

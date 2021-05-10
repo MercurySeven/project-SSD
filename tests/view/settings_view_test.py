@@ -63,7 +63,7 @@ class SettingsViewTest(default_code.DefaultCode):
         self.path_test.change_path_button.click()
         mock_dialog.assert_called_once()
 
-    @patch("PySide6.QtWidgets.QDialog.exec_")
+    @patch("PySide2.QtWidgets.QDialog.exec_")
     def test_popup_file_dialog_interaction(self, mock_dialog):
         self.path_test.path.setText("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
         self.assertEqual(self.path_test.path.text(), "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
