@@ -126,9 +126,9 @@ def create_folder_with_folders(folder_list: list = None, time: int = 100) -> Tre
 def create_folder_with_files(file_list: list = None, time: int = 100) -> TreeNode:
     """
     Crea un nodo cartella contenente al suo interno altri file,
-    tante quante il numero di elementi passati nella lista.
+    tanti quanti il numero di elementi passati nella lista.
     Tutti i file sono inseriti nello stesso livello
-    :param folder_list: lista di file da aggiungere all'interno della cartella iniziale
+    :param file_list: lista di file da aggiungere all'interno della cartella iniziale
     :param time: il tempo di modifica e di creazione dei file
     :return: un nuovo tree node contenente tutti i i file
     """
