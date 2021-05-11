@@ -3,7 +3,7 @@ import os
 import shutil
 from threading import Thread, Condition
 
-from PySide6.QtCore import QSettings, Slot
+from PySide6.QtCore import (QObject, QSettings, Slot, Signal)
 from PySide6.QtWidgets import (QSystemTrayIcon)
 
 from src import settings
@@ -21,14 +21,18 @@ from .strategy.strategy import Strategy
 from .tree_comparator import Actions
 
 
-class DecisionEngine(Thread):
+class DecisionEngine(Thread, QObject):
+
+    Sg_toggle_files_update = Signal(str)
+
     def __init__(self,
                  main_model: MainModel,
                  notification_controller: NotificationController,
                  running: bool = False):
         Thread.__init__(self)
+        QObject.__init__(self)
 
-        self.setName("Algoritmo V4")
+        self.setName("Algoritmo V5")
         self.setDaemon(True)
         self.env_settings = QSettings()
         self.settings_model: SettingsModel = main_model.settings_model
@@ -134,9 +138,11 @@ class DecisionEngine(Thread):
                     os.remove(node._payload.path)
                     self.logger.info(f"Eliminato file non presente nel server: {name_node}")
                 else:
+                    self.Sg_toggle_files_update.emit(node.get_path())
                     id_parent = r["id"]
                     os_handler.upload_file(node, id_parent)
                     self.logger.info(f"Nuovo file da caricare nel server: {name_node}")
+                    self.Sg_toggle_files_update.emit(node.get_path())
             elif action == Actions.SERVER_NEW_FOLDER:
                 path = r["path"]
                 node_message = os_handler.download_folder(node, path)
@@ -146,9 +152,15 @@ class DecisionEngine(Thread):
                 if len(node_message) > 0:
                     self.logger.info(action.name + " " + name_node)
             elif action == Actions.SERVER_NEW_FILE or action == Actions.SERVER_UPDATE_FILE:
+                if action == Actions.SERVER_UPDATE_FILE:
+                    self.Sg_toggle_files_update.emit(node.get_path())
+
                 path = r["path"]
                 node_message = os_handler.download_file(node, path)
                 if node_message is not None:
                     node_message["action"] = action
                     self.notification_controller.add_notification(node_message)
                     self.logger.info(action.name + " " + name_node)
+
+                if action == Actions.SERVER_UPDATE_FILE:
+                    self.Sg_toggle_files_update.emit(node.get_path())

@@ -15,3 +15,7 @@ class FileController:
     @Slot(str)
     def Sl_update_files_with_new_path(self, path: str) -> None:
         self._model.set_current_node(path)
+
+    @Slot(str)
+    def Sl_toggle_files_update(self, file_path: str) -> None:
+        self._view.toggle_files_update(file_path)
