@@ -95,7 +95,8 @@ class MyHandler(PatternMatchingEventHandler, QObject):
         """
         super(MyHandler, self).__init__(ignore_patterns=[
             "*/log.mer",
-            "*/config.ini"])
+            "*/config.ini",
+            "*/client_dump.mer"])
         self.watchdog = watchdog
         self.logger = logger
 

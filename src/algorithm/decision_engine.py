@@ -134,8 +134,8 @@ class DecisionEngine(Thread):
                     os.remove(node._payload.path)
                     self.logger.info(f"Eliminato file non presente nel server: {name_node}")
                 else:
-                    path = r["id"]
-                    os_handler.upload_file(node, path)
+                    id_parent = r["id"]
+                    os_handler.upload_file(node, id_parent)
                     self.logger.info(f"Nuovo file da caricare nel server: {name_node}")
             elif action == Actions.SERVER_NEW_FOLDER:
                 path = r["path"]
