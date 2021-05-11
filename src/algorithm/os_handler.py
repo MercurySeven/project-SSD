@@ -1,5 +1,4 @@
 import os
-import shutil
 from typing import Optional
 from src.model.algorithm.tree_node import TreeNode
 from src.model.network_model import NetworkModel
@@ -23,22 +22,26 @@ def set_settings_model(set_model: SettingsModel) -> None:
 def download_folder(node: TreeNode, path: str) -> list[dict]:
     """Il nodo rappresenta la cartella che non esiste,
     ritorna i risultati dei download che sono stati fatti"""
-    path_folder = os.path.join(path, node.get_name())
-    os.mkdir(path_folder)
+
+    # Controlliamo se la cartella ha dei nodi da scaricare
+    file_node_list = settings_model.get_sync_list()
+    res = check_node_in_nodelist(node, file_node_list)
 
     download_operations_list = []
-    # folder_has_nodes = len(node.get_children()) > 0
-    for _node in node.get_children():
-        if _node.is_directory():
-            result = download_folder(_node, path_folder)
-            download_operations_list.extend(result)
-        else:
-            result = download_file(_node, path_folder)
-            if result is not None:
-                download_operations_list.append(result)
 
-    if len(download_operations_list) == 0:
-        shutil.rmtree(path_folder)
+    if res:
+        path_folder = os.path.join(path, node.get_name())
+        os.mkdir(path_folder)
+
+        for _node in node.get_children():
+            if _node.is_directory():
+                result = download_folder(_node, path_folder)
+                download_operations_list.extend(result)
+            else:
+                result = download_file(_node, path_folder)
+                if result is not None:
+                    download_operations_list.append(result)
+
     return download_operations_list
 
 
