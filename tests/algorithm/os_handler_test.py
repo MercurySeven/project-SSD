@@ -64,7 +64,8 @@ class OsHandlerTest(default_code.DefaultCode):
 
     @patch('src.model.network_model.NetworkModel.download_node', return_value=True)
     @patch('src.model.settings_model.SettingsModel.is_id_in_sync_list', return_value=True)
-    def test_download_folder_with_file(self, mock_1, mock_2):
+    @patch('src.algorithm.os_handler.check_node_in_nodelist', return_value=True)
+    def test_download_folder_with_file(self, mock_1, mock_2, mock_3):
         updated = 200
         created = 100
         test_node = TreeNode(Node("CLIENT_NODE", self.folder_name,
@@ -75,6 +76,7 @@ class OsHandlerTest(default_code.DefaultCode):
         self.assertEqual(x, [True])
         mock_1.assert_called_once()
         mock_2.assert_called_once()
+        mock_3.assert_called_once()
 
     def test_download_folder_with_folder(self):
         created = 100
@@ -83,7 +85,8 @@ class OsHandlerTest(default_code.DefaultCode):
                                   Type.Folder, created, updated, self.path))
         test_node.add_node(TreeNode(Node("CLIENT_NODE", self.folder_name,
                                          Type.Folder, created, updated, self.path)))
-        os_handler.download_folder(test_node, self.path)
+        x = os_handler.download_folder(test_node, self.path)
+        self.assertEqual(x, [])
         folder_path = os.path.join(self.path, self.folder_name)
         inner_folder_path = os.path.join(folder_path, self.folder_name)
         self.assertEqual(os.path.exists(folder_path), False)
