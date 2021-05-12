@@ -3,6 +3,7 @@ from src.model.widgets.remote_file import RemoteFile
 from src.view.widgets.file_widget import FileWidget
 from src.model.settings_model import SettingsModel
 from PySide6.QtGui import QPixmap, QPainter, QIcon
+from PySide6.QtWidgets import QMenu
 
 
 class RemoteFileWidget(FileWidget):
@@ -25,12 +26,27 @@ class RemoteFileWidget(FileWidget):
 
     @Slot()
     def Sl_on_double_click(self):
+        pass
+
+    def contextMenuEvent(self, event) -> None:
+        context_menu = QMenu(self)
         file_is_synced = self.settings_model.is_id_in_sync_list(self.id)
 
+        # se il file non è syncato mostra aggiungi, altrimenti mostra rimuovi
         if file_is_synced is False:
-            self.Sg_add_sync_file.emit(self.id)
+            add_sync_action = context_menu.addAction("Aggiungi a sync")
         else:
-            self.Sg_remove_sync_file.emit(self.id)
+            remove_sync_action = context_menu.addAction("Rimuovi da sync")
+
+        # selezione voci menu
+        if file_is_synced is False:
+            action = context_menu.exec_(self.mapToGlobal(event.pos()))
+            if action == add_sync_action:
+                self.Sg_add_sync_file.emit(self.id)
+        else:
+            action = context_menu.exec_(self.mapToGlobal(event.pos()))
+            if action == remove_sync_action:
+                self.Sg_remove_sync_file.emit(self.id)
 
     def show_synced(self) -> None:
         p1 = QPixmap(self.icon().pixmap(self.icon().actualSize(QSize(1024, 1024))))

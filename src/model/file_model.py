@@ -68,7 +68,7 @@ class FileModel(QObject):
 
         return list_of_files, list_of_dirs
 
-    def set_current_node(self, path) -> None:
+    def set_current_node(self, path: str) -> None:
         name = path.split('/')[-1]  # ottengo nome folder desiderato
         child = self._search_through_children(name, self.current_folder._node)  # cerco figlio
         if(child):
