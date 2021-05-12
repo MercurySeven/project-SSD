@@ -34,8 +34,8 @@ class FileView(QWidget):
         self.fileLayout = FlowLayout()
         self.fileLayout.setContentsMargins(0, 0, 0, 0)
 
-        self.show_path_button = QPushButton(self)
-        self.show_path_button.setText("Apri file manager")
+        self.show_path_button = QPushButton("Apri file manager", self)
+        self.force_sync_button = QPushButton("Sincronizza ora", self)
 
         self.fileWindow.setParent(self.scrollArea)
         self.fileWindow.setLayout(self.fileLayout)
@@ -44,6 +44,7 @@ class FileView(QWidget):
 
         header_layout = QHBoxLayout()
         header_layout.addWidget(self.title)
+        header_layout.addWidget(self.force_sync_button)
         header_layout.addWidget(self.show_path_button)
 
         layout = QVBoxLayout()
