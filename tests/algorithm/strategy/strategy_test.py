@@ -82,7 +82,6 @@ class StrategyTest(default_code.DefaultCode):
     @patch('src.algorithm.strategy.manual_strategy.get_or_create_folder_id',
            return_value=None)
     @patch('src.algorithm.os_handler.upload_file')
-    @patch('src.algorithm.strategy.manual_strategy.get_id_from_path', return_value="id")
     @patch('os.rename')
     @patch('src.algorithm.tree_builder._build_tree_node',
            return_value=default_code._get_test_node())
@@ -103,7 +102,6 @@ class StrategyTest(default_code.DefaultCode):
     @patch('src.algorithm.strategy.manual_strategy.get_or_create_folder_id',
            return_value=None)
     @patch('src.algorithm.os_handler.upload_file')
-    @patch('src.algorithm.strategy.manual_strategy.get_id_from_path', return_value="id")
     @patch('src.algorithm.tree_builder._create_node_from_dict',
            return_value=default_code._get_test_node())
     def test_execute_manual_strategy_server_update_file_equal_snap(

@@ -32,7 +32,6 @@ class CompareClientSnapshotTest(default_code.DefaultCode):
 
     @patch('src.algorithm.tree_comparator.compareFolders',
            return_value=ResultObj(Actions.CLIENT_NEW_FOLDER, 1))
-    @patch('src.algorithm.strategy.strategy.get_id_from_path')
     @patch('src.algorithm.os_handler.delete_node')
     def test_compare_snap_client_new_folder(self, mock_1, mock_2, mock_3):
         # TODO: SISTEMARE
@@ -45,7 +44,6 @@ class CompareClientSnapshotTest(default_code.DefaultCode):
 
     @patch('src.algorithm.tree_comparator.compareFolders',
            return_value=ResultObj(Actions.CLIENT_NEW_FILE, 1))
-    @patch('src.algorithm.strategy.strategy.get_id_from_path')
     @patch('src.algorithm.os_handler.delete_node')
     def test_compare_snap_client_new_file(self, mock_1, mock_2, mock_3):
         # TODO: SISTEMARE
@@ -80,7 +78,6 @@ class CompareClientSnapshotTest(default_code.DefaultCode):
 
     @patch('src.algorithm.tree_comparator.compareFolders',
            return_value=ResultObj(Actions.SERVER_UPDATE_FILE, 1))
-    @patch('src.algorithm.strategy.strategy.get_id_from_path')
     @patch('src.algorithm.os_handler.upload_file')
     def test_compare_snap_client_server_new_update_file(self, mock_1, mock_2, mock_3):
         # test_node = _get_test_node()
