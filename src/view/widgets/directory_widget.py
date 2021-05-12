@@ -2,6 +2,8 @@ from PySide6.QtCore import (Qt, QSize, QTimer, Signal, Slot)
 from PySide6.QtGui import (QIcon)
 from PySide6.QtWidgets import (QToolButton)
 
+from src.view.stylesheets.qssManager import resource_path
+
 
 class DirectoryWidget(QToolButton):
     Sg_double_clicked = Signal(str)
@@ -14,7 +16,7 @@ class DirectoryWidget(QToolButton):
 
         self.setAccessibleName('Directory')
 
-        self.setIcon(QIcon('./assets/icons/Cartella.png'))
+        self.setIcon(QIcon(resource_path('./assets/icons/Cartella.png')))
         self.setIconSize(QSize(45, 45))
         self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
 

@@ -3,6 +3,7 @@ from PySide6.QtGui import (QDesktopServices, QIcon, QPainter, QPixmap)
 
 from src.model.widgets.local_file import LocalFile
 from src.view.widgets.file_widget import FileWidget
+from src.view.stylesheets.qssManager import resource_path
 
 
 class LocalFileWidget(FileWidget):
@@ -32,8 +33,8 @@ class LocalFileWidget(FileWidget):
 
     def get_icon(self) -> QPixmap:
         if self.is_sync:
-            return QPixmap('./assets/icons/Transfer.png')
-        return QPixmap('./assets/icons/Check.png')
+            return QPixmap(resource_path('./assets/icons/Transfer.png'))
+        return QPixmap(resource_path('./assets/icons/Check.png'))
 
     def show_synced(self) -> None:
         p1 = QPixmap(self.icon().pixmap(self.icon().actualSize(QSize(1024, 1024))))
