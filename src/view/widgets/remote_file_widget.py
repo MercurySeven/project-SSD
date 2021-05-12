@@ -25,10 +25,6 @@ class RemoteFileWidget(FileWidget):
         self.setToolTip(tooltip)
         self.Sl_on_file_status_changed()
 
-    @Slot()
-    def Sl_on_double_click(self):
-        pass
-
     def contextMenuEvent(self, event) -> None:
         context_menu = QMenu(self)
         file_is_synced = self.settings_model.is_id_in_sync_list(self.id)
