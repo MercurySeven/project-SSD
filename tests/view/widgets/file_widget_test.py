@@ -128,3 +128,10 @@ class FileWidgetTest(default_code.DefaultCode):
         test_file = File(default_code._get_test_node())
         test_widget = FileWidget(test_file)
         test_widget.Sl_on_double_click()
+
+    def test_get_icon(self):
+        self.file_view_test.is_sync = False
+        self.assertIsNotNone(self.file_view_test.get_icon())
+
+        self.file_view_test.toggle()
+        self.assertIsNotNone(self.file_view_test.get_icon())
