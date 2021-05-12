@@ -42,7 +42,7 @@ Passi da seguire:
             "name": "Python: From main",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/src/main.py",
+            "program": "${workspaceFolder}/src/__main__.py",
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}",
             "env": {
