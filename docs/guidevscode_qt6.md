@@ -52,4 +52,4 @@ Passi da seguire:
     ]
 }
 ```
-8. Per generare l'eseguibile: `pyinstaller .\app_inst.spec --noconfirm`
+8. Per generare l'eseguibile su windows, eseguire il file: `win-dist.bat`, nella cartella `dist` ci sarà l'eseguibile
