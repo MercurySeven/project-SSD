@@ -5,6 +5,7 @@ from unittest.mock import patch
 from src.algorithm import os_handler
 from src.algorithm.strategy.client_strategy import ClientStrategy
 from src.algorithm.strategy.manual_strategy import ManualStrategy
+from src.algorithm.strategy import strategy
 from src.algorithm.tree_comparator import Actions
 from src.model.main_model import MainModel
 from tests import default_code
@@ -56,7 +57,7 @@ class StrategyTest(default_code.DefaultCode):
         self.delete_files()
         super(StrategyTest, self).tearDown()
 
-    @patch('src.algorithm.strategy.strategy.Strategy.get_or_create_folder_id', return_value=None)
+    @patch('src.algorithm.strategy.client_strategy.get_or_create_folder_id', return_value=None)
     @patch('src.algorithm.os_handler.upload_file')
     def test_execute_client_strategy_server_update_file(self, mock_1, mock_2):
         obj_to_iterate: list = [default_code.ResultObj(Actions.SERVER_UPDATE_FILE).result]
@@ -78,7 +79,7 @@ class StrategyTest(default_code.DefaultCode):
 
     @patch('src.model.network_model.NetworkModel.get_content_from_node',
            return_value=default_code._get_special_tree_dict())
-    @patch('src.algorithm.strategy.strategy.Strategy.get_or_create_folder_id',
+    @patch('src.algorithm.strategy.manual_strategy.get_or_create_folder_id',
            return_value=None)
     @patch('src.algorithm.os_handler.upload_file')
     @patch('src.algorithm.strategy.manual_strategy.get_id_from_path', return_value="id")
@@ -99,7 +100,7 @@ class StrategyTest(default_code.DefaultCode):
 
     @patch('src.model.network_model.NetworkModel.get_content_from_node',
            return_value=default_code._get_special_tree_dict())
-    @patch('src.algorithm.strategy.strategy.Strategy.get_or_create_folder_id',
+    @patch('src.algorithm.strategy.manual_strategy.get_or_create_folder_id',
            return_value=None)
     @patch('src.algorithm.os_handler.upload_file')
     @patch('src.algorithm.strategy.manual_strategy.get_id_from_path', return_value="id")
@@ -130,35 +131,22 @@ class StrategyTest(default_code.DefaultCode):
 
     @patch('src.algorithm.os_handler.create_folder')
     @patch('src.algorithm.tree_builder.get_tree_from_node_id',
-           return_value=default_code._get_file_test_node())
-    def test_get_or_create_id_empty(self, get_tree_mock, create_folder_mock):
-        client_result = self.client_strategy.get_or_create_folder_id(
-            self.env_set.value(default_code.DefaultCode.SYNC_ENV_VARIABLE))
-        create_folder_mock.assert_called_once()
-        self.assertEqual(get_tree_mock.call_count, 2)
-        manual_result = self.manual_strategy.get_or_create_folder_id(
-            self.env_set.value(default_code.DefaultCode.SYNC_ENV_VARIABLE))
-        self.assertEqual(create_folder_mock.call_count, 2)
-        self.assertEqual(get_tree_mock.call_count, 4)
-        self.assertEqual(client_result, manual_result)
-
-    @patch('src.algorithm.tree_builder.get_tree_from_node_id',
            return_value=default_code.create_folder_with_folders(["tree", "tree"]))
-    def test_get_or_create_id_found(self, get_tree_mock):
-        client_result = self.client_strategy.get_or_create_folder_id(self.first_folder)
-        self.assertEqual(get_tree_mock.call_count, 1)
-        manual_result = self.manual_strategy.get_or_create_folder_id(self.first_folder)
+    def test_get_or_create_id_found(self, get_tree_mock, create_folder_mock):
+        client_result = strategy.get_or_create_folder_id(self.first_folder)
         self.assertEqual(get_tree_mock.call_count, 2)
+        manual_result = strategy.get_or_create_folder_id(self.first_folder)
+        self.assertEqual(get_tree_mock.call_count, 4)
         self.assertEqual(client_result, manual_result)
 
     @patch('src.algorithm.os_handler.create_folder')
     @patch('src.algorithm.tree_builder.get_tree_from_node_id',
            return_value=default_code.create_folder_with_folders(["x", "x"]))
     def test_get_or_create_id_not_found(self, get_tree_mock, create_folder_mock):
-        client_result = self.client_strategy.get_or_create_folder_id(self.first_folder)
-        create_folder_mock.assert_called_once()
-        self.assertEqual(get_tree_mock.call_count, 2)
-        manual_result = self.manual_strategy.get_or_create_folder_id(self.first_folder)
+        client_result = strategy.get_or_create_folder_id(self.first_folder)
         self.assertEqual(create_folder_mock.call_count, 2)
-        self.assertEqual(get_tree_mock.call_count, 4)
+        self.assertEqual(get_tree_mock.call_count, 3)
+        manual_result = strategy.get_or_create_folder_id(self.first_folder)
+        self.assertEqual(create_folder_mock.call_count, 4)
+        self.assertEqual(get_tree_mock.call_count, 6)
         self.assertEqual(client_result, manual_result)
