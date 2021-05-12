@@ -3,7 +3,7 @@ import os
 from typing import Optional
 
 import psutil
-from PySide6.QtCore import (QObject, Signal, QSettings, Slot)
+from PySide6.QtCore import (QObject, Signal, QSettings)
 import bitmath
 
 from src import settings
@@ -51,10 +51,6 @@ class SettingsModel(QObject):
 
     def get_sync_time(self) -> int:
         return settings.get_sync_time()
-
-    @Slot()
-    def Sl_force_model_changed(self) -> None:
-        self.Sg_model_changed.emit()
 
     def get_quota_disco_raw(self) -> float:
         """Ritorna il valore grezzo"""
