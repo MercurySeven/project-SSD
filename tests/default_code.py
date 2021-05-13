@@ -20,7 +20,7 @@ node_name = "CLIENT_NODE"
 class DefaultCode(unittest.TestCase):
     BLACKLISTED_OS_FOR_CI = "Linux-5.4.0-1046-azure-x86_64-with-glibc2.31"
     app = None
-    if platform.platform() != BLACKLISTED_OS_FOR_CI:
+    if platform.platform() != BLACKLISTED_OS_FOR_CI and "azure" not in platform.platform():
         from PySide6.QtWidgets import QApplication
         app = QApplication(sys.argv)
     ORGANIZATION_NAME = "MercurySeven"
