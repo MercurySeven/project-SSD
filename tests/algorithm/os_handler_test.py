@@ -116,6 +116,14 @@ class OsHandlerTest(default_code.DefaultCode):
         os_handler.upload_folder(test_node, self.path)
         self.assertEqual(mocked_fun.call_count, 2)
 
+    @patch('src.model.settings_model.SettingsModel.is_id_in_sync_list', return_value=False)
+    def test_download_file_not_in_list(self, mocked_fun):
+        test_node = TreeNode(Node("CLIENT_NODE", self.folder_name,
+                                  Type.File, 100, 200, "ciao.txt"))
+        res = os_handler.download_file(test_node, self.path)
+        mocked_fun.assert_called_once()
+        self.assertIsNone(res)
+
     @patch('src.model.network_model.NetworkModel.delete_node')
     def test_delete_node(self, mocked_fun):
         # TODO: RISISTERMARE
