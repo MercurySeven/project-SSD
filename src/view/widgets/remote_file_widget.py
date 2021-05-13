@@ -37,11 +37,11 @@ class RemoteFileWidget(FileWidget):
 
         # selezione voci menu
         if file_is_synced is False:
-            action = context_menu.exec_(self.mapToGlobal(event.pos()))
+            action = context_menu.exec(self.mapToGlobal(event.pos()))
             if action == add_sync_action:
                 self.Sg_add_sync_file.emit(self.id)
         else:
-            action = context_menu.exec_(self.mapToGlobal(event.pos()))
+            action = context_menu.exec(self.mapToGlobal(event.pos()))
             if action == remove_sync_action:
                 self.Sg_remove_sync_file.emit(self.id)
 

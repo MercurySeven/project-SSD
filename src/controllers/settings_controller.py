@@ -72,7 +72,7 @@ class SettingsController:
                           "Siete sicuri di voler effettuare il logout?",
                           QMessageBox.Yes | QMessageBox.No)
         msg.setButtonText(QMessageBox.Yes, "Sì")
-        if msg.exec_() == QMessageBox.Yes:
+        if msg.exec() == QMessageBox.Yes:
             self._net_model.logout()
             sys.exit()
 

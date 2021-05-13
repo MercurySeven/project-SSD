@@ -78,7 +78,7 @@ if __name__ == "__main__":
     widget.resize(800, 600)
     widget.show()
 
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
 ``` 
 
 il programma di prova dovrebbe far comparire una gui!

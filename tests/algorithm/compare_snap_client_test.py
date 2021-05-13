@@ -77,7 +77,7 @@ class CompareClientSnapshotTest(default_code.DefaultCode):
     @patch('src.algorithm.tree_comparator.compareFolders',
            return_value=ResultObj(Actions.SERVER_UPDATE_FILE, 1))
     @patch('src.algorithm.os_handler.upload_file')
-    def test_compare_snap_client_server_new_update_file(self, mock_1, mock_2, mock_3):
+    def test_compare_snap_client_server_new_update_file(self, mock_1, mock_2):
         # test_node = _get_test_node()
         pass
         # settings.update_policy(Policy.Client)
