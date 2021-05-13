@@ -150,3 +150,19 @@ class OsHandlerTest(default_code.DefaultCode):
         m3.assert_called_once()
         m4.assert_called_once()
         self.assertTrue(res)
+
+    def test_check_node_in_nodelist(self):
+        updated = 200
+        created = 100
+        test_node = TreeNode(Node("ROOT", self.folder_name,
+                                  Type.Folder, created, updated, self.path))
+        test_node.add_node(TreeNode(Node("b", self.file_name,
+                                         Type.File, created, updated, self.path)))
+        test_node.add_node(TreeNode(Node("a", self.folder_name,
+                                         Type.Folder, created, updated, self.path)))
+
+        res = os_handler.check_node_in_nodelist(test_node, ["a", "b"])
+        self.assertTrue(res)
+
+        res = os_handler.check_node_in_nodelist(test_node, ["d", "e"])
+        self.assertFalse(res)
