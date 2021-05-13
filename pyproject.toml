@@ -11,8 +11,8 @@ author_email = "mercuryseven.swe@gmail.com"
 formal_name = "ssd"
 description = "client di sincronizzazione file per servizi zextras"
 sources = ['src']
-requires = ['pyside6==6.0.4',
-            'shiboken6==6.0.4',
+requires = ['pyside6==6.1.0',
+            'shiboken6==6.1.0',
             'gql==3.0.0a5',
             'watchdog==2.1.0',
             'aiohttp==3.7.4',
@@ -26,7 +26,7 @@ requires = ['pyside6==6.0.4',
 requires = []
 
 [tool.briefcase.app.src.linux]
-requires = ['pyside6==6.0.4']
+requires = ['pyside6==6.1.0']
 system_requires = ['libgl1','python3-pyqt5','qt5-default','libpq5']
 
 [tool.briefcase.app.src.windows]
