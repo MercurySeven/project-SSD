@@ -85,8 +85,10 @@ class StrategyTest(default_code.DefaultCode):
     @patch('os.rename')
     @patch('src.algorithm.tree_builder._build_tree_node',
            return_value=default_code._get_test_node())
+    @patch('src.algorithm.strategy.manual_strategy.check_node_still_exists',
+           return_value=True)
     def test_execute_manual_strategy_server_update_file_diff_snap(
-            self, mock_1, mock_2, mock_3, mock_4, mock_5):
+            self, mock_1, mock_2, mock_3, mock_4, mock_5, mock_6):
         obj_to_iterate: list = [default_code.ResultObj(
             Actions.SERVER_UPDATE_FILE, 0, "name.ciao.we").result]
         logger = default_code.FakeLogger()
@@ -96,6 +98,22 @@ class StrategyTest(default_code.DefaultCode):
         mock_3.assert_called_once()
         mock_4.assert_called_once()
         mock_5.assert_called_once()
+        mock_6.assert_called_once()
+
+    @patch('src.algorithm.strategy.manual_strategy.get_or_create_folder_id',
+           return_value=None)
+    @patch('src.algorithm.os_handler.upload_file')
+    @patch('src.algorithm.strategy.manual_strategy.check_node_still_exists',
+           return_value=None)
+    def test_execute_manual_strategy_server_update_file_none(
+            self, mock_1, mock_2, mock_3):
+        obj_to_iterate: list = [default_code.ResultObj(
+            Actions.SERVER_UPDATE_FILE, 0, "name.ciao.we").result]
+        logger = default_code.FakeLogger()
+        self.manual_strategy.execute(obj_to_iterate, logger)
+        mock_1.assert_called_once()
+        mock_2.assert_called_once()
+        mock_3.assert_called_once()
 
     @patch('src.model.network_model.NetworkModel.get_content_from_node',
            return_value=default_code._get_special_tree_dict())
@@ -104,8 +122,10 @@ class StrategyTest(default_code.DefaultCode):
     @patch('src.algorithm.os_handler.upload_file')
     @patch('src.algorithm.tree_builder._create_node_from_dict',
            return_value=default_code._get_test_node())
+    @patch('src.algorithm.strategy.manual_strategy.check_node_still_exists',
+           return_value=True)
     def test_execute_manual_strategy_server_update_file_equal_snap(
-            self, mock_1, mock_2, mock_3, mock_4):
+            self, mock_1, mock_2, mock_3, mock_4, mock_5):
         obj_to_iterate: list = [default_code.ResultObj(
             Actions.SERVER_UPDATE_FILE, 0, "name.ciao.we", 200).result]
         logger = default_code.FakeLogger()
@@ -114,6 +134,7 @@ class StrategyTest(default_code.DefaultCode):
         mock_2.assert_called_once()
         mock_3.assert_called_once()
         mock_4.assert_called_once()
+        mock_5.assert_called_once()
 
     @patch('src.algorithm.strategy.manual_strategy.common_strategy')
     def test_execute_manual_strategy_common(self, mock_1):
