@@ -166,8 +166,6 @@ class OsHandlerTest(default_code.DefaultCode):
                                           Type.File, created, updated, self.path)))
         test_node.add_node(sub_folder)
 
-        print(test_node)
-
         res = os_handler.check_node_in_nodelist(test_node, ["a", "b"])
         self.assertTrue(res)
 
