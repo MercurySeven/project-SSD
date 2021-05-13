@@ -158,11 +158,21 @@ class OsHandlerTest(default_code.DefaultCode):
                                   Type.Folder, created, updated, self.path))
         test_node.add_node(TreeNode(Node("b", self.file_name,
                                          Type.File, created, updated, self.path)))
-        test_node.add_node(TreeNode(Node("a", self.folder_name,
-                                         Type.Folder, created, updated, self.path)))
+
+        sub_folder = TreeNode(Node("a", self.folder_name,
+                                   Type.Folder, created, updated, self.path))
+
+        sub_folder.add_node(TreeNode(Node("f", self.folder_name,
+                                          Type.File, created, updated, self.path)))
+        test_node.add_node(sub_folder)
+
+        print(test_node)
 
         res = os_handler.check_node_in_nodelist(test_node, ["a", "b"])
         self.assertTrue(res)
 
         res = os_handler.check_node_in_nodelist(test_node, ["d", "e"])
         self.assertFalse(res)
+
+        res = os_handler.check_node_in_nodelist(test_node, ["f"])
+        self.assertTrue(res)
