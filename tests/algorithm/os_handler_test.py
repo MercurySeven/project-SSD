@@ -124,9 +124,16 @@ class OsHandlerTest(default_code.DefaultCode):
         mocked_fun.assert_called_once()
         self.assertIsNone(res)
 
+    @patch('src.model.settings_model.SettingsModel.get_sync_list', return_value=["a", "b"])
     @patch('src.model.network_model.NetworkModel.delete_node')
-    def test_delete_node(self, mocked_fun):
-        # TODO: RISISTERMARE
-        return
-        os_handler.delete_node("test")
-        mocked_fun.assert_called_once()
+    def test_delete_node_file_present(self, m1, m2):
+        res = os_handler.delete_node("a", True)
+        m1.assert_called_once()
+        m2.assert_called_once()
+        self.assertTrue(res)
+
+    @patch('src.model.settings_model.SettingsModel.get_sync_list', return_value=["a", "b"])
+    def test_delete_node_file_not_present(self, m1):
+        res = os_handler.delete_node("c", True)
+        m1.assert_called_once()
+        self.assertFalse(res)
