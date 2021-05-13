@@ -7,6 +7,7 @@ from src.model.algorithm.node import Node, Type
 from src.model.algorithm.tree_node import TreeNode
 from src.model.main_model import MainModel
 from tests import default_code
+from tests.default_code import _get_test_node
 
 
 class OsHandlerTest(default_code.DefaultCode):
@@ -137,3 +138,15 @@ class OsHandlerTest(default_code.DefaultCode):
         res = os_handler.delete_node("c", True)
         m1.assert_called_once()
         self.assertFalse(res)
+
+    @patch('src.model.settings_model.SettingsModel.get_sync_list', return_value=["a", "b"])
+    @patch('src.algorithm.tree_builder.get_tree_from_node_id', return_value=_get_test_node())
+    @patch('src.algorithm.os_handler.check_node_in_nodelist', return_value=True)
+    @patch('src.model.network_model.NetworkModel.delete_node')
+    def test_delete_node_folder_present(self, m1, m2, m3, m4):
+        res = os_handler.delete_node("a", False)
+        m1.assert_called_once()
+        m2.assert_called_once()
+        m3.assert_called_once()
+        m4.assert_called_once()
+        self.assertTrue(res)
