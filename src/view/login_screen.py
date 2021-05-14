@@ -1,6 +1,9 @@
+import os
+
 from PySide6.QtCore import (Signal, Slot, Qt)
 from PySide6.QtWidgets import (QVBoxLayout, QLineEdit, QPushButton, QLabel, QDialog)
 
+from src import assets_path
 from src.model.network_model import NetworkModel
 from src.view.stylesheets.qssManager import setQss
 
@@ -53,7 +56,7 @@ class LoginScreen(QDialog):
         self.layout.addWidget(self.login_button)
 
         self.setLayout(self.layout)
-        setQss("./assets/style.qss", self)
+        setQss(os.path.join(assets_path.ASSETS_PATH, "style.qss"), self)
 
     @Slot()
     def Sl_model_changed(self):
