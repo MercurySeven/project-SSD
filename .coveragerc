@@ -3,3 +3,4 @@ omit =
     *controllers*
     */__main__.py
     */api.py
+    */assets_path.py
