@@ -218,3 +218,17 @@ class StrategyTest(default_code.DefaultCode):
         strategy.common_strategy(node_raw, logger)
         m1.assert_not_called()
         m2.assert_called_once()
+
+    @patch('src.algorithm.tree_builder.get_tree_from_node_id',
+           return_value=default_code.create_folder_with_folders(["tree", "tree"]))
+    def test_check_node_still_exists(self, m1):
+        result = strategy.check_node_still_exists(os.path.join("test", "tree"))
+        m1.assert_called_once()
+        self.assertEqual(result, "CLIENT_NODE")
+
+    @patch('src.algorithm.tree_builder.get_tree_from_node_id',
+           return_value=default_code.create_folder_with_folders(["tree", "tree"]))
+    def test_check_node_still_exists_not_found(self, m1):
+        result = strategy.check_node_still_exists(os.path.join("test", "tree2"))
+        m1.assert_called_once()
+        self.assertIsNone(result)
