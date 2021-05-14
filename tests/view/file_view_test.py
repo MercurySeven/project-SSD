@@ -1,8 +1,16 @@
 from src.controllers.file_controller import FileController
 from src.model.main_model import MainModel
 from src.view.file_view import FileView
+from src.view.widgets.local_file_widget import LocalFileWidget
+from src.model.file_model import LocalFile
 from tests import default_code
 from unittest.mock import patch
+
+
+class testObject():
+
+    def __init__(self):
+        self.st_size = 100
 
 
 class FileViewTest(default_code.DefaultCode):
@@ -29,3 +37,15 @@ class FileViewTest(default_code.DefaultCode):
         correctly"""
         self.file_view_test.show_path_button.click()
         mock_dialog.assert_called_once()
+
+    def test_update_files_with_new_path_exists(self):
+        self.file_view_test.Sl_update_files_with_new_path("path")
+
+    @patch("os.path.samefile", return_value=True)
+    @patch("os.stat", return_value=testObject())
+    def test_toggle_files_update(self, mock_os, mock_samefile):
+        test_local_file = LocalFile(default_code._get_file_test_node())
+        test_local_file_widget = LocalFileWidget(test_local_file)
+        self.file_view_test.layout().addWidget(test_local_file_widget)
+        self.file_view_test.toggle_files_update("test")
+        mock_os.assert_called_once()
