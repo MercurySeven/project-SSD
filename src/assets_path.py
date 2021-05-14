@@ -6,4 +6,4 @@ if __DEPLOY_MACOS:
     file_name = os.path.join(dir_name, "./assets")
     ASSETS_PATH = file_name
 else:
-    ASSETS_PATH = "./assets"
+    ASSETS_PATH = "./src/assets"
