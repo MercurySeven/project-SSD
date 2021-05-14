@@ -50,6 +50,13 @@ class TreeBuilderTest(default_code.DefaultCode):
                                   Type.Folder, created, updated, self.path))
         self._test_tree_node(self.tree, test_node)
 
+    @patch('os.path.exists', return_value=False)
+    def test_build_tree_node_file_not_exists(self, m1):
+        node_name = "prova"
+        with self.assertRaises(FileNotFoundError):
+            self.tree = tree_builder._build_tree_node(self.path, node_name)
+            m1.assert_called_once()
+
     def test_get_tree_from_system(self):
         self.tree = tree_builder.get_tree_from_system(self.path)
         updated = int(os.stat(self.path).st_mtime)
