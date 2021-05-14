@@ -1,6 +1,10 @@
+import os
+
 from PySide6.QtGui import QPixmap, QPainter, QIcon
 from PySide6.QtWidgets import QMenu
 from PySide6.QtCore import (Slot, Qt, QPoint, QSize, Signal)
+
+from src import assets_path
 from src.model.widgets.remote_file import RemoteFile
 from src.model.settings_model import SettingsModel
 from src.view.widgets.file_widget import FileWidget
@@ -43,7 +47,7 @@ class RemoteFileWidget(FileWidget):
 
     def show_synced(self) -> None:
         p1 = QPixmap(self.icon().pixmap(self.icon().actualSize(QSize(1024, 1024))))
-        p2 = QPixmap(resource_path('./assets/icons/KeepSync.png'))
+        p2 = QPixmap(resource_path(os.path.join(assets_path.ASSETS_PATH, 'icons/KeepSync.png')))
 
         mode = QPainter.CompositionMode_SourceOver
         s = p1.size().expandedTo(p2.size())
