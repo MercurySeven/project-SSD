@@ -1,5 +1,7 @@
 import os
 import pathlib
+from src.model.algorithm.tree_node import TreeNode
+from src.model.algorithm.node import Node, Type
 from unittest.mock import patch
 
 from src.algorithm import os_handler
@@ -168,3 +170,15 @@ class StrategyTest(default_code.DefaultCode):
         self.assertEqual(create_folder_mock.call_count, 4)
         self.assertEqual(get_tree_mock.call_count, 6)
         self.assertEqual(client_result, manual_result)
+
+    @patch('src.algorithm.strategy.strategy.check_node_still_exists', return_value="a")
+    @patch('src.algorithm.os_handler.delete_node', return_value=True)
+    def test_common_strategy_client_new_folder(self, m1, m2):
+        node_raw = {
+            "action": Actions.CLIENT_NEW_FOLDER,
+            "node": TreeNode(Node("a", "ciao.txt", Type.File, 100, 200, "a/ciao.txt"))
+        }
+        logger = default_code.FakeLogger()
+        strategy.common_strategy(node_raw, logger)
+        m1.assert_called_once()
+        m2.assert_called_once()
