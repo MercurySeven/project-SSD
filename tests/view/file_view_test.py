@@ -47,5 +47,5 @@ class FileViewTest(default_code.DefaultCode):
         test_local_file = LocalFile(default_code._get_file_test_node())
         test_local_file_widget = LocalFileWidget(test_local_file)
         self.file_view_test.layout().addWidget(test_local_file_widget)
-        self.file_view_test.toggle_files_update("test")
+        self.file_view_test.toggle_files_update("test", True)
         mock_os.assert_called_once()
