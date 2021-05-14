@@ -74,8 +74,8 @@ class FileView(QWidget):
     def Sl_update_files_with_new_path(self, path: str) -> None:
         self.Sg_update_files_with_new_path.emit(path)
 
-    def toggle_files_update(self, file_path: str) -> None:
+    def toggle_files_update(self, file_path: str, is_sync: bool) -> None:
         for widget in self.fileLayout._item_list:
             if type(widget.wid) == LocalFileWidget:
                 if os.path.samefile(widget.wid.path, file_path):
-                    widget.wid.toggle()
+                    widget.wid.show_synced(is_sync)

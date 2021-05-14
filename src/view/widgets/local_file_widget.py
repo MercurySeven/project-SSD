@@ -21,8 +21,7 @@ class LocalFileWidget(FileWidget):
                    f"Ultima modifica: {self.last_modified_date}\n"
                    f"Dimensioni: {self.size}")
 
-        self.is_sync = False
-        self.show_synced()
+        self.show_synced(False)
         self.setToolTip(tooltip)
 
     @Slot()
@@ -34,16 +33,16 @@ class LocalFileWidget(FileWidget):
         self.is_sync = not self.is_sync
         self.show_synced()
 
-    def get_icon(self) -> QPixmap:
-        if self.is_sync:
+    def get_icon(self, is_sync: bool) -> QPixmap:
+        if is_sync:
             return QPixmap(resource_path(
                 os.path.join(assets_path.ASSETS_PATH, 'icons/Transfer.png')))
         return QPixmap(resource_path(
             os.path.join(assets_path.ASSETS_PATH, 'icons/Check.png')))
 
-    def show_synced(self) -> None:
+    def show_synced(self, is_sync: bool) -> None:
         p1 = QPixmap(self.icon().pixmap(self.icon().actualSize(QSize(1024, 1024))))
-        p2 = self.get_icon()
+        p2 = self.get_icon(is_sync)
 
         mode = QPainter.CompositionMode_SourceOver
         s = p1.size().expandedTo(p2.size())

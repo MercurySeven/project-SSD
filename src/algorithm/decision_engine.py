@@ -23,7 +23,7 @@ from .tree_comparator import Actions
 
 class DecisionEngine(Thread, QObject):
 
-    Sg_toggle_files_update = Signal(str)
+    Sg_toggle_files_update = Signal(str, bool)
 
     def __init__(self,
                  main_model: MainModel,
@@ -138,11 +138,11 @@ class DecisionEngine(Thread, QObject):
                     os.remove(node._payload.path)
                     self.logger.info(f"Eliminato file non presente nel server: {name_node}")
                 else:
-                    self.Sg_toggle_files_update.emit(node.get_path())
+                    self.Sg_toggle_files_update.emit(node.get_path(), True)
                     id_parent = r["id"]
                     os_handler.upload_file(node, id_parent)
                     self.logger.info(f"Nuovo file da caricare nel server: {name_node}")
-                    self.Sg_toggle_files_update.emit(node.get_path())
+                    self.Sg_toggle_files_update.emit(node.get_path(), False)
             elif action == Actions.SERVER_NEW_FOLDER:
                 path = r["path"]
                 node_message = os_handler.download_folder(node, path)
@@ -152,15 +152,16 @@ class DecisionEngine(Thread, QObject):
                 if len(node_message) > 0:
                     self.logger.info(action.name + " " + name_node)
             elif action == Actions.SERVER_NEW_FILE or action == Actions.SERVER_UPDATE_FILE:
+                folder_path = r["path"]
+                file_path = os.path.join(folder_path, name_node)
                 if action == Actions.SERVER_UPDATE_FILE:
-                    self.Sg_toggle_files_update.emit(node.get_path())
+                    self.Sg_toggle_files_update.emit(file_path, True)
 
-                path = r["path"]
-                node_message = os_handler.download_file(node, path)
+                node_message = os_handler.download_file(node, folder_path)
                 if node_message is not None:
                     node_message["action"] = action
                     self.notification_controller.add_notification(node_message)
                     self.logger.info(action.name + " " + name_node)
 
                 if action == Actions.SERVER_UPDATE_FILE:
-                    self.Sg_toggle_files_update.emit(node.get_path())
+                    self.Sg_toggle_files_update.emit(file_path, False)
