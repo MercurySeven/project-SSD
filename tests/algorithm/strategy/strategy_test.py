@@ -182,3 +182,15 @@ class StrategyTest(default_code.DefaultCode):
         strategy.common_strategy(node_raw, logger)
         m1.assert_called_once()
         m2.assert_called_once()
+
+    @patch('src.algorithm.strategy.strategy.check_node_still_exists', return_value="a")
+    @patch('src.algorithm.os_handler.delete_node', return_value=True)
+    def test_common_strategy_client_new_file(self, m1, m2):
+        node_raw = {
+            "action": Actions.CLIENT_NEW_FILE,
+            "node": TreeNode(Node("a", "ciao.txt", Type.File, 100, 200, "a/ciao.txt"))
+        }
+        logger = default_code.FakeLogger()
+        strategy.common_strategy(node_raw, logger)
+        m1.assert_called_once()
+        m2.assert_called_once()
