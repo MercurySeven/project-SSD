@@ -3,8 +3,8 @@ import logging
 import os.path
 from typing import Optional
 
-DEPLOY = False
-if DEPLOY:
+__DEPLOY_MACOS = False
+if __DEPLOY_MACOS:
     dir_name = os.path.dirname(__file__)
     file_name = os.path.join(dir_name, "config.ini")
 else:
