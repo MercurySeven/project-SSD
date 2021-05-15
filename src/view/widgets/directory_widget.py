@@ -1,10 +1,7 @@
-import os
-
 from PySide6.QtCore import (Qt, QSize, QTimer, Signal, Slot)
 from PySide6.QtGui import (QIcon)
 from PySide6.QtWidgets import (QToolButton)
 
-from src import assets_path
 from src.view.stylesheets.qssManager import resource_path
 
 
@@ -19,8 +16,7 @@ class DirectoryWidget(QToolButton):
 
         self.setAccessibleName('Directory')
 
-        self.setIcon(QIcon(resource_path(
-            os.path.join(assets_path.ASSETS_PATH, 'icons/Cartella.png'))))
+        self.setIcon(QIcon(resource_path("icons/Cartella.png")))
         self.setIconSize(QSize(45, 45))
         self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
 

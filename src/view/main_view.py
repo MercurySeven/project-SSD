@@ -1,4 +1,3 @@
-import os
 import re
 
 from PySide6 import QtCore
@@ -13,7 +12,6 @@ from src.view.widgets.sync_widget import SyncWidget
 from .file_view import FileView
 from .remote_file_view import RemoteFileView
 from .settings_view import SettingsView
-from .. import assets_path
 
 
 class MainWindow(QMainWindow):
@@ -23,8 +21,7 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
 
         self.setWindowTitle("SSD: Zextras Drive Desktop")
-        self.setWindowIcon(
-            QIcon(resource_path(os.path.join(assets_path.ASSETS_PATH, "icons/logo.png"))))
+        self.setWindowIcon(QIcon(resource_path("icons/logo.png")))
 
         # widgets
         self.main_widget = MainWidget(model, self)
@@ -35,7 +32,7 @@ class MainWindow(QMainWindow):
         # style
         self.resize(1200, 800)
 
-        setQss(os.path.join(assets_path.ASSETS_PATH, "style.qss"), self)
+        setQss("style.qss", self)
 
 
 class MainWidget(QWidget):
@@ -65,20 +62,17 @@ class MainWidget(QWidget):
         self.sync_widget = SyncWidget(self._model.sync_model)
 
         self.files_button = QPushButton(self)
-        self.files_button.setIcon(
-            QIcon(resource_path(os.path.join(assets_path.ASSETS_PATH, "icons/Locali.png"))))
+        self.files_button.setIcon(QIcon(resource_path("icons/Locali.png")))
         self.files_button.setIconSize(QSize(45, 45))
         self.files_button.setCheckable(True)
 
         self.remote_button = QPushButton(self)
-        self.remote_button.setIcon(
-            QIcon(resource_path(os.path.join(assets_path.ASSETS_PATH, "icons/Server.png"))))
+        self.remote_button.setIcon(QIcon(resource_path("icons/Server.png")))
         self.remote_button.setIconSize(QSize(45, 45))
         self.remote_button.setCheckable(True)
 
         self.settings_button = QPushButton(self)
-        self.settings_button.setIcon(QIcon(resource_path(
-            os.path.join(assets_path.ASSETS_PATH, "icons/settings.png"))))
+        self.settings_button.setIcon(QIcon(resource_path("icons/settings.png")))
         self.settings_button.setIconSize(QSize(45, 45))
         self.settings_button.setCheckable(True)
 

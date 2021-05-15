@@ -1,17 +1,13 @@
-import os
-
 from PySide6.QtWidgets import (QSystemTrayIcon, QMenu)
 from PySide6.QtGui import (QAction, QIcon)
 
-from src import assets_path
 from src.view.stylesheets.qssManager import resource_path
 
 
 class NotificationView(QSystemTrayIcon):
 
     def __init__(self, parent=None):
-        QSystemTrayIcon.__init__(self, QIcon(resource_path(
-            os.path.join(assets_path.ASSETS_PATH, "icons/logo.png"))), parent)
+        QSystemTrayIcon.__init__(self, QIcon(resource_path("icons/logo.png")), parent)
         self.setVisible(True)
         self.setToolTip("SSD: Zextras Drive Desktop")
 

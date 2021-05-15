@@ -1,6 +1,7 @@
 import os
 import sys
 from PySide6 import QtCore
+from src import assets_path
 
 '''
 Da usare per settare le stylesheet dei widget
@@ -24,4 +25,4 @@ def resource_path(relative_path: str) -> str:
     except Exception:
         base_path = os.path.abspath(".")
 
-    return os.path.join(base_path, relative_path)
+    return os.path.join(base_path, assets_path.ASSETS_PATH, relative_path)

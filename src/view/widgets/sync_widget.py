@@ -1,10 +1,7 @@
-import os
-
 from PySide6.QtCore import (Signal, Slot, Qt, QSize)
 from PySide6.QtWidgets import (QPushButton, QLabel, QVBoxLayout, QWidget)
 from PySide6.QtGui import (QIcon)
 
-from src import assets_path
 from src.model.widgets.sync_model import SyncModel
 from src.view.stylesheets.qssManager import resource_path
 
@@ -29,8 +26,7 @@ class SyncWidget(QWidget):
         self.running_label.setAccessibleName("Subtitle")
 
         self.sync_button = QPushButton(self)
-        self.sync_button.setIcon(QIcon(resource_path(
-            os.path.join(assets_path.ASSETS_PATH, 'icons/reload.png'))))
+        self.sync_button.setIcon(QIcon(resource_path('icons/reload.png')))
         self.sync_button.setIconSize(QSize(50, 50))
         self.sync_button.setCheckable(True)
         self.sync_button.setAccessibleName('HighlightButton')

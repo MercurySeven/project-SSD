@@ -1,10 +1,7 @@
-import os
-
 from PySide6.QtCore import (Qt, QSize, QTimer, Signal, Slot)
 from PySide6.QtGui import (QIcon)
 from PySide6.QtWidgets import (QToolButton)
 
-from src import assets_path
 from src.model.widgets.file import File
 from src.view.stylesheets.qssManager import resource_path
 
@@ -43,20 +40,15 @@ class FileWidget(QToolButton):
         self.setIconSize(QSize(45, 45))
         self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
         if self.extension in ["txt", "xml", "json", "docx", "xlsx"]:
-            self.setIcon(QIcon(resource_path(os.path.join(
-                assets_path.ASSETS_PATH, 'icons/Txt.png'))))
+            self.setIcon(QIcon(resource_path('icons/Txt.png')))
         elif self.extension in ["mp4", "avi", "mpeg", "wmv"]:
-            self.setIcon(QIcon(resource_path(os.path.join(
-                assets_path.ASSETS_PATH, 'icons/Video.png'))))
+            self.setIcon(QIcon(resource_path('icons/Video.png')))
         elif self.extension in ["jpg", "png", "gif"]:
-            self.setIcon(QIcon(resource_path(os.path.join(
-                assets_path.ASSETS_PATH, 'icons/Immagine.png'))))
+            self.setIcon(QIcon(resource_path('icons/Immagine.png')))
         elif self.extension in ["mp3", "wav", "ogg"]:
-            self.setIcon(QIcon(resource_path(os.path.join(
-                assets_path.ASSETS_PATH, 'icons/Audio.png'))))
+            self.setIcon(QIcon(resource_path('icons/Audio.png')))
         else:
-            self.setIcon(QIcon(resource_path(os.path.join(
-                assets_path.ASSETS_PATH, 'icons/DocGenerico.png'))))
+            self.setIcon(QIcon(resource_path('icons/DocGenerico.png')))
 
     def check_double_click(self):
         if self.timer.isActive():

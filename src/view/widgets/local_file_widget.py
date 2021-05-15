@@ -1,9 +1,6 @@
-import os
-
 from PySide6.QtCore import (QPoint, QSize, Slot, QUrl, Qt)
 from PySide6.QtGui import (QDesktopServices, QIcon, QPainter, QPixmap)
 
-from src import assets_path
 from src.model.widgets.local_file import LocalFile
 from src.view.widgets.file_widget import FileWidget
 from src.view.stylesheets.qssManager import resource_path
@@ -31,7 +28,7 @@ class LocalFileWidget(FileWidget):
 
     def get_icon(self, is_sync: bool) -> QPixmap:
         icon = 'icons/Transfer.png' if is_sync else 'icons/Check.png'
-        return QPixmap(resource_path(os.path.join(assets_path.ASSETS_PATH, icon)))
+        return QPixmap(resource_path(icon))
 
     def show_synced(self, is_sync: bool) -> None:
         p1 = QPixmap(self.icon().pixmap(self.icon().actualSize(QSize(1024, 1024))))
