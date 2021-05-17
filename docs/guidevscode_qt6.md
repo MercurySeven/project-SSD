@@ -42,7 +42,7 @@ Passi da seguire:
             "name": "Python: From main",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/src/main.py",
+            "program": "${workspaceFolder}/src/__main__.py",
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}",
             "env": {
@@ -52,4 +52,4 @@ Passi da seguire:
     ]
 }
 ```
-8. Per generare l'eseguibile: `pyinstaller .\app_inst.spec --noconfirm`
+8. Per generare l'eseguibile su windows, eseguire il file: `win-dist.bat`, nella cartella `dist` ci sarà l'eseguibile

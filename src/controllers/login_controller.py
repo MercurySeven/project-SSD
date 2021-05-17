@@ -72,4 +72,4 @@ class LoginController:
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Critical)
         msg.setText("Errore nell'autenticazione con le credenziali inserite")
-        msg.exec_()
+        msg.exec()

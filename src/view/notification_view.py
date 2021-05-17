@@ -1,19 +1,19 @@
 from PySide6.QtWidgets import (QSystemTrayIcon, QMenu)
 from PySide6.QtGui import (QAction, QIcon)
 
+from src.view.stylesheets.qssManager import resource_path
+
 
 class NotificationView(QSystemTrayIcon):
 
     def __init__(self, parent=None):
-        """Custom SystemTrayIcon, richiede in input il path dell'icona"""
-        QSystemTrayIcon.__init__(self, QIcon("./assets/icons/logo.png"), parent)
+        QSystemTrayIcon.__init__(self, QIcon(resource_path("icons/logo.png")), parent)
         self.setVisible(True)
-        self.setToolTip("Zextras Drive Desktop")
+        self.setToolTip("SSD: Zextras Drive Desktop")
 
         menu = QMenu()
         self.show_option = QAction("Mostra")
         self.exit_option = QAction("Esci")
-        # TODO: Aggiungere l'opzione per acc/speg la sync dal menu
 
         menu.addAction(self.show_option)
         menu.addAction(self.exit_option)

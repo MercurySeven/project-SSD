@@ -1,10 +1,13 @@
 import os
 import pathlib
+from src.model.algorithm.tree_node import TreeNode
+from src.model.algorithm.node import Node, Type
 from unittest.mock import patch
 
 from src.algorithm import os_handler
 from src.algorithm.strategy.client_strategy import ClientStrategy
 from src.algorithm.strategy.manual_strategy import ManualStrategy
+from src.algorithm.strategy import strategy
 from src.algorithm.tree_comparator import Actions
 from src.model.main_model import MainModel
 from tests import default_code
@@ -56,7 +59,7 @@ class StrategyTest(default_code.DefaultCode):
         self.delete_files()
         super(StrategyTest, self).tearDown()
 
-    @patch('src.algorithm.strategy.strategy.Strategy.get_or_create_folder_id', return_value=None)
+    @patch('src.algorithm.strategy.client_strategy.get_or_create_folder_id', return_value=None)
     @patch('src.algorithm.os_handler.upload_file')
     def test_execute_client_strategy_server_update_file(self, mock_1, mock_2):
         obj_to_iterate: list = [default_code.ResultObj(Actions.SERVER_UPDATE_FILE).result]
@@ -78,13 +81,14 @@ class StrategyTest(default_code.DefaultCode):
 
     @patch('src.model.network_model.NetworkModel.get_content_from_node',
            return_value=default_code._get_special_tree_dict())
-    @patch('src.algorithm.strategy.strategy.Strategy.get_or_create_folder_id',
+    @patch('src.algorithm.strategy.manual_strategy.get_or_create_folder_id',
            return_value=None)
     @patch('src.algorithm.os_handler.upload_file')
-    @patch('src.algorithm.strategy.manual_strategy.get_id_from_path', return_value="id")
     @patch('os.rename')
     @patch('src.algorithm.tree_builder._build_tree_node',
            return_value=default_code._get_test_node())
+    @patch('src.algorithm.strategy.manual_strategy.check_node_still_exists',
+           return_value=True)
     def test_execute_manual_strategy_server_update_file_diff_snap(
             self, mock_1, mock_2, mock_3, mock_4, mock_5, mock_6):
         obj_to_iterate: list = [default_code.ResultObj(
@@ -96,15 +100,32 @@ class StrategyTest(default_code.DefaultCode):
         mock_3.assert_called_once()
         mock_4.assert_called_once()
         mock_5.assert_called_once()
+        mock_6.assert_called_once()
+
+    @patch('src.algorithm.strategy.manual_strategy.get_or_create_folder_id',
+           return_value=None)
+    @patch('src.algorithm.os_handler.upload_file')
+    @patch('src.algorithm.strategy.manual_strategy.check_node_still_exists',
+           return_value=None)
+    def test_execute_manual_strategy_server_update_file_none(
+            self, mock_1, mock_2, mock_3):
+        obj_to_iterate: list = [default_code.ResultObj(
+            Actions.SERVER_UPDATE_FILE, 0, "name.ciao.we").result]
+        logger = default_code.FakeLogger()
+        self.manual_strategy.execute(obj_to_iterate, logger)
+        mock_1.assert_called_once()
+        mock_2.assert_called_once()
+        mock_3.assert_called_once()
 
     @patch('src.model.network_model.NetworkModel.get_content_from_node',
            return_value=default_code._get_special_tree_dict())
-    @patch('src.algorithm.strategy.strategy.Strategy.get_or_create_folder_id',
+    @patch('src.algorithm.strategy.manual_strategy.get_or_create_folder_id',
            return_value=None)
     @patch('src.algorithm.os_handler.upload_file')
-    @patch('src.algorithm.strategy.manual_strategy.get_id_from_path', return_value="id")
     @patch('src.algorithm.tree_builder._create_node_from_dict',
            return_value=default_code._get_test_node())
+    @patch('src.algorithm.strategy.manual_strategy.check_node_still_exists',
+           return_value=True)
     def test_execute_manual_strategy_server_update_file_equal_snap(
             self, mock_1, mock_2, mock_3, mock_4, mock_5):
         obj_to_iterate: list = [default_code.ResultObj(
@@ -130,35 +151,84 @@ class StrategyTest(default_code.DefaultCode):
 
     @patch('src.algorithm.os_handler.create_folder')
     @patch('src.algorithm.tree_builder.get_tree_from_node_id',
-           return_value=default_code._get_file_test_node())
-    def test_get_or_create_id_empty(self, get_tree_mock, create_folder_mock):
-        client_result = self.client_strategy.get_or_create_folder_id(
-            self.env_set.value(default_code.DefaultCode.SYNC_ENV_VARIABLE))
-        create_folder_mock.assert_called_once()
-        self.assertEqual(get_tree_mock.call_count, 2)
-        manual_result = self.manual_strategy.get_or_create_folder_id(
-            self.env_set.value(default_code.DefaultCode.SYNC_ENV_VARIABLE))
-        self.assertEqual(create_folder_mock.call_count, 2)
-        self.assertEqual(get_tree_mock.call_count, 4)
-        self.assertEqual(client_result, manual_result)
-
-    @patch('src.algorithm.tree_builder.get_tree_from_node_id',
            return_value=default_code.create_folder_with_folders(["tree", "tree"]))
-    def test_get_or_create_id_found(self, get_tree_mock):
-        client_result = self.client_strategy.get_or_create_folder_id(self.first_folder)
-        self.assertEqual(get_tree_mock.call_count, 1)
-        manual_result = self.manual_strategy.get_or_create_folder_id(self.first_folder)
+    def test_get_or_create_id_found(self, get_tree_mock, create_folder_mock):
+        client_result = strategy.get_or_create_folder_id(self.first_folder)
         self.assertEqual(get_tree_mock.call_count, 2)
+        manual_result = strategy.get_or_create_folder_id(self.first_folder)
+        self.assertEqual(get_tree_mock.call_count, 4)
         self.assertEqual(client_result, manual_result)
 
     @patch('src.algorithm.os_handler.create_folder')
     @patch('src.algorithm.tree_builder.get_tree_from_node_id',
            return_value=default_code.create_folder_with_folders(["x", "x"]))
     def test_get_or_create_id_not_found(self, get_tree_mock, create_folder_mock):
-        client_result = self.client_strategy.get_or_create_folder_id(self.first_folder)
-        create_folder_mock.assert_called_once()
-        self.assertEqual(get_tree_mock.call_count, 2)
-        manual_result = self.manual_strategy.get_or_create_folder_id(self.first_folder)
+        client_result = strategy.get_or_create_folder_id(self.first_folder)
         self.assertEqual(create_folder_mock.call_count, 2)
-        self.assertEqual(get_tree_mock.call_count, 4)
+        self.assertEqual(get_tree_mock.call_count, 3)
+        manual_result = strategy.get_or_create_folder_id(self.first_folder)
+        self.assertEqual(create_folder_mock.call_count, 4)
+        self.assertEqual(get_tree_mock.call_count, 6)
         self.assertEqual(client_result, manual_result)
+
+    @patch('src.algorithm.strategy.strategy.check_node_still_exists', return_value="a")
+    @patch('src.algorithm.os_handler.delete_node', return_value=True)
+    def test_common_strategy_client_new_folder(self, m1, m2):
+        node_raw = {
+            "action": Actions.CLIENT_NEW_FOLDER,
+            "node": TreeNode(Node("a", "ciao.txt", Type.File, 100, 200, "a/ciao.txt"))
+        }
+        logger = default_code.FakeLogger()
+        strategy.common_strategy(node_raw, logger)
+        m1.assert_called_once()
+        m2.assert_called_once()
+
+    @patch('src.algorithm.strategy.strategy.check_node_still_exists', return_value="a")
+    @patch('src.algorithm.os_handler.delete_node', return_value=True)
+    def test_common_strategy_client_new_file(self, m1, m2):
+        node_raw = {
+            "action": Actions.CLIENT_NEW_FILE,
+            "node": TreeNode(Node("a", "ciao.txt", Type.File, 100, 200, "a/ciao.txt"))
+        }
+        logger = default_code.FakeLogger()
+        strategy.common_strategy(node_raw, logger)
+        m1.assert_called_once()
+        m2.assert_called_once()
+
+    @patch('src.algorithm.strategy.strategy.check_node_still_exists', return_value=None)
+    @patch('src.algorithm.os_handler.delete_node', return_value=True)
+    def test_common_strategy_client_new_folder_id_not_exists(self, m1, m2):
+        node_raw = {
+            "action": Actions.CLIENT_NEW_FOLDER,
+            "node": TreeNode(Node("a", "ciao.txt", Type.File, 100, 200, "a/ciao.txt"))
+        }
+        logger = default_code.FakeLogger()
+        strategy.common_strategy(node_raw, logger)
+        m1.assert_not_called()
+        m2.assert_called_once()
+
+    @patch('src.algorithm.strategy.strategy.check_node_still_exists', return_value=None)
+    @patch('src.algorithm.os_handler.delete_node', return_value=True)
+    def test_common_strategy_client_new_file_id_not_exists(self, m1, m2):
+        node_raw = {
+            "action": Actions.CLIENT_NEW_FILE,
+            "node": TreeNode(Node("a", "ciao.txt", Type.File, 100, 200, "a/ciao.txt"))
+        }
+        logger = default_code.FakeLogger()
+        strategy.common_strategy(node_raw, logger)
+        m1.assert_not_called()
+        m2.assert_called_once()
+
+    @patch('src.algorithm.tree_builder.get_tree_from_node_id',
+           return_value=default_code.create_folder_with_folders(["tree", "tree"]))
+    def test_check_node_still_exists(self, m1):
+        result = strategy.check_node_still_exists(os.path.join("test", "tree"))
+        m1.assert_called_once()
+        self.assertEqual(result, "CLIENT_NODE")
+
+    @patch('src.algorithm.tree_builder.get_tree_from_node_id',
+           return_value=default_code.create_folder_with_folders(["tree", "tree"]))
+    def test_check_node_still_exists_not_found(self, m1):
+        result = strategy.check_node_still_exists(os.path.join("test", "tree2"))
+        m1.assert_called_once()
+        self.assertIsNone(result)

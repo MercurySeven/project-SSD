@@ -1,5 +1,6 @@
 [run]
 omit =
     *controllers*
-    */main.py
+    */__main__.py
     */api.py
+    */assets_path.py

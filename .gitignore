@@ -146,3 +146,7 @@ cython_debug/
 *.mer
 config.ini
 tests/*.txt
+
+# Per deploy
+/linux/*
+/macOS/*

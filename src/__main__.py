@@ -48,7 +48,7 @@ if __name__ == "__main__":
         dialog.setOption(QFileDialog.DontResolveSymlinks)
 
         # L'utente non ha selezionato la cartella
-        if not dialog.exec_():
+        if not dialog.exec():
             env_settings.setValue("sync_path", None)
             app.quit()
 
@@ -61,4 +61,4 @@ if __name__ == "__main__":
     model = MainModel()
     controller = MainController(app, model)
     login_controller = LoginController(model, controller)
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

@@ -1,3 +1,5 @@
+import os
+
 from PySide6.QtCore import (QSettings, QUrl, Slot, Qt, Signal)
 from PySide6.QtGui import (QDesktopServices)
 from PySide6.QtWidgets import (QVBoxLayout, QHBoxLayout, QWidget, QScrollArea, QPushButton, QLabel)
@@ -17,7 +19,7 @@ class FileView(QWidget):
         self.env_settings = QSettings()
         self._model = model
 
-        self.title = QLabel("File sincronizzati", self)
+        self.title = QLabel("File locali", self)
         self.title.setAlignment(Qt.AlignLeft)
         self.title.setAccessibleName("Title")
 
@@ -32,8 +34,8 @@ class FileView(QWidget):
         self.fileLayout = FlowLayout()
         self.fileLayout.setContentsMargins(0, 0, 0, 0)
 
-        self.show_path_button = QPushButton(self)
-        self.show_path_button.setText("Apri file manager")
+        self.show_path_button = QPushButton("Apri file manager", self)
+        self.force_sync_button = QPushButton("Sincronizza ora", self)
 
         self.fileWindow.setParent(self.scrollArea)
         self.fileWindow.setLayout(self.fileLayout)
@@ -42,6 +44,7 @@ class FileView(QWidget):
 
         header_layout = QHBoxLayout()
         header_layout.addWidget(self.title)
+        header_layout.addWidget(self.force_sync_button)
         header_layout.addWidget(self.show_path_button)
 
         layout = QVBoxLayout()
@@ -70,3 +73,9 @@ class FileView(QWidget):
     @Slot(str)
     def Sl_update_files_with_new_path(self, path: str) -> None:
         self.Sg_update_files_with_new_path.emit(path)
+
+    def toggle_files_update(self, file_path: str, is_sync: bool) -> None:
+        for widget in self.fileLayout._item_list:
+            if type(widget.wid) == LocalFileWidget:
+                if os.path.samefile(widget.wid.path, file_path):
+                    widget.wid.show_synced(is_sync)

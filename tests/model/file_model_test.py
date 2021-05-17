@@ -127,3 +127,8 @@ class FileModelTest(default_code.DefaultCode):
         result_node = self.model_test._search_through_children(name_to_search, node_to_search)
         # test di uguaglianza
         self.assertEqual(None, result_node)
+
+    def test_clear_view(self):
+        self.model_test.clear_view()
+        self.assertEqual(self.model_test.current_folder._files, [])
+        self.assertEqual(self.model_test.current_folder._dirs, [])

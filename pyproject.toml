@@ -1,0 +1,33 @@
+[tool.briefcase]
+project_name = "SSD"
+bundle = "com.mercuryseven"
+version = "1.0.0"
+url = "https://github.com/MercurySeven"
+license = "GNU General Public License v3 (GPLv3)"
+author = 'Mercury Seven'
+author_email = "mercuryseven.swe@gmail.com"
+
+[tool.briefcase.app.src]
+formal_name = "ssd"
+description = "client di sincronizzazione file per servizi zextras"
+sources = ['src']
+requires = ['pyside6==6.1.0',
+            'shiboken6==6.1.0',
+            'gql==3.0.0a5',
+            'watchdog==2.1.0',
+            'aiohttp==3.7.4',
+            'configparser==5.0.2',
+            'requests==2.25.1',
+            'psutil==5.8.0',
+            'bitmath==1.3.3.1']
+
+
+[tool.briefcase.app.src.macOS]
+requires = []
+
+[tool.briefcase.app.src.linux]
+requires = ['pyside6==6.1.0']
+system_requires = ['libgl1','python3-pyqt5','qt5-default','libpq5']
+
+[tool.briefcase.app.src.windows]
+requires = []

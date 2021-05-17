@@ -30,7 +30,7 @@ class FileModel(QObject):
         path = self.settings.value("sync_path")
         if os.path.isdir(path):
             self.tree = tree_builder.get_tree_from_system(path)
-            self.current_folder = LocalDirectory(self.tree, self.tree.get_name())
+            self.current_folder = LocalDirectory(self.tree)
             self.previous_folder = None
 
     @Slot()
@@ -68,7 +68,7 @@ class FileModel(QObject):
 
         return list_of_files, list_of_dirs
 
-    def set_current_node(self, path) -> None:
+    def set_current_node(self, path: str) -> None:
         name = path.split('/')[-1]  # ottengo nome folder desiderato
         child = self._search_through_children(name, self.current_folder._node)  # cerco figlio
         if(child):
@@ -88,7 +88,7 @@ class FileModel(QObject):
         relative_path = relative_path[relative_path.find(folder_name):]
         folders = relative_path.split(os.path.sep)
         curr_node = self.tree
-        if self.tree.get_payload().name == "ROOT":
+        if self.tree.get_name() == "ROOT":
             folders = folders[1:]
             for f in folders:
                 folder_found = self._search_through_children(f, curr_node)
@@ -100,9 +100,8 @@ class FileModel(QObject):
         else:
             return None
 
-    def _search_through_children(self, name, node) -> Optional[TreeNode]:
-        children = node.get_children()
-        for i in children:
-            if i.get_payload().name == name:
+    def _search_through_children(self, name: str, node: TreeNode) -> Optional[TreeNode]:
+        for i in node.get_children():
+            if i.get_name() == name:
                 return i
         return None

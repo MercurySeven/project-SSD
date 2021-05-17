@@ -48,6 +48,9 @@ class MainController(QObject):
 
         # ALGORITMO
         self.algoritmo = DecisionEngine(self.model, self.notification_controller)
+        self.algoritmo.Sg_toggle_files_update.connect(self.file_controller.Sl_toggle_files_update)
+        self.file_controller._view.force_sync_button.clicked.connect(
+            self.algoritmo.Sl_model_changed)
         self.algoritmo.start()
 
         self.model.settings_model.Sg_model_changed.connect(self.algoritmo.Sl_model_changed)

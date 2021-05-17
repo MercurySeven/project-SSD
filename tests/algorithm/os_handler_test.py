@@ -7,6 +7,7 @@ from src.model.algorithm.node import Node, Type
 from src.model.algorithm.tree_node import TreeNode
 from src.model.main_model import MainModel
 from tests import default_code
+from tests.default_code import _get_test_node
 
 
 class OsHandlerTest(default_code.DefaultCode):
@@ -64,7 +65,8 @@ class OsHandlerTest(default_code.DefaultCode):
 
     @patch('src.model.network_model.NetworkModel.download_node', return_value=True)
     @patch('src.model.settings_model.SettingsModel.is_id_in_sync_list', return_value=True)
-    def test_download_folder_with_file(self, mock_1, mock_2):
+    @patch('src.algorithm.os_handler.check_node_in_nodelist', return_value=True)
+    def test_download_folder_with_file(self, mock_1, mock_2, mock_3):
         updated = 200
         created = 100
         test_node = TreeNode(Node("CLIENT_NODE", self.folder_name,
@@ -75,6 +77,7 @@ class OsHandlerTest(default_code.DefaultCode):
         self.assertEqual(x, [True])
         mock_1.assert_called_once()
         mock_2.assert_called_once()
+        mock_3.assert_called_once()
 
     def test_download_folder_with_folder(self):
         created = 100
@@ -83,7 +86,8 @@ class OsHandlerTest(default_code.DefaultCode):
                                   Type.Folder, created, updated, self.path))
         test_node.add_node(TreeNode(Node("CLIENT_NODE", self.folder_name,
                                          Type.Folder, created, updated, self.path)))
-        os_handler.download_folder(test_node, self.path)
+        x = os_handler.download_folder(test_node, self.path)
+        self.assertEqual(x, [])
         folder_path = os.path.join(self.path, self.folder_name)
         inner_folder_path = os.path.join(folder_path, self.folder_name)
         self.assertEqual(os.path.exists(folder_path), False)
@@ -113,7 +117,60 @@ class OsHandlerTest(default_code.DefaultCode):
         os_handler.upload_folder(test_node, self.path)
         self.assertEqual(mocked_fun.call_count, 2)
 
-    @patch('src.model.network_model.NetworkModel.delete_node')
-    def test_delete_node(self, mocked_fun):
-        os_handler.delete_node("test")
+    @patch('src.model.settings_model.SettingsModel.is_id_in_sync_list', return_value=False)
+    def test_download_file_not_in_list(self, mocked_fun):
+        test_node = TreeNode(Node("CLIENT_NODE", self.folder_name,
+                                  Type.File, 100, 200, "ciao.txt"))
+        res = os_handler.download_file(test_node, self.path)
         mocked_fun.assert_called_once()
+        self.assertIsNone(res)
+
+    @patch('src.model.settings_model.SettingsModel.get_sync_list', return_value=["a", "b"])
+    @patch('src.model.network_model.NetworkModel.delete_node')
+    def test_delete_node_file_present(self, m1, m2):
+        res = os_handler.delete_node("a", True)
+        m1.assert_called_once()
+        m2.assert_called_once()
+        self.assertTrue(res)
+
+    @patch('src.model.settings_model.SettingsModel.get_sync_list', return_value=["a", "b"])
+    def test_delete_node_file_not_present(self, m1):
+        res = os_handler.delete_node("c", True)
+        m1.assert_called_once()
+        self.assertFalse(res)
+
+    @patch('src.model.settings_model.SettingsModel.get_sync_list', return_value=["a", "b"])
+    @patch('src.algorithm.tree_builder.get_tree_from_node_id', return_value=_get_test_node())
+    @patch('src.algorithm.os_handler.check_node_in_nodelist', return_value=True)
+    @patch('src.model.network_model.NetworkModel.delete_node')
+    def test_delete_node_folder_present(self, m1, m2, m3, m4):
+        res = os_handler.delete_node("a", False)
+        m1.assert_called_once()
+        m2.assert_called_once()
+        m3.assert_called_once()
+        m4.assert_called_once()
+        self.assertTrue(res)
+
+    def test_check_node_in_nodelist(self):
+        updated = 200
+        created = 100
+        test_node = TreeNode(Node("ROOT", self.folder_name,
+                                  Type.Folder, created, updated, self.path))
+        test_node.add_node(TreeNode(Node("b", self.file_name,
+                                         Type.File, created, updated, self.path)))
+
+        sub_folder = TreeNode(Node("a", self.folder_name,
+                                   Type.Folder, created, updated, self.path))
+
+        sub_folder.add_node(TreeNode(Node("f", self.folder_name,
+                                          Type.File, created, updated, self.path)))
+        test_node.add_node(sub_folder)
+
+        res = os_handler.check_node_in_nodelist(test_node, ["a", "b"])
+        self.assertTrue(res)
+
+        res = os_handler.check_node_in_nodelist(test_node, ["d", "e"])
+        self.assertFalse(res)
+
+        res = os_handler.check_node_in_nodelist(test_node, ["f"])
+        self.assertTrue(res)

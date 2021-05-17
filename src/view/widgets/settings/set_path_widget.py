@@ -57,7 +57,7 @@ class SetPathWidget(QWidget):
         dialog.setOption(QFileDialog.ShowDirsOnly)
         dialog.setOption(QFileDialog.DontResolveSymlinks)
 
-        if dialog.exec_():
+        if dialog.exec():
             # Serve per fare in modo che il test abbia una stringa da usare
             sync_path = ["test"] if self.debug else dialog.selectedFiles()
             if len(sync_path) == 1:

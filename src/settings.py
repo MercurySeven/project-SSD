@@ -1,9 +1,14 @@
 import configparser
-import os.path
 import logging
+import os.path
 from typing import Optional
 
-file_name = "config.ini"
+__DEPLOY_MACOS = False
+if __DEPLOY_MACOS:
+    dir_name = os.path.dirname(__file__)
+    file_name = os.path.join(dir_name, "config.ini")
+else:
+    file_name = "config.ini"
 
 
 def __read_from_file() -> None:

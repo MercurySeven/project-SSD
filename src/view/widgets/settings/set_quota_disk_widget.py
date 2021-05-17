@@ -105,15 +105,17 @@ class SetQuotaDiskWidget(QWidget):
         # Imposto la textbox che mi dice quanto peso ho occupato su quello disponibile
         self.disk_quota.setText(f"{folder_size_parsed} su {new_max_quota} in uso")
 
-        # Imposto la textbox che richiede input
-        self.dedicated_space.setText(str(quota_disco_parsed.value))
-
         free_disk_parsed = bitmath.parse_string(
             self._model.convert_size(self._model.get_free_disk()))
 
-        self.populate_size_box(folder_size_parsed, free_disk_parsed)
-        # Imposto l'unità di misura mostrata
-        self.sizes_box.setCurrentText(quota_disco_parsed.unit)
+        # Imposto la textbox che richiede input
+        if not self.dedicated_space.hasFocus():
+            self.dedicated_space.setText(str(quota_disco_parsed.value))
+            # Creo i nuovi valori della combobox
+            if not self.sizes_box.hasFocus():
+                self.populate_size_box(folder_size_parsed, free_disk_parsed)
+                # Imposto l'item in focus della combobox
+                self.sizes_box.setCurrentText(quota_disco_parsed.unit)
 
         # Prendo dimensione corrente della sync folder e della quota disco
         # e metto in proporzione con quotadisco:100=syncfolder:x
@@ -126,7 +128,7 @@ class SetQuotaDiskWidget(QWidget):
         self.disk_progress.setValue(_progress_bar_current_percentage)
 
         # Se la cartella occupa più spazio di quanto voluto allora la porto a quanto occupa
-        if quota_disco_parsed < folder_size_parsed:
+        if quota_disco_parsed < folder_size_parsed and not self.dedicated_space.hasFocus():
             self.dedicated_space.setText(str(folder_size_parsed.value))
             self.sizes_box.setCurrentText(folder_size_parsed.unit)
             self.Sg_view_changed.emit()
