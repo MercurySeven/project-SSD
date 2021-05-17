@@ -70,7 +70,7 @@ QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] > QComboBox:
 }
 
 QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] > QComboBox::down-arrow {
-    border-image: url(assets/icons/down-arrow.png);
+    border-image: url(src/assets/icons/down-arrow.png);
 }
 
 QWidget[accessibleName='Stacked'] QWidget[accessibleName='InfoBox'] > QComboBox::drop-down:hover {
