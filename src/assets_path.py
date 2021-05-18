@@ -1,7 +1,6 @@
 import os
 import platform
 
-__os = platform.system()
 if platform.system() == 'Windows':
     file_name = "./src/assets"
 else:
