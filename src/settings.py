@@ -1,14 +1,15 @@
 import configparser
 import logging
 import os.path
+import platform
 from typing import Optional
 
-__DEPLOY_MACOS = False
-if __DEPLOY_MACOS:
+__os = platform.system()
+if platform.system() == 'Windows':
+    file_name = "config.ini"
+else:
     dir_name = os.path.dirname(__file__)
     file_name = os.path.join(dir_name, "config.ini")
-else:
-    file_name = "config.ini"
 
 
 def __read_from_file() -> None:
