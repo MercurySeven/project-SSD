@@ -4,7 +4,6 @@ import os.path
 import platform
 from typing import Optional
 
-__os = platform.system()
 if platform.system() == 'Windows':
     file_name = "config.ini"
 else:
