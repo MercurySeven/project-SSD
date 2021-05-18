@@ -35,8 +35,13 @@ def RetryLogin(func):
             # e' possibile che sia scaduto il login provo a rifarlo
             # e ritento la chiamata
             logger.debug(f"retry {func.__name__} with new login")
+
+            env_settings = QSettings()
+            user = env_settings.value("Credentials/user")
+            password = env_settings.value("Credentials/password")
             api_impl = ApiImplementation()
-            api_impl.login()
+            api_impl.login(user, password)
+
             return func(self, *args, **kwargs)
 
     return handle
