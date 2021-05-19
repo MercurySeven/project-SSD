@@ -37,6 +37,9 @@ if __name__ == "__main__":
     logging.getLogger("gql.transport.requests").setLevel(logging.WARNING)
 
     env_settings = QSettings()
+    # env_settings.setValue("sync_path", None)
+    # env_settings.setValue("Credentials/user", None)
+    # env_settings.setValue("Credentials/password", None)
 
     # Controlliamo se l'utente ha già settato il PATH della cartella
     check_path = env_settings.value("sync_path")
