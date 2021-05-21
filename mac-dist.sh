@@ -1,4 +1,6 @@
 #!/bin/sh
+briefcase create
+briefcase build
 cd macOS
 mv app/ssd ssd
 rm -r app
